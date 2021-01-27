@@ -83,9 +83,9 @@ const useStyles = makeStyles({
   boldText: {
     fontWeight: 500,
   },
-  signInText: {
+  forgotPasswordText: {
     fontWeight: 500,
-    color: colors.lightYellow,
+    color: colors.standardRed,
     marginLeft: "5px",
   },
   image: {
@@ -95,13 +95,11 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Register() {
+export default function Login() {
   // Validation schema
   const validationSchema = useMemo(
     () =>
       yup.object({
-        firstName: yup.string().required("* First name is required"),
-        lastName: yup.string().required("* Last name field is required"),
         email: yup.string().required("* Email address field is required").email("* Wrong email format"),
         password: yup.string().required("* Password field field is required"),
       }),
@@ -118,17 +116,19 @@ export default function Register() {
     <Container maxWidth={false} className={classes.container}>
       <Grid container className={classes.fullHeightContainer}>
         <Grid container item lg={8} md={8} sm={true} xs={true} alignItems={"center"} justify={"center"}>
-          <img src={"/images/left-background-landing-page.png"} alt={"background"} className={classes.image} />
+          <Link href={"/register"}>
+            <img src={"/images/left-background-landing-page.png"} alt={"background"} className={classes.image} />
+          </Link>
         </Grid>
 
         <Grid item lg={4} md={4} sm={12} xs={12} className={clsx(classes.relativeContainer, classes.rightContainer)}>
           <Typography variant={"h5"} className={classes.title}>
-            Find inspiration. Get tattooed. Book today.
+            Hi, Welcome back!
           </Typography>
 
           <form onSubmit={handleSubmit(onSubmit)} className={classes.formWrapper}>
             <Typography className={classes.subTitle} display={"block"}>
-              Sign up with:
+              Continue with:
             </Typography>
             <Grid container spacing={1}>
               <Grid item lg={10} md={10} xs={10}>
@@ -152,35 +152,6 @@ export default function Register() {
             <CustomDivider className={classes.dividerContainer}>
               <Typography className={classes.greyText}>Or</Typography>
             </CustomDivider>
-
-            <Grid container spacing={2}>
-              <Grid item lg={6} md={6} xs={6}>
-                <FormInput
-                  name="firstName"
-                  label={"First Name"}
-                  id="firstName"
-                  placeholder={"First Name"}
-                  fullWidth
-                  control={control}
-                  variant={"outlined"}
-                  defaultValue={""}
-                  errors={errors.firstName}
-                />
-              </Grid>
-              <Grid item lg={6} md={6} xs={6}>
-                <FormInput
-                  name="lastName"
-                  label={"Last Name"}
-                  id="lastName"
-                  placeholder={"Last Name"}
-                  fullWidth
-                  control={control}
-                  variant={"outlined"}
-                  defaultValue={""}
-                  errors={errors.lastName}
-                />
-              </Grid>
-            </Grid>
 
             <FormInput
               name="email"
@@ -217,13 +188,13 @@ export default function Register() {
               fullWidth
               bluePastel
             >
-              Sign up
+              Login
             </PrimaryButton>
 
             <Grid container item justify={"center"} className={classes.alreadyMemberWrapper}>
-              <Typography className={classes.boldText}>Already a member?</Typography>
-              <Link href={"/login"}>
-                <Typography className={classes.signInText}> Sign in</Typography>
+              <Typography className={classes.boldText}>Forgot password?</Typography>
+              <Link href={"/forgot-password"}>
+                <Typography className={classes.forgotPasswordText}> Click here</Typography>
               </Link>
             </Grid>
 
