@@ -1,6 +1,6 @@
 // External import
-import React, { useMemo, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import React, { useMemo } from "react";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { makeStyles } from "@material-ui/core/styles";
 import { useYupValidationResolver } from "../utils";
@@ -12,19 +12,11 @@ import Image from "next/image";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import FormControl from "@material-ui/core/FormControl";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import IconButton from "@material-ui/core/IconButton";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 // Custom Component
-import ErrorMessage from "../components/ErrorMessage";
 import PrimaryButton from "../components/PrimaryButton";
 import CustomDivider from "../components/CustomDivider";
+import FormInput from "../components/FormInput";
 
 import colors from "../palette";
 
@@ -90,6 +82,11 @@ const useStyles = makeStyles({
   boldText: {
     fontWeight: 500,
   },
+  signInText: {
+    fontWeight: 500,
+    color: colors.lightYellow,
+    marginLeft: "5px",
+  },
 });
 
 export default function Register() {
@@ -108,13 +105,8 @@ export default function Register() {
   const classes = useStyles();
   const resolver = useYupValidationResolver(validationSchema);
   const { control, handleSubmit, errors } = useForm({ resolver });
-  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = () => {};
-
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
 
   return (
     <Container maxWidth={false} className={classes.container}>
@@ -157,116 +149,57 @@ export default function Register() {
 
             <Grid container spacing={2}>
               <Grid item lg={6} md={6} xs={6}>
-                <Controller
+                <FormInput
                   name="firstName"
+                  label={"First Name"}
+                  id="firstName"
+                  placeholder={"First Name"}
+                  fullWidth
                   control={control}
+                  variant={"outlined"}
                   defaultValue={""}
-                  render={({ value, onChange }) => {
-                    return (
-                      <>
-                        <TextField
-                          label={"First name"}
-                          id="firstName"
-                          placeholder={"First Name"}
-                          fullWidth
-                          variant={"outlined"}
-                          value={value}
-                          onChange={(e) => {
-                            onChange(e.target.value);
-                          }}
-                        />
-                        <ErrorMessage>{errors.firstName && errors.firstName.message}</ErrorMessage>
-                      </>
-                    );
-                  }}
+                  errors={errors.firstName}
                 />
               </Grid>
               <Grid item lg={6} md={6} xs={6}>
-                <Controller
+                <FormInput
                   name="lastName"
+                  label={"Last Name"}
+                  id="lastName"
+                  placeholder={"Last Name"}
+                  fullWidth
                   control={control}
+                  variant={"outlined"}
                   defaultValue={""}
-                  render={({ value, onChange }) => {
-                    return (
-                      <>
-                        <TextField
-                          label={"Last Name"}
-                          id="lastName"
-                          placeholder={"Last Name"}
-                          fullWidth
-                          variant={"outlined"}
-                          value={value}
-                          onChange={(e) => {
-                            onChange(e.target.value);
-                          }}
-                        />
-                        <ErrorMessage>{errors.lastName && errors.lastName.message}</ErrorMessage>
-                      </>
-                    );
-                  }}
+                  errors={errors.lastName}
                 />
               </Grid>
             </Grid>
 
-            <Controller
+            <FormInput
               name="email"
+              classes={{ root: classes.formInput }}
+              label={"Email Address"}
+              id="email"
+              placeholder={"Email address"}
+              fullWidth
               control={control}
+              variant={"outlined"}
               defaultValue={""}
-              render={({ value, onChange }) => {
-                return (
-                  <>
-                    <TextField
-                      classes={{ root: classes.formInput }}
-                      label={"Email Address"}
-                      id="email"
-                      placeholder={"Email address"}
-                      fullWidth
-                      variant={"outlined"}
-                      value={value}
-                      onChange={(e) => {
-                        onChange(e.target.value);
-                      }}
-                    />
-                    <ErrorMessage>{errors.email && errors.email.message}</ErrorMessage>
-                  </>
-                );
-              }}
+              errors={errors.email}
             />
 
-            <Controller
+            <FormInput
               name="password"
+              label={"Password"}
+              id="password"
+              placeholder={"Password"}
+              fullWidth
               control={control}
+              variant={"outlined"}
               defaultValue={""}
-              render={({ value, onChange }) => {
-                return (
-                  <>
-                    <FormControl variant="outlined" fullWidth>
-                      <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-                      <OutlinedInput
-                        id="outlined-adornment-password"
-                        type={showPassword ? "text" : "password"}
-                        value={value.password}
-                        onChange={(e) => {
-                          onChange(e.target.value);
-                        }}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              onClick={handleClickShowPassword}
-                              edge="end"
-                            >
-                              {showPassword ? <Visibility /> : <VisibilityOff />}
-                            </IconButton>
-                          </InputAdornment>
-                        }
-                        labelWidth={70}
-                      />
-                    </FormControl>
-                    <ErrorMessage>{errors.password && errors.password.message}</ErrorMessage>
-                  </>
-                );
-              }}
+              errors={errors.password}
+              type={"password"}
             />
 
             <PrimaryButton
@@ -276,7 +209,7 @@ export default function Register() {
               color="primary"
               size="large"
               fullWidth
-              blackStyle
+              bluePastel
             >
               Sign up
             </PrimaryButton>
@@ -284,10 +217,7 @@ export default function Register() {
             <Grid container item justify={"center"} className={classes.alreadyMemberWrapper}>
               <Typography className={classes.boldText}>Already a member?</Typography>
               <Link href={"/sign-in"}>
-                <Typography color={"error"} className={classes.boldText}>
-                  {" "}
-                  Sign in
-                </Typography>
+                <Typography className={classes.signInText}> Sign in</Typography>
               </Link>
             </Grid>
 
@@ -296,10 +226,10 @@ export default function Register() {
               color="primary"
               size="large"
               className={classes.joinArtistButton}
-              blackStyle
+              bluePastel
               fullWidth
             >
-              Join an artist or studio
+              Join as artist or studio
             </PrimaryButton>
           </form>
         </Grid>

@@ -1,0 +1,23 @@
+/* Text field override */
+label{
+  &.MuiInputLabel-outlined{
+    &.MuiInputLabel-shrink{
+      color: $standardGrey !important;
+    }
+  }
+}
+
+.MuiInputBase-formControl, .MuiTextField-root{
+  &:focus{
+    //outline-color: $standardBlack;
+  }
+}
+
+.Mui-focused{
+  .MuiOutlinedInput-notchedOutline{
+    border-width: 1px !important;
+    border-color: $standardBlack !important;
+  }
+}
+
+
