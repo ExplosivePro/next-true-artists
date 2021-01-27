@@ -23,7 +23,7 @@ import colors from "../palette";
 const useStyles = makeStyles({
   container: {
     height: "100vh",
-    paddingRight: 0,
+    padding: 0,
   },
   fullHeightContainer: {
     height: "100%",
@@ -51,6 +51,7 @@ const useStyles = makeStyles({
   title: {
     marginBottom: "35px",
     fontWeight: "bold",
+    textAlign: "center",
   },
   subTitle: {
     fontWeight: "bold",
@@ -87,6 +88,10 @@ const useStyles = makeStyles({
     color: colors.lightYellow,
     marginLeft: "5px",
   },
+  image: {
+    width: "70%",
+    height: "auto",
+  },
 });
 
 export default function Register() {
@@ -111,11 +116,11 @@ export default function Register() {
   return (
     <Container maxWidth={false} className={classes.container}>
       <Grid container className={classes.fullHeightContainer}>
-        <Grid item lg={7} md={7} xs={7}>
-          Left side bar
+        <Grid container item lg={7} md={7} sm={true} xs={true} alignItems={"center"} justify={"center"}>
+          <img src={"/images/left-background-landing-page.png"} alt={"background"} className={classes.image} />
         </Grid>
 
-        <Grid item lg={5} md={5} xs={5} className={clsx(classes.relativeContainer, classes.rightContainer)}>
+        <Grid item lg={5} md={5} sm={12} xs={12} className={clsx(classes.relativeContainer, classes.rightContainer)}>
           <Typography variant={"h5"} className={classes.title}>
             Find inspiration. Get tattooed. Book today.
           </Typography>
