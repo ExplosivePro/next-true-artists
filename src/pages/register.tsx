@@ -227,16 +227,18 @@ export default function Register() {
               </Link>
             </Grid>
 
-            <PrimaryButton
-              variant="outlined"
-              color="primary"
-              size="large"
-              className={classes.joinArtistButton}
-              bluePastel
-              fullWidth
-            >
-              Join as artist or studio
-            </PrimaryButton>
+            <Link href={"/register-selection"}>
+              <PrimaryButton
+                variant="outlined"
+                color="primary"
+                size="large"
+                className={classes.joinArtistButton}
+                bluePastel
+                fullWidth
+              >
+                Join as artist or studio
+              </PrimaryButton>
+            </Link>
           </form>
         </Grid>
       </Grid>
