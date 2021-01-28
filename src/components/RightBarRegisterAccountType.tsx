@@ -1,7 +1,7 @@
 // External
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Typography } from "@material-ui/core";
+import clsx from "clsx";
 
 // Material UI Components
 import color from "../palette";
@@ -9,6 +9,7 @@ import CardHeader from "@material-ui/core/CardHeader";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+import { Grid, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {
@@ -44,22 +45,45 @@ const useStyles = makeStyles({
       backgroundColor: color.standardYellow,
     },
   },
+  cardSelected: {
+    backgroundColor: color.brightBlue,
+  },
+  avatarSelected: {
+    backgroundColor: color.standardYellow,
+  },
+  arrowIcon: {
+    color: color.standardBlack,
+  },
 });
 
 export default function RightBarRegisterAccountType() {
   const classes = useStyles();
 
-  const OperationCard = ({ name, description, imageUrl }: { name: string; description: string; imageUrl: string }) => {
+  const [cardSelected, setCardSelected] = useState<number>();
+
+  const OperationCard = ({
+    name,
+    description,
+    imageUrl,
+    selected = false,
+    onClick,
+  }: {
+    name: string;
+    description: string;
+    imageUrl: string;
+    selected: boolean;
+    onClick: () => void;
+  }) => {
     return (
       <CardHeader
         avatar={
-          <Avatar aria-label="recipe" className={classes.avatar}>
+          <Avatar aria-label="recipe" className={clsx(classes.avatar, { [classes.avatarSelected]: selected })}>
             <img className={classes.cardImage} src={imageUrl} alt={name} />
           </Avatar>
         }
         action={
           <IconButton aria-label="next">
-            <ArrowForwardIcon />
+            <ArrowForwardIcon className={classes.arrowIcon} />
           </IconButton>
         }
         title={
@@ -68,7 +92,8 @@ export default function RightBarRegisterAccountType() {
           </Typography>
         }
         subheader={<Typography className={classes.descriptionText}>{description}</Typography>}
-        classes={{ root: classes.cardHeader }}
+        className={clsx(classes.cardHeader, { [classes.cardSelected]: selected })}
+        onClick={onClick}
       />
     );
   };
@@ -88,11 +113,19 @@ export default function RightBarRegisterAccountType() {
           name={"Artist"}
           description={"Join as an artist to have your own account."}
           imageUrl={"/images/icons/artist.svg"}
+          selected={cardSelected === 0}
+          onClick={() => {
+            setCardSelected(0);
+          }}
         />
         <OperationCard
           name={"Studio"}
           description={"Join as a studio to manage a studio account and add multiple artist accounts."}
           imageUrl={"/images/icons/studio.svg"}
+          selected={cardSelected === 1}
+          onClick={() => {
+            setCardSelected(1);
+          }}
         />
       </div>
     </Grid>
