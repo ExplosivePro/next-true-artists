@@ -1,5 +1,6 @@
 // External
 import React, { useState } from "react";
+import clsx from "clsx";
 
 import TextField, { TextFieldProps } from "@material-ui/core/TextField";
 import ErrorMessage from "./ErrorMessage";
@@ -38,6 +39,7 @@ export default function FormInput(props: CustomTextFieldProps) {
             {customProps.type !== "password" && (
               <TextField
                 {...customProps}
+                className={clsx(props.className, `${props.errors && props.errors.message ? "error" : ""}`)}
                 value={value}
                 onChange={(e) => {
                   onChange(e.target.value);
@@ -46,7 +48,11 @@ export default function FormInput(props: CustomTextFieldProps) {
             )}
 
             {customProps.type === "password" && (
-              <FormControl variant="outlined" fullWidth>
+              <FormControl
+                variant="outlined"
+                fullWidth
+                className={clsx(props.className, `${props.errors && props.errors.message ? "error" : ""}`)}
+              >
                 <InputLabel htmlFor="outlined-adornment-password">{customProps.label}</InputLabel>
                 <OutlinedInput
                   id="outlined-adornment-password"

@@ -56,7 +56,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function RightBarRegisterAccountType() {
+export default function RightBarRegisterAccountType({ onNext }: { onNext: () => void }) {
   const classes = useStyles();
 
   const [cardSelected, setCardSelected] = useState<number>();
@@ -66,13 +66,14 @@ export default function RightBarRegisterAccountType() {
     description,
     imageUrl,
     selected = false,
-    onClick,
+    onSelect,
   }: {
     name: string;
     description: string;
     imageUrl: string;
     selected: boolean;
-    onClick: () => void;
+    onSelect: () => void;
+    onNext?: () => void;
   }) => {
     return (
       <CardHeader
@@ -82,7 +83,7 @@ export default function RightBarRegisterAccountType() {
           </Avatar>
         }
         action={
-          <IconButton aria-label="next">
+          <IconButton aria-label="next" onClick={onNext}>
             <ArrowForwardIcon className={classes.arrowIcon} />
           </IconButton>
         }
@@ -93,7 +94,7 @@ export default function RightBarRegisterAccountType() {
         }
         subheader={<Typography className={classes.descriptionText}>{description}</Typography>}
         className={clsx(classes.cardHeader, { [classes.cardSelected]: selected })}
-        onClick={onClick}
+        onClick={onSelect}
       />
     );
   };
@@ -114,18 +115,20 @@ export default function RightBarRegisterAccountType() {
           description={"Join as an artist to have your own account."}
           imageUrl={"/images/icons/artist.svg"}
           selected={cardSelected === 0}
-          onClick={() => {
+          onSelect={() => {
             setCardSelected(0);
           }}
+          onNext={onNext}
         />
         <OperationCard
           name={"Studio"}
           description={"Join as a studio to manage a studio account and add multiple artist accounts."}
           imageUrl={"/images/icons/studio.svg"}
           selected={cardSelected === 1}
-          onClick={() => {
+          onSelect={() => {
             setCardSelected(1);
           }}
+          onNext={onNext}
         />
       </div>
     </Grid>

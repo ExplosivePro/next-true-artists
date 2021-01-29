@@ -100,10 +100,10 @@ export default function Register() {
   const validationSchema = useMemo(
     () =>
       yup.object({
-        firstName: yup.string().required("* First name is required"),
-        lastName: yup.string().required("* Last name field is required"),
-        email: yup.string().required("* Email address field is required").email("* Wrong email format"),
-        password: yup.string().required("* Password field field is required"),
+        firstName: yup.string().required("First name is required"),
+        lastName: yup.string().required("Last name field is required"),
+        email: yup.string().required("Email address field is required").email("* Wrong email format"),
+        password: yup.string().required("Password field field is required"),
       }),
     [],
   );

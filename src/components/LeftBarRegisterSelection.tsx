@@ -32,9 +32,18 @@ const useStyles = makeStyles({
     position: "absolute",
     bottom: 0,
     width: "100%",
+    maxWidth: "300px",
   },
   checkIcon: {
     color: color.standardGreen,
+  },
+  logo: {
+    maxWidth: "244px",
+  },
+  logoWrapper: {
+    position: "absolute",
+    top: "48px",
+    left: "45px",
   },
 });
 
@@ -65,7 +74,10 @@ export default function LeftBarRegisterSelection({ step }: { step: number }) {
   };
 
   return (
-    <div className={classes.root}>
+    <Grid container className={classes.root} alignItems={"center"} justify={"center"}>
+      <div className={classes.logoWrapper}>
+        <img src={"/images/icons/logo.svg"} className={classes.logo} alt={"logo"} />
+      </div>
       <Grid container spacing={4}>
         <Grid container item lg={12} md={12} sm={12} alignItems={"center"}>
           <StepItem name={"Account Type"} selected={step === 0} checked={step > 0} />
@@ -86,6 +98,6 @@ export default function LeftBarRegisterSelection({ step }: { step: number }) {
       <div className={classes.imageWrapper}>
         <img className={classes.imageItem} src={"/images/left-bar-register-selection.svg"} alt={"icon"} />
       </div>
-    </div>
+    </Grid>
   );
 }

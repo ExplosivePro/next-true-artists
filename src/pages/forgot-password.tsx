@@ -66,7 +66,7 @@ export default function Register() {
   const validationSchema = useMemo(
     () =>
       yup.object({
-        email: yup.string().required("* Email address field is required").email("* Wrong email format"),
+        email: yup.string().required("Email address field is required").email("* Wrong email format"),
       }),
     [],
   );

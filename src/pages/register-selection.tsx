@@ -1,5 +1,5 @@
 // External import
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 
@@ -7,9 +7,11 @@ import clsx from "clsx";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 
-// Custom Component
+// Custom Components
 import LeftBarRegisterSelection from "../components/LeftBarRegisterSelection";
 import RightBarRegisterAccountType from "../components/RightBarRegisterAccountType";
+import RightBarRegisterPersonalDetail from "../components/RightBarRegisterPersonalDetail";
+import RightBarRegisterSetPassword from "../components/RightBarRegisterSetPassword";
 
 import colors from "../palette";
 
@@ -57,15 +59,47 @@ const useStyles = makeStyles({
 export default function RegisterSelection() {
   const classes = useStyles();
 
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    setStep(2);
+  }, []);
+
   return (
     <Container maxWidth={false} className={classes.container}>
       <Grid container className={classes.fullHeightContainer}>
         <Grid container item lg={3} md={3} sm={12} xs={12} alignItems={"center"} justify={"center"}>
-          <LeftBarRegisterSelection step={0} />
+          <LeftBarRegisterSelection step={step} />
         </Grid>
 
         <Grid item lg={9} md={9} sm={12} xs={12} className={clsx(classes.relativeContainer, classes.rightContainer)}>
-          <RightBarRegisterAccountType />
+          {step === 0 && (
+            <RightBarRegisterAccountType
+              onNext={() => {
+                setStep(1);
+              }}
+            />
+          )}
+          {step === 1 && (
+            <RightBarRegisterPersonalDetail
+              onNext={() => {
+                setStep(2);
+              }}
+              onPreviousStep={() => {
+                setStep(0);
+              }}
+            />
+          )}
+          {step === 2 && (
+            <RightBarRegisterSetPassword
+              onNext={() => {
+                setStep(3);
+              }}
+              onPreviousStep={() => {
+                setStep(1);
+              }}
+            />
+          )}
         </Grid>
       </Grid>
     </Container>

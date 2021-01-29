@@ -10,6 +10,7 @@ const colors = {
   darkBluePastel: "#0e848c",
   lightYellow: "#f5c964",
   standardRed: "#a04015",
+  brightRed: "#d92626",
   standardGreen: "#55ae66",
   standardGrey: "#686868",
   standardBlack: "#242424",
