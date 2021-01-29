@@ -39,7 +39,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function RightBarRegisterAccountType({
+export default function RightBarRegisterPersonalDetail({
   onPreviousStep,
   onNext,
 }: {

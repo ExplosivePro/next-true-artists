@@ -12,6 +12,8 @@ import LeftBarRegisterSelection from "../components/LeftBarRegisterSelection";
 import RightBarRegisterAccountType from "../components/RightBarRegisterAccountType";
 import RightBarRegisterPersonalDetail from "../components/RightBarRegisterPersonalDetail";
 import RightBarRegisterSetPassword from "../components/RightBarRegisterSetPassword";
+import RightBarRegisterWorkingLocation from "../components/RightBarRegisterWorkingLocation";
+import RightBarRegisterWorkStyle from "../components/RightBarRegisterWorkStyle";
 
 import colors from "../palette";
 
@@ -62,7 +64,7 @@ export default function RegisterSelection() {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
-    setStep(2);
+    setStep(4);
   }, []);
 
   return (
@@ -97,6 +99,26 @@ export default function RegisterSelection() {
               }}
               onPreviousStep={() => {
                 setStep(1);
+              }}
+            />
+          )}
+          {step === 3 && (
+            <RightBarRegisterWorkingLocation
+              onNext={() => {
+                setStep(2);
+              }}
+              onPreviousStep={() => {
+                setStep(4);
+              }}
+            />
+          )}
+          {step === 4 && (
+            <RightBarRegisterWorkStyle
+              onNext={() => {
+                setStep(2);
+              }}
+              onSkip={() => {
+                setStep(4);
               }}
             />
           )}
