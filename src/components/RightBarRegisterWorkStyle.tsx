@@ -8,6 +8,8 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Box from "@material-ui/core/Box";
+import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 // Custom component
 import PrimaryButton from "./PrimaryButton";
@@ -47,6 +49,17 @@ const useStyles = makeStyles({
     padding: "15px",
     margin: "15px 0",
   },
+  formControlLabel: {
+    width: "100%",
+    flexDirection: "inherit",
+  },
+  checkBox: {
+    position: "absolute",
+    right: 0,
+  },
+  checkedIcon: {
+    color: colors.standardGreen,
+  },
 });
 
 export default function RightBarRegisterWorkStyle({ onSkip, onNext }: { onSkip?: () => void; onNext?: () => void }) {
@@ -67,7 +80,14 @@ export default function RightBarRegisterWorkStyle({ onSkip, onNext }: { onSkip?:
             <FormGroup row>
               <FormControlLabel
                 value={workStyle.value}
-                control={<Checkbox name="antoine" />}
+                classes={{ root: classes.formControlLabel }}
+                control={
+                  <Checkbox
+                    classes={{ root: classes.checkBox }}
+                    icon={<RadioButtonUncheckedIcon />}
+                    checkedIcon={<CheckCircleIcon classes={{ root: classes.checkedIcon }} />}
+                  />
+                }
                 label={workStyle.label}
                 labelPlacement="start"
               />

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
+import { useRouter } from "next/router";
 
 // Material UI Components
 import Container from "@material-ui/core/Container";
@@ -60,11 +61,16 @@ const useStyles = makeStyles({
 
 export default function RegisterSelection() {
   const classes = useStyles();
+  const router = useRouter();
 
   const [step, setStep] = useState(0);
 
+  const goToPage = (url: string) => {
+    router.replace(url);
+  };
+
   useEffect(() => {
-    setStep(4);
+    // setStep(3);
   }, []);
 
   return (
@@ -105,17 +111,17 @@ export default function RegisterSelection() {
           {step === 3 && (
             <RightBarRegisterWorkingLocation
               onNext={() => {
-                setStep(2);
+                setStep(4);
               }}
               onPreviousStep={() => {
-                setStep(4);
+                setStep(2);
               }}
             />
           )}
           {step === 4 && (
             <RightBarRegisterWorkStyle
               onNext={() => {
-                setStep(2);
+                goToPage("/home");
               }}
               onSkip={() => {
                 setStep(4);

@@ -11,6 +11,10 @@ export default class MyDocument extends Document {
           {/* PWA primary color */}
           <meta name="theme-color" content={theme.palette.primary.main} />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cabin:300,400,500,700&display=swap" />
+          <script
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOdFwaPhwsa_1j5--QpunB-6OcNQ8xC98&v=3.exp&libraries=geometry,drawing,places"
+            defer
+          ></script>
         </Head>
         <body>
           <Main />
