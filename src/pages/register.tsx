@@ -20,6 +20,8 @@ import FormInput from "../components/FormInput";
 
 import colors from "../palette";
 
+import { useAuth } from "../contexts/auth";
+
 const useStyles = makeStyles({
   container: {
     height: "100vh",
@@ -96,6 +98,8 @@ const useStyles = makeStyles({
 });
 
 export default function Register() {
+  const { register } = useAuth();
+
   // Validation schema
   const validationSchema = useMemo(
     () =>
@@ -112,7 +116,16 @@ export default function Register() {
   const resolver = useYupValidationResolver(validationSchema);
   const { control, handleSubmit, errors } = useForm({ resolver });
 
-  const onSubmit = () => {};
+  const onSubmit = async (data: Register.FormData) => {
+    const { email, password, firstName, lastName } = data;
+    const response = await register({
+      email,
+      password,
+      name: `${firstName} ${lastName}`,
+    });
+
+    console.log(response);
+  };
 
   return (
     <Container maxWidth={false} className={classes.container}>
@@ -227,18 +240,18 @@ export default function Register() {
               </Link>
             </Grid>
 
-            <Link href={"/register-selection"}>
-              <PrimaryButton
-                variant="outlined"
-                color="primary"
-                size="large"
-                className={classes.joinArtistButton}
-                bluePastel
-                fullWidth
-              >
-                Join as artist or studio
-              </PrimaryButton>
-            </Link>
+            {/*<Link href={"/register-selection"}>*/}
+            <PrimaryButton
+              variant="outlined"
+              color="primary"
+              size="large"
+              className={classes.joinArtistButton}
+              bluePastel
+              fullWidth
+            >
+              Join as artist or studio
+            </PrimaryButton>
+            {/*</Link>*/}
           </form>
         </Grid>
       </Grid>

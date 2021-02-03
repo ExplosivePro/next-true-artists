@@ -20,6 +20,8 @@ import FormInput from "../components/FormInput";
 
 import colors from "../palette";
 
+import { useAuth } from "../contexts";
+
 const useStyles = makeStyles({
   container: {
     height: "100vh",
@@ -96,6 +98,8 @@ const useStyles = makeStyles({
 });
 
 export default function Login() {
+  const { login } = useAuth();
+
   // Validation schema
   const validationSchema = useMemo(
     () =>
@@ -110,7 +114,9 @@ export default function Login() {
   const resolver = useYupValidationResolver(validationSchema);
   const { control, handleSubmit, errors } = useForm({ resolver });
 
-  const onSubmit = () => {};
+  const onSubmit = async (data: Login.FormData) => {
+    await login(data.email, data.password);
+  };
 
   return (
     <Container maxWidth={false} className={classes.container}>

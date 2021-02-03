@@ -1,5 +1,5 @@
 // External
-import * as React from "react";
+import React, { createContext, useRef, useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 
 // APIs
@@ -8,7 +8,7 @@ import { clearAuthHeader, setAuthHeader, registerUser, loginUser, verifyUser } f
 import { FullPageLoader } from "../components/FullPageLoader";
 
 // @ts-ignore
-const context = React.createContext<Context>({});
+const context = createContext<Context>({});
 
 enum AuthState {
   "pending",
@@ -35,9 +35,9 @@ const unauthRoutes = ["/login", "/register", "/forgot-password", "/register-sele
 export function AuthContext({ children: route }: Props) {
   const router = useRouter();
 
-  const user = React.useRef<User | undefined>(undefined);
-  const [status, setStatus] = React.useState<AuthState>(AuthState.pending);
-  const [previousPath, setPreviousPath] = React.useState("");
+  const user = useRef<User | undefined>(undefined);
+  const [status, setStatus] = useState<AuthState>(AuthState.pending);
+  const [previousPath, setPreviousPath] = useState("");
 
   async function login(email: string, password: string): Promise<RestApi.Response> {
     try {
@@ -68,9 +68,9 @@ export function AuthContext({ children: route }: Props) {
     }
   }
 
-  async function register(email: string, password: string) {
+  async function register(payload: Register.ApiPayload) {
     try {
-      const data = await registerUser(email, password);
+      const data = await registerUser(payload);
       localStorage.setItem(TOKEN_KEY, data.auth_token);
       setAuthHeader(data.auth_token);
 
@@ -95,7 +95,7 @@ export function AuthContext({ children: route }: Props) {
     router.replace("/login");
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Only save auth router
     if (unauthRoutes.indexOf(router.pathname) === -1) {
       // Store this url to get back later
@@ -103,7 +103,7 @@ export function AuthContext({ children: route }: Props) {
     }
   }, [router.pathname]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const token = localStorage.getItem(TOKEN_KEY);
 
     console.log(`Token: ${token}`);
@@ -112,17 +112,14 @@ export function AuthContext({ children: route }: Props) {
     if (!token) {
       setStatus(AuthState.unAuthenticated);
 
-      // Any route is not defined as unauth route will be redirected to login page
+      // Any route is not defined as unauth route will be redirected to register page
       if (unauthRoutes.indexOf(router.pathname) === -1) {
         // Store this url to get back later
         setPreviousPath(router.pathname);
 
-        // Redirect to login page
-        router.replace("/login");
+        // Redirect to register page
+        router.replace("/register");
       }
-
-      // Redirect to login page
-      router.replace("/login");
 
       return;
     }
@@ -153,7 +150,7 @@ export function AuthContext({ children: route }: Props) {
 }
 
 export function useAuth() {
-  return React.useContext(context);
+  return useContext(context);
 }
 
 interface Props {
@@ -169,7 +166,7 @@ export type User = {
 interface Context {
   user?: User;
   login: (email: string, password: string) => Promise<RestApi.Response>;
-  register: (email: string, password: string, role?: Roles) => void;
+  register: (payload: Register.ApiPayload) => void;
   logOut: () => void;
   status: AuthState;
   previousPath: string;
