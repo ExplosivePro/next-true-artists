@@ -8,7 +8,7 @@ import Button, { ButtonProps } from "@material-ui/core/Button";
 
 import colors from "../palette";
 
-type CustomButtonProps = ButtonProps & { bluePastel?: boolean };
+type CustomButtonProps = ButtonProps & { bluePastel?: boolean; yellow?: boolean };
 
 const useStyles = makeStyles({
   root: {
@@ -31,6 +31,23 @@ const useStyles = makeStyles({
       color: colors.bluePastel,
     },
   },
+  yellowStyle: {
+    color: colors.white,
+    backgroundColor: colors.standardYellow,
+    "&:hover": {
+      backgroundColor: colors.darkYellow,
+    },
+  },
+  yellowOutlineStyle: {
+    borderColor: colors.standardYellow,
+    backgroundColor: colors.white,
+    color: colors.standardYellow,
+    "&:hover": {
+      borderColor: colors.standardYellow,
+      backgroundColor: colors.lightGrey,
+      color: colors.standardYellow,
+    },
+  },
 });
 
 export default function PrimaryButton(props: CustomButtonProps) {
@@ -46,6 +63,8 @@ export default function PrimaryButton(props: CustomButtonProps) {
       className={clsx(classes.root, props.className, {
         [classes.bluePastelStyle]: props.bluePastel,
         [classes.bluePastelOutlineStyle]: props.variant === "outlined" && props.bluePastel,
+        [classes.yellowStyle]: props.yellow,
+        [classes.yellowOutlineStyle]: props.variant === "outlined" && props.yellow,
       })}
     >
       {props && props.children}

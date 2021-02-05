@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
 // Material UI Components
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { Grid, Typography } from "@material-ui/core";
 
 // Custom component
@@ -12,32 +12,37 @@ import FormInput from "./FormInput";
 import { useYupValidationResolver } from "../utils";
 import PrimaryButton from "./PrimaryButton";
 
-const useStyles = makeStyles({
-  root: {
-    height: "100%",
-    position: "relative",
-  },
-  groupInput: {
-    marginBottom: "4px",
-  },
-  titleText: {
-    fontWeight: 600,
-    marginBottom: "10px",
-  },
-  titleWrapper: {
-    marginBottom: "72px",
-  },
-  formInput: {
-    margin: "12px 0",
-  },
-  formWrapper: {
-    width: "70%",
-    height: "100%",
-  },
-  buttonWrapper: {
-    marginTop: "25px",
-  },
-});
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      height: "100%",
+      position: "relative",
+    },
+    groupInput: {
+      marginBottom: "4px",
+    },
+    titleText: {
+      fontWeight: 600,
+      marginBottom: "10px",
+    },
+    titleWrapper: {
+      marginBottom: "72px",
+    },
+    formInput: {
+      margin: "12px 0",
+    },
+    formWrapper: {
+      width: "70%",
+      height: "100%",
+      [theme.breakpoints.down("sm")]: {
+        width: "100%",
+      },
+    },
+    buttonWrapper: {
+      marginTop: "25px",
+    },
+  }),
+);
 
 export default function RightBarRegisterPersonalDetail({
   onPreviousStep,

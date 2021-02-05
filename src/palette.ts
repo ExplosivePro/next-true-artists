@@ -13,9 +13,12 @@ const colors = {
   brightRed: "#d92626",
   standardGreen: "#55ae66",
   standardGrey: "#686868",
+  standardGreyFooter: "#fafafa",
   standardLightGrey: "#e7e7e7",
+  standardGreyBorder: "#8c8c8c",
   standardBlack: "#242424",
   standardYellow: "#f4c55b",
+  darkYellow: "#eca400",
 };
 
 export default colors;

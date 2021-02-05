@@ -7,6 +7,7 @@ import { useYupValidationResolver } from "../utils";
 import clsx from "clsx";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 // Material UI Components
 import Container from "@material-ui/core/Container";
@@ -98,6 +99,7 @@ const useStyles = makeStyles({
 });
 
 export default function Register() {
+  const router = useRouter();
   const { register } = useAuth();
 
   // Validation schema
@@ -125,6 +127,10 @@ export default function Register() {
     });
 
     console.log(response);
+  };
+
+  const goToPage = (url: string) => {
+    router.push(url);
   };
 
   return (
@@ -240,7 +246,6 @@ export default function Register() {
               </Link>
             </Grid>
 
-            {/*<Link href={"/register-selection"}>*/}
             <PrimaryButton
               variant="outlined"
               color="primary"
@@ -248,10 +253,12 @@ export default function Register() {
               className={classes.joinArtistButton}
               bluePastel
               fullWidth
+              onClick={() => {
+                goToPage("register-selection");
+              }}
             >
               Join as artist or studio
             </PrimaryButton>
-            {/*</Link>*/}
           </form>
         </Grid>
       </Grid>

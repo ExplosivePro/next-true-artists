@@ -18,6 +18,7 @@ const useStyles = makeStyles({
   },
   titleText: {
     fontWeight: 500,
+    marginBottom: "10px",
   },
   titleWrapper: {
     marginBottom: "72px",

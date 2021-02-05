@@ -1,6 +1,6 @@
 // External import
 import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 
@@ -18,46 +18,57 @@ import RightBarRegisterWorkStyle from "../components/RightBarRegisterWorkStyle";
 
 import colors from "../palette";
 
-const useStyles = makeStyles({
-  container: {
-    height: "100vh",
-    padding: 0,
-  },
-  fullHeightContainer: {
-    height: "100%",
-  },
-  relativeContainer: {
-    position: "relative",
-  },
-  formWrapper: {
-    position: "relative",
-    height: "100%",
-  },
-  formInput: {
-    margin: "10px 0",
-  },
-  rightContainer: {
-    padding: "50px 65px",
-    backgroundColor: colors.lightGrey,
-  },
-  title: {
-    fontWeight: "bold",
-    marginLeft: "10px",
-  },
-  resetPasswordButton: {
-    marginTop: "15px",
-  },
-  image: {
-    width: "70%",
-    height: "auto",
-  },
-  iconButton: {
-    marginLeft: "-12px", // Adjust margin instead of padding to prevent affecting to hover circle shape
-  },
-  backButton: {
-    color: colors.black,
-  },
-});
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      height: "100vh",
+      padding: 0,
+    },
+    leftBarContainer: {
+      [theme.breakpoints.down("sm")]: {
+        height: "70px",
+      },
+    },
+    fullHeightContainer: {
+      height: "100%",
+    },
+    relativeContainer: {
+      position: "relative",
+    },
+    formWrapper: {
+      position: "relative",
+      height: "100%",
+    },
+    formInput: {
+      margin: "10px 0",
+    },
+    rightContainer: {
+      height: "100%",
+      padding: "50px 65px",
+      backgroundColor: colors.lightGrey,
+      [theme.breakpoints.down("sm")]: {
+        padding: "50px 22px",
+      },
+    },
+    title: {
+      fontWeight: "bold",
+      marginLeft: "10px",
+    },
+    resetPasswordButton: {
+      marginTop: "15px",
+    },
+    image: {
+      width: "70%",
+      height: "auto",
+    },
+    iconButton: {
+      marginLeft: "-12px", // Adjust margin instead of padding to prevent affecting to hover circle shape
+    },
+    backButton: {
+      color: colors.black,
+    },
+  }),
+);
 
 export default function RegisterSelection() {
   const classes = useStyles();
@@ -70,13 +81,23 @@ export default function RegisterSelection() {
   };
 
   useEffect(() => {
-    // setStep(3);
+    // setStep(2);
   }, []);
 
   return (
     <Container maxWidth={false} className={classes.container}>
       <Grid container className={classes.fullHeightContainer}>
-        <Grid container item lg={3} md={3} sm={12} xs={12} alignItems={"center"} justify={"center"}>
+        <Grid
+          container
+          item
+          lg={3}
+          md={3}
+          sm={12}
+          xs={12}
+          alignItems={"center"}
+          justify={"center"}
+          className={clsx(classes.relativeContainer, classes.leftBarContainer)}
+        >
           <LeftBarRegisterSelection step={step} />
         </Grid>
 
@@ -121,7 +142,7 @@ export default function RegisterSelection() {
           {step === 4 && (
             <RightBarRegisterWorkStyle
               onNext={() => {
-                goToPage("/home");
+                goToPage("/artists");
               }}
               onSkip={() => {
                 setStep(4);

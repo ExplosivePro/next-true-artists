@@ -21,6 +21,7 @@ import FormInput from "../components/FormInput";
 import colors from "../palette";
 
 import { useAuth } from "../contexts";
+import { useRouter } from "next/router";
 
 const useStyles = makeStyles({
   container: {
@@ -98,6 +99,7 @@ const useStyles = makeStyles({
 });
 
 export default function Login() {
+  const router = useRouter();
   const { login } = useAuth();
 
   // Validation schema
@@ -116,6 +118,10 @@ export default function Login() {
 
   const onSubmit = async (data: Login.FormData) => {
     await login(data.email, data.password);
+  };
+
+  const goToPage = (url: string) => {
+    router.push(url);
   };
 
   return (
@@ -211,6 +217,9 @@ export default function Login() {
               className={classes.joinArtistButton}
               bluePastel
               fullWidth
+              onClick={() => {
+                goToPage("register-selection");
+              }}
             >
               Join as artist or studio
             </PrimaryButton>

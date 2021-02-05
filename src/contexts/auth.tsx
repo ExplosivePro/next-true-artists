@@ -5,6 +5,9 @@ import { useRouter } from "next/router";
 // APIs
 import { clearAuthHeader, setAuthHeader, registerUser, loginUser, verifyUser } from "../api";
 
+import { unauthRoutes } from "../constants";
+
+// Custom Components
 import { FullPageLoader } from "../components/FullPageLoader";
 
 // @ts-ignore
@@ -21,8 +24,6 @@ enum Roles {
   ARTISTS = "artist",
   STUDIOS = "studios",
 }
-
-const unauthRoutes = ["/login", "/register", "/forgot-password", "/register-selection"];
 
 /*
  Auth Flow: (TODO)
