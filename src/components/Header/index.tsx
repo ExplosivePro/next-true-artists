@@ -93,6 +93,7 @@ export default function Header() {
   const classes = useStyles();
   const router = useRouter();
 
+  // TODO: Move this to constants with well comment
   const navLinks = [
     { title: `Home`, path: `/home` },
     { title: `Artists`, path: `/artists` },

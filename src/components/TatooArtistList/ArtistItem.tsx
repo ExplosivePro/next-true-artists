@@ -20,6 +20,9 @@ const useStyles = makeStyles(() =>
       paddingTop: "56.25%", // 16:9
     },
     cardHeader: {
+      "& .MuiCardHeader-content": {
+        paddingRight: "20px",
+      },
       alignSelf: "center",
       "& .MuiCardHeader-action": {
         alignSelf: "center",

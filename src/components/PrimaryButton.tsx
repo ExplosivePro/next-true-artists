@@ -13,6 +13,7 @@ type CustomButtonProps = ButtonProps & { bluePastel?: boolean; yellow?: boolean 
 const useStyles = makeStyles({
   root: {
     textTransform: "none",
+    boxShadow: "none",
   },
   bluePastelStyle: {
     color: colors.white,

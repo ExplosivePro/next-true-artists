@@ -1,6 +1,6 @@
 // External import
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
 // Material UI Components
 import Container from "@material-ui/core/Container";
@@ -13,14 +13,19 @@ import TatooArtistList from "../components/TatooArtistList/TatooArtistList";
 import PrimaryButton from "../components/PrimaryButton";
 import Footer from "../components/Footer";
 
-const useStyles = makeStyles({
-  root: {
-    padding: "0 200px",
-  },
-  seeMoreButton: {
-    width: "191px",
-  },
-});
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      padding: "0 200px",
+      [theme.breakpoints.down("sm")]: {
+        padding: "10px",
+      },
+    },
+    seeMoreButton: {
+      width: "191px",
+    },
+  }),
+);
 
 export default function Artists() {
   const classes = useStyles();
@@ -31,7 +36,9 @@ export default function Artists() {
         <Header />
         <BodyContent>
           <Grid container>
-            <Typography variant={"h6"}>Browse Tatoo Artist</Typography>
+            <Typography variant={"h6"}>
+              <b>Browse Tatoo Artist</b>
+            </Typography>
 
             <TatooArtistList />
 
@@ -47,3 +54,8 @@ export default function Artists() {
     </>
   );
 }
+
+export const getStaticProps = async () => {
+  // TODO: Call APIs here to get artist list
+  return { props: { artists: [] } };
+};

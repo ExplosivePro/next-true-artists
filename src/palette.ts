@@ -16,6 +16,7 @@ const colors = {
   standardGreyFooter: "#fafafa",
   standardLightGrey: "#e7e7e7",
   standardGreyBorder: "#8c8c8c",
+  standardGreySubFooter: "#f2f2f2",
   standardBlack: "#242424",
   standardYellow: "#f4c55b",
   darkYellow: "#eca400",
