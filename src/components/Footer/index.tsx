@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     footerItemWrapper: {
       [theme.breakpoints.down("md")]: {
+        padding: "0 40px 0 0",
+      },
+      [theme.breakpoints.down("sm")]: {
         padding: "0 40px",
       },
     },
@@ -152,7 +155,7 @@ export default function Footer() {
 
   return (
     <Container className={clsx(classes.root, classes.relativeWrapper)} maxWidth={false}>
-      <Grid container spacing={4} className={classes.footerItemWrapper}>
+      <Grid container className={classes.footerItemWrapper}>
         <Hidden smDown>
           <Grid item lg={3} md={3} sm={false} xs={false} className={classes.relativeWrapper}>
             <div className={classes.imageWrapper}>
