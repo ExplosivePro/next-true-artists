@@ -1,9 +1,15 @@
+// External import
 import React from "react";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
+import { useRouter } from "next/router";
+
+// Material UI Components
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import Avatar from "@material-ui/core/Avatar";
+
+// Custom Components
 import PrimaryButton from "../PrimaryButton";
 
 const useStyles = makeStyles(() =>
@@ -32,7 +38,12 @@ const useStyles = makeStyles(() =>
 );
 
 export default function ArtistItem() {
+  const router = useRouter();
   const classes = useStyles();
+
+  const viewProfile = () => {
+    router.push("/artists/1");
+  };
 
   return (
     <Card className={classes.root} elevation={1}>
@@ -44,7 +55,7 @@ export default function ArtistItem() {
       <CardHeader
         avatar={<Avatar aria-label="recipe" src="/images/james.png" />}
         action={
-          <PrimaryButton variant="outlined" color="primary" size="small" bluePastel>
+          <PrimaryButton variant="outlined" color="primary" size="small" bluePastel onClick={viewProfile}>
             View profile
           </PrimaryButton>
         }
