@@ -6,7 +6,7 @@ import Avatar from "@material-ui/core/Avatar";
 
 import colors from "../../palette";
 
-const useStyles = makeStyles(() =>
+const styles = (theme: Theme) =>
   createStyles({
     root: {
       width: "100%",
@@ -25,11 +25,19 @@ const useStyles = makeStyles(() =>
       "& .MuiAvatar-img": {
         borderRadius: "50%",
       },
+      [theme.breakpoints.down("md")]: {
+        left: "50%",
+        transform: "translateX(-50%)",
+      },
     },
     bookButton: {
       position: "absolute",
       bottom: "15px",
       right: "15px",
+      [theme.breakpoints.down("md")]: {
+        top: "15px",
+        bottom: "unset",
+      },
     },
     backgroundImage: {
       width: "100%",
@@ -37,8 +45,9 @@ const useStyles = makeStyles(() =>
       objectFit: "cover",
       borderRadius: "16px",
     },
-  }),
-);
+  });
+
+const useStyles = makeStyles(styles);
 
 export default function ProfileCover() {
   const classes = useStyles();

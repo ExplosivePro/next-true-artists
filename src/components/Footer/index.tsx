@@ -10,7 +10,7 @@ import { List, ListItem, ListItemText } from "@material-ui/core";
 import FooterItem from "./FooterItem";
 import colors from "../../palette";
 
-const useStyles = makeStyles((theme: Theme) =>
+const styles = (theme: Theme) =>
   createStyles({
     root: {
       marginTop: "50px",
@@ -74,8 +74,9 @@ const useStyles = makeStyles((theme: Theme) =>
     gridItem: {
       marginBottom: "45px",
     },
-  }),
-);
+  });
+
+const useStyles = makeStyles(styles);
 
 export default function Footer() {
   const classes = useStyles();

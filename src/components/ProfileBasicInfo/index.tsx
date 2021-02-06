@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles, createStyles } from "@material-ui/core/styles";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
 
 // Material UI
 import ListItem from "@material-ui/core/ListItem";
@@ -12,10 +12,20 @@ import Chip from "@material-ui/core/Chip";
 
 import colors from "../../palette";
 
-const useStyles = makeStyles(() =>
+const styles = (theme: Theme) =>
   createStyles({
     root: {
       paddingLeft: "30%",
+      [theme.breakpoints.down("md")]: {
+        paddingLeft: 0,
+        marginTop: "70px",
+        justifyContent: "center",
+      },
+    },
+    chipContainer: {
+      [theme.breakpoints.down("md")]: {
+        justifyContent: "center",
+      },
     },
     buttonList: {
       display: `flex`,
@@ -48,8 +58,9 @@ const useStyles = makeStyles(() =>
       cursor: "pointer",
       fontSize: "14px",
     },
-  }),
-);
+  });
+
+const useStyles = makeStyles(styles);
 
 export default function ProfileBasicInfo() {
   const classes = useStyles();
@@ -70,7 +81,7 @@ export default function ProfileBasicInfo() {
           <ListItemText primary="Berlin, Germany" className={classes.itemText} />
         </ListItem>
       </List>
-      <Grid container alignItems={"center"} spacing={1}>
+      <Grid container alignItems={"center"} spacing={1} className={classes.chipContainer}>
         <Grid item>
           <Chip label="Styles" className={classes.yellowChip} />
         </Grid>

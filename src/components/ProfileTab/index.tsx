@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles, useTheme, createStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 // @ts-ignore
 import Gallery from "react-grid-gallery";
 
@@ -15,28 +15,26 @@ import TabPanel from "./TabPannel";
 
 import colors from "../../palette";
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    root: {
-      marginTop: "44px",
+const useStyles = makeStyles({
+  root: {
+    marginTop: "44px",
+  },
+  appBar: {
+    boxShadow: "none",
+  },
+  tabWrapper: {
+    "& .MuiTabs-indicator": {
+      backgroundColor: colors.standardYellow,
     },
-    appBar: {
-      boxShadow: "none",
+  },
+  tabItem: {
+    textTransform: "none",
+    fontSize: "16px",
+    "&.Mui-selected": {
+      color: colors.bluePastel,
     },
-    tabWrapper: {
-      "& .MuiTabs-indicator": {
-        backgroundColor: colors.standardYellow,
-      },
-    },
-    tabItem: {
-      textTransform: "none",
-      fontSize: "16px",
-      "&.Mui-selected": {
-        color: colors.bluePastel,
-      },
-    },
-  }),
-);
+  },
+});
 
 const images = [
   {
