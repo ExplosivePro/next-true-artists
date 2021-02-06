@@ -39,12 +39,14 @@ const useStyles = makeStyles(() =>
       backgroundColor: colors.chipYellow,
       color: colors.white,
       cursor: "pointer",
+      fontSize: "14px",
     },
     violetChip: {
       color: colors.standardViolet,
       border: `solid 1px ${colors.standardViolet}`,
       backgroundColor: colors.white,
       cursor: "pointer",
+      fontSize: "14px",
     },
   }),
 );

@@ -30,6 +30,7 @@ const useStyles = makeStyles(() =>
     },
     tabItem: {
       textTransform: "none",
+      fontSize: "16px",
       "&.Mui-selected": {
         color: colors.bluePastel,
       },
