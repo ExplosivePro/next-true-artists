@@ -9,6 +9,7 @@ import { Grid } from "@material-ui/core";
 import BodyContent from "../../components/BodyContent";
 import ProfileCover from "../../components/ProfileCover";
 import ProfileBasicInfo from "../../components/ProfileBasicInfo";
+import ProfileTab from "../../components/ProfileTab";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -26,6 +27,7 @@ export default function Artists() {
       <Grid container className={classes.root}>
         <ProfileCover />
         <ProfileBasicInfo />
+        <ProfileTab />
       </Grid>
     </BodyContent>
   );
