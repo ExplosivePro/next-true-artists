@@ -38,4 +38,5 @@ export const unauthRoutes = [
   "/register-selection",
   "/artists",
   "/artists/[id]",
+  "/studios",
 ];

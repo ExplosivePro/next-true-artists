@@ -24,14 +24,15 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function BodyContent({ children }: Props) {
+export default function BodyContent({ children, variant, className }: Props) {
   const classes = useStyles();
 
   return (
     <>
       <Container maxWidth={false} className={classes.root}>
         <Header />
-        <Grid container>{children}</Grid>
+        {variant !== "div" && <Grid container>{children}</Grid>}
+        {variant === "div" && <div className={className}>{children}</div>}
       </Container>
       <Footer />
     </>
@@ -40,4 +41,6 @@ export default function BodyContent({ children }: Props) {
 
 interface Props {
   children: JSX.Element;
+  variant?: string;
+  className?: any;
 }
