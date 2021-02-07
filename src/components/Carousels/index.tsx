@@ -6,10 +6,11 @@ import clsx from "clsx";
 import Box from "@material-ui/core/Box";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import colors from "../../palette";
 
 const useStyles = makeStyles({
   root: {
-    marginBottom: "30px",
+    marginBottom: "20px",
   },
   box: {
     width: "170px",
@@ -43,6 +44,11 @@ const useStyles = makeStyles({
     height: "50px",
     boxShadow: "0 4px 4px 0 rgb(136 118 118 / 15%)",
     zIndex: 2,
+    "&:hover": {
+      color: "black",
+      zIndex: 2,
+      backgroundColor: colors.lightGrey,
+    },
   },
 });
 

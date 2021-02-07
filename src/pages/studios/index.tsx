@@ -5,6 +5,7 @@ import { makeStyles, createStyles } from "@material-ui/core/styles";
 // Custom Components
 import BodyContent from "../../components/BodyContent";
 import Carousels from "../../components/Carousels";
+import CardCarousels from "../../components/CardCarousels";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -24,6 +25,8 @@ export default function Studios() {
   return (
     <BodyContent variant={"div"} className={classes.root}>
       <Carousels name={"Top Cities"} />
+      <CardCarousels name={"Featured Studios"} />
+      <CardCarousels name={"Latest Studios"} />
     </BodyContent>
   );
 }
