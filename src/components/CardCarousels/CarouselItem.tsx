@@ -2,6 +2,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useRouter } from "next/router";
+import clsx from "clsx";
 
 // Material UI Components
 import Card from "@material-ui/core/Card";
@@ -45,7 +46,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function CardCarouselsItem() {
+export default function CardCarouselsItem({ className }: Props) {
   const router = useRouter();
   const classes = useStyles();
 
@@ -54,7 +55,7 @@ export default function CardCarouselsItem() {
   };
 
   return (
-    <Card className={classes.root} elevation={1}>
+    <Card className={clsx(classes.root, className)} elevation={1}>
       <CardMedia className={classes.media} image="/images/feature-studio.jpg" title="Paella dish">
         <ChipRating
           text={
@@ -81,4 +82,8 @@ export default function CardCarouselsItem() {
       />
     </Card>
   );
+}
+
+interface Props {
+  className?: any;
 }

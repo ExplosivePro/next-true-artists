@@ -25,7 +25,7 @@ export default function Studios() {
   return (
     <BodyContent variant={"div"} className={classes.root}>
       <Carousels name={"Top Cities"} />
-      <CardCarousels name={"Featured Studios"} />
+      <CardCarousels name={"Featured Studios"} mode={"singleRow"} />
       <CardCarousels name={"Latest Studios"} />
     </BodyContent>
   );
