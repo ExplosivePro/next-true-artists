@@ -1,17 +1,24 @@
+// External
 import React from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
+
+// Material Components
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import theme from "../theme";
 
-export default function MyApp(props) {
+import { AuthContext } from "../contexts";
+
+import theme from "../theme";
+import "../scss/index.scss";
+
+export default function MyApp(props: any) {
   const { Component, pageProps } = props;
 
   React.useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector("#jss-server-side");
-    if (jssStyles) {
+    if (jssStyles && jssStyles.parentElement) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
   }, []);
@@ -25,7 +32,9 @@ export default function MyApp(props) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Component {...pageProps} />
+        <AuthContext>
+          <Component {...pageProps} />
+        </AuthContext>
       </ThemeProvider>
     </React.Fragment>
   );

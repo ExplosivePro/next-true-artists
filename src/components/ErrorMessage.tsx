@@ -8,8 +8,7 @@ import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {
-    color: color.red,
-    fontWeight: "bold",
+    color: color.brightRed,
     fontSize: "0.8rem",
   },
 });
