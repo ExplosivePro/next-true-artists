@@ -1,6 +1,7 @@
 import Grid from "@material-ui/core/Grid";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Slider from "react-slick";
+import clsx from "clsx";
 
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -42,11 +43,14 @@ const styles = (theme: Theme) =>
         width: "191px",
       },
     },
-    cardItem: {
-      padding: theme.spacing(4),
+    singleCardItem: {
+      margin: theme.spacing(2),
       [theme.breakpoints.down("md")]: {
-        margin: "0 auto",
+        margin: `${theme.spacing(2)}px auto`,
       },
+    },
+    cardItem: {
+      boxShadow: `0 4px 4px 0 rgb(136 118 118 / 15%)`,
     },
   });
 
@@ -58,7 +62,7 @@ import colors from "../../palette";
 import PrimaryButton from "../PrimaryButton";
 import React, { useState } from "react";
 
-export default function CardCarousels({ name, mode = "grid" }: Props) {
+export default function CardCarousels({ name, mode = Mode.GRID }: Props) {
   const classes = useStyles();
 
   // TODO: load all tatoo artist list here, do pagination etc
@@ -93,12 +97,14 @@ export default function CardCarousels({ name, mode = "grid" }: Props) {
     ],
   };
 
-  const [slider, setSlider] = useState();
+  const [slider, setSlider] = useState<Slider | null>();
 
   const next = () => {
+    // @ts-ignore
     slider.slickNext();
   };
   const previous = () => {
+    // @ts-ignore
     slider.slickPrev();
   };
 
@@ -121,7 +127,7 @@ export default function CardCarousels({ name, mode = "grid" }: Props) {
           {list.map((item, index) => {
             return (
               <Grid container item lg={4} md={6} sm={6} xs={12} key={index} justify={"center"}>
-                <CardCarouselsItem />
+                <CardCarouselsItem className={classes.cardItem} />
               </Grid>
             );
           })}
@@ -131,7 +137,7 @@ export default function CardCarousels({ name, mode = "grid" }: Props) {
       {mode === "singleRow" && (
         <Slider ref={(c) => setSlider(c)} {...settings}>
           {list.map((item, index) => {
-            return <CardCarouselsItem key={index} className={classes.cardItem} />;
+            return <CardCarouselsItem key={index} className={clsx(classes.cardItem, classes.singleCardItem)} />;
           })}
         </Slider>
       )}

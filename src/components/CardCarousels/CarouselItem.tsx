@@ -3,6 +3,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useRouter } from "next/router";
 import clsx from "clsx";
+import Slider from "react-slick";
 
 // Material UI Components
 import Card from "@material-ui/core/Card";
@@ -44,11 +45,41 @@ const useStyles = makeStyles({
   colorGrey: {
     color: colors.standardGrey,
   },
+  customDot: {
+    left: 0,
+    bottom: 0,
+    textAlign: "left",
+  },
 });
+
+// TODO: load all studio image
+const list = [1, 2, 3];
 
 export default function CardCarouselsItem({ className }: Props) {
   const router = useRouter();
   const classes = useStyles();
+
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToScroll: 1,
+    arrows: false,
+    slidesToShow: 1,
+    dotsClass: "custom-slick-dots",
+    // eslint-disable-next-line react/display-name
+    appendDots: (dots: any) => (
+      <ul
+        style={{
+          left: 0,
+          bottom: 0,
+          textAlign: "left",
+        }}
+      >
+        {dots}
+      </ul>
+    ),
+  };
 
   const viewProfile = () => {
     router.push("/artists/1");
@@ -56,15 +87,21 @@ export default function CardCarouselsItem({ className }: Props) {
 
   return (
     <Card className={clsx(classes.root, className)} elevation={1}>
-      <CardMedia className={classes.media} image="/images/feature-studio.jpg" title="Paella dish">
-        <ChipRating
-          text={
-            <Typography className={classes.rateText}>
-              <b>5.0</b> <span className={classes.colorGrey}>(2314)</span>
-            </Typography>
-          }
-        />
-      </CardMedia>
+      <Slider {...settings}>
+        {list.map((item, index) => {
+          return (
+            <CardMedia className={classes.media} image="/images/feature-studio.jpg" title="Paella dish" key={index}>
+              <ChipRating
+                text={
+                  <Typography className={classes.rateText}>
+                    <b>5.0</b> <span className={classes.colorGrey}>(2314)</span>
+                  </Typography>
+                }
+              />
+            </CardMedia>
+          );
+        })}
+      </Slider>
       <CardHeader
         avatar={<Avatar aria-label="recipe" src="/images/tatooer.png" />}
         action={
