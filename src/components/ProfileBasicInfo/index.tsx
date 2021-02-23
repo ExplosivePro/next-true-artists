@@ -18,7 +18,7 @@ const styles = (theme: Theme) =>
       paddingLeft: "30%",
       [theme.breakpoints.down("md")]: {
         paddingLeft: 0,
-        marginTop: "70px",
+        marginTop: "120px",
         justifyContent: "center",
       },
     },
