@@ -12,8 +12,14 @@
   margin: 0;
   list-style: none;
   left: 0;
-  bottom: 0;
+  bottom: 5px;
   text-align: left;
+  &.dot-right{
+    text-align: right;
+    right: 15px;
+    bottom: 15px;
+    left: unset;
+  }
   li {
     position: relative;
     display: inline-block;

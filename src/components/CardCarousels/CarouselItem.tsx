@@ -67,18 +67,6 @@ export default function CardCarouselsItem({ className }: Props) {
     arrows: false,
     slidesToShow: 1,
     dotsClass: "custom-slick-dots",
-    // eslint-disable-next-line react/display-name
-    appendDots: (dots: any) => (
-      <ul
-        style={{
-          left: 0,
-          bottom: 0,
-          textAlign: "left",
-        }}
-      >
-        {dots}
-      </ul>
-    ),
   };
 
   const viewProfile = () => {
