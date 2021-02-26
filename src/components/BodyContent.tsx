@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function BodyContent({ children, variant, className }: Props) {
+export default function BodyContent({ children, variant, className }: Props | Props2) {
   const classes = useStyles();
 
   return (
@@ -40,6 +40,12 @@ export default function BodyContent({ children, variant, className }: Props) {
 }
 
 interface Props {
+  children: JSX.Element[];
+  variant?: string;
+  className?: any;
+}
+
+interface Props2 {
   children: JSX.Element;
   variant?: string;
   className?: any;

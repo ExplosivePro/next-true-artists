@@ -17,6 +17,7 @@ const colors = {
   standardLightGrey: "#e7e7e7",
   standardGreyBorder: "#8c8c8c",
   standardGreySubFooter: "#f2f2f2",
+  borderGrey: "#e3e3e3",
   standardBlack: "#242424",
   standardYellow: "#f4c55b",
   darkYellow: "#eca400",

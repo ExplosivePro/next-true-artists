@@ -1,13 +1,6 @@
 // @ts-ignore
 import Gallery from "react-grid-gallery";
 import React from "react";
-import clsx from "clsx";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
-
-import { Grid, Typography } from "@material-ui/core";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-
-import colors from "../../palette";
 
 const images = [
   {
@@ -84,47 +77,6 @@ const images = [
   },
 ];
 
-const styles = () =>
-  createStyles({
-    titleWrapper: {
-      marginBottom: "20px",
-    },
-    viewAllTextWrapper: {
-      marginLeft: "auto",
-      color: colors.bluePastel,
-      cursor: "pointer",
-      display: "flex",
-      alignItems: "center",
-    },
-    viewAllText: {
-      color: colors.bluePastel,
-      fontSize: "14px",
-    },
-  });
-
-const useStyles = makeStyles(styles);
-
-export default function Portfolio(props: Props) {
-  const classes = useStyles();
-
-  return (
-    <Grid container className={clsx(props.className)}>
-      <Grid container item lg={12} md={12} sm={12} xs={12} className={classes.titleWrapper} alignItems={"center"}>
-        <Typography variant={"h5"}>Portfolio</Typography>
-        <div className={classes.viewAllTextWrapper}>
-          <Typography className={classes.viewAllText} display={"inline"}>
-            View All
-          </Typography>
-          <NavigateNextIcon />
-        </div>
-      </Grid>
-      <Grid item lg={12} md={12} sm={12} xs={12}>
-        <Gallery images={images} enableImageSelection={false} showCloseButton={false} />
-      </Grid>
-    </Grid>
-  );
-}
-
-interface Props {
-  className?: any;
+export default function CustomGallery() {
+  return <Gallery images={images} enableImageSelection={false} showCloseButton={false} />;
 }

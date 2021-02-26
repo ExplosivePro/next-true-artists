@@ -40,4 +40,6 @@ export const unauthRoutes = [
   "/artists/[id]",
   "/studios",
   "/studios/[id]",
+  "/tattoos",
+  "/tattoos/[id]",
 ];
