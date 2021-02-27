@@ -7,7 +7,7 @@ import { Grid } from "@material-ui/core";
 
 // Custom Components
 import BodyContent from "../../components/BodyContent";
-import CustomGallery from "../../components/CustomGallery";
+import TattooImage from "../../components/TattooImage";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -27,9 +27,7 @@ export default function Artists() {
   return (
     <BodyContent>
       <Grid container className={classes.root}>
-        <div className={classes.galleryWrapper}>
-          <CustomGallery />
-        </div>
+        <TattooImage />
       </Grid>
     </BodyContent>
   );

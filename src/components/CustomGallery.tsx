@@ -1,6 +1,7 @@
 // @ts-ignore
 import Gallery from "react-grid-gallery";
 import React from "react";
+import { useRouter } from "next/router";
 
 const images = [
   {
@@ -78,5 +79,13 @@ const images = [
 ];
 
 export default function CustomGallery() {
-  return <Gallery images={images} enableImageSelection={false} showCloseButton={false} />;
+  const router = useRouter();
+
+  const onClickImage = () => {
+    router.push("/tattoos/1");
+  };
+
+  return (
+    <Gallery images={images} enableImageSelection={false} showCloseButton={false} onClickThumbnail={onClickImage} />
+  );
 }
