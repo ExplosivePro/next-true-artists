@@ -78,7 +78,7 @@ const images = [
   },
 ];
 
-export default function CustomGallery() {
+export default function CustomGallery(props: Props) {
   const router = useRouter();
 
   const onClickImage = () => {
@@ -86,6 +86,16 @@ export default function CustomGallery() {
   };
 
   return (
-    <Gallery images={images} enableImageSelection={false} showCloseButton={false} onClickThumbnail={onClickImage} />
+    <Gallery
+      images={images}
+      enableImageSelection={false}
+      showCloseButton={false}
+      onClickThumbnail={onClickImage}
+      className={props.className}
+    />
   );
+}
+
+interface Props {
+  className?: string;
 }

@@ -11,9 +11,13 @@ import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import Divider from "@material-ui/core/Divider";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField from "@material-ui/core/TextField";
+import IconButton from "@material-ui/core/IconButton";
+import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
+import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 
 // Custom Component
 import Comments from "./Comments";
+import CustomGallery from "../CustomGallery";
 
 import colors from "../../palette";
 
@@ -104,6 +108,15 @@ const useStyles = makeStyles((theme: Theme) =>
       width: theme.spacing(8),
       height: theme.spacing(8),
     },
+    galleryContainer: {
+      height: "200px",
+    },
+    textBlock: {
+      margin: "20px 0 15px 0",
+      "& p": {
+        fontWeight: "bold",
+      },
+    },
   }),
 );
 
@@ -111,62 +124,80 @@ export default function TattooImage() {
   const classes = useStyles();
 
   return (
-    <Grid container>
-      <Grid item lg={6} md={6} sm={12} xs={12} className={classes.leftSide}>
-        <Image src="/images/tattoo-image-sample.jpg" cover={true} style={{ width: "100%" }} />
-      </Grid>
-      <Grid item lg={6} md={6} sm={12} xs={12} className={classes.rightSide}>
-        <List dense className={classes.title}>
-          <ListItem button>
-            <ListItemAvatar>
-              <Avatar alt={`Image`} src={`/images/sample-girl-avatar.svg`} />
-            </ListItemAvatar>
-            <ListItemText
-              primary={<Typography variant={"h6"}>Emerson Dias</Typography>}
-              className={classes.titleText}
-            />
-          </ListItem>
-        </List>
-        <Grid container className={classes.content}>
-          <Typography>
-            Hand tattoos by Clinton Lee #ClintonLee #geometrictattoos #geometric #sacredgeometry #sacredgeometrytattoo
-            #pattern #line #linework #shapes #ornamental #dotwork #handtattoo
-          </Typography>
-
-          <Grid container className={classes.operationContainer}>
-            <FavoriteBorderIcon className={classes.heartIcon} />
-            <Typography className={classes.greyText} display={"inline"}>
-              200k
+    <>
+      <Grid container>
+        <Grid item lg={6} md={6} sm={12} xs={12} className={classes.leftSide}>
+          <Image src="/images/tattoo-image-sample.jpg" cover={true} style={{ width: "100%" }} />
+        </Grid>
+        <Grid item lg={6} md={6} sm={12} xs={12} className={classes.rightSide}>
+          <List dense className={classes.title}>
+            <ListItem button>
+              <ListItemAvatar>
+                <Avatar alt={`Image`} src={`/images/sample-girl-avatar.svg`} />
+              </ListItemAvatar>
+              <ListItemText
+                primary={<Typography variant={"h6"}>Emerson Dias</Typography>}
+                className={classes.titleText}
+              />
+            </ListItem>
+          </List>
+          <Grid container className={classes.content}>
+            <Typography>
+              Hand tattoos by Clinton Lee #ClintonLee #geometrictattoos #geometric #sacredgeometry #sacredgeometrytattoo
+              #pattern #line #linework #shapes #ornamental #dotwork #handtattoo
             </Typography>
-            <div className={classes.postDateText}>
-              <Typography className={classes.greyText}>Posted 10 Months ago</Typography>
-            </div>
+
+            <Grid container className={classes.operationContainer}>
+              <FavoriteBorderIcon className={classes.heartIcon} />
+              <Typography className={classes.greyText} display={"inline"}>
+                200k
+              </Typography>
+              <div className={classes.postDateText}>
+                <Typography className={classes.greyText}>Posted 10 Months ago</Typography>
+              </div>
+            </Grid>
+          </Grid>
+
+          <Divider />
+
+          <Grid container className={classes.content}>
+            <Comments list={comments} className={classes.commentBLock} />
+          </Grid>
+
+          <Grid container className={classes.content}>
+            <TextField
+              className={classes.margin}
+              id="input-with-icon-textfield"
+              variant={"outlined"}
+              placeholder={"Add a comment"}
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Avatar alt={`Image`} src={`/images/sample-girl-avatar.svg`} className={classes.commentAvatar} />
+                  </InputAdornment>
+                ),
+              }}
+            />
           </Grid>
         </Grid>
-
-        <Divider />
-
-        <Grid container className={classes.content}>
-          <Comments list={comments} className={classes.commentBLock} />
+      </Grid>
+      <Grid container item justify={"flex-end"}>
+        <IconButton aria-label="delete">
+          <KeyboardArrowLeftIcon />
+        </IconButton>
+        <IconButton aria-label="delete">
+          <KeyboardArrowRightIcon />
+        </IconButton>
+      </Grid>
+      <Grid container>
+        <Grid container item lg={12} justify={"center"} className={classes.textBlock}>
+          <Typography>More Like This</Typography>
         </Grid>
-
-        <Grid container className={classes.content}>
-          <TextField
-            className={classes.margin}
-            id="input-with-icon-textfield"
-            variant={"outlined"}
-            placeholder={"Add a comment"}
-            fullWidth
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Avatar alt={`Image`} src={`/images/sample-girl-avatar.svg`} className={classes.commentAvatar} />
-                </InputAdornment>
-              ),
-            }}
-          />
+        <Grid item lg={12}>
+          <CustomGallery />
         </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 }
