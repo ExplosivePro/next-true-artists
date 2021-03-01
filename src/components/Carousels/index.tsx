@@ -52,7 +52,7 @@ const useStyles = makeStyles({
   },
 });
 
-function NextArrow(props) {
+function NextArrow(props: any) {
   const classes = useStyles();
 
   // eslint-disable-next-line react/prop-types
@@ -62,7 +62,7 @@ function NextArrow(props) {
   );
 }
 
-function BackArrow(props) {
+function BackArrow(props: any) {
   const classes = useStyles();
 
   // eslint-disable-next-line react/prop-types

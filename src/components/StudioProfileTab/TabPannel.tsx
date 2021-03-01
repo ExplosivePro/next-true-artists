@@ -1,6 +1,5 @@
 import React from "react";
 import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
 interface TabPanelProps {
@@ -31,7 +30,7 @@ export default function TabPanel(props: TabPanelProps) {
     >
       {value === index && (
         <Box p={3} className={classes.noSidePadding}>
-          <Typography>{children}</Typography>
+          <div>{children}</div>
         </Box>
       )}
     </div>

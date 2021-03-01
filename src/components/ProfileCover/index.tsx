@@ -1,10 +1,11 @@
 import React from "react";
-import { makeStyles, createStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 
 import PrimaryButton from "../PrimaryButton";
 import Avatar from "@material-ui/core/Avatar";
 
 import colors from "../../palette";
+import { Typography } from "@material-ui/core";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -13,10 +14,21 @@ const styles = (theme: Theme) =>
       position: "relative",
       height: "233px",
     },
-    avatar: {
+    name: {
+      fontWeight: "bold",
+      marginTop: "12px",
+    },
+    avatarWrapper: {
       position: "absolute",
-      bottom: "-30%",
+      bottom: "-50%",
       left: "7%",
+      textAlign: "center",
+      [theme.breakpoints.down("md")]: {
+        left: "50%",
+        transform: "translateX(-50%)",
+      },
+    },
+    avatar: {
       width: "150px",
       height: "150px",
       padding: "5px",
@@ -55,7 +67,13 @@ export default function ProfileCover() {
   return (
     <div className={classes.root}>
       <img src={"/images/cover.png"} className={classes.backgroundImage} alt={"cover"} />
-      <Avatar alt="Remy Sharp" src="/images/james.png" className={classes.avatar} />
+      <div className={classes.avatarWrapper}>
+        <Avatar alt="Remy Sharp" src="/images/tatooer.png" className={classes.avatar} />
+        <Typography className={classes.name} variant={"h6"}>
+          Guen Douglas
+        </Typography>
+      </div>
+
       <PrimaryButton variant="contained" color="primary" size="large" bluePastel className={classes.bookButton}>
         Book Appointment
       </PrimaryButton>

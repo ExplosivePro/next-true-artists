@@ -16,10 +16,7 @@ const useStyles = makeStyles(() =>
   createStyles({
     root: {
       maxWidth: 345,
-      "& .MuiPaper-elevation1": {
-        boxShadow:
-          "0px 0px 1px -1px rgb(0 0 0 / 20%), 0px 0px 0px 0px rgb(0 0 0 / 14%), 0px 0px 3px 0px rgb(0 0 0 / 12%)",
-      },
+      boxShadow: `0 4px 4px 0 rgb(136 118 118 / 15%)`,
     },
     media: {
       height: 0,

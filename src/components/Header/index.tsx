@@ -178,7 +178,7 @@ export default function Header() {
                 <a
                   href={path}
                   key={title}
-                  className={clsx(classes.linkText, { [classes.active]: router.pathname === path })}
+                  className={clsx(classes.linkText, { [classes.active]: router.pathname.includes(path) })}
                 >
                   <ListItem button>
                     <ListItemText primary={title} classes={{ primary: classes.listItemText }} />

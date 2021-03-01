@@ -21,6 +21,7 @@ const useStyles = makeStyles({
   },
   appBar: {
     boxShadow: "none",
+    backgroundColor: colors.white,
   },
   tabWrapper: {
     "& .MuiTabs-indicator": {
@@ -33,6 +34,9 @@ const useStyles = makeStyles({
     "&.Mui-selected": {
       color: colors.bluePastel,
     },
+  },
+  swipeView: {
+    borderTop: "solid 1px #e9e9e9",
   },
 });
 
@@ -168,6 +172,7 @@ export default function ProfileTab() {
           axis={theme.direction === "rtl" ? "x-reverse" : "x"}
           index={value}
           onChangeIndex={handleChangeIndex}
+          className={classes.swipeView}
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
             <Gallery images={images} enableImageSelection={false} showCloseButton={false} />,

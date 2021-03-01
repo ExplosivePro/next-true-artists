@@ -1,5 +1,5 @@
 import React from "react";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 // Material UI
 import ListItem from "@material-ui/core/ListItem";
@@ -18,7 +18,7 @@ const styles = (theme: Theme) =>
       paddingLeft: "30%",
       [theme.breakpoints.down("md")]: {
         paddingLeft: 0,
-        marginTop: "70px",
+        marginTop: "120px",
         justifyContent: "center",
       },
     },
