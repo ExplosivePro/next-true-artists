@@ -10,6 +10,9 @@ import Grid from "@material-ui/core/Grid";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
+// Context
+import { useAuth } from "../contexts";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -26,11 +29,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function BodyContent({ children, variant, className }: Props | Props2) {
   const classes = useStyles();
+  const auth = useAuth();
 
   return (
     <>
       <Container maxWidth={false} className={classes.root}>
-        <Header />
+        <Header userProfile={auth.user} />
         {variant !== "div" && <Grid container>{children}</Grid>}
         {variant === "div" && <div className={className}>{children}</div>}
       </Container>

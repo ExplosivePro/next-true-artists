@@ -3,28 +3,31 @@ import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { makeStyles } from "@material-ui/core/styles";
-import { useYupValidationResolver } from "../utils";
+import { useYupValidationResolver } from "../../utils";
 import clsx from "clsx";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 // Material UI Components
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-
-// Custom Component
-import PrimaryButton from "../components/PrimaryButton";
-import FormInput from "../components/FormInput";
-
-import colors from "../palette";
 import IconButton from "@material-ui/core/IconButton";
 
+// Custom Component
+import PrimaryButton from "../../components/PrimaryButton";
+import FormInput from "../../components/FormInput";
+
+import colors from "../../palette";
+
 // API
-import { requestResetPassword } from "../api";
+import { resetPassword } from "../../api";
 
 // Context
-import { useApp } from "../contexts";
+import { useApp } from "../../contexts";
+
+import { PasswordValidationRegex } from "../../constants";
 
 const useStyles = makeStyles({
   container: {
@@ -67,14 +70,28 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Register() {
+export default function ResetPassword() {
   const app = useApp();
+  const router = useRouter();
+
+  const { token } = router.query;
 
   // Validation schema
   const validationSchema = useMemo(
     () =>
       yup.object({
-        email: yup.string().required("Email address field is required").email("* Wrong email format"),
+        password: yup
+          .string()
+          .required("Password is required")
+          .matches(PasswordValidationRegex, "Password has to contain 6-10 characters, at least 1 letter and 1  number"),
+        confirmPassword: yup
+          .string()
+          .required("Confirm password field is required")
+          .matches(
+            PasswordValidationRegex,
+            "Confirm password has to contain 6-10 characters, at least 1 letter and 1  number",
+          )
+          .oneOf([yup.ref("password")], "This field have to be same as Password field"),
       }),
     [],
   );
@@ -83,14 +100,19 @@ export default function Register() {
   const resolver = useYupValidationResolver(validationSchema);
   const { control, handleSubmit, errors } = useForm({ resolver });
 
-  const onSubmit = async (data: FormSubmit) => {
-    const { error, errors } = await requestResetPassword({
-      email: data.email,
+  const onSubmit = async ({ password, confirmPassword }: FormSubmit) => {
+    const { error, errors } = await resetPassword({
+      token,
+      password,
+      confirmPassword,
     });
 
     // No error happens
     if (!error) {
-      app.showErrorDialog(true, "A reset password link has been just sent to your email. Please check it");
+      app.showErrorDialog(true, "Change password successfully");
+
+      // Redirect to login page
+      router.replace("/login");
     } else {
       app.showErrorDialog(true, errors ? errors.toString() : "Internal Server Error");
     }
@@ -112,22 +134,37 @@ export default function Register() {
             </Link>
 
             <Typography variant={"h5"} display={"inline"} className={classes.title}>
-              Forgot Password
+              Reset Password
             </Typography>
           </Grid>
 
           <form onSubmit={handleSubmit(onSubmit)} className={classes.formWrapper}>
             <FormInput
-              name="email"
-              classes={{ root: classes.formInput }}
-              label={"Email Address"}
-              id="email"
-              placeholder={"Email address"}
+              name="password"
+              className={classes.formInput}
+              label={"Password"}
+              id="password"
+              placeholder={"Password"}
               fullWidth
               control={control}
               variant={"outlined"}
               defaultValue={""}
-              errors={errors.email}
+              type={"password"}
+              errors={errors.password}
+            />
+
+            <FormInput
+              name="confirmPassword"
+              className={classes.formInput}
+              label={"Confirm Password"}
+              id="confirmPassword"
+              placeholder={"Confirm Password"}
+              fullWidth
+              control={control}
+              variant={"outlined"}
+              defaultValue={""}
+              type={"password"}
+              errors={errors.confirmPassword}
             />
             <PrimaryButton
               className={classes.resetPasswordButton}
@@ -148,5 +185,6 @@ export default function Register() {
 }
 
 interface FormSubmit {
-  email: string;
+  password: string;
+  confirmPassword: string;
 }

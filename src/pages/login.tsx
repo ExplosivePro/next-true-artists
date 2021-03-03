@@ -6,7 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useYupValidationResolver } from "../utils";
 import clsx from "clsx";
 import Link from "next/link";
-import Image from "next/image";
+import { useRouter } from "next/router";
 
 // Material UI Components
 import Container from "@material-ui/core/Container";
@@ -17,11 +17,14 @@ import Typography from "@material-ui/core/Typography";
 import PrimaryButton from "../components/PrimaryButton";
 import CustomDivider from "../components/CustomDivider";
 import FormInput from "../components/FormInput";
+import GoogleLoginButton from "../components/GoogleLoginButton";
+import InstagramLoginButton from "../components/InstagramLoginButton";
 
 import colors from "../palette";
 
+// Context
 import { useAuth } from "../contexts";
-import { useRouter } from "next/router";
+import { googleAppId, instagramAppId } from "../constants";
 
 const useStyles = makeStyles({
   container: {
@@ -124,6 +127,14 @@ export default function Login() {
     router.push(url);
   };
 
+  const handleGoogleLogin = (user: any) => {
+    console.log(user);
+  };
+
+  const handleGoogleLoginFailure = (err: any) => {
+    console.error(err);
+  };
+
   return (
     <Container maxWidth={false} className={classes.container}>
       <Grid container className={classes.fullHeightContainer}>
@@ -144,20 +155,24 @@ export default function Login() {
             </Typography>
             <Grid container spacing={1}>
               <Grid item lg={10} md={10} xs={10}>
-                <PrimaryButton
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  startIcon={<Image src="/images/icons/google.png" alt="fb" width={17} height={17} />}
-                  fullWidth
+                <GoogleLoginButton
+                  provider="google"
+                  appId={googleAppId}
+                  onLoginSuccess={handleGoogleLogin}
+                  onLoginFailure={handleGoogleLoginFailure}
                 >
                   Sign up with Google
-                </PrimaryButton>
+                </GoogleLoginButton>
               </Grid>
               <Grid container item lg={2} md={2} xs={2} justify={"center"}>
-                <div className={classes.facebookLoginIcon}>
-                  <Image src="/images/icons/fb.png" alt="fb" width={25} height={25} />
-                </div>
+                <InstagramLoginButton
+                  provider="instagram"
+                  appId={instagramAppId}
+                  scope={"user_profile"}
+                  redirect="https://localhost:3000/register"
+                  onLoginSuccess={handleGoogleLogin}
+                  onLoginFailure={handleGoogleLoginFailure}
+                />
               </Grid>
             </Grid>
 

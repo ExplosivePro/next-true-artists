@@ -42,4 +42,7 @@ export const unauthRoutes = [
   "/studios/[id]",
   "/tattoos",
   "/tattoos/[id]",
+  "/password/[type]",
 ];
+
+export const PasswordValidationRegex = /(?=.*[a-zA-Z])(?=.*[0-9]).{6,10}/;

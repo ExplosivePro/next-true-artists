@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function Header() {
+export default function Header(props: Props) {
   const classes = useStyles();
   const router = useRouter();
 
@@ -126,7 +126,7 @@ export default function Header() {
   };
 
   const menuId = "primary-search-account-menu";
-  const renderMenu = (
+  const renderMenu = props.userProfile && (
     <Menu
       anchorEl={anchorEl}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -141,7 +141,7 @@ export default function Header() {
   );
 
   const mobileMenuId = "primary-search-account-menu-mobile";
-  const renderMobileMenu = (
+  const renderMobileMenu = props.userProfile && (
     <Menu
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -190,22 +190,24 @@ export default function Header() {
           <IconButton edge="end" aria-label="search" color="inherit" className={classes.searchButton}>
             <SearchIcon />
           </IconButton>
-          <div className={classes.sectionDesktop}>
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              color="inherit"
-              onClick={handleProfileMenuOpen}
-              classes={{ root: classes.profileButton }}
-            >
-              <Avatar alt={"User"} src="/images/james.png" />
-              <Typography className={classes.accountName}>James</Typography>
+          {props.userProfile && (
+            <div className={classes.sectionDesktop}>
+              <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                color="inherit"
+                onClick={handleProfileMenuOpen}
+                classes={{ root: classes.profileButton }}
+              >
+                <Avatar alt={"User"} src="/images/james.png" />
+                <Typography className={classes.accountName}>James</Typography>
 
-              <ExpandMoreIcon />
-            </IconButton>
-          </div>
+                <ExpandMoreIcon />
+              </IconButton>
+            </div>
+          )}
           <div className={classes.sectionMobile}>
             <IconButton
               aria-label="show more"
@@ -223,4 +225,8 @@ export default function Header() {
       {renderMenu}
     </div>
   );
+}
+
+interface Props {
+  userProfile: any;
 }

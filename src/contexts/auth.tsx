@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 // APIs
 import { clearAuthHeader, setAuthHeader, registerUser, loginUser, verifyUser } from "../api";
 
+import { useApp } from "./app";
+
 import { unauthRoutes } from "../constants";
 
 // Custom Components
@@ -35,6 +37,7 @@ enum Roles {
 */
 export function AuthContext({ children: route }: Props) {
   const router = useRouter();
+  const app = useApp();
 
   const user = useRef<User | undefined>(undefined);
   const [status, setStatus] = useState<AuthState>(AuthState.pending);
@@ -43,7 +46,7 @@ export function AuthContext({ children: route }: Props) {
   async function login(email: string, password: string): Promise<RestApi.Response> {
     try {
       const response = await loginUser(email, password);
-      const { error, data } = response;
+      const { error, data, errors } = response;
       // No error happens
       if (!error) {
         user.current = data.user;
@@ -58,12 +61,16 @@ export function AuthContext({ children: route }: Props) {
         if (previousPath !== "") {
           router.push(previousPath);
         } else {
-          router.push("/");
+          // Go to home page
+          router.push("/artists");
         }
+      } else {
+        app.showErrorDialog(true, errors ? errors.toString() : "Login fail");
       }
 
       return response;
     } catch (error) {
+      app.showErrorDialog(true, "Internal server. Please try again");
       // Unknown issue or code issues
       return { error: true, data: null, errors: "Internal server. Please try again" };
     }
@@ -71,17 +78,32 @@ export function AuthContext({ children: route }: Props) {
 
   async function register(payload: Register.ApiPayload) {
     try {
-      const data = await registerUser(payload);
-      localStorage.setItem(TOKEN_KEY, data.auth_token);
-      setAuthHeader(data.auth_token);
+      const response = await registerUser(payload);
 
-      // Update status
-      setStatus(AuthState.authenticated);
+      const { error, data, errors } = response;
+      // No error happens
+      if (!error) {
+        localStorage.setItem(TOKEN_KEY, data.auth_token);
+        setAuthHeader(data.auth_token);
 
-      user.current = data.user;
+        // Update status
+        setStatus(AuthState.authenticated);
 
-      router.push("/");
-    } catch (error) {}
+        user.current = data.user;
+
+        // Navigate to register selection page
+        router.push("/artists");
+      } else {
+        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+      }
+
+      // Unknown issue or code issues
+      return { error: false, data, errors: "" };
+    } catch (error) {
+      app.showErrorDialog(true, "Internal server. Please try again");
+      // Unknown issue or code issues
+      return { error: true, data: null, errors: "Internal server. Please try again" };
+    }
   }
 
   function logOut() {
@@ -118,8 +140,8 @@ export function AuthContext({ children: route }: Props) {
         // Store this url to get back later
         setPreviousPath(router.pathname);
 
-        // Redirect to register page
-        router.replace("/register");
+        // Redirect to home page
+        router.replace("/artists");
       }
 
       return;
@@ -130,6 +152,10 @@ export function AuthContext({ children: route }: Props) {
         user.current = data;
 
         setStatus(AuthState.authenticated);
+
+        // Navigate to artist page
+        //TODO: This should be home page
+        router.replace("/artists");
       })
       .catch(() => {
         localStorage.removeItem(TOKEN_KEY);
