@@ -153,7 +153,9 @@ export default function Register() {
     <Container maxWidth={false} className={classes.container}>
       <Grid container className={classes.fullHeightContainer}>
         <Grid container item lg={8} md={8} sm={true} xs={true} alignItems={"center"} justify={"center"}>
-          <img src={"/images/left-background-landing-page.png"} alt={"background"} className={classes.image} />
+          <Link href={"/home"}>
+            <img src={"/images/left-background-landing-page.png"} alt={"background"} className={classes.image} />
+          </Link>
         </Grid>
 
         <Grid item lg={4} md={4} sm={12} xs={12} className={clsx(classes.relativeContainer, classes.rightContainer)}>

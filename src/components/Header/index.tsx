@@ -19,6 +19,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import AppBarMenuItems from "./AppBarMenuItems";
 
 import colors from "../../palette";
+import PrimaryButton from "../PrimaryButton";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -86,6 +87,12 @@ const useStyles = makeStyles((theme: Theme) =>
     searchButton: {
       marginRight: "50px",
     },
+    operationButton: {
+      marginLeft: "10px",
+      [theme.breakpoints.down("md")]: {
+        display: "none",
+      },
+    },
   }),
 );
 
@@ -125,6 +132,11 @@ export default function Header(props: Props) {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  // Go to specific page
+  const goToPage = (url: string) => {
+    router.push(url);
+  };
+
   const menuId = "primary-search-account-menu";
   const renderMenu = props.userProfile && (
     <Menu
@@ -141,7 +153,7 @@ export default function Header(props: Props) {
   );
 
   const mobileMenuId = "primary-search-account-menu-mobile";
-  const renderMobileMenu = props.userProfile && (
+  const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -151,17 +163,34 @@ export default function Header(props: Props) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-          classes={{ root: classes.profileButton }}
-        >
-          <Avatar alt={"User"} src="/images/james.png" />
-        </IconButton>
-        <p>Profile</p>
+      {props.userProfile && (
+        <MenuItem onClick={handleProfileMenuOpen}>
+          <IconButton
+            aria-label="account of current user"
+            aria-controls="primary-search-account-menu"
+            aria-haspopup="true"
+            color="inherit"
+            classes={{ root: classes.profileButton }}
+          >
+            <Avatar alt={"User"} src="/images/james.png" />
+          </IconButton>
+          <p>Profile</p>
+        </MenuItem>
+      )}
+
+      <MenuItem
+        onClick={() => {
+          goToPage("/login");
+        }}
+      >
+        <Typography>Login</Typography>
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          goToPage("/register");
+        }}
+      >
+        <Typography>Register</Typography>
       </MenuItem>
     </Menu>
   );
@@ -190,6 +219,33 @@ export default function Header(props: Props) {
           <IconButton edge="end" aria-label="search" color="inherit" className={classes.searchButton}>
             <SearchIcon />
           </IconButton>
+
+          <PrimaryButton
+            variant="contained"
+            color="primary"
+            size="large"
+            bluePastel
+            className={classes.operationButton}
+            onClick={() => {
+              goToPage("/register");
+            }}
+          >
+            Register
+          </PrimaryButton>
+
+          <PrimaryButton
+            variant="outlined"
+            color="primary"
+            size="large"
+            bluePastel
+            className={classes.operationButton}
+            onClick={() => {
+              goToPage("/register");
+            }}
+          >
+            Login
+          </PrimaryButton>
+
           {props.userProfile && (
             <div className={classes.sectionDesktop}>
               <IconButton

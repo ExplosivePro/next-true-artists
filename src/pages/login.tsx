@@ -139,7 +139,7 @@ export default function Login() {
     <Container maxWidth={false} className={classes.container}>
       <Grid container className={classes.fullHeightContainer}>
         <Grid container item lg={8} md={8} sm={true} xs={true} alignItems={"center"} justify={"center"}>
-          <Link href={"/register"}>
+          <Link href={"/home"}>
             <img src={"/images/left-background-landing-page.png"} alt={"background"} className={classes.image} />
           </Link>
         </Grid>
