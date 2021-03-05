@@ -8,11 +8,12 @@ import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import Avatar from "@material-ui/core/Avatar";
+import Grid from "@material-ui/core/Grid";
 
 // Custom Components
 import PrimaryButton from "../PrimaryButton";
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       maxWidth: 345,
@@ -29,6 +30,18 @@ const useStyles = makeStyles(() =>
       alignSelf: "center",
       "& .MuiCardHeader-action": {
         alignSelf: "center",
+      },
+    },
+    actionButton: {
+      [theme.breakpoints.down("md")]: {
+        display: "none",
+      },
+    },
+    actionButtonMobile: {
+      display: "none",
+      [theme.breakpoints.down("md")]: {
+        display: "flex",
+        marginBottom: "15px",
       },
     },
   }),
@@ -48,7 +61,14 @@ export default function ArtistItem() {
       <CardHeader
         avatar={<Avatar aria-label="recipe" src="/images/tatooer.png" />}
         action={
-          <PrimaryButton variant="outlined" color="primary" size="small" bluePastel onClick={viewProfile}>
+          <PrimaryButton
+            variant="outlined"
+            color="primary"
+            size="small"
+            bluePastel
+            onClick={viewProfile}
+            className={classes.actionButton}
+          >
             View profile
           </PrimaryButton>
         }
@@ -56,6 +76,11 @@ export default function ArtistItem() {
         subheader="Good Fortune Tattoo"
         className={classes.cardHeader}
       />
+      <Grid container justify={"center"} className={classes.actionButtonMobile}>
+        <PrimaryButton variant="outlined" color="primary" size="small" bluePastel onClick={viewProfile}>
+          View profile
+        </PrimaryButton>
+      </Grid>
     </Card>
   );
 }

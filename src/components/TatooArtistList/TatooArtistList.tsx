@@ -1,5 +1,9 @@
-import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
+
+import Grid from "@material-ui/core/Grid";
+import { Typography } from "@material-ui/core";
+
+import ArtistItem from "./ArtistItem";
 
 const useStyles = makeStyles({
   root: {
@@ -7,23 +11,25 @@ const useStyles = makeStyles({
   },
 });
 
-import ArtistItem from "./ArtistItem";
-
-export default function TatooArtistList() {
+export default function TattooArtistList({ data }: Props) {
   const classes = useStyles();
-
-  // TODO: load all tatoo artist list here
-  const list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
   return (
     <Grid container alignItems={"center"} spacing={4} className={classes.root}>
-      {list.map((item, index) => {
+      <Grid container justify={"center"}>
+        <Typography>No data</Typography>
+      </Grid>
+      {data.map((item, index) => {
         return (
-          <Grid container item lg={4} md={6} sm={6} xs={12} key={index} justify={"center"}>
+          <Grid container item lg={4} md={4} sm={6} xs={12} key={index} justify={"center"}>
             <ArtistItem />
           </Grid>
         );
       })}
     </Grid>
   );
+}
+
+interface Props {
+  data: Resource.ArtistDetail[];
 }
