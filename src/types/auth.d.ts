@@ -3,6 +3,15 @@ declare namespace Register {
     email: string;
     password: string;
     name: string;
+    role?: string;
+  }
+
+  interface ApiEditUserPayload {
+    id: number;
+    streetAddress?: string;
+    zipCode?: string;
+    country?: string;
+    styles?: number[];
   }
 
   interface FormData {

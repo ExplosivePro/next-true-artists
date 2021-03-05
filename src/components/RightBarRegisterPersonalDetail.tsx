@@ -12,6 +12,15 @@ import FormInput from "./FormInput";
 import { useYupValidationResolver } from "../utils";
 import PrimaryButton from "./PrimaryButton";
 
+import { PasswordValidationRegex } from "../constants";
+import Link from "next/link";
+import colors from "../palette";
+
+import { registerUser } from "../api";
+
+// Context
+import { useApp } from "../contexts";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -41,16 +50,26 @@ const useStyles = makeStyles((theme: Theme) =>
     buttonWrapper: {
       marginTop: "25px",
     },
+    signInText: {
+      fontWeight: 500,
+      color: colors.lightYellow,
+      marginLeft: "5px",
+      cursor: "pointer",
+    },
   }),
 );
 
 export default function RightBarRegisterPersonalDetail({
+  role,
   onPreviousStep,
   onNext,
 }: {
+  role: string;
   onPreviousStep?: () => void;
   onNext?: () => void;
 }) {
+  const app = useApp();
+
   // Validation schema
   const validationSchema = useMemo(
     () =>
@@ -59,9 +78,18 @@ export default function RightBarRegisterPersonalDetail({
         lastName: yup.string().required("Last name field is required"),
         email: yup.string().required("Email address field is required").email("* Wrong email format"),
         phoneNumber: yup.string().required("Phone number field is required"),
-        streetAddress: yup.string().required("Street address field is required"),
-        zipCode: yup.string().required("Zip code field is required"),
-        country: yup.string().required("Country field is required"),
+        password: yup
+          .string()
+          .required("Password is required")
+          .matches(PasswordValidationRegex, "Password has to contain 6-10 characters, at least 1 letter and 1  number"),
+        confirmPassword: yup
+          .string()
+          .required("Confirm password field is required")
+          .matches(
+            PasswordValidationRegex,
+            "Confirm password has to contain 6-10 characters, at least 1 letter and 1  number",
+          )
+          .oneOf([yup.ref("password")], "This field have to be same as Password field"),
       }),
     [],
   );
@@ -70,8 +98,25 @@ export default function RightBarRegisterPersonalDetail({
   const resolver = useYupValidationResolver(validationSchema);
   const { control, handleSubmit, errors } = useForm({ resolver });
 
-  const onSubmit = () => {
-    onNext && onNext();
+  const onSubmit = async ({ firstName, lastName, email, password }: SubmitFormData) => {
+    // Call APIs to submit register data
+
+    const response = await registerUser({
+      email,
+      password,
+      name: `${firstName} ${lastName}`,
+      role,
+    });
+
+    const { error, data, errors } = response;
+    // No error happens
+    if (!error) {
+      // TODO: Process data
+      console.log(data);
+      onNext && onNext();
+    } else {
+      app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+    }
   };
 
   return (
@@ -81,7 +126,15 @@ export default function RightBarRegisterPersonalDetail({
           <Typography variant={"h5"} className={classes.titleText}>
             Artist Account
           </Typography>
-          <Typography variant={"subtitle2"}>Add your name and work email to get started with TrueArtists</Typography>
+          <Typography variant={"subtitle2"}>Add your name and work email to get started with TrueArtists.</Typography>
+          <Typography variant={"subtitle2"}>
+            Already a member?
+            <Link href={"/login"}>
+              <Typography variant={"subtitle2"} className={classes.signInText} display={"inline"}>
+                Sign in
+              </Typography>
+            </Link>
+          </Typography>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -141,42 +194,31 @@ export default function RightBarRegisterPersonalDetail({
           />
 
           <FormInput
-            name="streetAddress"
-            classes={{ root: classes.formInput }}
-            label={"Street Address"}
-            id="streetAddress"
-            placeholder={"Street Address"}
+            name="password"
+            className={classes.formInput}
+            label={"Password"}
+            id="password"
+            placeholder={"Password"}
             fullWidth
             control={control}
             variant={"outlined"}
             defaultValue={""}
-            errors={errors.streetAddress}
+            type={"password"}
+            errors={errors.password}
           />
 
           <FormInput
-            name="zipCode"
-            classes={{ root: classes.formInput }}
-            label={"Zip Code"}
-            id="zipCode"
-            placeholder={"Zip Code"}
+            name="confirmPassword"
+            className={classes.formInput}
+            label={"Confirm Password"}
+            id="confirmPassword"
+            placeholder={"Confirm Password"}
             fullWidth
             control={control}
             variant={"outlined"}
             defaultValue={""}
-            errors={errors.zipCode}
-          />
-
-          <FormInput
-            name="country"
-            classes={{ root: classes.formInput }}
-            label={"Country"}
-            id="zipCode"
-            placeholder={"Country"}
-            fullWidth
-            control={control}
-            variant={"outlined"}
-            defaultValue={""}
-            errors={errors.country}
+            type={"password"}
+            errors={errors.confirmPassword}
           />
 
           <Grid container spacing={2} className={classes.buttonWrapper}>
@@ -203,4 +245,13 @@ export default function RightBarRegisterPersonalDetail({
       </div>
     </Grid>
   );
+}
+
+interface SubmitFormData {
+  confirmPassword: "string";
+  email: "string";
+  firstName: "string";
+  lastName: "string";
+  password: "string";
+  phoneNumber: "string";
 }

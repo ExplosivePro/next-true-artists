@@ -12,11 +12,13 @@ import Grid from "@material-ui/core/Grid";
 import LeftBarRegisterSelection from "../components/LeftBarRegisterSelection";
 import RightBarRegisterAccountType from "../components/RightBarRegisterAccountType";
 import RightBarRegisterPersonalDetail from "../components/RightBarRegisterPersonalDetail";
-import RightBarRegisterSetPassword from "../components/RightBarRegisterSetPassword";
-import RightBarRegisterWorkingLocation from "../components/RightBarRegisterWorkingLocation";
+import RightBarRegisterAddress from "../components/RightBarRegisterAddress";
+// import RightBarRegisterWorkingLocation from "../components/RightBarRegisterWorkingLocation";
 import RightBarRegisterWorkStyle from "../components/RightBarRegisterWorkStyle";
 
 import colors from "../palette";
+
+import { getWorkingStyleList } from "../api";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,11 +72,14 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function RegisterSelection() {
+export default function RegisterSelection({ workingStyles }: Props) {
   const classes = useStyles();
   const router = useRouter();
 
   const [step, setStep] = useState(0);
+
+  // Step 1: Account type
+  const [role, setRole] = useState("artist");
 
   const goToPage = (url: string) => {
     router.replace(url);
@@ -104,13 +109,15 @@ export default function RegisterSelection() {
         <Grid item lg={9} md={9} sm={12} xs={12} className={clsx(classes.relativeContainer, classes.rightContainer)}>
           {step === 0 && (
             <RightBarRegisterAccountType
-              onNext={() => {
+              onNext={(role) => {
+                setRole(role);
                 setStep(1);
               }}
             />
           )}
           {step === 1 && (
             <RightBarRegisterPersonalDetail
+              role={role}
               onNext={() => {
                 setStep(2);
               }}
@@ -119,8 +126,9 @@ export default function RegisterSelection() {
               }}
             />
           )}
+
           {step === 2 && (
-            <RightBarRegisterSetPassword
+            <RightBarRegisterAddress
               onNext={() => {
                 setStep(3);
               }}
@@ -129,23 +137,34 @@ export default function RegisterSelection() {
               }}
             />
           )}
+          {/*{step === 2 && (*/}
+          {/*  <RightBarRegisterSetPassword*/}
+          {/*    onNext={() => {*/}
+          {/*      setStep(3);*/}
+          {/*    }}*/}
+          {/*    onPreviousStep={() => {*/}
+          {/*      setStep(1);*/}
+          {/*    }}*/}
+          {/*  />*/}
+          {/*)}*/}
+          {/*{step === 3 && (*/}
+          {/*  <RightBarRegisterWorkingLocation*/}
+          {/*    onNext={() => {*/}
+          {/*      setStep(4);*/}
+          {/*    }}*/}
+          {/*    onPreviousStep={() => {*/}
+          {/*      setStep(2);*/}
+          {/*    }}*/}
+          {/*  />*/}
+          {/*)}*/}
           {step === 3 && (
-            <RightBarRegisterWorkingLocation
-              onNext={() => {
-                setStep(4);
-              }}
-              onPreviousStep={() => {
-                setStep(2);
-              }}
-            />
-          )}
-          {step === 4 && (
             <RightBarRegisterWorkStyle
+              data={workingStyles}
               onNext={() => {
                 goToPage("/artists");
               }}
               onSkip={() => {
-                setStep(4);
+                goToPage("/artists");
               }}
             />
           )}
@@ -154,3 +173,13 @@ export default function RegisterSelection() {
     </Container>
   );
 }
+
+interface Props {
+  workingStyles: Resource.WorkingStyle[];
+}
+
+export const getStaticProps = async () => {
+  const workingStyles = await getWorkingStyleList();
+
+  return { props: { workingStyles } };
+};

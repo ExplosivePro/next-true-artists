@@ -164,18 +164,27 @@ export default function Header(props: Props) {
       onClose={handleMobileMenuClose}
     >
       {props.userProfile && (
-        <MenuItem onClick={handleProfileMenuOpen}>
-          <IconButton
-            aria-label="account of current user"
-            aria-controls="primary-search-account-menu"
-            aria-haspopup="true"
-            color="inherit"
-            classes={{ root: classes.profileButton }}
+        <>
+          <MenuItem onClick={handleProfileMenuOpen}>
+            <IconButton
+              aria-label="account of current user"
+              aria-controls="primary-search-account-menu"
+              aria-haspopup="true"
+              color="inherit"
+              classes={{ root: classes.profileButton }}
+            >
+              <Avatar alt={"User"} src="/images/james.png" />
+            </IconButton>
+            <p>Profile</p>
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              goToPage("/login");
+            }}
           >
-            <Avatar alt={"User"} src="/images/james.png" />
-          </IconButton>
-          <p>Profile</p>
-        </MenuItem>
+            <Typography>Logout</Typography>
+          </MenuItem>
+        </>
       )}
 
       <MenuItem
