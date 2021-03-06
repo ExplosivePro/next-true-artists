@@ -61,16 +61,18 @@ const styles = (theme: Theme) =>
 
 const useStyles = makeStyles(styles);
 
-export default function ProfileCover() {
+export default function ProfileCover({ data }: Props) {
   const classes = useStyles();
+
+  console.log(data);
 
   return (
     <div className={classes.root}>
       <img src={"/images/cover.png"} className={classes.backgroundImage} alt={"cover"} />
       <div className={classes.avatarWrapper}>
-        <Avatar alt="Remy Sharp" src="/images/tatooer.png" className={classes.avatar} />
+        <Avatar alt="Remy Sharp" src={data.avatar} className={classes.avatar} />
         <Typography className={classes.name} variant={"h6"}>
-          Guen Douglas
+          {data.first_name} {data.last_name}
         </Typography>
       </div>
 
@@ -79,4 +81,8 @@ export default function ProfileCover() {
       </PrimaryButton>
     </div>
   );
+}
+
+interface Props {
+  data: Resource.ArtistDetail;
 }

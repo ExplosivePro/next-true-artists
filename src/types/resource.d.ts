@@ -13,7 +13,23 @@ declare namespace Resource {
     name: string;
   }
 
-  interface ArtistDetail {}
+  interface Tattoos {
+    src: string;
+    thumbnail: string;
+    thumbnailWidth: number;
+    thumbnailHeight: number;
+  }
+
+  interface ArtistDetail {
+    id: number;
+    first_name?: string;
+    last_name?: string;
+    street_address?: string;
+    city?: string;
+    styles?: WorkingStyle[];
+    tattoos?: Tattoos[];
+    avatar?: string;
+  }
 
   interface ArtistListResponse {
     artists: ArtistDetail[];
