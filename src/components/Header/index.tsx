@@ -47,6 +47,9 @@ const useStyles = makeStyles((theme: Theme) =>
       textDecoration: `none`,
       color: `white`,
     },
+    linkTextMenu: {
+      margin: "10px 15px",
+    },
     active: {
       borderBottom: `solid 4px ${colors.standardYellow}`,
     },
@@ -181,6 +184,7 @@ export default function Header(props: Props) {
             onClick={() => {
               goToPage("/login");
             }}
+            className={classes.linkTextMenu}
           >
             <Typography>Logout</Typography>
           </MenuItem>
@@ -191,6 +195,7 @@ export default function Header(props: Props) {
         onClick={() => {
           goToPage("/login");
         }}
+        className={classes.linkTextMenu}
       >
         <Typography>Login</Typography>
       </MenuItem>
@@ -198,9 +203,21 @@ export default function Header(props: Props) {
         onClick={() => {
           goToPage("/register");
         }}
+        className={classes.linkTextMenu}
       >
         <Typography>Register</Typography>
       </MenuItem>
+      {navLinks.map(({ title, path }, index) => (
+        <MenuItem
+          key={index}
+          onClick={() => {
+            goToPage(path);
+          }}
+          className={clsx(classes.linkTextMenu, { [classes.active]: router.pathname.includes(path) })}
+        >
+          <Typography>{title}</Typography>
+        </MenuItem>
+      ))}
     </Menu>
   );
 
