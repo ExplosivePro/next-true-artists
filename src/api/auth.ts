@@ -1,13 +1,13 @@
 import { api } from "./axios";
 
-export const registerUser = async ({ email, password, name, role = "regular" }: Register.ApiPayload) => {
+// Register normal user
+export const registerUser = async ({ email, password, name }: Register.ApiPayload) => {
   return await api
     .post("/api/v1/users", {
       email,
       password,
       password_confirmation: password,
       full_name: name,
-      role,
     })
     .then((response) => {
       return { error: false, data: response.data, errors: "" };
@@ -35,32 +35,19 @@ export const registerUser = async ({ email, password, name, role = "regular" }: 
     });
 };
 
-export const editUser = async ({ id, streetAddress, zipCode, country, styles }: Register.ApiEditUserPayload) => {
+// Edit normal user
+export const editUser = async (data: Register.ApiEditUserPayload) => {
   // Parse data, only submit valid data
   const submitData = {};
 
-  if (streetAddress) {
-    submitData["streetAddress"] = streetAddress;
-  }
-
-  if (zipCode) {
-    submitData["zipCode"] = zipCode;
-  }
-
-  if (country) {
-    submitData["country"] = country;
-  }
-
-  if (styles) {
-    submitData["styles"] = styles;
-  }
+  Object.keys(data).map((key) => {
+    if (data[key]) {
+      submitData[key] = data[key];
+    }
+  });
 
   return await api
-    .put(`/api/v1/artists/${id}`, {
-      street_address: streetAddress,
-      zip_code: zipCode,
-      country,
-    })
+    .put(`/api/v1/users/${data.id}`, submitData)
     .then((response) => {
       return { error: false, data: response.data, errors: "" };
     })
@@ -91,6 +78,93 @@ export const editUser = async ({ id, streetAddress, zipCode, country, styles }: 
     });
 };
 
+// Create artist
+export const createArtistProfile = async (data: Register.ApiCreateArtistPayload) => {
+  // Parse data, only submit valid data
+  const submitData = {};
+
+  Object.keys(data).map((key) => {
+    if (data[key]) {
+      submitData[key] = data[key];
+    }
+  });
+
+  return await api
+    .post(`/api/v1/artists`, submitData)
+    .then((response) => {
+      return { error: false, data: response.data, errors: "" };
+    })
+    .catch((e) => {
+      const errors = [];
+
+      if (e.response.data && typeof e.response.data === "string") {
+        errors.push(e.response.data);
+      }
+
+      if (e.response.data && typeof e.response.data === "object") {
+        Object.keys(e.response.data).map((name: any) => {
+          // String error format
+          if (e.response.data[name] && typeof e.response.data[name] === "string") {
+            errors.push(e.response.data[name]);
+          }
+
+          // Array error format
+          if (typeof e.response.data[name] === "object" && e.response.data[name].length > 0) {
+            e.response.data[name].map((item: { attribute: any; message: any }) => {
+              errors.push(`${item.attribute} ${item.message}`);
+            });
+          }
+        });
+      }
+
+      return { error: true, data: null, errors };
+    });
+};
+
+// Edit artist
+export const editArtistProfile = async (data: Register.ApiEditArtistPayload) => {
+  // Parse data, only submit valid data
+  const submitData = {};
+
+  Object.keys(data).map((key) => {
+    if (data[key]) {
+      submitData[key] = data[key];
+    }
+  });
+
+  return await api
+    .put(`/api/v1/artists/${data.id}`, submitData)
+    .then((response) => {
+      return { error: false, data: response.data, errors: "" };
+    })
+    .catch((e) => {
+      const errors = [];
+
+      if (e.response.data && typeof e.response.data === "string") {
+        errors.push(e.response.data);
+      }
+
+      if (e.response.data && typeof e.response.data === "object") {
+        Object.keys(e.response.data).map((name: any) => {
+          // String error format
+          if (e.response.data[name] && typeof e.response.data[name] === "string") {
+            errors.push(e.response.data[name]);
+          }
+
+          // Array error format
+          if (typeof e.response.data[name] === "object" && e.response.data[name].length > 0) {
+            e.response.data[name].map((item: { attribute: any; message: any }) => {
+              errors.push(`${item.attribute} ${item.message}`);
+            });
+          }
+        });
+      }
+
+      return { error: true, data: null, errors };
+    });
+};
+
+// Login for normal user
 export async function loginUser(email: string, password: string): Promise<RestApi.Response> {
   return await api
     .post("/api/v1/sessions/login", {
@@ -104,6 +178,7 @@ export async function loginUser(email: string, password: string): Promise<RestAp
     });
 }
 
+// Request to reset password
 export async function requestResetPassword(email: { email: any }): Promise<RestApi.Response> {
   return await api
     .post("/api/v1/passwords", {
@@ -117,6 +192,7 @@ export async function requestResetPassword(email: { email: any }): Promise<RestA
     });
 }
 
+// Reset password
 export async function resetPassword({
   password,
   confirmPassword,

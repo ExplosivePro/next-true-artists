@@ -7,6 +7,8 @@ import BodyContent from "../../components/BodyContent";
 import Carousels from "../../components/Carousels";
 import CardCarousels from "../../components/CardCarousels";
 
+import { getStudioList } from "../../api";
+
 const useStyles = makeStyles(() =>
   createStyles({
     root: {
@@ -30,3 +32,10 @@ export default function Studios() {
     </BodyContent>
   );
 }
+
+export const getStaticProps = async () => {
+  // Preload artist list
+  const studios = await getStudioList(1);
+
+  return { props: { studios } };
+};

@@ -27,7 +27,7 @@ declare namespace Resource {
     street_address?: string;
     city?: string;
     styles?: WorkingStyle[];
-    tattoos?: Tattoos[];
+    tattoos: Tattoos[];
     avatar?: string;
   }
 

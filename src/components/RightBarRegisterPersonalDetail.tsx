@@ -16,7 +16,7 @@ import { PasswordValidationRegex } from "../constants";
 import Link from "next/link";
 import colors from "../palette";
 
-import { registerUser } from "../api";
+import { editUser, registerUser, setAuthHeader } from "../api";
 
 // Context
 import { useApp } from "../contexts";
@@ -59,15 +59,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function RightBarRegisterPersonalDetail({
-  role,
-  onPreviousStep,
-  onNext,
-}: {
-  role: string;
-  onPreviousStep?: () => void;
-  onNext?: () => void;
-}) {
+export default function RightBarRegisterPersonalDetail({ currentUserId, onPreviousStep, onNext, currentData }: Props) {
   const app = useApp();
 
   // Validation schema
@@ -98,24 +90,42 @@ export default function RightBarRegisterPersonalDetail({
   const resolver = useYupValidationResolver(validationSchema);
   const { control, handleSubmit, errors } = useForm({ resolver });
 
-  const onSubmit = async ({ firstName, lastName, email, password }: SubmitFormData) => {
+  const onSubmit = async ({ firstName, lastName, email, password, confirmPassword, phoneNumber }: SubmitFormData) => {
     // Call APIs to submit register data
+    // Edit user
+    if (currentUserId) {
+      const response = await editUser({
+        id: currentUserId,
+        email,
+        first_name: firstName,
+        last_name: lastName,
+      });
 
-    const response = await registerUser({
-      email,
-      password,
-      name: `${firstName} ${lastName}`,
-      role,
-    });
-
-    const { error, data, errors } = response;
-    // No error happens
-    if (!error) {
-      // TODO: Process data
-      console.log(data);
-      onNext && onNext();
+      const { error, data, errors } = response;
+      // No error happens
+      if (!error) {
+        onNext && onNext(data?.id, { firstName, lastName, email, phoneNumber, password, confirmPassword });
+      } else {
+        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+      }
     } else {
-      app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+      // Create the new one
+      const response = await registerUser({
+        email,
+        password,
+        name: `${firstName} ${lastName}`,
+      });
+
+      const { error, data, errors } = response;
+      // No error happens
+      if (!error) {
+        // Set token for auth APIs call later
+        setAuthHeader(data.auth_token);
+
+        onNext && onNext(data?.user.id, { firstName, lastName, email, phoneNumber, password, confirmPassword });
+      } else {
+        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+      }
     }
   };
 
@@ -148,7 +158,7 @@ export default function RightBarRegisterPersonalDetail({
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={""}
+                defaultValue={currentData.firstName || ""}
                 errors={errors.firstName}
               />
             </Grid>
@@ -161,7 +171,7 @@ export default function RightBarRegisterPersonalDetail({
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={""}
+                defaultValue={currentData.lastName || ""}
                 errors={errors.lastName}
               />
             </Grid>
@@ -176,7 +186,7 @@ export default function RightBarRegisterPersonalDetail({
             fullWidth
             control={control}
             variant={"outlined"}
-            defaultValue={""}
+            defaultValue={currentData.email || ""}
             errors={errors.email}
           />
 
@@ -189,7 +199,7 @@ export default function RightBarRegisterPersonalDetail({
             fullWidth
             control={control}
             variant={"outlined"}
-            defaultValue={""}
+            defaultValue={currentData.phoneNumber || ""}
             errors={errors.phoneNumber}
           />
 
@@ -202,7 +212,7 @@ export default function RightBarRegisterPersonalDetail({
             fullWidth
             control={control}
             variant={"outlined"}
-            defaultValue={""}
+            defaultValue={currentData.password || ""}
             type={"password"}
             errors={errors.password}
           />
@@ -216,7 +226,7 @@ export default function RightBarRegisterPersonalDetail({
             fullWidth
             control={control}
             variant={"outlined"}
-            defaultValue={""}
+            defaultValue={currentData.confirmPassword || ""}
             type={"password"}
             errors={errors.confirmPassword}
           />
@@ -254,4 +264,12 @@ interface SubmitFormData {
   lastName: "string";
   password: "string";
   phoneNumber: "string";
+}
+
+interface Props {
+  role: string;
+  currentUserId: number | undefined;
+  currentData: any;
+  onPreviousStep?: () => void;
+  onNext?: (userId: number, data: any) => void;
 }

@@ -176,3 +176,16 @@ export const getArtistById = async (id: number): Promise<Resource.ArtistDetail> 
     };
   }
 };
+
+// Studio public list
+export const getStudioList = async (page: number) => {
+  try {
+    const result = await api.get(`/api/v1/studios?page=${page}`);
+    return result.data;
+  } catch (e) {
+    return {
+      artists: [],
+      meta: {},
+    };
+  }
+};

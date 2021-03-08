@@ -91,5 +91,5 @@ export default function ProfileTab({ tattoos }: Props) {
 }
 
 interface Props {
-  tattoos: string[];
+  tattoos: Resource.Tattoos[];
 }

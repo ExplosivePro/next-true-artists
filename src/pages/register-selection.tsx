@@ -77,6 +77,9 @@ export default function RegisterSelection({ workingStyles }: Props) {
   const router = useRouter();
 
   const [step, setStep] = useState(0);
+  const [currentUserId, setCurrentUserId] = useState<number>();
+  const [currentUserRoleId, setCurrentUserRoleId] = useState<number>(); // This is can be artist id or studio id
+  const [stepData, setStepData] = useState({});
 
   // Step 1: Account type
   const [role, setRole] = useState("artist");
@@ -118,7 +121,18 @@ export default function RegisterSelection({ workingStyles }: Props) {
           {step === 1 && (
             <RightBarRegisterPersonalDetail
               role={role}
-              onNext={() => {
+              currentUserId={currentUserId}
+              currentData={stepData[1] || {}}
+              onNext={(userId: number, data) => {
+                const thisStepData = { 1: data };
+
+                // Save current user id
+                setCurrentUserId(userId);
+
+                // Store step data to edit later
+                setStepData({ ...stepData, ...thisStepData });
+
+                // Next step
                 setStep(2);
               }}
               onPreviousStep={() => {
@@ -129,7 +143,17 @@ export default function RegisterSelection({ workingStyles }: Props) {
 
           {step === 2 && (
             <RightBarRegisterAddress
-              onNext={() => {
+              currentUserId={currentUserId}
+              currentData={stepData[2] || {}}
+              onNext={(id: number, data) => {
+                const thisStepData = { 2: data };
+
+                // Save current user role id
+                setCurrentUserRoleId(id);
+
+                // Store step data to edit later
+                setStepData({ ...stepData, ...thisStepData });
+
                 setStep(3);
               }}
               onPreviousStep={() => {
@@ -160,6 +184,7 @@ export default function RegisterSelection({ workingStyles }: Props) {
           {step === 3 && (
             <RightBarRegisterWorkStyle
               data={workingStyles}
+              currentUserId={currentUserRoleId}
               onNext={() => {
                 goToPage("/artists");
               }}

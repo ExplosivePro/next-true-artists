@@ -15,7 +15,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import PrimaryButton from "./PrimaryButton";
 import colors from "../palette";
 
-import { editUser } from "../api";
+import { editArtistProfile } from "../api";
 
 import { useApp } from "../contexts";
 
@@ -64,12 +64,13 @@ const useStyles = makeStyles({
   },
 });
 
-export default function RightBarRegisterWorkStyle({ data = [], onSkip, onNext }: Props) {
+export default function RightBarRegisterWorkStyle({ data = [], currentUserId, onSkip, onNext }: Props) {
   const classes = useStyles();
   const app = useApp();
 
   const [optionValues, setOptionValues] = useState({});
 
+  // Get style id array from object array data
   const getSelectedIds = () => {
     const results: number[] = [];
     Object.keys(optionValues).map((key) => {
@@ -88,23 +89,21 @@ export default function RightBarRegisterWorkStyle({ data = [], onSkip, onNext }:
   };
 
   const goNext = async () => {
-    // Call APIs to submit register data
+    if (currentUserId) {
+      // Call APIs to submit register data
+      const response = await editArtistProfile({
+        id: currentUserId,
+        styles: getSelectedIds(),
+      });
 
-    const response = await editUser({
-      id: 1,
-      styles: getSelectedIds(),
-    });
-
-    const { error, data, errors } = response;
-    // No error happens
-    if (!error) {
-      // TODO: Process data
-      console.log(data);
-      onNext && onNext();
-    } else {
-      app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+      const { error, errors } = response;
+      // No error happens
+      if (!error) {
+        onNext && onNext();
+      } else {
+        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+      }
     }
-    // onNext && onNext();
   };
 
   return (
@@ -166,6 +165,7 @@ export default function RightBarRegisterWorkStyle({ data = [], onSkip, onNext }:
 
 interface Props {
   data: Resource.WorkingStyle[];
+  currentUserId: number | undefined;
   onSkip?: () => void;
   onNext?: () => void;
 }
