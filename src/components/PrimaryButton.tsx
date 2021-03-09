@@ -57,6 +57,7 @@ export default function PrimaryButton(props: CustomButtonProps) {
 
   // Remove invalid prop of material component
   delete customPropsValue.bluePastel;
+  delete customPropsValue.yellow;
 
   return (
     <Button

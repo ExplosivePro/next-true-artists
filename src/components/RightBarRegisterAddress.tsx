@@ -70,7 +70,7 @@ export default function RightBarRegisterAddress({ onPreviousStep, onNext, curren
       // Call APIs to submit register data
       const response = await createArtistProfile({
         user_id: currentUserId,
-        street_address: streetAddress,
+        // street_address: streetAddress, // Put this down temporarily due to missing APIs
         zip_code: zipCode,
         country,
       });

@@ -52,10 +52,10 @@ const useStyles = makeStyles({
   },
 });
 
-// TODO: load all studio image
-const list = [1, 2, 3];
-
-export default function CardCarouselsItem({ className }: Props) {
+export default function CardCarouselsItem({
+  className,
+  data: { name, rating, totalRating, city, country, avatar, images },
+}: Props) {
   const router = useRouter();
   const classes = useStyles();
 
@@ -76,13 +76,13 @@ export default function CardCarouselsItem({ className }: Props) {
   return (
     <Card className={clsx(classes.root, className)} elevation={1}>
       <Slider {...settings}>
-        {list.map((item, index) => {
+        {images.map((image, index) => {
           return (
-            <CardMedia className={classes.media} image="/images/feature-studio.jpg" title="Paella dish" key={index}>
+            <CardMedia className={classes.media} image={image} title="Paella dish" key={index}>
               <ChipRating
                 text={
                   <Typography className={classes.rateText}>
-                    <b>5.0</b> <span className={classes.colorGrey}>(2314)</span>
+                    <b>{rating}</b> <span className={classes.colorGrey}>({totalRating})</span>
                   </Typography>
                 }
               />
@@ -91,7 +91,7 @@ export default function CardCarouselsItem({ className }: Props) {
         })}
       </Slider>
       <CardHeader
-        avatar={<Avatar aria-label="recipe" src="/images/tatooer.png" />}
+        avatar={<Avatar aria-label="recipe" src={avatar} />}
         action={
           <PrimaryButton variant="contained" color="primary" size="large" bluePastel onClick={viewProfile}>
             Book now
@@ -99,10 +99,10 @@ export default function CardCarouselsItem({ className }: Props) {
         }
         title={
           <Typography>
-            <b>Mango</b>
+            <b>{name}</b>
           </Typography>
         }
-        subheader="Barcelona, Catalunya"
+        subheader={`${city}, ${country}`}
         className={classes.cardHeader}
       />
     </Card>
@@ -111,4 +111,5 @@ export default function CardCarouselsItem({ className }: Props) {
 
 interface Props {
   className?: any;
+  data: Resource.StudioDetail;
 }

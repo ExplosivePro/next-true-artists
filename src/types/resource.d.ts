@@ -35,4 +35,25 @@ declare namespace Resource {
     artists: ArtistDetail[];
     meta: Meta;
   }
+
+  interface TopCity {
+    name: string;
+    image: string;
+  }
+
+  interface StudioDetail {
+    id: number;
+    name: string;
+    city: string;
+    country: string;
+    rating: number;
+    totalRating: number;
+    images: string[];
+    avatar: string;
+  }
+
+  interface StudioListResponse {
+    studios: StudioDetail[];
+    meta: Meta;
+  }
 }

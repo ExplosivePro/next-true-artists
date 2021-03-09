@@ -70,7 +70,7 @@ function BackArrow(props: any) {
   return <ArrowBackIosIcon className={clsx(className, classes.arrowButton)} style={{ ...style }} onClick={onClick} />;
 }
 
-export default function Carousels({ name }: Props) {
+export default function Carousels({ name, data = [] }: Props) {
   const classes = useStyles();
 
   const settings = {
@@ -111,48 +111,16 @@ export default function Carousels({ name }: Props) {
         <b>{name}</b>
       </Typography>
       <Slider {...settings}>
-        <Box component="div" className={classes.box}>
-          <div className={classes.imageBox}>
-            <img src={"/images/seoul.jpg"} alt={name} className={classes.image} />
-            <Typography className={classes.text}>Seoul</Typography>
-          </div>
-        </Box>
-        <Box component="div">
-          <div className={classes.imageBox}>
-            <img src={"/images/bangkok.jpg"} alt={name} className={classes.image} />
-            <Typography className={classes.text}>Bangkok</Typography>
-          </div>
-        </Box>
-        <Box component="div">
-          <div className={classes.imageBox}>
-            <img src={"/images/perth.jpg"} alt={name} className={classes.image} />
-            <Typography className={classes.text}>Perth</Typography>
-          </div>
-        </Box>
-        <Box component="div">
-          <div className={classes.imageBox}>
-            <img src={"/images/singapore.jpg"} alt={name} className={classes.image} />
-            <Typography className={classes.text}>Singapore</Typography>
-          </div>
-        </Box>
-        <Box component="div">
-          <div className={classes.imageBox}>
-            <img src={"/images/bejing.jpg"} alt={name} className={classes.image} />
-            <Typography className={classes.text}>Bejing</Typography>
-          </div>
-        </Box>
-        <Box component="div">
-          <div className={classes.imageBox}>
-            <img src={"/images/tokyo.jpg"} alt={name} className={classes.image} />
-            <Typography className={classes.text}>Tokyo</Typography>
-          </div>
-        </Box>
-        <Box component="div" className={classes.box}>
-          <div className={classes.imageBox}>
-            <img src={"/images/seoul.jpg"} alt={name} className={classes.image} />
-            <Typography className={classes.text}>Seoul</Typography>
-          </div>
-        </Box>
+        {data.map((item, index) => {
+          return (
+            <Box component="div" className={classes.box} key={index}>
+              <div className={classes.imageBox}>
+                <img src={item.image} alt={name} className={classes.image} />
+                <Typography className={classes.text}>{item.name}</Typography>
+              </div>
+            </Box>
+          );
+        })}
       </Slider>
     </>
   );
@@ -160,4 +128,5 @@ export default function Carousels({ name }: Props) {
 
 interface Props {
   name: string;
+  data: Resource.TopCity[];
 }

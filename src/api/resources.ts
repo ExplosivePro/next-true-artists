@@ -23,17 +23,6 @@ export const getArtistList = async (page: number) => {
   }
 };
 
-// Get all artist list, this is used for SSR preload data purpose
-export const getAllArtistList = async (): Promise<Resource.ArtistDetail[]> => {
-  try {
-    // TODO: Call API here
-    // const result = await api.get(`/api/v1/artists`);
-    return [{ id: 1 }, { id: 2 }];
-  } catch (e) {
-    return [];
-  }
-};
-
 export const getArtistById = async (id: number): Promise<Resource.ArtistDetail> => {
   try {
     // TODO: Call API here
@@ -178,14 +167,136 @@ export const getArtistById = async (id: number): Promise<Resource.ArtistDetail> 
 };
 
 // Studio public list
-export const getStudioList = async (page: number) => {
+export const getStudioList = async (page: number): Promise<Resource.StudioListResponse> => {
   try {
-    const result = await api.get(`/api/v1/studios?page=${page}`);
-    return result.data;
+    // const result = await api.get(`/api/v1/studios?page=${page}`);
+    // return result.data;
+    return {
+      meta: {
+        current_page: page,
+        last_page: page === 3,
+        limit_value: 60,
+        next_page: page + 1,
+        total_count: 10,
+        total_pages: 3,
+      },
+      studios: [
+        {
+          id: page,
+          name: `Mango-${page}`,
+          city: "Barcelona",
+          country: "Catalunya",
+          rating: 5,
+          totalRating: 2314,
+          avatar: "/images/tatooer.png",
+          images: ["/images/feature-studio.jpg", "/images/feature-studio.jpg", "/images/feature-studio.jpg"],
+        },
+        {
+          id: page + 1,
+          name: `Mango-${page + 1}`,
+          city: "Barcelona",
+          country: "Catalunya",
+          rating: 5,
+          totalRating: 2314,
+          avatar: "/images/tatooer.png",
+          images: ["/images/feature-studio.jpg", "/images/feature-studio.jpg", "/images/feature-studio.jpg"],
+        },
+      ],
+    };
   } catch (e) {
     return {
-      artists: [],
+      studios: [],
+      meta: {
+        current_page: 1,
+        last_page: true,
+        limit_value: 60,
+        next_page: 1,
+        total_count: 0,
+        total_pages: 1,
+      },
+    };
+  }
+};
+
+// Featured studio list
+export const getFeaturedStudioList = async (page: number) => {
+  try {
+    // const result = await api.get(`/api/v1/studios?page=${page}`);
+    return {
+      meta: {
+        current_page: page,
+        last_page: page === 3,
+        limit_value: 60,
+        next_page: page + 1,
+        total_count: 10,
+        total_pages: 3,
+      },
+      studios: [
+        {
+          id: page,
+          name: `Mango-${page}`,
+          city: "Barcelona",
+          country: "Catalunya",
+          rating: 5,
+          totalRating: 2314,
+          avatar: "/images/tatooer.png",
+          images: ["/images/feature-studio.jpg", "/images/feature-studio.jpg", "/images/feature-studio.jpg"],
+        },
+        {
+          id: page + 1,
+          name: `Mango-${page + 1}`,
+          city: "Barcelona",
+          country: "Catalunya",
+          rating: 5,
+          totalRating: 2314,
+          avatar: "/images/tatooer.png",
+          images: ["/images/feature-studio.jpg", "/images/feature-studio.jpg", "/images/feature-studio.jpg"],
+        },
+      ],
+    };
+  } catch (e) {
+    return {
+      studios: [],
       meta: {},
     };
+  }
+};
+
+// Top city list
+export const getTopCityList = async () => {
+  try {
+    // TODO: Call API here
+    return [
+      {
+        name: "Seoul",
+        image: "/images/seoul.jpg",
+      },
+      {
+        name: "Bangkok",
+        image: "/images/bangkok.jpg",
+      },
+      {
+        name: "Perth",
+        image: "/images/perth.jpg",
+      },
+      {
+        name: "Singapore",
+        image: "/images/singapore.jpg",
+      },
+      {
+        name: "Bejing",
+        image: "/images/bejing.jpg",
+      },
+      {
+        name: "Tokyo",
+        image: "/images/tokyo.jpg",
+      },
+      {
+        name: "Seoul",
+        image: "/images/seoul.jpg",
+      },
+    ];
+  } catch (e) {
+    return [];
   }
 };
