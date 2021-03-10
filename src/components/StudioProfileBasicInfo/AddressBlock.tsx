@@ -65,7 +65,7 @@ export default function AddressBlock({
           }
           subheader={
             <Typography>
-              {address} {city}, {country}
+              {address} {city} {`${country ? `, ${country}` : ""}`}
             </Typography>
           }
           className={classes.cardHeader}

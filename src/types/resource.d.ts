@@ -67,4 +67,11 @@ declare namespace Resource {
     studios: StudioDetail[];
     meta: Meta;
   }
+
+  interface Review {
+    name: string;
+    avatar: Image;
+    rate: number;
+    comment: string;
+  }
 }

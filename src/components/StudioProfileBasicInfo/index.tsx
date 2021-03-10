@@ -44,32 +44,11 @@ const operationList = [
   { icon: "/images/icons/comestic-icon.svg", name: "Comestic Tatoo" },
 ];
 
-const reviews = [
-  {
-    name: "Alena Levin",
-    avatar: "/images/sample-girl-avatar.svg",
-    rate: 5,
-    comment:
-      "Pellentesque accumsan augue nisl, sed suscipit lacus commodo a. Cras dictum euismod tortor eget tincidunt. Ut turpis ex, hendrerit sed augue a, pharetra pellentesque ipsum. Maecenas tincidunt sollicitudin dui. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus ridiculus mus. Nulla fringilla turpis elit. Aenean at ex facilisis, mollis neque vitae, ornare erat.",
-  },
-  {
-    name: "Minh Hoang",
-    avatar: "/images/sample-girl-avatar.svg",
-    rate: 3,
-    comment:
-      "Pellentesque accumsan augue nisl, sed suscipit lacus commodo a. Cras dictum euismod tortor eget tincidunt. Ut turpis ex, hendrerit sed augue a, pharetra pellentesque ipsum. Maecenas tincidunt sollicitudin dui. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus ridiculus mus. Nulla fringilla turpis elit. Aenean at ex facilisis, mollis neque vitae, ornare erat.",
-  },
-  {
-    name: "Bad Guy",
-    avatar: "/images/sample-girl-avatar.svg",
-    rate: 4,
-    comment:
-      "Pellentesque accumsan augue nisl, sed suscipit lacus commodo a. Cras dictum euismod tortor eget tincidunt. Ut turpis ex, hendrerit sed augue a, pharetra pellentesque ipsum. Maecenas tincidunt sollicitudin dui. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus ridiculus mus. Nulla fringilla turpis elit. Aenean at ex facilisis, mollis neque vitae, ornare erat.",
-  },
-];
-
 export default function StudioProfileBasicInfo({
-  data: { bio, street_address, city, country, name, lat, long, images },
+  data: {
+    data: { bio, street_address, city, country, name, lat, long, tattoos },
+    reviews,
+  },
 }: Props) {
   const classes = useStyles();
 
@@ -103,7 +82,7 @@ export default function StudioProfileBasicInfo({
         </Grid>
         <Hidden smDown>
           <Grid item lg={6} md={6} className={classes.imageBlock}>
-            <ImageCarousel />
+            <ImageCarousel data={tattoos} />
           </Grid>
         </Hidden>
       </Grid>
@@ -118,13 +97,18 @@ export default function StudioProfileBasicInfo({
         long={long}
       />
 
-      <Portfolio className={classes.block} data={images} />
+      <Portfolio className={classes.block} data={tattoos} />
 
       <Preview className={classes.block} list={reviews} />
     </>
   );
 }
 
-interface Props {
+interface Data {
   data: Resource.StudioDetail;
+  reviews: Resource.Review[];
+}
+
+interface Props {
+  data: Data;
 }

@@ -87,6 +87,11 @@ export default function StudioProfileTab({ data }: Props) {
   );
 }
 
-interface Props {
+interface Data {
   data: Resource.StudioDetail;
+  reviews: Resource.Review[];
+}
+
+interface Props {
+  data: Data;
 }

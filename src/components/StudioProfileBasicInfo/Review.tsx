@@ -89,7 +89,7 @@ export default function Review({ className, list = [] }: Props) {
             return (
               <ListItem alignItems="flex-start" key={index}>
                 <ListItemAvatar className={classes.avatarWrapper}>
-                  <Avatar alt="Remy Sharp" src={item.avatar} className={classes.avatar} />
+                  <Avatar alt="Remy Sharp" src={item.avatar?.image_url} className={classes.avatar} />
                 </ListItemAvatar>
                 <ListItemText
                   primary={<Typography className={classes.name}>{item.name}</Typography>}
@@ -111,14 +111,7 @@ export default function Review({ className, list = [] }: Props) {
   );
 }
 
-interface Review {
-  name: string;
-  rate: number;
-  comment: string;
-  avatar: string;
-}
-
 interface Props {
   className?: any;
-  list: Review[];
+  list: Resource.Review[];
 }

@@ -10,7 +10,7 @@ import BodyContent from "../../components/BodyContent";
 import FullWidthCover from "../../components/FullWidthCover";
 import StudioProfileHeader from "../../components/StudioProfileHeader";
 import StudioProfileTab from "../../components/StudioProfileTab";
-import { getStudioById, getStudioList } from "../../api";
+import { getStudioById, getStudioList, getStudioReviews } from "../../api";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -18,17 +18,17 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-export default function Studio({ currentStudio }: Props) {
+export default function Studio({ currentStudio, reviews }: Props) {
   const classes = useStyles();
 
-  // TODO: Load data currentArtist to profile
+  console.log(currentStudio);
 
   return (
     <BodyContent>
       <Grid container className={classes.root}>
         <FullWidthCover src={currentStudio.cover || ""} />
         <StudioProfileHeader data={currentStudio} />
-        <StudioProfileTab data={currentStudio} />
+        <StudioProfileTab data={{ data: currentStudio, reviews }} />
       </Grid>
     </BodyContent>
   );
@@ -36,6 +36,7 @@ export default function Studio({ currentStudio }: Props) {
 
 interface Props {
   currentStudio: Resource.StudioDetail;
+  reviews: Resource.Review[];
 }
 
 interface PageParams {
@@ -45,8 +46,9 @@ interface PageParams {
 
 export const getStaticProps = async ({ params: { id } }: { params: PageParams }) => {
   const currentStudio = await getStudioById(parseInt(id));
+  const reviews = await getStudioReviews(parseInt(id));
   return {
-    props: { currentStudio },
+    props: { currentStudio, reviews },
     revalidate: 60,
   }; // Re-generate the artist detail at most once per 60 second if a request comes in
 };

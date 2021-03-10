@@ -29,13 +29,13 @@ const styles = () =>
 
 const useStyles = makeStyles(styles);
 
-const generateImageList = (list: string[]) => {
+const generateImageList = (list: Resource.Image[]) => {
   const imageList: Resource.Tattoos[] = [];
 
-  list.map((url) => {
+  list.map((image) => {
     imageList.push({
-      src: url,
-      thumbnail: url,
+      src: image.image_url,
+      thumbnail: image.image_url,
       thumbnailWidth: 320,
       thumbnailHeight: 183,
     });
@@ -52,21 +52,31 @@ export default function Portfolio({ className, data }: Props) {
     <Grid container className={clsx(className)}>
       <Grid container item lg={12} md={12} sm={12} xs={12} className={classes.titleWrapper} alignItems={"center"}>
         <Typography variant={"h5"}>Portfolio</Typography>
-        <div className={classes.viewAllTextWrapper}>
-          <Typography className={classes.viewAllText} display={"inline"}>
-            View All
-          </Typography>
-          <NavigateNextIcon />
-        </div>
+        {images.length === 0 && (
+          <Grid container alignItems={"center"} justify={"center"}>
+            <Typography> No Data </Typography>
+          </Grid>
+        )}
+
+        {images.length > 0 && (
+          <div className={classes.viewAllTextWrapper}>
+            <Typography className={classes.viewAllText} display={"inline"}>
+              View All
+            </Typography>
+            <NavigateNextIcon />
+          </div>
+        )}
       </Grid>
-      <Grid item lg={12} md={12} sm={12} xs={12}>
-        <Gallery images={images} enableImageSelection={false} showCloseButton={false} />
-      </Grid>
+      {images.length > 0 && (
+        <Grid item lg={12} md={12} sm={12} xs={12}>
+          <Gallery images={images} enableImageSelection={false} showCloseButton={false} />
+        </Grid>
+      )}
     </Grid>
   );
 }
 
 interface Props {
   className?: any;
-  data: string[];
+  data: Resource.Image[];
 }
