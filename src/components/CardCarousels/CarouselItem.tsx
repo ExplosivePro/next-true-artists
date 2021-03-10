@@ -10,16 +10,17 @@ import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import Avatar from "@material-ui/core/Avatar";
+import { Typography } from "@material-ui/core";
 
 // Custom Components
 import PrimaryButton from "../PrimaryButton";
-import { Typography } from "@material-ui/core";
 import ChipRating from "./ChipRating";
 import colors from "../../palette";
 
+import { defaultStudioTattoo } from "../../constants";
+
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345,
     "& .MuiPaper-elevation1": {
       boxShadow:
         "0px 0px 1px -1px rgb(0 0 0 / 20%), 0px 0px 0px 0px rgb(0 0 0 / 14%), 0px 0px 3px 0px rgb(0 0 0 / 12%)",
@@ -33,10 +34,12 @@ const useStyles = makeStyles({
   cardHeader: {
     "& .MuiCardHeader-content": {
       paddingRight: "20px",
+      maxWidth: "45%",
     },
     alignSelf: "center",
     "& .MuiCardHeader-action": {
       alignSelf: "center",
+      marginLeft: "auto",
     },
   },
   rateText: {
@@ -50,11 +53,25 @@ const useStyles = makeStyles({
     bottom: 0,
     textAlign: "left",
   },
+  onClickComponent: {
+    cursor: "pointer",
+  },
+  subHeader: {
+    fontSize: "14px",
+    color: colors.standardGreyBorder,
+  },
+  bookButton: {
+    maxHeight: "33px",
+    maxWidth: "104px",
+    fontSize: "16px",
+    lineHeight: "normal",
+    padding: "7px 16px",
+  },
 });
 
 export default function CardCarouselsItem({
   className,
-  data: { name, rating, totalRating, city, country, avatar, images },
+  data: { name, rating, totalRating, city, country, avatar, tattoos, id },
 }: Props) {
   const router = useRouter();
   const classes = useStyles();
@@ -70,39 +87,68 @@ export default function CardCarouselsItem({
   };
 
   const viewProfile = () => {
-    router.push("/artists/1");
+    router.push(`/studios/${id}`);
   };
 
   return (
     <Card className={clsx(classes.root, className)} elevation={1}>
       <Slider {...settings}>
-        {images.map((image, index) => {
+        {tattoos.map((tattoo, index) => {
           return (
-            <CardMedia className={classes.media} image={image} title="Paella dish" key={index}>
+            <CardMedia className={classes.media} image={tattoo.image_url} title={tattoo.name} key={index}>
               <ChipRating
                 text={
                   <Typography className={classes.rateText}>
-                    <b>{rating}</b> <span className={classes.colorGrey}>({totalRating})</span>
+                    <b>{Number(rating).toFixed(1)}</b> <span className={classes.colorGrey}>({totalRating})</span>
                   </Typography>
                 }
               />
             </CardMedia>
           );
         })}
+        {tattoos.length === 0 && (
+          <CardMedia className={classes.media} image={defaultStudioTattoo} title={"default"}>
+            <ChipRating
+              text={
+                <Typography className={classes.rateText}>
+                  <b>{Number(0).toFixed(1)}</b> <span className={classes.colorGrey}>({0})</span>
+                </Typography>
+              }
+            />
+          </CardMedia>
+        )}
       </Slider>
       <CardHeader
-        avatar={<Avatar aria-label="recipe" src={avatar} />}
+        avatar={
+          <Avatar
+            aria-label="recipe"
+            src={avatar.image_url}
+            className={classes.onClickComponent}
+            onClick={viewProfile}
+          />
+        }
         action={
-          <PrimaryButton variant="contained" color="primary" size="large" bluePastel onClick={viewProfile}>
+          <PrimaryButton
+            variant="contained"
+            color="primary"
+            size="large"
+            bluePastel
+            onClick={viewProfile}
+            className={classes.bookButton}
+          >
             Book now
           </PrimaryButton>
         }
         title={
-          <Typography>
+          <Typography className={classes.onClickComponent} onClick={viewProfile} noWrap>
             <b>{name}</b>
           </Typography>
         }
-        subheader={`${city}, ${country}`}
+        subheader={
+          <Typography className={clsx(classes.onClickComponent, classes.subHeader)} onClick={viewProfile} noWrap>
+            {city} {`${country ? `, ${country}` : ""}`}
+          </Typography>
+        }
         className={classes.cardHeader}
       />
     </Card>

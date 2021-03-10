@@ -68,7 +68,9 @@ const reviews = [
   },
 ];
 
-export default function StudioProfileBasicInfo() {
+export default function StudioProfileBasicInfo({
+  data: { bio, street_address, city, country, name, lat, long, images },
+}: Props) {
   const classes = useStyles();
 
   return (
@@ -78,10 +80,7 @@ export default function StudioProfileBasicInfo() {
           <Typography variant={"h5"} className={classes.title}>
             About the Studio
           </Typography>
-          <Typography>
-            Barcelona&apos;s finest custom tattoos, next to the famous Sagrada Familia. You can find from small
-            minimalist tattoos to big elaborate full body designs. WALK INS WELCOME
-          </Typography>
+          <Typography>{bio}</Typography>
 
           <TextField
             id="outlined-select-currency"
@@ -109,11 +108,23 @@ export default function StudioProfileBasicInfo() {
         </Hidden>
       </Grid>
 
-      <AddressBlock className={classes.block} />
+      <AddressBlock
+        className={classes.block}
+        name={name}
+        address={street_address}
+        city={city}
+        country={country}
+        lat={lat}
+        long={long}
+      />
 
-      <Portfolio className={classes.block} />
+      <Portfolio className={classes.block} data={images} />
 
       <Preview className={classes.block} list={reviews} />
     </>
   );
+}
+
+interface Props {
+  data: Resource.StudioDetail;
 }

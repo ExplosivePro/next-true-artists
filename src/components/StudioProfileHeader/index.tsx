@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) =>
   }),
 );
 
-export default function StudioProfileHeader() {
+export default function StudioProfileHeader({ data: { name, rating, totalRating } }: Props) {
   const classes = useStyles();
 
   return (
@@ -84,14 +84,14 @@ export default function StudioProfileHeader() {
         }
         title={
           <Typography>
-            <b>Black Ship BCN Tattoo</b>
+            <b>{name}</b>
           </Typography>
         }
         subheader={
           <Grid container alignItems={"center"}>
             <StarIcon className={classes.icon} />
             <Typography className={classes.rateText} display={"inline"}>
-              <b>5.0</b> <span className={classes.colorGrey}>(2314)</span>
+              <b>{Number(rating).toFixed(1)}</b> <span className={classes.colorGrey}>({totalRating})</span>
             </Typography>
           </Grid>
         }
@@ -107,4 +107,8 @@ export default function StudioProfileHeader() {
       </Grid>
     </Grid>
   );
+}
+
+interface Props {
+  data: Resource.StudioDetail;
 }

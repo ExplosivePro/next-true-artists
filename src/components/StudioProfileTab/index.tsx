@@ -37,7 +37,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function StudioProfileTab() {
+export default function StudioProfileTab({ data }: Props) {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
@@ -62,7 +62,7 @@ export default function StudioProfileTab() {
           className={classes.tabWrapper}
         >
           <Tab label="Studio" className={classes.tabItem} />
-          <Tab label="Porfolio" className={classes.tabItem} />
+          <Tab label="Portfolio" className={classes.tabItem} />
           <Tab label="Artists" className={classes.tabItem} />
         </Tabs>
 
@@ -73,7 +73,7 @@ export default function StudioProfileTab() {
           className={classes.swipeView}
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
-            <StudioProfileBasicInfo />
+            <StudioProfileBasicInfo data={data} />
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
             Item Two
@@ -85,4 +85,8 @@ export default function StudioProfileTab() {
       </AppBar>
     </Grid>
   );
+}
+
+interface Props {
+  data: Resource.StudioDetail;
 }

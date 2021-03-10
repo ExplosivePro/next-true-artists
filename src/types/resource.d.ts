@@ -13,6 +13,12 @@ declare namespace Resource {
     name: string;
   }
 
+  interface Image {
+    id: number;
+    image_url: string;
+    name: string;
+  }
+
   interface Tattoos {
     src: string;
     thumbnail: string;
@@ -48,8 +54,13 @@ declare namespace Resource {
     country: string;
     rating: number;
     totalRating: number;
-    images: string[];
-    avatar: string;
+    tattoos: Image[];
+    avatar: Image;
+    bio?: string;
+    street_address?: string;
+    cover?: string;
+    lat?: number;
+    long?: number;
   }
 
   interface StudioListResponse {

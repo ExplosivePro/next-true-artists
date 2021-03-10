@@ -30,17 +30,25 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-export default function AddressBlock(props: Props) {
+export default function AddressBlock({
+  className,
+  address,
+  name,
+  city,
+  country,
+  lat = 10.7718225,
+  long = 106.7041598,
+}: Props) {
   const classes = useStyles();
 
   return (
-    <Grid container className={clsx(props.className)}>
+    <Grid container className={clsx(className)}>
       <Grid item lg={4} md={4} sm={12} xs={12}>
         <GoogleWithSearch
           height={200}
           noSearch
           disableDefaultUI
-          defaultMarkerLocation={{ lat: 10.7718225, lng: 106.7041598, name: "Test" }}
+          defaultMarkerLocation={{ lat: lat, lng: long, name: name }}
         />
       </Grid>
       <Grid container item lg={8} md={8} sm={12} xs={12} alignItems={"center"}>
@@ -52,10 +60,14 @@ export default function AddressBlock(props: Props) {
           }
           title={
             <Typography>
-              <b>Black Ship Tattoo Barcelona</b>
+              <b>{name}</b>
             </Typography>
           }
-          subheader={<Typography>Carrer de Còrsega, 527, 08025 Barcelona, Spain</Typography>}
+          subheader={
+            <Typography>
+              {address} {city}, {country}
+            </Typography>
+          }
           className={classes.cardHeader}
         />
       </Grid>
@@ -65,4 +77,10 @@ export default function AddressBlock(props: Props) {
 
 interface Props {
   className?: any;
+  name?: string;
+  address?: string;
+  city?: string;
+  country?: string;
+  lat?: number;
+  long?: number;
 }

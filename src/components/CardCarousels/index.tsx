@@ -14,6 +14,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import PrimaryButton from "../PrimaryButton";
 import Loading from "../Loading";
 import CardCarouselsItem from "./CarouselItem";
+
 import colors from "../../palette";
 
 import { getStudioList } from "../../api";
@@ -22,6 +23,9 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       marginTop: "50px",
+    },
+    fullWidth: {
+      width: "100%",
     },
     title: {
       marginBottom: "30px",
@@ -64,6 +68,9 @@ const styles = (theme: Theme) =>
     cardItem: {
       boxShadow: `0 4px 4px 0 rgb(136 118 118 / 15%)`,
     },
+    loadingIcon: {
+      marginTop: "100px",
+    },
   });
 
 const useStyles = makeStyles(styles);
@@ -90,7 +97,7 @@ export default function CardCarousels({
     slidesToScroll: 1,
     arrows: false,
     slidesToShow: 3,
-    centerMode: true,
+    adaptiveHeight: true,
     responsive: [
       {
         breakpoint: 1280,
@@ -149,7 +156,7 @@ export default function CardCarousels({
         <Typography variant={"h5"} display={"inline"}>
           <b>{name}</b>
         </Typography>
-        {mode === "singleRow" && studioList.length > 0 && (
+        {mode === "singleRow" && studioList.length > 3 && (
           <div className={classes.navigationButtons}>
             <ChevronLeftIcon className={classes.arrowButton} onClick={previous} />
             <ChevronRightIcon className={classes.arrowButton} onClick={next} />
@@ -168,7 +175,7 @@ export default function CardCarousels({
             {studioList.map((item, index) => {
               return (
                 <Grid container item lg={4} md={6} sm={6} xs={12} key={index} justify={"center"}>
-                  <CardCarouselsItem className={classes.cardItem} data={item} />
+                  <CardCarouselsItem className={clsx(classes.cardItem, classes.fullWidth)} data={item} />
                 </Grid>
               );
             })}
@@ -199,7 +206,7 @@ export default function CardCarousels({
         </>
       )}
 
-      {loading && <Loading />}
+      {loading && <Loading className={classes.loadingIcon} />}
 
       {mode === "grid" && !lastPage && (
         <Grid container alignItems={"center"} justify={"center"} className={classes.seeMoreButton}>

@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import clsx from "clsx";
 
 import Grid from "@material-ui/core/Grid";
 
@@ -6,7 +7,7 @@ import colors from "../palette";
 
 const useStyles = makeStyles({
   root: {
-    margin: "15px",
+    margin: "inherit",
   },
   loadingIcon: {
     width: "40px",
@@ -14,13 +15,23 @@ const useStyles = makeStyles({
     backgroundColor: colors.standardYellow,
     animation: "sk-rotateplane 1.2s infinite ease-in-out",
   },
+  positionFixed: {
+    position: "fixed",
+    top: "50%",
+    transform: "translateY(-50%)",
+  },
 });
 
-export default function Loading() {
+export default function Loading({ className, fixed = false }: Props) {
   const classes = useStyles();
   return (
-    <Grid container justify={"center"} className={classes.root}>
+    <Grid container justify={"center"} className={clsx(classes.root, className, { [classes.positionFixed]: fixed })}>
       <div className={classes.loadingIcon} />
     </Grid>
   );
+}
+
+interface Props {
+  className?: string;
+  fixed?: boolean;
 }

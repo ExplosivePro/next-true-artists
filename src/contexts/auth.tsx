@@ -10,7 +10,7 @@ import { useApp } from "./app";
 import { unauthRoutes } from "../constants";
 
 // Custom Components
-import { FullPageLoader } from "../components/FullPageLoader";
+import Loading from "../components/Loading";
 
 // @ts-ignore
 const context = createContext<Context>({});
@@ -169,7 +169,7 @@ export function AuthContext({ children: route }: Props) {
 
   return (
     <context.Provider value={{ user: user.current, status, register, login, logOut, previousPath }}>
-      {status === AuthState.pending ? <FullPageLoader /> : null}
+      {status === AuthState.pending ? <Loading fixed /> : null}
       {status === AuthState.authenticated ? route : null}
       {status === AuthState.unAuthenticated ? route : null}
     </context.Provider>

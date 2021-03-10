@@ -169,40 +169,40 @@ export const getArtistById = async (id: number): Promise<Resource.ArtistDetail> 
 // Studio public list
 export const getStudioList = async (page: number): Promise<Resource.StudioListResponse> => {
   try {
-    // const result = await api.get(`/api/v1/studios?page=${page}`);
-    // return result.data;
-    return {
-      meta: {
-        current_page: page,
-        last_page: page === 3,
-        limit_value: 60,
-        next_page: page + 1,
-        total_count: 10,
-        total_pages: 3,
-      },
-      studios: [
-        {
-          id: page,
-          name: `Mango-${page}`,
-          city: "Barcelona",
-          country: "Catalunya",
-          rating: 5,
-          totalRating: 2314,
-          avatar: "/images/tatooer.png",
-          images: ["/images/feature-studio.jpg", "/images/feature-studio.jpg", "/images/feature-studio.jpg"],
-        },
-        {
-          id: page + 1,
-          name: `Mango-${page + 1}`,
-          city: "Barcelona",
-          country: "Catalunya",
-          rating: 5,
-          totalRating: 2314,
-          avatar: "/images/tatooer.png",
-          images: ["/images/feature-studio.jpg", "/images/feature-studio.jpg", "/images/feature-studio.jpg"],
-        },
-      ],
-    };
+    const result = await api.get(`/api/v1/studios?page=${page}`);
+    return result.data;
+    // return {
+    //   meta: {
+    //     current_page: page,
+    //     last_page: page === 3,
+    //     limit_value: 60,
+    //     next_page: page + 1,
+    //     total_count: 10,
+    //     total_pages: 3,
+    //   },
+    //   studios: [
+    //     {
+    //       id: page,
+    //       name: `Mango-${page}`,
+    //       city: "Barcelona",
+    //       country: "Catalunya",
+    //       rating: 5,
+    //       totalRating: 2314,
+    //       avatar: "/images/tatooer.png",
+    //       images: ["/images/feature-studio.jpg", "/images/feature-studio.jpg", "/images/feature-studio.jpg"],
+    //     },
+    //     {
+    //       id: page + 1,
+    //       name: `Mango-${page + 1}`,
+    //       city: "Barcelona",
+    //       country: "Catalunya",
+    //       rating: 5,
+    //       totalRating: 2314,
+    //       avatar: "/images/tatooer.png",
+    //       images: ["/images/feature-studio.jpg", "/images/feature-studio.jpg", "/images/feature-studio.jpg"],
+    //     },
+    //   ],
+    // };
   } catch (e) {
     return {
       studios: [],
@@ -221,43 +221,96 @@ export const getStudioList = async (page: number): Promise<Resource.StudioListRe
 // Featured studio list
 export const getFeaturedStudioList = async (page: number) => {
   try {
-    // const result = await api.get(`/api/v1/studios?page=${page}`);
-    return {
-      meta: {
-        current_page: page,
-        last_page: page === 3,
-        limit_value: 60,
-        next_page: page + 1,
-        total_count: 10,
-        total_pages: 3,
-      },
-      studios: [
-        {
-          id: page,
-          name: `Mango-${page}`,
-          city: "Barcelona",
-          country: "Catalunya",
-          rating: 5,
-          totalRating: 2314,
-          avatar: "/images/tatooer.png",
-          images: ["/images/feature-studio.jpg", "/images/feature-studio.jpg", "/images/feature-studio.jpg"],
-        },
-        {
-          id: page + 1,
-          name: `Mango-${page + 1}`,
-          city: "Barcelona",
-          country: "Catalunya",
-          rating: 5,
-          totalRating: 2314,
-          avatar: "/images/tatooer.png",
-          images: ["/images/feature-studio.jpg", "/images/feature-studio.jpg", "/images/feature-studio.jpg"],
-        },
-      ],
-    };
+    const result = await api.get(`/api/v1/studios?page=${page}`);
+    return result.data;
+    // return {
+    //   meta: {
+    //     current_page: page,
+    //     last_page: page === 3,
+    //     limit_value: 60,
+    //     next_page: page + 1,
+    //     total_count: 10,
+    //     total_pages: 3,
+    //   },
+    //   studios: [
+    //     {
+    //       id: page,
+    //       name: `Mango-${page}`,
+    //       city: "Barcelona",
+    //       country: "Catalunya",
+    //       rating: 5,
+    //       totalRating: 2314,
+    //       avatar: "/images/tatooer.png",
+    //       images: ["/images/feature-studio.jpg", "/images/feature-studio.jpg", "/images/feature-studio.jpg"],
+    //     },
+    //     {
+    //       id: page + 1,
+    //       name: `Mango-${page + 1}`,
+    //       city: "Barcelona",
+    //       country: "Catalunya",
+    //       rating: 5,
+    //       totalRating: 2314,
+    //       avatar: "/images/tatooer.png",
+    //       images: ["/images/feature-studio.jpg", "/images/feature-studio.jpg", "/images/feature-studio.jpg"],
+    //     },
+    //     {
+    //       id: page + 2,
+    //       name: `Mango-${page + 2}`,
+    //       city: "Barcelona",
+    //       country: "Catalunya",
+    //       rating: 5,
+    //       totalRating: 2314,
+    //       avatar: "/images/tatooer.png",
+    //       images: ["/images/feature-studio.jpg", "/images/feature-studio.jpg", "/images/feature-studio.jpg"],
+    //     },
+    //   ],
+    // };
   } catch (e) {
     return {
       studios: [],
       meta: {},
+    };
+  }
+};
+
+// Get studio by id
+export const getStudioById = async (id: number): Promise<Resource.StudioDetail> => {
+  try {
+    // TODO: Call API here
+    // const result = await api.get(`/api/v1/artists`);
+    return {
+      id: id,
+      name: `Mango-${id}`,
+      city: "Barcelona",
+      country: "Catalunya",
+      rating: 5,
+      bio:
+        "Barcelona's finest custom tattoos, next to the famous Sagrada Familia. You can find from small minimalist tattoos to big elaborate full body designs. WALK INS WELCOME",
+      totalRating: 2314,
+      avatar: "/images/tatooer.png",
+      tattoos: [
+        "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
+        "https://c6.staticflickr.com/9/8890/28897154101_a8f55be225_b.jpg",
+      ],
+      street_address: "Carrer de Còrsega, 527, 08025",
+      cover: "/images/fullwidth-cover.png",
+      lat: 25.7823907,
+      long: -80.2994989,
+    };
+  } catch (e) {
+    return {
+      id: id,
+      name: `Mango-${id}`,
+      city: "Barcelona",
+      country: "Catalunya",
+      rating: 5,
+      bio:
+        "Barcelona's finest custom tattoos, next to the famous Sagrada Familia. You can find from small minimalist tattoos to big elaborate full body designs. WALK INS WELCOME",
+      totalRating: 2314,
+      avatar: "/images/tatooer.png",
+      images: ["/images/feature-studio.jpg", "/images/feature-studio.jpg", "/images/feature-studio.jpg"],
+      street_address: "Carrer de Còrsega, 527, 08025",
+      cover: "/images/fullwidth-cover.png",
     };
   }
 };
