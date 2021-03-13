@@ -3,10 +3,20 @@ import React, { createContext, useRef, useState, useEffect, useContext } from "r
 import { useRouter } from "next/router";
 
 // APIs
-import { clearAuthHeader, setAuthHeader, registerUser, loginUser, verifyUser } from "../api";
+import {
+  clearAuthHeader,
+  setAuthHeader,
+  registerUser,
+  loginUser,
+  socialLoginUser,
+  verifyUser,
+  socialRegisterUser,
+} from "../api";
 
+// Contexts
 import { useApp } from "./app";
 
+// Constants
 import { unauthRoutes } from "../constants";
 
 // Custom Components
@@ -43,6 +53,7 @@ export function AuthContext({ children: route }: Props) {
   const [status, setStatus] = useState<AuthState>(AuthState.pending);
   const [previousPath, setPreviousPath] = useState("");
 
+  // Normal login, by email and password
   async function login(email: string, password: string): Promise<RestApi.Response> {
     try {
       const response = await loginUser(email, password);
@@ -76,6 +87,41 @@ export function AuthContext({ children: route }: Props) {
     }
   }
 
+  // Social login, by just social id
+  async function socialLogin(socialId: number): Promise<RestApi.Response> {
+    try {
+      const response = await socialLoginUser(socialId);
+      const { error, data, errors } = response;
+      // No error happens
+      if (!error) {
+        user.current = data.user;
+
+        localStorage.setItem(TOKEN_KEY, data.auth_token);
+        setAuthHeader(data.auth_token);
+
+        // Update status
+        setStatus(AuthState.authenticated);
+
+        // If user went to specific before
+        if (previousPath !== "") {
+          router.push(previousPath);
+        } else {
+          // Go to home page
+          router.push("/artists");
+        }
+      } else {
+        app.showErrorDialog(true, errors ? errors.toString() : "Login fail");
+      }
+
+      return response;
+    } catch (error) {
+      app.showErrorDialog(true, "Internal server. Please try again");
+      // Unknown issue or code issues
+      return { error: true, data: null, errors: "Internal server. Please try again" };
+    }
+  }
+
+  // Normal register: by email and password
   async function register(payload: Register.ApiPayload) {
     try {
       const response = await registerUser(payload);
@@ -97,8 +143,37 @@ export function AuthContext({ children: route }: Props) {
         app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
       }
 
+      return response;
+    } catch (error) {
+      app.showErrorDialog(true, "Internal server. Please try again");
       // Unknown issue or code issues
-      return { error: false, data, errors: "" };
+      return { error: true, data: null, errors: "Internal server. Please try again" };
+    }
+  }
+
+  // Social register, by social id and email
+  async function socialRegister(payload: Register.ApiSocialPayload): Promise<RestApi.Response> {
+    try {
+      const response = await socialRegisterUser(payload);
+
+      const { error, data, errors } = response;
+      // No error happens
+      if (!error) {
+        localStorage.setItem(TOKEN_KEY, data.auth_token);
+        setAuthHeader(data.auth_token);
+
+        // Update status
+        setStatus(AuthState.authenticated);
+
+        user.current = data.user;
+
+        // Navigate to register selection page
+        router.push("/artists");
+      } else {
+        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+      }
+
+      return response;
     } catch (error) {
       app.showErrorDialog(true, "Internal server. Please try again");
       // Unknown issue or code issues
@@ -107,15 +182,20 @@ export function AuthContext({ children: route }: Props) {
   }
 
   function logOut() {
+    // Back to login
+    router.replace("/login");
+
+    // Remove token from header
     setAuthHeader("");
+
+    // Remove saved token value in local storage
     localStorage.removeItem(TOKEN_KEY);
+
+    // Reset user value
     user.current = undefined;
 
     // Update status
     setStatus(AuthState.unAuthenticated);
-
-    // Back to login
-    router.replace("/login");
   }
 
   useEffect(() => {
@@ -155,7 +235,7 @@ export function AuthContext({ children: route }: Props) {
 
         // Navigate to artist page
         //TODO: This should be home page
-        router.replace("/artists");
+        // router.replace("/artists");
       })
       .catch(() => {
         localStorage.removeItem(TOKEN_KEY);
@@ -168,7 +248,9 @@ export function AuthContext({ children: route }: Props) {
   }, []);
 
   return (
-    <context.Provider value={{ user: user.current, status, register, login, logOut, previousPath }}>
+    <context.Provider
+      value={{ user: user.current, status, register, socialRegister, login, socialLogin, logOut, previousPath }}
+    >
       {status === AuthState.pending ? <Loading fixed /> : null}
       {status === AuthState.authenticated ? route : null}
       {status === AuthState.unAuthenticated ? route : null}
@@ -187,13 +269,17 @@ interface Props {
 export type User = {
   email: string;
   id: number;
+  full_name: string;
+  avatar: Resource.Image;
   role: Roles;
 };
 
 interface Context {
   user?: User;
   login: (email: string, password: string) => Promise<RestApi.Response>;
+  socialLogin: (socialId: number) => Promise<RestApi.Response>;
   register: (payload: Register.ApiPayload) => void;
+  socialRegister: (payload: Register.ApiSocialPayload) => Promise<RestApi.Response>;
   logOut: () => void;
   status: AuthState;
   previousPath: string;

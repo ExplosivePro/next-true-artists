@@ -6,6 +6,13 @@ declare namespace Register {
     role?: string;
   }
 
+  interface ApiSocialPayload {
+    email: string;
+    name: string;
+    socialId: number;
+    provider: string;
+  }
+
   interface ApiEditUserPayload {
     id: number;
     first_name?: string;

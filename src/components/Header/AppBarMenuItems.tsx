@@ -1,15 +1,15 @@
 import React from "react";
-
 import { withStyles } from "@material-ui/core/styles";
+
 import MenuItem from "@material-ui/core/MenuItem";
 import Divider from "@material-ui/core/Divider";
-
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 import { useAuth } from "../../contexts";
+import Typography from "@material-ui/core/Typography";
 
 const StyledMenuItem = withStyles((theme) => ({
   root: {
@@ -28,16 +28,16 @@ declare interface BarItems {
 
 export default function AppBarMenuItems({ handleMenuClose }: BarItems) {
   // auth
-  const { logOut } = useAuth();
+  const { user, logOut } = useAuth();
   // @ts-ignore
   // @ts-ignore
   return (
     <div>
       <StyledMenuItem onClick={handleMenuClose}>
         <ListItemIcon>
-          <Avatar alt={"User"} src="/images/james.png" />
+          <Avatar alt={user?.full_name || "Avatar"} src={user?.avatar?.image_url} />
         </ListItemIcon>
-        <ListItemText primary="Profile" />
+        <ListItemText primary={user?.full_name} />
       </StyledMenuItem>
 
       <Divider />
@@ -45,7 +45,13 @@ export default function AppBarMenuItems({ handleMenuClose }: BarItems) {
         <ListItemIcon>
           <ExitToAppIcon />
         </ListItemIcon>
-        <ListItemText primary="Log out" />
+        <ListItemText
+          primary={
+            <Typography color={"error"}>
+              <b>Logout</b>
+            </Typography>
+          }
+        />
       </StyledMenuItem>
     </div>
   );

@@ -1,9 +1,8 @@
 // External import
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import { makeStyles } from "@material-ui/core/styles";
-import { useYupValidationResolver } from "../utils";
+import { useYupValidationResolver } from "../../utils";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -14,96 +13,22 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
 // Custom Component
-import PrimaryButton from "../components/PrimaryButton";
-import CustomDivider from "../components/CustomDivider";
-import FormInput from "../components/FormInput";
-import GoogleLoginButton from "../components/GoogleLoginButton";
-import InstagramLoginButton from "../components/InstagramLoginButton";
-
-import colors from "../palette";
+import PrimaryButton from "../../components/PrimaryButton";
+import CustomDivider from "../../components/CustomDivider";
+import FormInput from "../../components/FormInput";
+import GoogleLoginButton from "../../components/GoogleLoginButton";
+import InstagramLoginButton from "../../components/InstagramLoginButton";
 
 // Context
-import { useAuth } from "../contexts";
-import { googleAppId, instagramAppId } from "../constants";
+import { useAuth } from "../../contexts";
+import { googleAppId, instagramAppId } from "../../constants";
+import { getInstagramProfile } from "../../api";
 
-const useStyles = makeStyles({
-  container: {
-    height: "100vh",
-    padding: 0,
-  },
-  fullHeightContainer: {
-    height: "100%",
-  },
-  relativeContainer: {
-    position: "relative",
-  },
-  formWrapper: {
-    position: "relative",
-    height: "100%",
-  },
-  formInput: {
-    margin: "10px 0",
-  },
-  joinArtistButton: {
-    position: "absolute",
-    bottom: "70px",
-    left: "50%",
-    transform: "translateX(-50%)",
-  },
-  rightContainer: {
-    padding: "50px 65px",
-    backgroundColor: colors.lightGrey,
-  },
-  title: {
-    marginBottom: "35px",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  subTitle: {
-    fontWeight: "bold",
-    margin: "15px 0",
-  },
-  facebookLoginIcon: {
-    width: "45px",
-    height: "45px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.normalGrey,
-    borderRadius: "5px",
-    cursor: "pointer",
-  },
-  greyText: {
-    color: colors.grey,
-  },
-  dividerContainer: {
-    marginTop: "10px",
-  },
-  signUpButton: {
-    marginTop: "15px",
-  },
-  alreadyMemberWrapper: {
-    marginTop: "15px",
-    cursor: "pointer",
-  },
-  boldText: {
-    fontWeight: 500,
-  },
-  forgotPasswordText: {
-    fontWeight: 500,
-    color: colors.standardRed,
-    marginLeft: "5px",
-  },
-  image: {
-    width: "70%",
-    height: "auto",
-    cursor: "pointer",
-  },
-});
+import useStyles from "./styles";
 
 export default function Login() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, socialLogin } = useAuth();
 
   // Validation schema
   const validationSchema = useMemo(
@@ -127,13 +52,38 @@ export default function Login() {
     router.push(url);
   };
 
-  const handleGoogleLogin = (user: any) => {
-    console.log(user);
+  const handleGoogleLogin = async (user: any) => {
+    const {
+      _profile: { id },
+    } = user;
+
+    await socialLogin(id);
   };
 
-  const handleGoogleLoginFailure = (err: any) => {
-    console.error(err);
+  const handleGoogleLoginFailure = () => {
+    // Just refresh the page
+    window.location.reload();
   };
+
+  useEffect(() => {
+    if (router.query && router.query.code) {
+      // Callback from instagram login
+      getInstagramProfile({
+        code: router.query.code,
+        redirectUrl: `${process.env.NEXT_PUBLIC_INSTAGRAM_LOGIN_REDIRECT_URL}`,
+      }).then((data) => {
+        // Any error happens, go back to login page
+        if (data.error) {
+          router.replace("/login");
+        } else {
+          const {
+            data: { id },
+          } = data;
+          socialLogin(id);
+        }
+      });
+    }
+  }, [router.query]);
 
   return (
     <Container maxWidth={false} className={classes.container}>
@@ -161,7 +111,7 @@ export default function Login() {
                   onLoginSuccess={handleGoogleLogin}
                   onLoginFailure={handleGoogleLoginFailure}
                 >
-                  Sign up with Google
+                  Login with Google
                 </GoogleLoginButton>
               </Grid>
               <Grid container item lg={2} md={2} xs={2} justify={"center"}>
@@ -169,9 +119,7 @@ export default function Login() {
                   provider="instagram"
                   appId={instagramAppId}
                   scope={"user_profile"}
-                  redirect="https://localhost:3000/register"
-                  onLoginSuccess={handleGoogleLogin}
-                  onLoginFailure={handleGoogleLoginFailure}
+                  redirect={`${process.env.NEXT_PUBLIC_INSTAGRAM_LOGIN_REDIRECT_URL}`}
                 />
               </Grid>
             </Grid>

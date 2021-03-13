@@ -16,6 +16,7 @@ const useStyles = makeStyles({
 
 const GoogleLoginButton = (props: {
   triggerLogin: ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void) | undefined;
+  children: any;
 }) => {
   const classes = useStyles();
 
@@ -24,18 +25,20 @@ const GoogleLoginButton = (props: {
   delete domProps.triggerLogin;
 
   return (
-    <PrimaryButton
-      variant="contained"
-      color="primary"
-      size="large"
-      startIcon={<Image src="/images/icons/google.png" alt="fb" width={17} height={17} />}
-      fullWidth
-      className={classes.googleSignUpButton}
-      onClick={props.triggerLogin}
-      {...domProps}
-    >
-      Sign up with Google
-    </PrimaryButton>
+    <>
+      <PrimaryButton
+        variant="contained"
+        color="primary"
+        size="large"
+        startIcon={<Image src="/images/icons/google.png" alt="fb" width={17} height={17} />}
+        fullWidth
+        className={classes.googleSignUpButton}
+        onClick={props.triggerLogin}
+        {...domProps}
+      >
+        {props.children}
+      </PrimaryButton>
+    </>
   );
 };
 

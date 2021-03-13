@@ -2,6 +2,6 @@ declare namespace RestApi {
   declare interface Response {
     error: boolean;
     data?: any;
-    errors?: string;
+    errors?: any;
   }
 }

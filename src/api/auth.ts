@@ -1,4 +1,5 @@
-import { api } from "./axios";
+import { api, nextApi } from "./axios";
+import axios from "axios";
 
 // Register normal user
 export const registerUser = async ({ email, password, name }: Register.ApiPayload) => {
@@ -8,6 +9,46 @@ export const registerUser = async ({ email, password, name }: Register.ApiPayloa
       password,
       password_confirmation: password,
       full_name: name,
+    })
+    .then((response) => {
+      return { error: false, data: response.data, errors: "" };
+    })
+    .catch((e) => {
+      const errors = [];
+
+      // return { error: true, data: null, errors: e.response.data.errors };
+
+      if (e.response.data && typeof e.response.data === "string") {
+        errors.push(e.response.data);
+      }
+
+      if (e.response.data && typeof e.response.data === "object") {
+        Object.keys(e.response.data).map((name: any) => {
+          if (e.response.data[name].length > 0) {
+            e.response.data[name].map((item: { attribute: any; message: any }) => {
+              errors.push(`${item.attribute} ${item.message}`);
+            });
+          }
+        });
+      }
+
+      return { error: true, data: null, errors };
+    });
+};
+
+// Social register user
+export const socialRegisterUser = async ({
+  email,
+  name,
+  socialId,
+  provider,
+}: Register.ApiSocialPayload): Promise<RestApi.Response> => {
+  return api
+    .post("/api/v1/users", {
+      email,
+      full_name: name,
+      social_id: socialId,
+      provider,
     })
     .then((response) => {
       return { error: false, data: response.data, errors: "" };
@@ -178,6 +219,42 @@ export async function loginUser(email: string, password: string): Promise<RestAp
     });
 }
 
+// Social login
+export async function socialLoginUser(socialId: number): Promise<RestApi.Response> {
+  return await api
+    .post("/api/v1/sessions/login", {
+      user: { social_id: socialId },
+    })
+    .then((response) => {
+      return { error: false, data: response.data, errors: "" };
+    })
+    .catch((e) => {
+      const errors = [];
+
+      if (e.response.data && typeof e.response.data === "string") {
+        errors.push(e.response.data);
+      }
+
+      if (e.response.data && typeof e.response.data === "object") {
+        Object.keys(e.response.data).map((name: any) => {
+          // String error format
+          if (e.response.data[name] && typeof e.response.data[name] === "string") {
+            errors.push(e.response.data[name]);
+          }
+
+          // Array error format
+          if (typeof e.response.data[name] === "object" && e.response.data[name].length > 0) {
+            e.response.data[name].map((item: { attribute: any; message: any }) => {
+              errors.push(`${item.attribute} ${item.message}`);
+            });
+          }
+        });
+      }
+
+      return { error: true, data: null, errors };
+    });
+}
+
 // Request to reset password
 export async function requestResetPassword(email: { email: any }): Promise<RestApi.Response> {
   return await api
@@ -213,6 +290,39 @@ export async function resetPassword({
     .catch((e) => {
       return { error: true, data: null, errors: e.response ? e.response.data.errors : e.toString() };
     });
+}
+
+// Get Instagram access token
+export async function getInstagramAccessToken(data: any): Promise<RestApi.Response> {
+  return axios
+    .post("https://api.instagram.com/oauth/access_token", data, {
+      // You need to use `getHeaders()` in Node.js because Axios doesn't
+      // automatically set the multipart form boundary in Node.
+      headers: data.getHeaders(),
+    })
+    .then(function (response) {
+      return { error: false, data: response.data, errors: "" };
+    })
+    .catch(function (e) {
+      //handle error
+      return { error: true, data: null, errors: e.message };
+    });
+}
+
+// Get instagram profile by code and redirect url
+export async function getInstagramProfile({ code, redirectUrl }: { code: any; redirectUrl: string }) {
+  const { data } = await nextApi.post(`/api/get-instagram-token-by-code`, { code, redirectUrl });
+  // Error happens, just redirect it to parent call
+  if (data.error) {
+    return data;
+  } else {
+    // Use token return to get user info
+    const result = await nextApi.get(
+      `https://graph.instagram.com/me?fields=id,username&access_token=${data.data.access_token}`,
+    );
+
+    return { error: false, data: result.data, errors: "" };
+  }
 }
 
 export function verifyUser() {

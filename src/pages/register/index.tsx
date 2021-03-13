@@ -1,9 +1,8 @@
 // External import
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, createRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import { makeStyles } from "@material-ui/core/styles";
-import { useYupValidationResolver } from "../utils";
+import { useYupValidationResolver } from "../../utils";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -14,100 +13,26 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
 // Custom Component
-import PrimaryButton from "../components/PrimaryButton";
-import CustomDivider from "../components/CustomDivider";
-import FormInput from "../components/FormInput";
-import GoogleLoginButton from "../components/GoogleLoginButton";
-import InstagramLoginButton from "../components/InstagramLoginButton";
-import colors from "../palette";
+import PrimaryButton from "../../components/PrimaryButton";
+import CustomDivider from "../../components/CustomDivider";
+import FormInput from "../../components/FormInput";
+import GoogleLoginButton from "../../components/GoogleLoginButton";
+import InstagramLoginButton from "../../components/InstagramLoginButton";
 
-import { useAuth } from "../contexts";
-import { PasswordValidationRegex, googleAppId, instagramAppId } from "../constants";
+import useStyles from "./styles";
 
-const useStyles = makeStyles({
-  container: {
-    height: "100vh",
-    padding: 0,
-  },
-  fullHeightContainer: {
-    height: "100%",
-  },
-  relativeContainer: {
-    position: "relative",
-  },
-  formWrapper: {
-    position: "relative",
-    height: "100%",
-  },
-  formInput: {
-    margin: "10px 0",
-  },
-  joinArtistButton: {
-    position: "absolute",
-    bottom: "70px",
-    left: "50%",
-    transform: "translateX(-50%)",
-  },
-  rightContainer: {
-    padding: "50px 65px",
-    backgroundColor: colors.lightGrey,
-  },
-  title: {
-    marginBottom: "35px",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  subTitle: {
-    fontWeight: "bold",
-    margin: "15px 0",
-  },
-  facebookLoginIcon: {
-    width: "45px",
-    height: "45px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.normalGrey,
-    borderRadius: "5px",
-    cursor: "pointer",
-  },
-  greyText: {
-    color: colors.grey,
-  },
-  dividerContainer: {
-    marginTop: "10px",
-  },
-  signUpButton: {
-    marginTop: "15px",
-  },
-  alreadyMemberWrapper: {
-    marginTop: "15px",
-    cursor: "pointer",
-  },
-  boldText: {
-    fontWeight: 500,
-  },
-  signInText: {
-    fontWeight: 500,
-    color: colors.lightYellow,
-    marginLeft: "5px",
-  },
-  image: {
-    width: "70%",
-    height: "auto",
-    cursor: "pointer",
-  },
-  googleSignUpButton: {
-    "& .MuiButton-startIcon": {
-      position: "absolute",
-      left: "20px",
-    },
-  },
-});
+// Contexts
+import { useAuth } from "../../contexts";
+import { PasswordValidationRegex, googleAppId, instagramAppId } from "../../constants";
+
+// APIs
+import { getInstagramProfile } from "../../api";
 
 export default function Register() {
+  const socialLoginRef = createRef();
+
   const router = useRouter();
-  const { register } = useAuth();
+  const { register, socialRegister } = useAuth();
 
   // Validation schema
   const validationSchema = useMemo(
@@ -127,7 +52,9 @@ export default function Register() {
   const classes = useStyles();
   const resolver = useYupValidationResolver(validationSchema);
   const { control, handleSubmit, errors } = useForm({ resolver });
+  const [ref, setRef] = useState();
 
+  // On submit form
   const onSubmit = async (data: Register.FormData) => {
     const { email, password, firstName, lastName } = data;
     await register({
@@ -137,17 +64,78 @@ export default function Register() {
     });
   };
 
+  // Go to specific page
   const goToPage = (url: string) => {
     router.push(url);
   };
 
-  const handleGoogleLogin = (user: any) => {
-    console.log(user);
+  // Social login sucessfully
+  const onSocialRegisterSuccess = async (
+    email: string,
+    socialId: number,
+    firstName: string,
+    lastName: string,
+    provider: string,
+  ) => {
+    const { error } = await socialRegister({
+      email,
+      socialId,
+      name: `${firstName} ${lastName}`,
+      provider,
+    });
+
+    // Error happens, logout users from social
+    if (error) {
+      if (ref) {
+        // Dirt hack to resolve react social keep remember logged in state
+        // window.location.reload();
+      }
+    }
   };
 
-  const handleGoogleLoginFailure = (err: any) => {
-    console.error(err);
+  // User grant access to login by google
+  const handleGoogleLogin = async (user: any) => {
+    const {
+      _profile: { email, id, firstName, lastName },
+    } = user;
+
+    onSocialRegisterSuccess(email, id, firstName, lastName, "google");
   };
+
+  // Google login fail
+  const handleGoogleLoginFailure = () => {
+    // Dirt hack to resolve react social keep remember logged in state
+    window.location.reload();
+  };
+
+  const setSocialLoginRef = () => socialLoginRef;
+
+  useEffect(() => {
+    if (router.query && router.query.code) {
+      // Callback from instagram login
+      getInstagramProfile({
+        code: router.query.code,
+        redirectUrl: `${process.env.NEXT_PUBLIC_INSTAGRAM_REGISTER_REDIRECT_URL}`,
+      }).then((data) => {
+        // Any error happens, go back to register page
+        if (data.error) {
+          router.replace("/register");
+        } else {
+          const {
+            data: { id, username },
+          } = data;
+          onSocialRegisterSuccess(username, id, username, "", "instagram");
+        }
+      });
+    }
+  }, [router.query]);
+
+  useEffect(() => {
+    if (socialLoginRef.current) {
+      // @ts-ignore
+      setRef(socialLoginRef.current);
+    }
+  }, [socialLoginRef.current]);
 
   return (
     <Container maxWidth={false} className={classes.container}>
@@ -170,12 +158,14 @@ export default function Register() {
             <Grid container spacing={1}>
               <Grid item lg={10} md={10} xs={10}>
                 <GoogleLoginButton
+                  ref={socialLoginRef}
                   provider="google"
                   appId={googleAppId}
                   onLoginSuccess={handleGoogleLogin}
                   onLoginFailure={handleGoogleLoginFailure}
+                  getInstance={setSocialLoginRef}
                 >
-                  Login
+                  Sign up with Google
                 </GoogleLoginButton>
               </Grid>
               <Grid container item lg={2} md={2} xs={2} justify={"center"}>
@@ -183,9 +173,7 @@ export default function Register() {
                   provider="instagram"
                   appId={instagramAppId}
                   scope={"user_profile"}
-                  redirect="https://localhost:3000/register"
-                  onLoginSuccess={handleGoogleLogin}
-                  onLoginFailure={handleGoogleLoginFailure}
+                  redirect={`${process.env.NEXT_PUBLIC_INSTAGRAM_REGISTER_REDIRECT_URL}`}
                 />
               </Grid>
             </Grid>
