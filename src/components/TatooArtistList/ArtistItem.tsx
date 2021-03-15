@@ -13,6 +13,8 @@ import Grid from "@material-ui/core/Grid";
 // Custom Components
 import PrimaryButton from "../PrimaryButton";
 
+import { defaultStudioTattoo } from "../../constants";
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -47,19 +49,23 @@ const useStyles = makeStyles((theme) =>
   }),
 );
 
-export default function ArtistItem() {
+export default function ArtistItem({ data: { id, name, avatar, hero_banner } }: Props) {
   const router = useRouter();
   const classes = useStyles();
 
   const viewProfile = () => {
-    router.push("/artists/1");
+    router.push(`/artists/${id}`);
   };
 
   return (
     <Card className={classes.root} elevation={1}>
-      <CardMedia className={classes.media} image="/images/feature-studio.jpg" title="Paella dish" />
+      <CardMedia
+        className={classes.media}
+        image={hero_banner ? hero_banner.image_url : defaultStudioTattoo}
+        title={name}
+      />
       <CardHeader
-        avatar={<Avatar aria-label="recipe" src="/images/tatooer.png" />}
+        avatar={<Avatar aria-label="recipe" src={avatar?.image_url} />}
         action={
           <PrimaryButton
             variant="outlined"
@@ -72,7 +78,7 @@ export default function ArtistItem() {
             View profile
           </PrimaryButton>
         }
-        title="Bai"
+        title={name}
         subheader="Good Fortune Tattoo"
         className={classes.cardHeader}
       />
@@ -83,4 +89,8 @@ export default function ArtistItem() {
       </Grid>
     </Card>
   );
+}
+
+interface Props {
+  data: Resource.ArtistDetail;
 }

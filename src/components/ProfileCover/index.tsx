@@ -1,11 +1,15 @@
 import React from "react";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import clsx from "clsx";
 
-import PrimaryButton from "../PrimaryButton";
+import { Typography } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 
+import PrimaryButton from "../PrimaryButton";
+
 import colors from "../../palette";
-import { Typography } from "@material-ui/core";
+
+import { defaultArtistBannerImage } from "../../constants";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -57,22 +61,31 @@ const styles = (theme: Theme) =>
       objectFit: "cover",
       borderRadius: "16px",
     },
+    blankAvatar: {
+      backgroundColor: colors.borderGrey,
+    },
   });
 
 const useStyles = makeStyles(styles);
 
-export default function ProfileCover({ data }: Props) {
+export default function ProfileCover({ data: { avatar, hero_banner, name } }: Props) {
   const classes = useStyles();
-
-  console.log(data);
 
   return (
     <div className={classes.root}>
-      <img src={"/images/cover.png"} className={classes.backgroundImage} alt={"cover"} />
+      <img
+        src={hero_banner ? hero_banner.image_url : defaultArtistBannerImage}
+        className={classes.backgroundImage}
+        alt={"cover"}
+      />
       <div className={classes.avatarWrapper}>
-        <Avatar alt="Remy Sharp" src={data.avatar} className={classes.avatar} />
+        <Avatar
+          alt={name}
+          src={avatar?.image_url}
+          className={clsx(classes.avatar, { [classes.blankAvatar]: !avatar })}
+        />
         <Typography className={classes.name} variant={"h6"}>
-          {data.first_name} {data.last_name}
+          {name}
         </Typography>
       </div>
 

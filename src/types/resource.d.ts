@@ -28,13 +28,17 @@ declare namespace Resource {
 
   interface ArtistDetail {
     id: number;
+    name: string;
     first_name?: string;
     last_name?: string;
     street_address?: string;
     city?: string;
+    country?: string;
     styles?: WorkingStyle[];
-    tattoos: Tattoos[];
-    avatar?: string;
+    tattoos: Image[];
+    avatar?: Image;
+    hero_banner?: Image;
+    bio: string;
   }
 
   interface ArtistListResponse {

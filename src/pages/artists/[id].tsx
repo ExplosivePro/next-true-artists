@@ -44,7 +44,7 @@ export default function Artists({ currentArtist }: Props) {
       <Grid container className={classes.root}>
         <ProfileCover data={currentArtist} />
         <ProfileBasicInfo data={currentArtist} />
-        <ProfileTab tattoos={currentArtist.tattoos} />
+        <ProfileTab data={currentArtist} />
       </Grid>
     </BodyContent>
   );
