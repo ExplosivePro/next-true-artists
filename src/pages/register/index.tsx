@@ -17,13 +17,13 @@ import PrimaryButton from "../../components/PrimaryButton";
 import CustomDivider from "../../components/CustomDivider";
 import FormInput from "../../components/FormInput";
 import GoogleLoginButton from "../../components/GoogleLoginButton";
-import InstagramLoginButton from "../../components/InstagramLoginButton";
+// import InstagramLoginButton from "../../components/InstagramLoginButton";
 
 import useStyles from "./styles";
 
 // Contexts
 import { useAuth } from "../../contexts";
-import { PasswordValidationRegex, googleAppId, instagramAppId } from "../../constants";
+import { PasswordValidationRegex, googleAppId } from "../../constants";
 
 // APIs
 import { getInstagramProfile } from "../../api";
@@ -156,7 +156,7 @@ export default function Register() {
               Sign up with:
             </Typography>
             <Grid container spacing={1}>
-              <Grid item lg={10} md={10} xs={10}>
+              <Grid item lg={12} md={12} xs={12}>
                 <GoogleLoginButton
                   ref={socialLoginRef}
                   provider="google"
@@ -168,14 +168,14 @@ export default function Register() {
                   Sign up with Google
                 </GoogleLoginButton>
               </Grid>
-              <Grid container item lg={2} md={2} xs={2} justify={"center"}>
-                <InstagramLoginButton
-                  provider="instagram"
-                  appId={instagramAppId}
-                  scope={"user_profile"}
-                  redirect={`${process.env.NEXT_PUBLIC_INSTAGRAM_REGISTER_REDIRECT_URL}`}
-                />
-              </Grid>
+              {/*<Grid container item lg={2} md={2} xs={2} justify={"center"}>*/}
+              {/*  <InstagramLoginButton*/}
+              {/*    provider="instagram"*/}
+              {/*    appId={instagramAppId}*/}
+              {/*    scope={"user_profile"}*/}
+              {/*    redirect={`${process.env.NEXT_PUBLIC_INSTAGRAM_REGISTER_REDIRECT_URL}`}*/}
+              {/*  />*/}
+              {/*</Grid>*/}
             </Grid>
 
             <CustomDivider className={classes.dividerContainer}>

@@ -1,4 +1,4 @@
-import { api, nextApi } from "./axios";
+import { api, nextApi, setAuthHeader } from "./axios";
 import axios from "axios";
 
 // Register normal user
@@ -205,6 +205,92 @@ export const editArtistProfile = async (data: Register.ApiEditArtistPayload) => 
     });
 };
 
+// Create studio
+export const createStudioProfile = async (data: Register.ApiCreateStudioPayload) => {
+  // Parse data, only submit valid data
+  const submitData = {};
+
+  Object.keys(data).map((key) => {
+    if (data[key]) {
+      submitData[key] = data[key];
+    }
+  });
+
+  return await api
+    .post(`/api/v1/studios`, submitData)
+    .then((response) => {
+      return { error: false, data: response.data, errors: "" };
+    })
+    .catch((e) => {
+      const errors = [];
+
+      if (e.response.data && typeof e.response.data === "string") {
+        errors.push(e.response.data);
+      }
+
+      if (e.response.data && typeof e.response.data === "object") {
+        Object.keys(e.response.data).map((name: any) => {
+          // String error format
+          if (e.response.data[name] && typeof e.response.data[name] === "string") {
+            errors.push(e.response.data[name]);
+          }
+
+          // Array error format
+          if (typeof e.response.data[name] === "object" && e.response.data[name].length > 0) {
+            e.response.data[name].map((item: { attribute: any; message: any }) => {
+              errors.push(`${item.attribute} ${item.message}`);
+            });
+          }
+        });
+      }
+
+      return { error: true, data: null, errors };
+    });
+};
+
+// Edit studio
+export const editStudioProfile = async (data: Register.ApiEditStudioPayload) => {
+  // Parse data, only submit valid data
+  const submitData = {};
+
+  Object.keys(data).map((key) => {
+    if (data[key]) {
+      submitData[key] = data[key];
+    }
+  });
+
+  return await api
+    .put(`/api/v1/studios/${data.id}`, submitData)
+    .then((response) => {
+      return { error: false, data: response.data, errors: "" };
+    })
+    .catch((e) => {
+      const errors = [];
+
+      if (e.response.data && typeof e.response.data === "string") {
+        errors.push(e.response.data);
+      }
+
+      if (e.response.data && typeof e.response.data === "object") {
+        Object.keys(e.response.data).map((name: any) => {
+          // String error format
+          if (e.response.data[name] && typeof e.response.data[name] === "string") {
+            errors.push(e.response.data[name]);
+          }
+
+          // Array error format
+          if (typeof e.response.data[name] === "object" && e.response.data[name].length > 0) {
+            e.response.data[name].map((item: { attribute: any; message: any }) => {
+              errors.push(`${item.attribute} ${item.message}`);
+            });
+          }
+        });
+      }
+
+      return { error: true, data: null, errors };
+    });
+};
+
 // Login for normal user
 export async function loginUser(email: string, password: string): Promise<RestApi.Response> {
   return await api
@@ -220,10 +306,10 @@ export async function loginUser(email: string, password: string): Promise<RestAp
 }
 
 // Social login
-export async function socialLoginUser(socialId: number): Promise<RestApi.Response> {
+export async function socialLoginUser(socialId: number, email: string): Promise<RestApi.Response> {
   return await api
     .post("/api/v1/sessions/login", {
-      user: { social_id: socialId },
+      user: { social_id: socialId, email },
     })
     .then((response) => {
       return { error: false, data: response.data, errors: "" };
@@ -325,6 +411,10 @@ export async function getInstagramProfile({ code, redirectUrl }: { code: any; re
   }
 }
 
-export function verifyUser() {
+export function verifyUser(token?: string) {
+  // If token is defined, set it in header
+  if (token) {
+    setAuthHeader(token);
+  }
   return api.get("api/v1/me");
 }

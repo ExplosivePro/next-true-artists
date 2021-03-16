@@ -23,6 +23,7 @@ import PrimaryButton from "../PrimaryButton";
 import useStyles from "./styles";
 
 import { navLinks } from "../../constants";
+import Link from "next/link";
 
 export default function Header({ userProfile }: Props) {
   const classes = useStyles();
@@ -141,7 +142,9 @@ export default function Header({ userProfile }: Props) {
     <div>
       <AppBar position="static" className={classes.appBar}>
         <Toolbar className={classes.toolBar}>
-          <img src={"/images/icons/logo.svg"} className={classes.logo} alt={"logo"} />
+          <Link href={"/artists"}>
+            <img src={"/images/icons/logo.svg"} className={classes.logo} alt={"logo"} />
+          </Link>
 
           <Grid container alignItems={"center"} justify={"center"}>
             <List component="nav" aria-labelledby="main navigation" className={classes.navDisplayFlex}>

@@ -12,7 +12,7 @@ import FormInput from "./FormInput";
 import { useYupValidationResolver } from "../utils";
 import PrimaryButton from "./PrimaryButton";
 
-import { createArtistProfile } from "../api";
+import { createArtistProfile, createStudioProfile } from "../api";
 import { useApp } from "../contexts";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function RightBarRegisterAddress({ onPreviousStep, onNext, currentUserId }: Props) {
+export default function RightBarRegisterAddress({ onPreviousStep, onNext, currentUserId, role }: Props) {
   const app = useApp();
 
   // Validation schema
@@ -67,20 +67,40 @@ export default function RightBarRegisterAddress({ onPreviousStep, onNext, curren
 
   const onSubmit = async ({ streetAddress, zipCode, country }: submitFormData) => {
     if (currentUserId) {
-      // Call APIs to submit register data
-      const response = await createArtistProfile({
-        user_id: currentUserId,
-        street_address: streetAddress, // Put this down temporarily due to missing APIs
-        zip_code: zipCode,
-        country,
-      });
+      // Call APIs to create artist profile
+      if (role === "artist") {
+        const response = await createArtistProfile({
+          user_id: currentUserId,
+          street_address: streetAddress, // Put this down temporarily due to missing APIs
+          zip_code: zipCode,
+          country,
+        });
 
-      const { error, data, errors } = response;
-      // No error happens
-      if (!error) {
-        onNext && onNext(data.id, { streetAddress, zipCode, country });
-      } else {
-        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        const { error, data, errors } = response;
+        // No error happens
+        if (!error) {
+          onNext && onNext(data.id, { streetAddress, zipCode, country });
+        } else {
+          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        }
+      }
+
+      // Call APIs to create studio profile
+      if (role === "studio") {
+        const response = await createStudioProfile({
+          user_id: currentUserId,
+          street_address: streetAddress, // Put this down temporarily due to missing APIs
+          zip_code: zipCode,
+          country,
+        });
+
+        const { error, data, errors } = response;
+        // No error happens
+        if (!error) {
+          onNext && onNext(data.id, { streetAddress, zipCode, country });
+        } else {
+          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        }
       }
     }
   };
@@ -164,6 +184,7 @@ export default function RightBarRegisterAddress({ onPreviousStep, onNext, curren
 interface Props {
   currentUserId: number | undefined;
   currentData: any;
+  role: string;
   onPreviousStep?: () => void;
   onNext?: (id: number, data: any) => void;
 }

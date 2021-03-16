@@ -61,6 +61,7 @@ const useStyles = makeStyles((theme) =>
     },
     logo: {
       width: "244px",
+      cursor: "pointer",
       [theme.breakpoints.down("sm")]: {
         maxWidth: "180px",
       },

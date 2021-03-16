@@ -15,8 +15,10 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import PrimaryButton from "./PrimaryButton";
 import colors from "../palette";
 
-import { editArtistProfile } from "../api";
+// APIs
+import { editArtistProfile, editStudioProfile } from "../api";
 
+// Context
 import { useApp } from "../contexts";
 
 const useStyles = makeStyles({
@@ -64,7 +66,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function RightBarRegisterWorkStyle({ data = [], currentUserId, onSkip, onNext }: Props) {
+export default function RightBarRegisterWorkStyle({ data = [], currentUserId, role, onSkip, onNext }: Props) {
   const classes = useStyles();
   const app = useApp();
 
@@ -90,18 +92,38 @@ export default function RightBarRegisterWorkStyle({ data = [], currentUserId, on
 
   const goNext = async () => {
     if (currentUserId) {
-      // Call APIs to submit register data
-      const response = await editArtistProfile({
-        id: currentUserId,
-        styles: getSelectedIds(),
-      });
+      // Edit artist profile
+      if (role === "artist") {
+        // Call APIs to submit register data
+        const response = await editArtistProfile({
+          id: currentUserId,
+          styles: getSelectedIds(),
+        });
 
-      const { error, errors } = response;
-      // No error happens
-      if (!error) {
-        onNext && onNext();
-      } else {
-        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        const { error, errors } = response;
+        // No error happens
+        if (!error) {
+          onNext && onNext();
+        } else {
+          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        }
+      }
+
+      // Edit studio profile
+      if (role === "studio") {
+        // Call APIs to submit register data
+        const response = await editStudioProfile({
+          id: currentUserId,
+          styles: getSelectedIds(),
+        });
+
+        const { error, errors } = response;
+        // No error happens
+        if (!error) {
+          onNext && onNext();
+        } else {
+          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        }
       }
     }
   };
@@ -166,6 +188,7 @@ export default function RightBarRegisterWorkStyle({ data = [], currentUserId, on
 interface Props {
   data: Resource.WorkingStyle[];
   currentUserId: number | undefined;
+  role: string;
   onSkip?: () => void;
   onNext?: () => void;
 }

@@ -1,95 +1,63 @@
 // External import
 import React, { useEffect, useState } from "react";
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import clsx from "clsx";
-import { useRouter } from "next/router";
 
 // Material UI Components
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 
 // Custom Components
-import LeftBarRegisterSelection from "../components/LeftBarRegisterSelection";
-import RightBarRegisterAccountType from "../components/RightBarRegisterAccountType";
-import RightBarRegisterPersonalDetail from "../components/RightBarRegisterPersonalDetail";
-import RightBarRegisterAddress from "../components/RightBarRegisterAddress";
+import LeftBarRegisterSelection from "../../components/LeftBarRegisterSelection";
+import RightBarRegisterAccountType from "../../components/RightBarRegisterAccountType";
+import RightBarRegisterPersonalDetail from "../../components/RightBarRegisterPersonalDetail";
+import RightBarRegisterAddress from "../../components/RightBarRegisterAddress";
 // import RightBarRegisterWorkingLocation from "../components/RightBarRegisterWorkingLocation";
-import RightBarRegisterWorkStyle from "../components/RightBarRegisterWorkStyle";
+import RightBarRegisterWorkStyle from "../../components/RightBarRegisterWorkStyle";
 
-import colors from "../palette";
+import { getWorkingStyleList } from "../../api";
+import { useAuth, useApp } from "../../contexts";
 
-import { getWorkingStyleList } from "../api";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      height: "100vh",
-      padding: 0,
-    },
-    leftBarContainer: {
-      [theme.breakpoints.down("sm")]: {
-        height: "70px",
-      },
-    },
-    fullHeightContainer: {
-      height: "100%",
-    },
-    relativeContainer: {
-      position: "relative",
-    },
-    formWrapper: {
-      position: "relative",
-      height: "100%",
-    },
-    formInput: {
-      margin: "10px 0",
-    },
-    rightContainer: {
-      height: "100%",
-      padding: "50px 65px",
-      backgroundColor: colors.lightGrey,
-      [theme.breakpoints.down("sm")]: {
-        padding: "50px 22px",
-      },
-    },
-    title: {
-      fontWeight: "bold",
-      marginLeft: "10px",
-    },
-    resetPasswordButton: {
-      marginTop: "15px",
-    },
-    image: {
-      width: "70%",
-      height: "auto",
-    },
-    iconButton: {
-      marginLeft: "-12px", // Adjust margin instead of padding to prevent affecting to hover circle shape
-    },
-    backButton: {
-      color: colors.black,
-    },
-  }),
-);
+import useStyles from "./styles";
 
 export default function RegisterSelection({ workingStyles }: Props) {
   const classes = useStyles();
-  const router = useRouter();
+  const auth = useAuth();
+  const { setRegistrationCallbackData, registrationCallback, userInfo } = useApp();
 
   const [step, setStep] = useState(0);
   const [currentUserId, setCurrentUserId] = useState<number>();
   const [currentUserRoleId, setCurrentUserRoleId] = useState<number>(); // This is can be artist id or studio id
   const [stepData, setStepData] = useState({});
+  const [token, setToken] = useState<string>(); // Keep token temporarily, at the end of this registration, will store this one to loggin
 
   // Step 1: Account type
-  const [role, setRole] = useState("artist");
-
-  const goToPage = (url: string) => {
-    router.replace(url);
-  };
+  const [role, setRole] = useState<string>("artist");
 
   useEffect(() => {
-    // setStep(2);
+    // User back from login page
+    if (registrationCallback) {
+      const token = localStorage.getItem("AUTH_TOKEN");
+      if (token && userInfo.registerType) {
+        setToken(token);
+        setRole(userInfo.registerType);
+
+        const thisStepData = { 1: { firstName: userInfo.full_name, email: userInfo.email } };
+
+        // Save current user id
+        setCurrentUserId(userInfo.id);
+
+        // Store step data to edit later
+        setStepData({ ...stepData, ...thisStepData });
+
+        // Next step
+        setStep(2);
+      }
+    }
+
+    // Reset these value at destructure
+    return () => {
+      setRegistrationCallbackData(userInfo, true);
+    };
   }, []);
 
   return (
@@ -123,7 +91,11 @@ export default function RegisterSelection({ workingStyles }: Props) {
               role={role}
               currentUserId={currentUserId}
               currentData={stepData[1] || {}}
-              onNext={(userId: number, data) => {
+              onNext={(userId: number, data, token) => {
+                if (token) {
+                  setToken(token);
+                }
+
                 const thisStepData = { 1: data };
 
                 // Save current user id
@@ -143,6 +115,7 @@ export default function RegisterSelection({ workingStyles }: Props) {
 
           {step === 2 && (
             <RightBarRegisterAddress
+              role={role}
               currentUserId={currentUserId}
               currentData={stepData[2] || {}}
               onNext={(id: number, data) => {
@@ -183,13 +156,18 @@ export default function RegisterSelection({ workingStyles }: Props) {
           {/*)}*/}
           {step === 3 && (
             <RightBarRegisterWorkStyle
+              role={role}
               data={workingStyles}
               currentUserId={currentUserRoleId}
               onNext={() => {
-                goToPage("/artists");
+                if (token) {
+                  auth.loginByToken(token);
+                }
               }}
               onSkip={() => {
-                goToPage("/artists");
+                if (token) {
+                  auth.loginByToken(token);
+                }
               }}
             />
           )}

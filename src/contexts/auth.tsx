@@ -54,7 +54,7 @@ export function AuthContext({ children: route }: Props) {
   const [previousPath, setPreviousPath] = useState("");
 
   // Normal login, by email and password
-  async function login(email: string, password: string): Promise<RestApi.Response> {
+  async function login(email: string, password: string, preventRedirect = false): Promise<RestApi.Response> {
     try {
       const response = await loginUser(email, password);
       const { error, data, errors } = response;
@@ -68,12 +68,14 @@ export function AuthContext({ children: route }: Props) {
         // Update status
         setStatus(AuthState.authenticated);
 
-        // If user went to specific before
-        if (previousPath !== "") {
-          router.push(previousPath);
-        } else {
-          // Go to home page
-          router.push("/artists");
+        if (!preventRedirect) {
+          // If user went to specific before
+          if (previousPath !== "") {
+            router.push(previousPath);
+          } else {
+            // Go to home page
+            router.push("/artists");
+          }
         }
       } else {
         app.showErrorDialog(true, errors ? errors.toString() : "Login fail");
@@ -87,10 +89,37 @@ export function AuthContext({ children: route }: Props) {
     }
   }
 
-  // Social login, by just social id
-  async function socialLogin(socialId: number): Promise<RestApi.Response> {
+  // Login by token
+  async function loginByToken(token: string) {
     try {
-      const response = await socialLoginUser(socialId);
+      verifyUser(token)
+        .then(({ data }) => {
+          user.current = data;
+
+          localStorage.setItem(TOKEN_KEY, token);
+          setAuthHeader(token);
+          setStatus(AuthState.authenticated);
+
+          // Navigate to artist page
+          router.replace("/artists");
+        })
+        .catch(() => {
+          localStorage.removeItem(TOKEN_KEY);
+          clearAuthHeader();
+          setStatus(AuthState.unAuthenticated);
+
+          // Redirect to login page
+          router.replace("/login");
+        });
+    } catch (error) {
+      app.showErrorDialog(true, "Internal server. Please try again");
+    }
+  }
+
+  // Social login, by just social id
+  async function socialLogin(socialId: number, email: string, preventRedirect = false): Promise<RestApi.Response> {
+    try {
+      const response = await socialLoginUser(socialId, email);
       const { error, data, errors } = response;
       // No error happens
       if (!error) {
@@ -102,12 +131,14 @@ export function AuthContext({ children: route }: Props) {
         // Update status
         setStatus(AuthState.authenticated);
 
-        // If user went to specific before
-        if (previousPath !== "") {
-          router.push(previousPath);
-        } else {
-          // Go to home page
-          router.push("/artists");
+        if (!preventRedirect) {
+          // If user went to specific before
+          if (previousPath !== "") {
+            router.push(previousPath);
+          } else {
+            // Go to home page
+            router.push("/artists");
+          }
         }
       } else {
         app.showErrorDialog(true, errors ? errors.toString() : "Login fail");
@@ -182,9 +213,6 @@ export function AuthContext({ children: route }: Props) {
   }
 
   function logOut() {
-    // Back to login
-    router.replace("/login");
-
     // Remove token from header
     setAuthHeader("");
 
@@ -208,8 +236,6 @@ export function AuthContext({ children: route }: Props) {
 
   useEffect(() => {
     const token = localStorage.getItem(TOKEN_KEY);
-
-    console.log(`Token: ${token}`);
 
     // No token available
     if (!token) {
@@ -249,7 +275,17 @@ export function AuthContext({ children: route }: Props) {
 
   return (
     <context.Provider
-      value={{ user: user.current, status, register, socialRegister, login, socialLogin, logOut, previousPath }}
+      value={{
+        user: user.current,
+        status,
+        register,
+        socialRegister,
+        login,
+        loginByToken,
+        socialLogin,
+        logOut,
+        previousPath,
+      }}
     >
       {status === AuthState.pending ? <Loading fixed /> : null}
       {status === AuthState.authenticated ? route : null}
@@ -276,8 +312,9 @@ export type User = {
 
 interface Context {
   user?: User;
-  login: (email: string, password: string) => Promise<RestApi.Response>;
-  socialLogin: (socialId: number) => Promise<RestApi.Response>;
+  login: (email: string, password: string, preventRedirect: boolean) => Promise<RestApi.Response>;
+  loginByToken: (token: string) => void;
+  socialLogin: (socialId: number, email: string, preventRedirect: boolean) => Promise<RestApi.Response>;
   register: (payload: Register.ApiPayload) => void;
   socialRegister: (payload: Register.ApiSocialPayload) => Promise<RestApi.Response>;
   logOut: () => void;

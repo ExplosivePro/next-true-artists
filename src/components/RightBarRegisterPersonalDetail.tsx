@@ -55,11 +55,18 @@ const useStyles = makeStyles((theme: Theme) =>
       color: colors.lightYellow,
       marginLeft: "5px",
       cursor: "pointer",
+      fontSize: "14px",
     },
   }),
 );
 
-export default function RightBarRegisterPersonalDetail({ currentUserId, onPreviousStep, onNext, currentData }: Props) {
+export default function RightBarRegisterPersonalDetail({
+  currentUserId,
+  onPreviousStep,
+  onNext,
+  currentData,
+  role,
+}: Props) {
   const app = useApp();
 
   // Validation schema
@@ -122,7 +129,12 @@ export default function RightBarRegisterPersonalDetail({ currentUserId, onPrevio
         // Set token for auth APIs call later
         setAuthHeader(data.auth_token);
 
-        onNext && onNext(data?.user.id, { firstName, lastName, email, phoneNumber, password, confirmPassword });
+        onNext &&
+          onNext(
+            data?.user.id,
+            { firstName, lastName, email, phoneNumber, password, confirmPassword },
+            data.auth_token,
+          );
       } else {
         app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
       }
@@ -139,8 +151,8 @@ export default function RightBarRegisterPersonalDetail({ currentUserId, onPrevio
           <Typography variant={"subtitle2"}>Add your name and work email to get started with TrueArtists.</Typography>
           <Typography variant={"subtitle2"}>
             Already a member?
-            <Link href={"/login"}>
-              <Typography variant={"subtitle2"} className={classes.signInText} display={"inline"}>
+            <Link href={`/login?callback=register-selection&type=${role}`}>
+              <Typography className={classes.signInText} display={"inline"}>
                 Sign in
               </Typography>
             </Link>
@@ -271,5 +283,5 @@ interface Props {
   currentUserId: number | undefined;
   currentData: any;
   onPreviousStep?: () => void;
-  onNext?: (userId: number, data: any) => void;
+  onNext?: (userId: number, data: any, token?: string) => void;
 }

@@ -13,6 +13,15 @@ declare namespace Resource {
     name: string;
   }
 
+  interface UserDetail {
+    id: number;
+    email: string;
+    full_name: string;
+    role: string;
+    status: string;
+    registerType?: string;
+  }
+
   interface Image {
     id: number;
     image_url: string;
