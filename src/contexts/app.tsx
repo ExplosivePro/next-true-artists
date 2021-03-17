@@ -87,5 +87,5 @@ interface Context {
   userInfo: Resource.UserDetail;
   showErrorDialog: (show: boolean, message: string) => void;
   showSuccessDialog: (show: boolean, message: string) => void;
-  setRegistrationCallbackData: (userInfo: Resource.UserDetail, destroy: boolean) => void;
+  setRegistrationCallbackData: (userInfo: Resource.UserDetail, destroy?: boolean) => void;
 }

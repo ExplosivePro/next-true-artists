@@ -1,6 +1,7 @@
 // External import
 import React, { useState } from "react";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
+import Head from "next/head";
 
 // Material UI Components
 import { Grid, Typography } from "@material-ui/core";
@@ -55,9 +56,15 @@ export default function Artists({
 
   return (
     <BodyContent>
+      <Head>
+        <title>Artist List</title>
+        <meta name="description" content={"Artist list"} />
+        <meta key="og:title" property="og:title" content={"Tattoo Artist List"} />
+        <meta key="og:description" property="og:description" content={"Artist list"} />
+      </Head>
       <Grid container>
         <Typography variant={"h6"}>
-          <b>Browse Tatoo Artist</b>
+          <b>Browse Tattoo Artist</b>
         </Typography>
 
         <TattooArtistList data={artistList} />
@@ -91,5 +98,5 @@ export const getStaticProps = async () => {
   // Preload artist list
   const artists = await getArtistList(1);
 
-  return { props: { artists } };
+  return { props: { artists }, revalidate: 300 };
 };

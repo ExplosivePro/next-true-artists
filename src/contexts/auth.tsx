@@ -19,13 +19,10 @@ import { useApp } from "./app";
 // Constants
 import { unauthRoutes } from "../constants";
 
-// Custom Components
-import Loading from "../components/Loading";
-
 // @ts-ignore
 const context = createContext<Context>({});
 
-enum AuthState {
+export enum AuthState {
   "pending",
   "unAuthenticated",
   "authenticated",
@@ -45,7 +42,7 @@ enum Roles {
   - if token is missing or invalid: mark user as not logged in & redirect to '/login', while saving the page he was on ( or trying to access )
   - once he's logged in ( save token , mark as logged in & redirect to the page he was trying to access )
 */
-export function AuthContext({ children: route }: Props) {
+export function AuthContext({ children }: Props) {
   const router = useRouter();
   const app = useApp();
 
@@ -287,9 +284,7 @@ export function AuthContext({ children: route }: Props) {
         previousPath,
       }}
     >
-      {status === AuthState.pending ? <Loading fixed /> : null}
-      {status === AuthState.authenticated ? route : null}
-      {status === AuthState.unAuthenticated ? route : null}
+      {children}
     </context.Provider>
   );
 }

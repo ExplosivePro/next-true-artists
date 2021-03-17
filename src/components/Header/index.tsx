@@ -172,9 +172,7 @@ export default function Header({ userProfile }: Props) {
               size="large"
               bluePastel
               className={classes.operationButton}
-              onClick={() => {
-                goToPage("/register");
-              }}
+              href={"/register"}
             >
               Register
             </PrimaryButton>
@@ -187,9 +185,7 @@ export default function Header({ userProfile }: Props) {
               size="large"
               bluePastel
               className={classes.operationButton}
-              onClick={() => {
-                goToPage("/register");
-              }}
+              href={"/login"}
             >
               Login
             </PrimaryButton>

@@ -70,6 +70,9 @@ const useStyles = makeStyles(() =>
       fontWeight: 500,
       color: colors.standardRed,
       marginLeft: "5px",
+      "& a": {
+        textDecoration: "none",
+      },
     },
     image: {
       width: "70%",

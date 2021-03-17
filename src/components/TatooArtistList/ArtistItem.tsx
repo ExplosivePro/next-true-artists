@@ -1,7 +1,6 @@
 // External import
 import React from "react";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
-import { useRouter } from "next/router";
 
 // Material UI Components
 import Card from "@material-ui/core/Card";
@@ -50,12 +49,7 @@ const useStyles = makeStyles((theme) =>
 );
 
 export default function ArtistItem({ data: { id, name, avatar, hero_banner } }: Props) {
-  const router = useRouter();
   const classes = useStyles();
-
-  const viewProfile = () => {
-    router.push(`/artists/${id}`);
-  };
 
   return (
     <Card className={classes.root} elevation={1}>
@@ -72,8 +66,8 @@ export default function ArtistItem({ data: { id, name, avatar, hero_banner } }: 
             color="primary"
             size="small"
             bluePastel
-            onClick={viewProfile}
             className={classes.actionButton}
+            href={`/artists/${id}`}
           >
             View profile
           </PrimaryButton>
@@ -83,7 +77,7 @@ export default function ArtistItem({ data: { id, name, avatar, hero_banner } }: 
         className={classes.cardHeader}
       />
       <Grid container justify={"center"} className={classes.actionButtonMobile}>
-        <PrimaryButton variant="outlined" color="primary" size="small" bluePastel onClick={viewProfile}>
+        <PrimaryButton variant="outlined" color="primary" size="small" bluePastel href={`/artists/${id}`}>
           View profile
         </PrimaryButton>
       </Grid>

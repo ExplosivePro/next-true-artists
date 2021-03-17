@@ -22,7 +22,7 @@ import GoogleLoginButton from "../../components/GoogleLoginButton";
 import useStyles from "./styles";
 
 // Contexts
-import { useAuth } from "../../contexts";
+import { useAuth, AuthState } from "../../contexts";
 import { PasswordValidationRegex, googleAppId } from "../../constants";
 
 // APIs
@@ -32,7 +32,7 @@ export default function Register() {
   const socialLoginRef = createRef();
 
   const router = useRouter();
-  const { register, socialRegister } = useAuth();
+  const { register, socialRegister, status } = useAuth();
 
   // Validation schema
   const validationSchema = useMemo(
@@ -62,11 +62,6 @@ export default function Register() {
       password,
       name: `${firstName} ${lastName}`,
     });
-  };
-
-  // Go to specific page
-  const goToPage = (url: string) => {
-    router.push(url);
   };
 
   // Social login sucessfully
@@ -157,16 +152,18 @@ export default function Register() {
             </Typography>
             <Grid container spacing={1}>
               <Grid item lg={12} md={12} xs={12}>
-                <GoogleLoginButton
-                  ref={socialLoginRef}
-                  provider="google"
-                  appId={googleAppId}
-                  onLoginSuccess={handleGoogleLogin}
-                  onLoginFailure={handleGoogleLoginFailure}
-                  getInstance={setSocialLoginRef}
-                >
-                  Sign up with Google
-                </GoogleLoginButton>
+                {status !== AuthState.pending && (
+                  <GoogleLoginButton
+                    ref={socialLoginRef}
+                    provider="google"
+                    appId={googleAppId}
+                    onLoginSuccess={handleGoogleLogin}
+                    onLoginFailure={handleGoogleLoginFailure}
+                    getInstance={setSocialLoginRef}
+                  >
+                    Sign up with Google
+                  </GoogleLoginButton>
+                )}
               </Grid>
               {/*<Grid container item lg={2} md={2} xs={2} justify={"center"}>*/}
               {/*  <InstagramLoginButton*/}
@@ -263,9 +260,7 @@ export default function Register() {
               className={classes.joinArtistButton}
               bluePastel
               fullWidth
-              onClick={() => {
-                goToPage("register-selection");
-              }}
+              href={"/register-selection"}
             >
               Join as artist or studio
             </PrimaryButton>

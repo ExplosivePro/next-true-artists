@@ -20,7 +20,7 @@ import GoogleLoginButton from "../../components/GoogleLoginButton";
 // import InstagramLoginButton from "../../components/InstagramLoginButton";
 
 // Context
-import { useAuth, useApp } from "../../contexts";
+import { useAuth, useApp, AuthState } from "../../contexts";
 
 // Constants
 import { googleAppId } from "../../constants";
@@ -32,7 +32,7 @@ import useStyles from "./styles";
 
 export default function Login() {
   const router = useRouter();
-  const { login, socialLogin } = useAuth();
+  const { login, socialLogin, status } = useAuth();
   const { setRegistrationCallbackData } = useApp();
 
   // Validation schema
@@ -59,10 +59,6 @@ export default function Login() {
       setRegistrationCallbackData({ ...result.data.user, ...{ registerType: router.query.type } });
       router.push(`/${router.query.callback}`);
     }
-  };
-
-  const goToPage = (url: string) => {
-    router.push(url);
   };
 
   // Submit google login, using social id
@@ -127,14 +123,16 @@ export default function Login() {
             </Typography>
             <Grid container spacing={1}>
               <Grid item lg={12} md={12} xs={12}>
-                <GoogleLoginButton
-                  provider="google"
-                  appId={googleAppId}
-                  onLoginSuccess={handleGoogleLogin}
-                  onLoginFailure={handleGoogleLoginFailure}
-                >
-                  Login with Google
-                </GoogleLoginButton>
+                {status !== AuthState.pending && (
+                  <GoogleLoginButton
+                    provider="google"
+                    appId={googleAppId}
+                    onLoginSuccess={handleGoogleLogin}
+                    onLoginFailure={handleGoogleLoginFailure}
+                  >
+                    Login with Google
+                  </GoogleLoginButton>
+                )}
               </Grid>
               {/*<Grid container item lg={2} md={2} xs={2} justify={"center"}>*/}
               {/*  <InstagramLoginButton*/}
@@ -190,9 +188,9 @@ export default function Login() {
 
             <Grid container item justify={"center"} className={classes.alreadyMemberWrapper}>
               <Typography className={classes.boldText}>Forgot password?</Typography>
-              <Link href={"/forgot-password"}>
-                <Typography className={classes.forgotPasswordText}> Click here</Typography>
-              </Link>
+              <Typography className={classes.forgotPasswordText}>
+                <Link href={"/forgot-password"}>Click here</Link>
+              </Typography>
             </Grid>
 
             <PrimaryButton
@@ -202,9 +200,7 @@ export default function Login() {
               className={classes.joinArtistButton}
               bluePastel
               fullWidth
-              onClick={() => {
-                goToPage("register-selection");
-              }}
+              href={"/register-selection"}
             >
               Join as artist or studio
             </PrimaryButton>
