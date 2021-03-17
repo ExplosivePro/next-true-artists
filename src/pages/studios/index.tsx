@@ -1,6 +1,7 @@
 // External import
 import React from "react";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
+import Head from "next/head";
 
 // Custom Components
 import BodyContent from "../../components/BodyContent";
@@ -25,6 +26,12 @@ export default function Studios({ studios, topCities, featuredStudios }: Props) 
 
   return (
     <BodyContent variant={"div"} className={classes.root}>
+      <Head>
+        <title>Studio List</title>
+        <meta name="description" content={"Studio list"} />
+        <meta key="og:title" property="og:title" content={"Studio List"} />
+        <meta key="og:description" property="og:description" content={"Studio list"} />
+      </Head>
       <Carousels name={"Top Cities"} data={topCities} />
       <CardCarousels name={"Featured Studios"} mode={Mode.SINGLE_ROW} data={featuredStudios} />
       <CardCarousels name={"Latest Studios"} data={studios} />

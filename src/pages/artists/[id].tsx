@@ -14,6 +14,7 @@ import ProfileTab from "../../components/ProfileTab";
 import Loading from "../../components/Loading";
 
 import { getArtistList, getArtistById } from "../../api";
+import Head from "next/head";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -24,6 +25,8 @@ const useStyles = makeStyles(() =>
 export default function Artists({ currentArtist }: Props) {
   const classes = useStyles();
   const router = useRouter();
+
+  console.log(currentArtist);
 
   // If the page is not yet generated, this will be displayed
   // initially until getStaticProps() finishes running
@@ -39,6 +42,12 @@ export default function Artists({ currentArtist }: Props) {
 
   return (
     <BodyContent>
+      <Head>
+        <title>Artist Profile - {currentArtist.name}</title>
+        <meta name="description" content={`Artist ${currentArtist.name} profile`} />
+        <meta key="og:title" property="og:title" content={`Artist Profile - ${currentArtist.name}`} />
+        <meta key="og:description" property="og:description" content={`Artist ${currentArtist.name} profile`} />
+      </Head>
       <Grid container className={classes.root}>
         <ProfileCover data={currentArtist} />
         <ProfileBasicInfo data={currentArtist} />

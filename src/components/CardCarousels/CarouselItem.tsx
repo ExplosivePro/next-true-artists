@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useRouter } from "next/router";
 import clsx from "clsx";
 import Slider from "react-slick";
+import Link from "next/link";
 
 // Material UI Components
 import Card from "@material-ui/core/Card";
@@ -55,6 +56,11 @@ const useStyles = makeStyles({
   },
   onClickComponent: {
     cursor: "pointer",
+    "& a": {
+      fontWeight: "bold",
+      textDecoration: "none",
+      color: colors.black,
+    },
   },
   subHeader: {
     fontSize: "14px",
@@ -140,8 +146,8 @@ export default function CardCarouselsItem({
           </PrimaryButton>
         }
         title={
-          <Typography className={classes.onClickComponent} onClick={viewProfile} noWrap>
-            <b>{name}</b>
+          <Typography className={classes.onClickComponent} noWrap>
+            <Link href={`/studios/${id}`}>{name}</Link>
           </Typography>
         }
         subheader={

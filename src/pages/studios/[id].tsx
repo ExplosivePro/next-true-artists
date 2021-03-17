@@ -1,6 +1,7 @@
 // External import
 import React from "react";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
+import Head from "next/head";
 
 // Material UI Components
 import { Grid } from "@material-ui/core";
@@ -25,6 +26,12 @@ export default function Studio({ currentStudio, reviews }: Props) {
 
   return (
     <BodyContent>
+      <Head>
+        <title>Studio Profile - {currentStudio.name}</title>
+        <meta name="description" content={`Artist ${currentStudio.name} profile`} />
+        <meta key="og:title" property="og:title" content={`Artist Profile - ${currentStudio.name}`} />
+        <meta key="og:description" property="og:description" content={`Artist ${currentStudio.name} profile`} />
+      </Head>
       <Grid container className={classes.root}>
         <FullWidthCover src={currentStudio.cover || ""} />
         <StudioProfileHeader data={currentStudio} />
