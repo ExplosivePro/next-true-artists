@@ -11,29 +11,17 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { useAuth } from "../../contexts";
 import Typography from "@material-ui/core/Typography";
 
-const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: theme.palette.common.white,
-      },
-    },
-  },
+const StyledMenuItem = withStyles(() => ({
+  root: {},
 }))(MenuItem);
 
-declare interface BarItems {
-  handleMenuClose(): void;
-}
-
-export default function AppBarMenuItems({ handleMenuClose }: BarItems) {
-  // auth
+// eslint-disable-next-line react/display-name
+const AppBarMenuItems = React.forwardRef((props: any, ref) => {
+  const { handleMenuClose, ...rest } = props;
   const { user, logOut } = useAuth();
-  // @ts-ignore
-  // @ts-ignore
   return (
     <div>
-      <StyledMenuItem onClick={handleMenuClose}>
+      <StyledMenuItem onClick={handleMenuClose} ref={ref} {...rest}>
         <ListItemIcon>
           <Avatar alt={user?.full_name || "Avatar"} src={user?.avatar?.image_url} />
         </ListItemIcon>
@@ -41,7 +29,7 @@ export default function AppBarMenuItems({ handleMenuClose }: BarItems) {
       </StyledMenuItem>
 
       <Divider />
-      <StyledMenuItem onClick={logOut}>
+      <StyledMenuItem onClick={logOut} ref={ref} {...rest}>
         <ListItemIcon>
           <ExitToAppIcon />
         </ListItemIcon>
@@ -55,4 +43,6 @@ export default function AppBarMenuItems({ handleMenuClose }: BarItems) {
       </StyledMenuItem>
     </div>
   );
-}
+});
+
+export default AppBarMenuItems;

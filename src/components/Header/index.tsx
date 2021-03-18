@@ -2,6 +2,7 @@
 import React from "react";
 import clsx from "clsx";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 // Material UI Components
 import { AppBar, Toolbar } from "@material-ui/core";
@@ -20,10 +21,11 @@ import SearchIcon from "@material-ui/icons/Search";
 import AppBarMenuItems from "./AppBarMenuItems";
 import PrimaryButton from "../PrimaryButton";
 
+// Styles
 import useStyles from "./styles";
 
+// Constants
 import { navLinks } from "../../constants";
-import Link from "next/link";
 
 export default function Header({ userProfile }: Props) {
   const classes = useStyles();
@@ -62,7 +64,8 @@ export default function Header({ userProfile }: Props) {
   const renderMenu = userProfile && (
     <Menu
       anchorEl={anchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      getContentAnchorEl={null}
+      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       id={menuId}
       keepMounted
       transformOrigin={{ vertical: "top", horizontal: "right" }}

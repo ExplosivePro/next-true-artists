@@ -81,6 +81,16 @@ declare namespace Resource {
     meta: Meta;
   }
 
+  interface TattooDetail {
+    id: number;
+    image: Image;
+  }
+
+  interface TattooListResponse {
+    tattoos: TattooDetail[];
+    meta: Meta;
+  }
+
   interface Review {
     name: string;
     avatar: Image;

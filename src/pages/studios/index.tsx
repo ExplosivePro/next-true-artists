@@ -51,5 +51,5 @@ export const getStaticProps = async () => {
   const topCities = await getTopCityList();
   const featuredStudios = await getFeaturedStudioList(1);
 
-  return { props: { studios, topCities, featuredStudios } };
+  return { props: { studios, topCities, featuredStudios }, revalidate: 300 };
 };

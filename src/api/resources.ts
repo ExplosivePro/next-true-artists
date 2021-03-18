@@ -133,3 +133,52 @@ export const getTopCityList = async () => {
     return [];
   }
 };
+
+// Tattoo public list
+export const getTattooList = async (page: number, searchKey?: string): Promise<Resource.TattooListResponse> => {
+  try {
+    console.log(searchKey);
+    // const result = await api.get(`/api/v1/studios?page=${page}`);
+    // return result.data;
+    return {
+      tattoos: [
+        {
+          id: page,
+          image: {
+            id: 1,
+            image_url: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
+            name: "image1",
+          },
+        },
+        {
+          id: page + 1,
+          image: {
+            id: 2,
+            image_url: "https://c6.staticflickr.com/9/8890/28897154101_a8f55be225_b.jpg",
+            name: "image2",
+          },
+        },
+      ],
+      meta: {
+        current_page: 1,
+        last_page: true,
+        limit_value: 60,
+        next_page: 1,
+        total_count: 0,
+        total_pages: 1,
+      },
+    };
+  } catch (e) {
+    return {
+      tattoos: [],
+      meta: {
+        current_page: 1,
+        last_page: true,
+        limit_value: 60,
+        next_page: 1,
+        total_count: 0,
+        total_pages: 1,
+      },
+    };
+  }
+};
