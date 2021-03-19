@@ -14,6 +14,8 @@ import Popover from "@material-ui/core/Popover";
 // Custom Components
 import BodyContent from "../../components/BodyContent";
 import CustomGallery from "../../components/CustomGallery";
+import Filters from "../../components/Filters";
+import FilterBlock from "../../components/Filters/FilterBlock";
 
 // APIs
 import { getTattooList } from "../../api";
@@ -38,7 +40,9 @@ export default function Tattoos({ tattoos: { tattoos } }: Props) {
   const [searchInput, setSearchInput] = useState("");
   const [images, setImages] = useState(tattoos);
   const debouncedSearchTerm = useDebounce(searchInput, 500);
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [filters, setFilters] = useState<any[]>([]);
+  const [filterByGroups, setFilterByGroups] = useState<any>({});
 
   // On filter button click
   const handleFilterClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -80,41 +84,27 @@ export default function Tattoos({ tattoos: { tattoos } }: Props) {
     }
   }, [debouncedSearchTerm]);
 
-  // This for my testing
-  // const onFileChange = (e) => {
-  //   console.log(e.target.files);
-  //
-  //   // Create an object of formData
-  //   const formData = new FormData();
-  //
-  //   Object.keys(e.target.files).map((key) => {
-  //     console.log(e.target.files[key]);
-  //     formData.append("images[]", e.target.files[key]);
-  //   });
-  //
-  //   formData.append(
-  //     "meta_data",
-  //     JSON.stringify([
-  //       {
-  //         placement: "back",
-  //         size: "small",
-  //         color: "black",
-  //         tag_list: ["joint", "tattoo", "tribal"],
-  //       },
-  //       {
-  //         placement: "back",
-  //         size: "small",
-  //         color: "black",
-  //         tag_list: ["back", "tattoo", "tribal"],
-  //       },
-  //     ]),
-  //   );
-  //   axios.post("http://localhost:3001/api/v1/tattoos/batch-create", formData, {
-  //     headers: {
-  //       Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTYwNzI5MDAsImlzcyI6Imlzc3Vlcl9uYW1lIiwiYXVkIjoiY2xpZW50IiwidXNlcl9pZCI6MTUzM30.1TdciC_kcBlebtTySlmgQgMA2qT1rKxBGK6w1aUkIUs`,
-  //     },
-  //   });
-  // };
+  // Filter
+  const applyFilter = (data: any) => {
+    // Store this group data
+    setFilterByGroups(data);
+
+    // TODO: Call REST API here
+
+    const filterArr: any[] = [];
+    Object.keys(data).map((key) => {
+      data[key].map((item: any) => {
+        filterArr.push(item);
+      });
+    });
+
+    setFilters(filterArr);
+    handleFilterClose();
+  };
+
+  const removeFilter = (id: number, group: string) => {
+    setFilters(filters.filter((item) => (item.id !== id && item.group === group) || item.group !== group));
+  };
 
   return (
     <BodyContent variant={"div"} className={classes.root}>
@@ -125,7 +115,7 @@ export default function Tattoos({ tattoos: { tattoos } }: Props) {
           </Typography>
 
           <Grid container className={classes.operationContainer}>
-            <Grid item lg={8} md={12} sm={12} xs={12} className={clsx(classes.padding, classes.mobileMargin)}>
+            <Grid item lg={9} md={12} sm={12} xs={12} className={clsx(classes.padding, classes.mobileMargin)}>
               <div className={classes.search}>
                 <div className={classes.searchIcon}>
                   <SearchIcon />
@@ -156,10 +146,10 @@ export default function Tattoos({ tattoos: { tattoos } }: Props) {
                         }}
                         transformOrigin={{
                           vertical: "top",
-                          horizontal: "left",
+                          horizontal: "center",
                         }}
                       >
-                        <Typography>The content of the Popover.</Typography>
+                        <Filters data={filterByGroups} onClose={handleFilterClose} onApply={applyFilter} />
                       </Popover>
                     </>
                   }
@@ -169,7 +159,7 @@ export default function Tattoos({ tattoos: { tattoos } }: Props) {
             <Grid
               container
               item
-              lg={2}
+              lg={3}
               md={12}
               sm={12}
               xs={12}
@@ -191,27 +181,21 @@ export default function Tattoos({ tattoos: { tattoos } }: Props) {
                 ))}
               </TextField>
             </Grid>
-            <Grid item lg={2} md={12} sm={12} xs={12} className={clsx(classes.padding, classes.mobileMargin)}>
-              <TextField
-                id="standard-select-currency"
-                select
-                label="Art Style"
-                value={cities[0].value}
-                variant="outlined"
-                fullWidth
-              >
-                {cities.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
           </Grid>
 
-          {/*<Grid container>*/}
-          {/*  <input type={"file"} onChange={onFileChange} multiple />*/}
-          {/*</Grid>*/}
+          <Grid container item alignItems={"center"} className={classes.filterWrapper}>
+            {filters.map((filter, index) => {
+              return (
+                <FilterBlock
+                  key={index}
+                  name={filter.name}
+                  group={filter.group}
+                  id={filter.id}
+                  removeFilter={removeFilter}
+                />
+              );
+            })}
+          </Grid>
         </div>
 
         {loading && <Loading />}

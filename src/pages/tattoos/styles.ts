@@ -72,6 +72,10 @@ const useStyles = makeStyles((theme) =>
       padding: "20px 5px 60px 5px",
       backgroundColor: colors.standardGreyFooter,
     },
+    filterWrapper: {
+      padding: "0 8px",
+      marginTop: "15px",
+    },
   }),
 );
 
