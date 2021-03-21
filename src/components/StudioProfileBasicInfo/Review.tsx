@@ -66,7 +66,7 @@ export default function Review({ className, list = [] }: Props) {
   const getRatingStar = (rate: number) => {
     const stars = [];
     for (let i = 1; i <= rate; i++) {
-      stars.push(<StarRateIcon />);
+      stars.push(<StarRateIcon key={i} />);
     }
 
     return stars;
@@ -94,12 +94,12 @@ export default function Review({ className, list = [] }: Props) {
                 <ListItemText
                   primary={<Typography className={classes.name}>{item.name}</Typography>}
                   secondary={
-                    <div className={classes.reviewBlock}>
+                    <span className={classes.reviewBlock}>
                       <span className={classes.ratingStar}>{getRatingStar(item.rate)}</span>
                       <Typography className={classes.inline} color="textPrimary">
                         {item.comment}
                       </Typography>
-                    </div>
+                    </span>
                   }
                 />
               </ListItem>

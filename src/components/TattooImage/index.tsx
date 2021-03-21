@@ -195,7 +195,7 @@ export default function TattooImage() {
           <Typography>More Like This</Typography>
         </Grid>
         <Grid item lg={12}>
-          <CustomGallery />
+          <CustomGallery tattoos={[]} />
         </Grid>
       </Grid>
     </>

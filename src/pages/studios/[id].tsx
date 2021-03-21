@@ -22,21 +22,21 @@ const useStyles = makeStyles(() =>
 export default function Studio({ currentStudio, reviews }: Props) {
   const classes = useStyles();
 
-  console.log(currentStudio);
-
   return (
     <BodyContent>
       <Head>
-        <title>Studio Profile - {currentStudio.name}</title>
-        <meta name="description" content={`Artist ${currentStudio.name} profile`} />
-        <meta key="og:title" property="og:title" content={`Artist Profile - ${currentStudio.name}`} />
-        <meta key="og:description" property="og:description" content={`Artist ${currentStudio.name} profile`} />
+        <title>Studio Profile - {currentStudio?.name}</title>
+        <meta name="description" content={`Artist ${currentStudio?.name} profile`} />
+        <meta key="og:title" property="og:title" content={`Artist Profile - ${currentStudio?.name}`} />
+        <meta key="og:description" property="og:description" content={`Artist ${currentStudio?.name} profile`} />
       </Head>
-      <Grid container className={classes.root}>
-        <FullWidthCover src={currentStudio.cover || ""} />
-        <StudioProfileHeader data={currentStudio} />
-        <StudioProfileTab data={{ data: currentStudio, reviews }} />
-      </Grid>
+      {currentStudio && (
+        <Grid container className={classes.root}>
+          <FullWidthCover src={currentStudio.cover || ""} />
+          <StudioProfileHeader data={currentStudio} />
+          <StudioProfileTab data={{ data: currentStudio, reviews }} />
+        </Grid>
+      )}
     </BodyContent>
   );
 }
