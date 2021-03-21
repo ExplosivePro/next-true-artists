@@ -8,12 +8,14 @@ const generateImageList = (list: Resource.TattooDetail[]) => {
   const imageList: Resource.Tattoos[] = [];
 
   list.map((tattoo) => {
-    imageList.push({
-      src: tattoo.image.image_url,
-      thumbnail: tattoo.image.image_url,
-      thumbnailWidth: 320,
-      thumbnailHeight: 183,
-    });
+    if (tattoo.image) {
+      imageList.push({
+        id: tattoo.id,
+        src: tattoo.image.image_url,
+        thumbnail: tattoo.image.image_url,
+        alt: tattoo.image.name,
+      });
+    }
   });
 
   return imageList;
@@ -24,8 +26,8 @@ export default function CustomGallery({ className, tattoos }: Props) {
 
   const [images, setImages] = useState(generateImageList(tattoos));
 
-  const onClickImage = () => {
-    router.push("/tattoos/1");
+  const onClickImage = (index: number) => {
+    router.push(`/tattoos/${images[index].id}`);
   };
 
   useEffect(() => {

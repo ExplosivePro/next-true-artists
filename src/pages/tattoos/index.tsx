@@ -114,7 +114,8 @@ export default function Tattoos({ tattoos: { tattoos } }: Props) {
   const classes = useStyles();
 
   const [loading, setLoading] = useState(false);
-  const [searchInput, setSearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState(""); // Direct search input value before debounce
+  const [currentSearchInput, setCurrentSearchInput] = useState(""); // Debounce search value which is used for query
   const [images, setImages] = useState(tattoos);
   const debouncedSearchTerm = useDebounce(searchInput, 500);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -148,7 +149,24 @@ export default function Tattoos({ tattoos: { tattoos } }: Props) {
     // Show loading
     setLoading(true);
 
-    const { tattoos } = await getTattooList(1, keyword);
+    const { tattoos } = await getTattooList(1, keyword, filterByGroups);
+    setImages(tattoos);
+
+    setCurrentSearchInput(keyword);
+
+    // Hide loading
+    setLoading(false);
+  };
+
+  // Do filter
+  const doFilter = async (filter: any) => {
+    // Clear all current result first
+    setImages([]);
+
+    // Show loading
+    setLoading(true);
+
+    const { tattoos } = await getTattooList(1, currentSearchInput, filter);
     setImages(tattoos);
 
     // Hide loading
@@ -156,9 +174,7 @@ export default function Tattoos({ tattoos: { tattoos } }: Props) {
   };
 
   useEffect(() => {
-    if (debouncedSearchTerm) {
-      search(debouncedSearchTerm);
-    }
+    search(debouncedSearchTerm);
   }, [debouncedSearchTerm]);
 
   // Filter
@@ -166,7 +182,8 @@ export default function Tattoos({ tattoos: { tattoos } }: Props) {
     // Store this group data
     setFilterByGroups(data);
 
-    // TODO: Call REST API here
+    // Call API do do filter
+    doFilter(data);
 
     const filterArr: any[] = [];
     Object.keys(data).map((key) => {
@@ -181,6 +198,15 @@ export default function Tattoos({ tattoos: { tattoos } }: Props) {
 
   const removeFilter = (id: number, group: string) => {
     setFilters(filters.filter((item) => (item.id !== id && item.group === group) || item.group !== group));
+
+    const newFilter = filterByGroups;
+
+    newFilter[group] = filterByGroups[group].filter(
+      (item: any) => (item.id !== id && item.group === group) || item.group !== group,
+    );
+    setFilterByGroups(newFilter);
+
+    doFilter(newFilter);
   };
 
   return (
@@ -279,6 +305,11 @@ export default function Tattoos({ tattoos: { tattoos } }: Props) {
 
         <Grid container className={classes.galleryContainer}>
           <div className={classes.galleryWrapper}>
+            {images.length === 0 && (
+              <Grid container justify={"center"}>
+                <Typography>No data</Typography>
+              </Grid>
+            )}
             <CustomGallery tattoos={images} />
           </div>
         </Grid>
@@ -294,6 +325,7 @@ interface Props {
 export const getStaticProps = async () => {
   // Preload studios, top cities, feature studios list
   const tattoos = await getTattooList(1);
+  console.log(tattoos);
 
   return { props: { tattoos }, revalidate: 300 };
 };

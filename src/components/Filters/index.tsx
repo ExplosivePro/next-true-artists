@@ -104,7 +104,7 @@ export default function Filters({ data, onClose, onApply }: Props) {
         </IconButton>
       </div>
       <Grid container>
-        <Grid item lg={4} md={4} sm={6} xs={6}>
+        <Grid item lg={4} md={4} sm={12} xs={12}>
           <FormControl component="fieldset" className={classes.formControl}>
             <FormLabel component="legend" className={classes.filterGroupTitle}>
               Color
@@ -126,7 +126,7 @@ export default function Filters({ data, onClose, onApply }: Props) {
             </FormGroup>
           </FormControl>
         </Grid>
-        <Grid item lg={4} md={4} sm={6} xs={6}>
+        <Grid item lg={4} md={4} sm={12} xs={12}>
           <FormControl component="fieldset" className={classes.formControl}>
             <FormLabel component="legend" className={classes.filterGroupTitle}>
               Placement
@@ -147,7 +147,7 @@ export default function Filters({ data, onClose, onApply }: Props) {
             </FormGroup>
           </FormControl>
         </Grid>
-        <Grid item lg={4} md={4} sm={6} xs={6}>
+        <Grid item lg={4} md={4} sm={12} xs={12}>
           <FormControl component="fieldset" className={classes.formControl}>
             <FormLabel component="legend" className={classes.filterGroupTitle}>
               Art Style

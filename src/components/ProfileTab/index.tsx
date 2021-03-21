@@ -55,10 +55,9 @@ const generateImageList = (list: Resource.Image[]) => {
 
   list.map((image) => {
     imageList.push({
+      id: image.id,
       src: image.image_url,
       thumbnail: image.image_url,
-      thumbnailWidth: 320,
-      thumbnailHeight: 183,
     });
   });
 

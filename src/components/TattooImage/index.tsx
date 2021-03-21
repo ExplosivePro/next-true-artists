@@ -120,23 +120,25 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function TattooImage() {
+export default function TattooImage({ data }: Props) {
   const classes = useStyles();
+
+  console.log(data);
 
   return (
     <>
       <Grid container>
         <Grid item lg={6} md={6} sm={12} xs={12} className={classes.leftSide}>
-          <Image src="/images/tattoo-image-sample.jpg" cover={true} style={{ width: "100%" }} />
+          <Image src={data.image?.image_url} cover={true} style={{ width: "100%" }} />
         </Grid>
         <Grid item lg={6} md={6} sm={12} xs={12} className={classes.rightSide}>
           <List dense className={classes.title}>
             <ListItem button>
               <ListItemAvatar>
-                <Avatar alt={`Image`} src={`/images/sample-girl-avatar.svg`} />
+                <Avatar alt={data.artist.name} src={`${data.artist.avatar?.image_url}`} />
               </ListItemAvatar>
               <ListItemText
-                primary={<Typography variant={"h6"}>Emerson Dias</Typography>}
+                primary={<Typography variant={"h6"}>{data.artist.name}</Typography>}
                 className={classes.titleText}
               />
             </ListItem>
@@ -200,4 +202,8 @@ export default function TattooImage() {
       </Grid>
     </>
   );
+}
+
+interface Props {
+  data: Resource.TattooDetail;
 }

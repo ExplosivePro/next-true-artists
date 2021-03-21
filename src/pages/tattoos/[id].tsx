@@ -9,6 +9,9 @@ import { Grid } from "@material-ui/core";
 import BodyContent from "../../components/BodyContent";
 import TattooImage from "../../components/TattooImage";
 
+// APIs
+import { getTattooList, getTattooById } from "../../api";
+
 const useStyles = makeStyles(() =>
   createStyles({
     root: {},
@@ -19,37 +22,36 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-export default function Artists() {
+export default function Artists({ currentTattoo }: Props) {
   const classes = useStyles();
-
-  // TODO: Load data currentArtist to profile
 
   return (
     <BodyContent>
       <Grid container className={classes.root}>
-        <TattooImage />
+        <TattooImage data={currentTattoo} />
       </Grid>
     </BodyContent>
   );
 }
 
+interface Props {
+  currentTattoo: Resource.TattooDetail;
+}
+
 export const getStaticProps = async ({ params: { id } }: { params: PageParams }) => {
-  // TODO: Call API to get artist by their id
-  // const currentArtist = await getArtistById(artist);
-  return { props: { currentArtist: { id: id, name: "Test" } } };
+  const currentTattoo = await getTattooById(parseInt(id));
+  return { props: { currentTattoo } };
 };
 
 export const getStaticPaths = async () => {
-  // TODO: Call API to get all available artists here
-  // const artists = await getAll();
-  // const paths = artists.map((artists) => ({ params: { artists: artists.id } }));
+  const { tattoos } = await getTattooList(1);
+  const paths = tattoos.map((tattoo) => ({ params: { id: tattoo.id.toString() } }));
   return {
-    paths: [{ params: { id: "1" } }, { params: { id: "2" } }],
+    paths,
     fallback: true,
   };
 };
 
 interface PageParams {
   id: string;
-  name: string;
 }
