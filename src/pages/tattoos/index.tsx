@@ -325,7 +325,6 @@ interface Props {
 export const getStaticProps = async () => {
   // Preload studios, top cities, feature studios list
   const tattoos = await getTattooList(1);
-  console.log(tattoos);
 
   return { props: { tattoos }, revalidate: 300 };
 };

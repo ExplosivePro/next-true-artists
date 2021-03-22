@@ -86,6 +86,12 @@ declare namespace Resource {
     id: number;
     image: Image;
     artist: ArtistDetail;
+    color?: string;
+    placement?: string;
+    size?: string;
+    description?: string;
+    created_at?: string;
+    liked?: number;
   }
 
   interface TattooListResponse {

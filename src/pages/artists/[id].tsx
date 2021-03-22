@@ -26,8 +26,6 @@ export default function Artists({ currentArtist }: Props) {
   const classes = useStyles();
   const router = useRouter();
 
-  console.log(currentArtist);
-
   // If the page is not yet generated, this will be displayed
   // initially until getStaticProps() finishes running
   if (router.isFallback) {

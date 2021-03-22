@@ -148,11 +148,16 @@ export const getTattooList = async (
       query += `&query=${searchKey}`;
     }
 
-    // IF filter is defined
-    if (filters) {
+    // IF filter is defined, and this is under object format
+    if (filters && typeof filters === "object") {
       Object.keys(filters).map((filterKey) => {
         query += `&${filterKey}=${filters[filterKey].map((filter: any) => filter.name).join(",")}`;
       });
+    }
+
+    // IF filter is defined, and this is under string format
+    if (filters && typeof filters === "object") {
+      query += `&${filters}`;
     }
 
     const result = await api.get(query);

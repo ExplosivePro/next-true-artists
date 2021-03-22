@@ -22,13 +22,13 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-export default function Artists({ currentTattoo }: Props) {
+export default function Artists({ currentTattoo, relatedTattoos }: Props) {
   const classes = useStyles();
 
   return (
     <BodyContent>
       <Grid container className={classes.root}>
-        <TattooImage data={currentTattoo} />
+        <TattooImage data={currentTattoo} relatedTattoos={relatedTattoos} />
       </Grid>
     </BodyContent>
   );
@@ -36,11 +36,17 @@ export default function Artists({ currentTattoo }: Props) {
 
 interface Props {
   currentTattoo: Resource.TattooDetail;
+  relatedTattoos: Resource.TattooDetail[];
 }
 
 export const getStaticProps = async ({ params: { id } }: { params: PageParams }) => {
   const currentTattoo = await getTattooById(parseInt(id));
-  return { props: { currentTattoo } };
+  const { tattoos } = await getTattooList(
+    1,
+    "",
+    `placement=${currentTattoo.placement}&color=${currentTattoo.color}&size=${currentTattoo.size}`,
+  );
+  return { props: { currentTattoo, relatedTattoos: tattoos } };
 };
 
 export const getStaticPaths = async () => {
