@@ -45,7 +45,7 @@ declare namespace Resource {
     city?: string;
     country?: string;
     styles?: WorkingStyle[];
-    tattoos: Image[];
+    tattoos: TattooDetail[];
     avatar?: Image;
     hero_banner?: Image;
     bio: string;

@@ -50,15 +50,17 @@ const useStyles = makeStyles({
 });
 
 // Generate suitable image list from image array backend response
-const generateImageList = (list: Resource.Image[]) => {
+const generateImageList = (list: Resource.TattooDetail[]) => {
   const imageList: Resource.Tattoos[] = [];
 
-  list.map((image) => {
-    imageList.push({
-      id: image.id,
-      src: image.image_url,
-      thumbnail: image.image_url,
-    });
+  list.map((tattoo) => {
+    if (tattoo.image) {
+      imageList.push({
+        id: tattoo.id,
+        src: tattoo.image.image_url,
+        thumbnail: tattoo.image.image_url,
+      });
+    }
   });
 
   return imageList;
