@@ -105,4 +105,14 @@ declare namespace Resource {
     rate: number;
     comment: string;
   }
+
+  interface Location {
+    id: number;
+    city: string;
+  }
+
+  interface CityListResponse {
+    locations: Location[];
+    meta: Meta;
+  }
 }

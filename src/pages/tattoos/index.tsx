@@ -19,7 +19,7 @@ import Filters from "../../components/Filters";
 import FilterBlock from "../../components/Filters/FilterBlock";
 
 // APIs
-import { getTattooList } from "../../api";
+import { getTattooList, getWorkingStyleList, getCityList } from "../../api";
 import Loading from "../../components/Loading";
 
 // Hooks
@@ -103,14 +103,7 @@ const useStyles = makeStyles((theme) =>
   }),
 );
 
-const cities = [
-  {
-    value: "all",
-    label: "All Cities",
-  },
-];
-
-export default function Tattoos({ tattoos: { tattoos } }: Props) {
+export default function Tattoos({ tattoos: { tattoos }, workingStyles, cities: { locations } }: Props) {
   const classes = useStyles();
 
   const [loading, setLoading] = useState(false);
@@ -252,7 +245,12 @@ export default function Tattoos({ tattoos: { tattoos } }: Props) {
                           horizontal: "center",
                         }}
                       >
-                        <Filters data={filterByGroups} onClose={handleFilterClose} onApply={applyFilter} />
+                        <Filters
+                          data={filterByGroups}
+                          workingStyles={workingStyles}
+                          onClose={handleFilterClose}
+                          onApply={applyFilter}
+                        />
                       </Popover>
                     </>
                   }
@@ -269,17 +267,10 @@ export default function Tattoos({ tattoos: { tattoos } }: Props) {
               alignItems={"center"}
               className={clsx(classes.padding, classes.mobileMargin)}
             >
-              <TextField
-                id="standard-select-currency"
-                select
-                label="Select City"
-                variant="outlined"
-                value={cities[0].value}
-                fullWidth
-              >
-                {cities.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+              <TextField id="standard-select-currency" select label="Select City" variant="outlined" fullWidth>
+                {locations.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.city}
                   </MenuItem>
                 ))}
               </TextField>
@@ -320,11 +311,15 @@ export default function Tattoos({ tattoos: { tattoos } }: Props) {
 
 interface Props {
   tattoos: Resource.TattooListResponse;
+  workingStyles: Resource.WorkingStyle[];
+  cities: Resource.CityListResponse;
 }
 
 export const getStaticProps = async () => {
   // Preload studios, top cities, feature studios list
   const tattoos = await getTattooList(1);
+  const workingStyles = await getWorkingStyleList();
+  const cities = await getCityList(1);
 
-  return { props: { tattoos }, revalidate: 300 };
+  return { props: { tattoos, workingStyles, cities }, revalidate: 300 };
 };

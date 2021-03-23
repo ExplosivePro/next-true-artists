@@ -134,6 +134,12 @@ export const getTopCityList = async () => {
   }
 };
 
+// Get city list
+export const getCityList = async (page: number) => {
+  const result = await api.get(`/api/v1/locations?page=${page}`);
+  return result.data;
+};
+
 // Tattoo public list
 export const getTattooList = async (
   page: number,

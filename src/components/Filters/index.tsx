@@ -62,17 +62,11 @@ const placements = [
   },
 ];
 
-const artStyles = [
-  {
-    id: 1,
-    name: "All Styles",
-  },
-];
-
-export default function Filters({ data, onClose, onApply }: Props) {
+export default function Filters({ data, onClose, onApply, workingStyles }: Props) {
   const classes = useStyles();
 
   const [optionValues, setOptionValues] = useState(data);
+  const [artStyles] = useState(workingStyles);
 
   // Handle checkbox change
   const handleChange = (e: any, id: number, group: string) => {
@@ -193,4 +187,5 @@ interface Props {
   onClose: () => void;
   onApply: (data: any) => void;
   data: any;
+  workingStyles: Resource.WorkingStyle[];
 }
