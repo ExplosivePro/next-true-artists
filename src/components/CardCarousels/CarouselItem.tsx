@@ -101,7 +101,7 @@ export default function CardCarouselsItem({
       <Slider {...settings}>
         {tattoos.map((tattoo, index) => {
           return (
-            <CardMedia className={classes.media} image={tattoo.image_url} title={tattoo.name} key={index}>
+            <CardMedia className={classes.media} image={tattoo.image.image_url} title={tattoo.name} key={index}>
               <ChipRating
                 text={
                   <Typography className={classes.rateText}>

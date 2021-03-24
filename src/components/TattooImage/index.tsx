@@ -59,32 +59,32 @@ export default function TattooImage({ data, relatedTattoos }: Props) {
     <>
       <Grid container>
         <Grid item lg={6} md={6} sm={12} xs={12} className={classes.leftSide}>
-          <Image src={data.image?.image_url} aspectRatio={671 / 990} cover={true} style={{ width: "100%" }} />
+          <Image src={data?.image?.image_url} aspectRatio={671 / 990} cover={true} style={{ width: "100%" }} />
         </Grid>
         <Grid item lg={6} md={6} sm={12} xs={12} className={classes.rightSide}>
           <List dense className={classes.title}>
             <ListItem className={classes.spaceAtLeft}>
               <ListItemAvatar>
-                <Avatar alt={data.artist.name} src={`${data.artist.avatar?.image_url}`} />
+                <Avatar alt={data?.artist.name} src={`${data?.artist.avatar?.image_url}`} />
               </ListItemAvatar>
               <ListItemText
-                primary={<Typography variant={"h6"}>{data.artist.name}</Typography>}
+                primary={<Typography variant={"h6"}>{data?.artist.name}</Typography>}
                 className={classes.titleText}
               />
             </ListItem>
           </List>
           <Grid container className={clsx(classes.content, classes.spaceAtLeft)}>
-            <Typography className={classes.description}>{data.description}</Typography>
+            <Typography className={classes.description}>{data?.description}</Typography>
 
             <Grid container item alignItems={"center"}>
               {!liked && <FavoriteBorderIcon className={classes.heartIcon} onClick={like} />}
               {liked && <FavoriteIcon className={classes.heartIcon} onClick={like} />}
               <Typography className={classes.greyText} display={"inline"}>
-                {data.liked || (liked ? 1 : 0)}
+                {data?.liked || (liked ? 1 : 0)}
               </Typography>
               <div className={classes.postDateText}>
                 <Typography className={classes.greyText}>
-                  Posted {data.created_at ? moment(data.created_at).fromNow() : moment().fromNow()}
+                  Posted {data?.created_at ? moment(data?.created_at).fromNow() : moment().fromNow()}
                 </Typography>
               </div>
             </Grid>
@@ -124,10 +124,10 @@ export default function TattooImage({ data, relatedTattoos }: Props) {
       </Grid>
       <Grid container>
         <Grid container item lg={12} justify={"center"} className={classes.textBlock}>
-          {relatedTattoos.length === 0 && <Typography>More Like This</Typography>}
+          {relatedTattoos && relatedTattoos.length === 0 && <Typography>More Like This</Typography>}
         </Grid>
         <Grid item lg={12}>
-          <CustomGallery tattoos={relatedTattoos} />
+          <CustomGallery tattoos={relatedTattoos || []} />
         </Grid>
       </Grid>
     </>

@@ -85,6 +85,7 @@ declare namespace Resource {
 
   interface TattooDetail {
     id: number;
+    name?: string;
     image: Image;
     artist: ArtistDetail;
     color?: string;

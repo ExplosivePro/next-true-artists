@@ -1,11 +1,11 @@
 // External import
 import React from "react";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
+import Image from "next/image";
 
 // Material UI Components
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
 import Avatar from "@material-ui/core/Avatar";
 import Grid from "@material-ui/core/Grid";
 
@@ -53,10 +53,12 @@ export default function ArtistItem({ data: { id, name, avatar, hero_banner } }: 
 
   return (
     <Card className={classes.root} elevation={1}>
-      <CardMedia
-        className={classes.media}
-        image={hero_banner ? hero_banner.image_url : defaultStudioTattoo}
-        title={name}
+      <Image
+        src={hero_banner ? hero_banner.image_url : defaultStudioTattoo}
+        width={370}
+        height={200}
+        alt={name}
+        layout={"responsive"}
       />
       <CardHeader
         avatar={<Avatar aria-label="recipe" src={avatar?.image_url} />}
