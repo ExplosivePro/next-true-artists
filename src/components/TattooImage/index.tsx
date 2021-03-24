@@ -59,11 +59,11 @@ export default function TattooImage({ data, relatedTattoos }: Props) {
     <>
       <Grid container>
         <Grid item lg={6} md={6} sm={12} xs={12} className={classes.leftSide}>
-          <Image src={data.image?.image_url} cover={true} style={{ width: "100%" }} />
+          <Image src={data.image?.image_url} aspectRatio={671 / 990} cover={true} style={{ width: "100%" }} />
         </Grid>
         <Grid item lg={6} md={6} sm={12} xs={12} className={classes.rightSide}>
           <List dense className={classes.title}>
-            <ListItem button className={classes.spaceAtLeft}>
+            <ListItem className={classes.spaceAtLeft}>
               <ListItemAvatar>
                 <Avatar alt={data.artist.name} src={`${data.artist.avatar?.image_url}`} />
               </ListItemAvatar>

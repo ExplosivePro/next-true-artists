@@ -22,23 +22,23 @@ const useStyles = makeStyles((theme) =>
       "& img": {
         borderRadius: "20px",
         [theme.breakpoints.down("sm")]: {
-          height: "300px !important",
-          width: "auto !important",
-          left: "50% !important",
-          transform: "translateX(-50%)",
+          // height: "300px !important",
+          // width: "auto !important",
+          // left: "50% !important",
+          // transform: "translateX(-50%)",
         },
       },
       "& div": {
         backgroundColor: "transparent !important",
-        height: "980px",
+        // height: "980px",
         boxShadow: "6px 3px 6px 0px rgb(0 0 0 / 22%)",
         [theme.breakpoints.down("md")]: {
           boxShadow: "none",
         },
         borderRadius: "20px",
         [theme.breakpoints.down("sm")]: {
-          height: "300px",
-          paddingTop: "0 !important",
+          // height: "300px",
+          // paddingTop: "0 !important",
           boxShadow: "none",
         },
       },
@@ -50,7 +50,6 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: colors.standardGreyFooter,
       borderBottomRightRadius: "20px",
       marginLeft: "-15px",
-      paddingRight: "15px",
       [theme.breakpoints.down("sm")]: {
         marginLeft: "0",
       },
@@ -94,7 +93,7 @@ const useStyles = makeStyles((theme) =>
       height: theme.spacing(7),
     },
     galleryContainer: {
-      height: "200px",
+      // height: "200px",
     },
     textBlock: {
       margin: "20px 0 15px 0",
@@ -110,6 +109,7 @@ const useStyles = makeStyles((theme) =>
     },
     commentInputWrapper: {
       marginLeft: "30px",
+      paddingRight: "40px",
       [theme.breakpoints.down("sm")]: {
         marginLeft: "15px",
       },

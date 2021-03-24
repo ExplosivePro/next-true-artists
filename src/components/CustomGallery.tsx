@@ -34,7 +34,7 @@ export default function CustomGallery({ tattoos }: Props) {
     setImages(generateImageList(tattoos));
   }, [tattoos]);
 
-  return <Gallery photos={images} onClick={onClickImage} />;
+  return <Gallery photos={images} onClick={onClickImage} margin={12} />;
 }
 
 interface Props {
