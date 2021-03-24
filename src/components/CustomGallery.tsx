@@ -1,19 +1,19 @@
-// @ts-ignore
-import Gallery from "react-grid-gallery";
-import React, { useEffect, useState } from "react";
+import Gallery, { PhotoProps } from "react-photo-gallery";
+import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/router";
 
 // Generate suitable image list from image array backend response
 const generateImageList = (list: Resource.TattooDetail[]) => {
-  const imageList: Resource.Tattoos[] = [];
+  const imageList: PhotoProps[] = [];
 
   list.map((tattoo) => {
     if (tattoo.image) {
       imageList.push({
-        id: tattoo.id,
         src: tattoo.image.image_url,
-        thumbnail: tattoo.image.image_url,
         alt: tattoo.image.name,
+        width: 1,
+        height: 1,
+        key: tattoo.id.toString(),
       });
     }
   });
@@ -21,28 +21,20 @@ const generateImageList = (list: Resource.TattooDetail[]) => {
   return imageList;
 };
 
-export default function CustomGallery({ className, tattoos }: Props) {
+export default function CustomGallery({ tattoos }: Props) {
   const router = useRouter();
 
   const [images, setImages] = useState(generateImageList(tattoos));
 
-  const onClickImage = (index: number) => {
-    router.push(`/tattoos/${images[index].id}`);
-  };
+  const onClickImage = useCallback((event: any, { photo }) => {
+    router.push(`/tattoos/${photo.key}`);
+  }, []);
 
   useEffect(() => {
     setImages(generateImageList(tattoos));
   }, [tattoos]);
 
-  return (
-    <Gallery
-      images={images}
-      enableImageSelection={false}
-      showCloseButton={false}
-      onClickThumbnail={onClickImage}
-      className={className}
-    />
-  );
+  return <Gallery photos={images} onClick={onClickImage} />;
 }
 
 interface Props {

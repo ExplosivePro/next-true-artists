@@ -1,7 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-// @ts-ignore
-import Gallery from "react-grid-gallery";
 
 // Material UI
 import SwipeableViews from "react-swipeable-views";
@@ -23,6 +21,7 @@ import TabPanel from "./TabPannel";
 
 import colors from "../../palette";
 import { Typography } from "@material-ui/core";
+import CustomGallery from "../CustomGallery";
 
 const useStyles = makeStyles({
   root: {
@@ -49,28 +48,10 @@ const useStyles = makeStyles({
   },
 });
 
-// Generate suitable image list from image array backend response
-const generateImageList = (list: Resource.TattooDetail[]) => {
-  const imageList: Resource.Tattoos[] = [];
-
-  list.map((tattoo) => {
-    if (tattoo.image) {
-      imageList.push({
-        id: tattoo.id,
-        src: tattoo.image.image_url,
-        thumbnail: tattoo.image.image_url,
-      });
-    }
-  });
-
-  return imageList;
-};
-
 export default function ProfileTab({ data: { tattoos, bio, street_address, country, city } }: Props) {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
-  const [images] = useState(generateImageList(tattoos));
 
   const handleChange = (event: React.ChangeEvent<any>, newValue: number) => {
     setValue(newValue);
@@ -103,12 +84,12 @@ export default function ProfileTab({ data: { tattoos, bio, street_address, count
           className={classes.swipeView}
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
-            {images.length === 0 && (
+            {tattoos.length === 0 && (
               <Grid container justify={"center"}>
                 <Typography>This artist does not have any image yet.</Typography>
               </Grid>
             )}
-            <Gallery images={images} enableImageSelection={false} showCloseButton={false} />
+            <CustomGallery tattoos={tattoos} />
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
             {bio ? (

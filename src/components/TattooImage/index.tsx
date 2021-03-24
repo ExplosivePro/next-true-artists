@@ -58,7 +58,7 @@ export default function TattooImage({ data, relatedTattoos }: Props) {
   return (
     <>
       <Grid container>
-        <Grid item lg={6} md={6} sm={12} xs={12} className={classes.leftSide} justify={"center"}>
+        <Grid item lg={6} md={6} sm={12} xs={12} className={classes.leftSide}>
           <Image src={data.image?.image_url} cover={true} style={{ width: "100%" }} />
         </Grid>
         <Grid item lg={6} md={6} sm={12} xs={12} className={classes.rightSide}>

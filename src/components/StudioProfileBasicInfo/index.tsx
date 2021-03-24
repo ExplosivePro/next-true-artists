@@ -82,7 +82,7 @@ export default function StudioProfileBasicInfo({
         </Grid>
         <Hidden smDown>
           <Grid item lg={6} md={6} className={classes.imageBlock}>
-            <ImageCarousel data={tattoos} />
+            <ImageCarousel data={[]} />
           </Grid>
         </Hidden>
       </Grid>

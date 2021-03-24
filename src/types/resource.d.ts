@@ -31,9 +31,10 @@ declare namespace Resource {
   interface Tattoos {
     id: number;
     src: string;
-    thumbnail: string;
     alt?: string;
     tags?: any[];
+    width?: number;
+    height?: number;
   }
 
   interface ArtistDetail {
@@ -68,7 +69,7 @@ declare namespace Resource {
     country: string;
     rating: number;
     totalRating: number;
-    tattoos: Image[];
+    tattoos: TattooDetail[];
     avatar: Image;
     bio?: string;
     street_address?: string;
