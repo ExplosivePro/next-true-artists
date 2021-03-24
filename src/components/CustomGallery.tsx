@@ -81,7 +81,7 @@ export default function CustomGallery({ tattoos }: Props) {
           return (
             <img
               key={index}
-              alt={image.key}
+              alt={image.alt}
               src={image.src}
               onClick={() => {
                 onClickImage(image.id);
@@ -95,7 +95,7 @@ export default function CustomGallery({ tattoos }: Props) {
           return (
             <img
               key={index}
-              alt={image.key}
+              alt={image.alt}
               src={image.src}
               onClick={() => {
                 onClickImage(image.id);
@@ -109,7 +109,7 @@ export default function CustomGallery({ tattoos }: Props) {
           return (
             <img
               key={index}
-              alt={image.key}
+              alt={image.alt}
               src={image.src}
               onClick={() => {
                 onClickImage(image.id);
@@ -123,7 +123,7 @@ export default function CustomGallery({ tattoos }: Props) {
           return (
             <img
               key={index}
-              alt={image.key}
+              alt={image.alt}
               src={image.src}
               onClick={() => {
                 onClickImage(image.id);
