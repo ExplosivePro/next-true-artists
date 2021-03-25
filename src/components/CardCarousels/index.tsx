@@ -61,9 +61,6 @@ const styles = (theme: Theme) =>
     },
     singleCardItem: {
       margin: theme.spacing(2),
-      [theme.breakpoints.down("md")]: {
-        margin: `${theme.spacing(2)}px auto`,
-      },
     },
     cardItem: {
       boxShadow: `0 4px 4px 0 rgb(136 118 118 / 15%)`,
@@ -102,7 +99,7 @@ export default function CardCarousels({
       {
         breakpoint: 1280,
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 2,
         },
       },
       {

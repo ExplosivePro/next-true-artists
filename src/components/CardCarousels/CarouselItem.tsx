@@ -5,11 +5,11 @@ import { useRouter } from "next/router";
 import clsx from "clsx";
 import Slider from "react-slick";
 import Link from "next/link";
+import Image from "next/image";
 
 // Material UI Components
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
 import Avatar from "@material-ui/core/Avatar";
 import { Typography } from "@material-ui/core";
 
@@ -61,6 +61,9 @@ const useStyles = makeStyles({
       textDecoration: "none",
       color: colors.black,
     },
+    "&:hover": {
+      textDecoration: "underline",
+    },
   },
   subHeader: {
     fontSize: "14px",
@@ -101,7 +104,15 @@ export default function CardCarouselsItem({
       <Slider {...settings}>
         {tattoos.map((tattoo, index) => {
           return (
-            <CardMedia className={classes.media} image={tattoo.image.image_url} title={tattoo.name} key={index}>
+            <>
+              <Image
+                src={tattoo.image.image_url}
+                width={370}
+                height={200}
+                alt={name}
+                layout={"responsive"}
+                key={index}
+              />
               <ChipRating
                 text={
                   <Typography className={classes.rateText}>
@@ -109,11 +120,12 @@ export default function CardCarouselsItem({
                   </Typography>
                 }
               />
-            </CardMedia>
+            </>
           );
         })}
         {tattoos.length === 0 && (
-          <CardMedia className={classes.media} image={defaultStudioTattoo} title={"default"}>
+          <>
+            <Image src={defaultStudioTattoo} width={370} height={200} alt={name} layout={"responsive"} />
             <ChipRating
               text={
                 <Typography className={classes.rateText}>
@@ -121,7 +133,7 @@ export default function CardCarouselsItem({
                 </Typography>
               }
             />
-          </CardMedia>
+          </>
         )}
       </Slider>
       <CardHeader

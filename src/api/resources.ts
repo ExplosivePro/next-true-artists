@@ -146,6 +146,7 @@ export const getTattooList = async (
   searchKey?: string,
   filters?: any,
 ): Promise<Resource.TattooListResponse> => {
+  console.log(filters);
   try {
     let query = `/api/v1/tattoos?page=${page}`;
 
@@ -162,7 +163,7 @@ export const getTattooList = async (
     }
 
     // IF filter is defined, and this is under string format
-    if (filters && typeof filters === "object") {
+    if (filters && typeof filters === "string") {
       query += `&${filters}`;
     }
 

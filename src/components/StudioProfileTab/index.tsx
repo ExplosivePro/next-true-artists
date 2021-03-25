@@ -76,10 +76,14 @@ export default function StudioProfileTab({ data }: Props) {
             <StudioProfileBasicInfo data={data} />
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
-            Item Two
+            <Grid container justify={"center"}>
+              No Data
+            </Grid>
           </TabPanel>
           <TabPanel value={value} index={2} dir={theme.direction}>
-            Item Three
+            <Grid container justify={"center"}>
+              No Data
+            </Grid>
           </TabPanel>
         </SwipeableViews>
       </AppBar>

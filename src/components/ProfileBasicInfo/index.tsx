@@ -69,13 +69,13 @@ export default function ProfileBasicInfo({ data }: Props) {
   return (
     <Grid container alignItems={"center"} className={classes.root}>
       <List component="nav" aria-labelledby="main navigation" className={classes.buttonList}>
-        <ListItem button>
+        <ListItem>
           <ListItemIcon className={classes.listItemIcon}>
             <BusinessCenterIcon className={classes.icon} />
           </ListItemIcon>
           <ListItemText primary="Taiko Gallery" className={classes.itemText} />
         </ListItem>
-        <ListItem button>
+        <ListItem>
           <ListItemIcon>
             <RoomIcon className={classes.icon} />
           </ListItemIcon>

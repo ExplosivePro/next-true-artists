@@ -172,6 +172,7 @@ export default function Tattoos({ tattoos: { tattoos }, workingStyles, cities: {
 
   // Filter
   const applyFilter = (data: any) => {
+    console.log(data);
     // Store this group data
     setFilterByGroups(data);
 
@@ -189,6 +190,7 @@ export default function Tattoos({ tattoos: { tattoos }, workingStyles, cities: {
     handleFilterClose();
   };
 
+  // Remove filter
   const removeFilter = (id: number, group: string) => {
     setFilters(filters.filter((item) => (item.id !== id && item.group === group) || item.group !== group));
 
@@ -199,6 +201,15 @@ export default function Tattoos({ tattoos: { tattoos }, workingStyles, cities: {
     );
     setFilterByGroups(newFilter);
 
+    doFilter(newFilter);
+  };
+
+  const onCityChange = (e: any) => {
+    let newFilter = filterByGroups;
+
+    newFilter = { ...filterByGroups, location: [{ id: e.target.value, name: e.target.value, group: "location" }] };
+
+    setFilterByGroups(newFilter);
     doFilter(newFilter);
   };
 
@@ -267,7 +278,15 @@ export default function Tattoos({ tattoos: { tattoos }, workingStyles, cities: {
               alignItems={"center"}
               className={clsx(classes.padding, classes.mobileMargin)}
             >
-              <TextField id="standard-select-currency" select label="Select City" variant="outlined" fullWidth>
+              <TextField
+                id="standard-select-city"
+                select
+                label="Select City"
+                variant="outlined"
+                fullWidth
+                onChange={onCityChange}
+                defaultValue={""}
+              >
                 {locations.map((option) => (
                   <MenuItem key={option.id} value={option.id}>
                     {option.city}
