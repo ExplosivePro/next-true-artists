@@ -157,7 +157,7 @@ export default function Header({ userProfile }: Props) {
                   key={title}
                   className={clsx(classes.linkText, { [classes.active]: router.pathname.includes(path) })}
                 >
-                  <ListItem button>
+                  <ListItem>
                     <ListItemText primary={title} classes={{ primary: classes.listItemText }} />
                   </ListItem>
                 </a>

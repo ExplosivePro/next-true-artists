@@ -27,6 +27,9 @@ const useStyles = makeStyles((theme) =>
     linkText: {
       textDecoration: `none`,
       color: `white`,
+      "&:hover": {
+        borderBottom: `solid 4px ${colors.standardYellow}`,
+      },
     },
     linkTextMenu: {
       margin: "10px 15px",
