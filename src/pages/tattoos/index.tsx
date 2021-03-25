@@ -114,6 +114,7 @@ export default function Tattoos({ tattoos: { tattoos }, workingStyles, cities: {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [filters, setFilters] = useState<any[]>([]);
   const [filterByGroups, setFilterByGroups] = useState<any>({});
+  const [cities, setCities] = useState<any[]>(locations);
 
   // On filter button click
   const handleFilterClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -204,6 +205,7 @@ export default function Tattoos({ tattoos: { tattoos }, workingStyles, cities: {
     doFilter(newFilter);
   };
 
+  // On city selection change
   const onCityChange = (e: any) => {
     let newFilter = filterByGroups;
 
@@ -212,6 +214,11 @@ export default function Tattoos({ tattoos: { tattoos }, workingStyles, cities: {
     setFilterByGroups(newFilter);
     doFilter(newFilter);
   };
+
+  useEffect(() => {
+    // Add All Cities option to selection list
+    setCities([{ id: null, city: "All Cities" }].concat(cities));
+  }, []);
 
   return (
     <BodyContent variant={"div"} className={classes.root}>
@@ -287,7 +294,7 @@ export default function Tattoos({ tattoos: { tattoos }, workingStyles, cities: {
                 onChange={onCityChange}
                 defaultValue={""}
               >
-                {locations.map((option) => (
+                {cities.map((option) => (
                   <MenuItem key={option.id} value={option.id}>
                     {option.city}
                   </MenuItem>
