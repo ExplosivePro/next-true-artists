@@ -173,7 +173,6 @@ export default function Tattoos({ tattoos: { tattoos }, workingStyles, cities: {
 
   // Filter
   const applyFilter = (data: any) => {
-    console.log(data);
     // Store this group data
     setFilterByGroups(data);
 

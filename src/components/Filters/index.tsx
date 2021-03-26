@@ -1,5 +1,6 @@
 // External APIs
 import React, { useState } from "react";
+import clsx from "clsx";
 
 // Material UI Components
 import { Grid, Typography } from "@material-ui/core";
@@ -70,34 +71,46 @@ export default function Filters({ data, onClose, onApply, workingStyles }: Props
 
   // Handle checkbox change
   const handleChange = (e: any, id: number, group: string) => {
-    let groupData = [{ id, name: e.target.name, group }];
-    // Group does already existed
-    if (optionValues[group]) {
-      groupData = groupData.concat(optionValues[group]);
-    }
+    // Check
+    if (e.target.checked) {
+      let groupData = [{ id, name: e.target.name, group }];
+      // Group does already existed
+      if (optionValues[group]) {
+        groupData = groupData.concat(optionValues[group]);
+      }
 
-    setOptionValues({ ...optionValues, [group]: groupData });
+      setOptionValues({ ...optionValues, [group]: groupData });
+    } else {
+      // Uncheck
+      setOptionValues({
+        ...optionValues,
+        [group]: optionValues[group].filter((item: any) => item.id !== id),
+      });
+    }
   };
 
   // Reset all filters
   const reset = () => {
     setOptionValues({});
-    onClose();
   };
 
-  // const isChecked = (id: number, group: string) => {
-  //   return optionValues[group] && optionValues[group].filter((item: any) => item.id === id).length > 0;
-  // };
+  const isChecked = (id: number, group: string) => {
+    return optionValues[group]
+      ? optionValues[group] && optionValues[group].filter((item: any) => item.id === id).length > 0
+      : false;
+  };
 
   return (
     <Grid container>
       <div className={classes.header}>
-        <Typography variant={"h6"}>Filter</Typography>
+        <Typography variant={"h6"} className={classes.title}>
+          Filter
+        </Typography>
         <IconButton className={classes.closeIcon} onClick={onClose}>
           <CloseIcon />
         </IconButton>
       </div>
-      <Grid container>
+      <Grid container className={classes.container}>
         <Grid item lg={4} md={4} sm={12} xs={12}>
           <FormControl component="fieldset" className={classes.formControl}>
             <FormLabel component="legend" className={classes.filterGroupTitle}>
@@ -109,8 +122,14 @@ export default function Filters({ data, onClose, onApply, workingStyles }: Props
                   <FormControlLabel
                     key={color.id}
                     value={color.id}
-                    control={<Checkbox name={color.name} />}
-                    label={color.name}
+                    control={<Checkbox name={color.name} checked={isChecked(color.id, "colors")} />}
+                    label={
+                      <Typography
+                        className={clsx(classes.label, { [classes.selected]: isChecked(color.id, "colors") })}
+                      >
+                        {color.name}
+                      </Typography>
+                    }
                     onChange={(e) => {
                       handleChange(e, color.id, "colors");
                     }}
@@ -130,8 +149,14 @@ export default function Filters({ data, onClose, onApply, workingStyles }: Props
                 return (
                   <FormControlLabel
                     key={placement.id}
-                    control={<Checkbox name={placement.name} />}
-                    label={placement.name}
+                    control={<Checkbox name={placement.name} checked={isChecked(placement.id, "placements")} />}
+                    label={
+                      <Typography
+                        className={clsx(classes.label, { [classes.selected]: isChecked(placement.id, "placements") })}
+                      >
+                        {placement.name}
+                      </Typography>
+                    }
                     onChange={(e) => {
                       handleChange(e, placement.id, "placements");
                     }}
@@ -151,8 +176,14 @@ export default function Filters({ data, onClose, onApply, workingStyles }: Props
                 return (
                   <FormControlLabel
                     key={artStyle.id}
-                    control={<Checkbox name={artStyle.name} />}
-                    label={artStyle.name}
+                    control={<Checkbox name={artStyle.name} checked={isChecked(artStyle.id, "artStyles")} />}
+                    label={
+                      <Typography
+                        className={clsx(classes.label, { [classes.selected]: isChecked(artStyle.id, "artStyles") })}
+                      >
+                        {artStyle.name}
+                      </Typography>
+                    }
                     onChange={(e) => {
                       handleChange(e, artStyle.id, "artStyles");
                     }}
@@ -164,10 +195,18 @@ export default function Filters({ data, onClose, onApply, workingStyles }: Props
         </Grid>
       </Grid>
       <Grid container justify={"flex-end"} alignItems={"center"} className={classes.footer}>
-        <Typography className={classes.resetButton} onClick={reset}>
-          Reset
-        </Typography>
         <PrimaryButton
+          className={classes.button}
+          variant="outlined"
+          color="primary"
+          size="medium"
+          bluePastel
+          onClick={reset}
+        >
+          Reset
+        </PrimaryButton>
+        <PrimaryButton
+          className={classes.button}
           variant="contained"
           color="primary"
           size="medium"

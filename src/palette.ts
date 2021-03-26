@@ -7,7 +7,7 @@ const colors = {
   red: "#b84001",
   brightBlue: "#e3fdff",
   bluePastel: "#47b4bb",
-  darkBluePastel: "#0e848c",
+  darkBluePastel: "#2b8187",
   lightYellow: "#f5c964",
   standardRed: "#a04015",
   brightRed: "#d92626",
