@@ -4,10 +4,17 @@ import colors from "../../palette";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
+    imageContainer: {
+      maxHeight: "980px",
+      overflow: "hidden",
+      [theme.breakpoints.down("xs")]: {
+        maxHeight: "unset",
+      },
+    },
     title: {
       backgroundColor: colors.bluePastel,
       borderTopRightRadius: "20px",
-      [theme.breakpoints.down("sm")]: {
+      [theme.breakpoints.down("xs")]: {
         borderTopLeftRadius: "20px",
       },
     },
@@ -19,38 +26,25 @@ const useStyles = makeStyles((theme) =>
     },
     leftSide: {
       zIndex: 1,
+      backgroundColor: colors.extremeDarkBluePastel,
+      borderRadius: "20px",
+      boxShadow: "6px 3px 6px 0px rgb(0 0 0 / 22%)",
       "& img": {
-        borderRadius: "20px",
-        [theme.breakpoints.down("sm")]: {
-          // height: "300px !important",
-          // width: "auto !important",
-          // left: "50% !important",
-          // transform: "translateX(-50%)",
-        },
+        width: "100%",
+        height: "auto",
       },
-      "& div": {
-        backgroundColor: "transparent !important",
-        // height: "980px",
-        boxShadow: "6px 3px 6px 0px rgb(0 0 0 / 22%)",
-        [theme.breakpoints.down("md")]: {
-          boxShadow: "none",
-        },
-        borderRadius: "20px",
-        [theme.breakpoints.down("sm")]: {
-          // height: "300px",
-          // paddingTop: "0 !important",
-          boxShadow: "none",
-        },
-      },
-      [theme.breakpoints.down("sm")]: {
+      [theme.breakpoints.down("xs")]: {
         marginBottom: "25px",
       },
     },
     rightSide: {
+      borderTopRightRadius: "20px",
       backgroundColor: colors.standardGreyFooter,
       borderBottomRightRadius: "20px",
       marginLeft: "-15px",
-      [theme.breakpoints.down("sm")]: {
+      height: "100%",
+      overflow: "scroll",
+      [theme.breakpoints.down("xs")]: {
         marginLeft: "0",
       },
       zIndex: 0,
@@ -103,16 +97,19 @@ const useStyles = makeStyles((theme) =>
     },
     spaceAtLeft: {
       marginLeft: "15px",
-      [theme.breakpoints.down("sm")]: {
+      [theme.breakpoints.down("xs")]: {
         marginLeft: "inherit",
       },
     },
     commentInputWrapper: {
       marginLeft: "30px",
       paddingRight: "40px",
-      [theme.breakpoints.down("sm")]: {
+      [theme.breakpoints.down("xs")]: {
         marginLeft: "15px",
       },
+    },
+    moreLikeThisText: {
+      fontWeight: 500,
     },
   }),
 );

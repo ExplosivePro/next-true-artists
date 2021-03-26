@@ -1,6 +1,5 @@
 // External
 import { Grid, Typography } from "@material-ui/core";
-import Image from "material-ui-image";
 import clsx from "clsx";
 import moment from "moment";
 import { useState } from "react";
@@ -57,11 +56,11 @@ export default function TattooImage({ data, relatedTattoos }: Props) {
 
   return (
     <>
-      <Grid container>
-        <Grid item lg={6} md={6} sm={12} xs={12} className={classes.leftSide}>
-          <Image src={data?.image?.image_url} aspectRatio={671 / 990} cover={true} style={{ width: "100%" }} />
+      <Grid container className={classes.imageContainer}>
+        <Grid container alignItems={"center"} item lg={6} md={6} sm={6} xs={12} className={classes.leftSide}>
+          <img src={data?.image?.image_url} alt={data?.image?.name} />
         </Grid>
-        <Grid item lg={6} md={6} sm={12} xs={12} className={classes.rightSide}>
+        <Grid item lg={6} md={6} sm={6} xs={12} className={classes.rightSide}>
           <List dense className={classes.title}>
             <ListItem className={classes.spaceAtLeft}>
               <ListItemAvatar>
@@ -124,7 +123,11 @@ export default function TattooImage({ data, relatedTattoos }: Props) {
       </Grid>
       <Grid container>
         <Grid container item lg={12} justify={"center"} className={classes.textBlock}>
-          {relatedTattoos && relatedTattoos.length === 0 && <Typography>More Like This</Typography>}
+          {relatedTattoos && relatedTattoos.length > 0 && (
+            <Typography variant={"h5"} className={classes.moreLikeThisText}>
+              More Like This
+            </Typography>
+          )}
         </Grid>
         <Grid item lg={12}>
           <CustomGallery tattoos={relatedTattoos || []} />

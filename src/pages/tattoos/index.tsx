@@ -128,7 +128,7 @@ export default function Tattoos({ tattoos: { tattoos }, workingStyles, cities: {
 
   // Filter open
   const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
+  const id = open ? "filter-popover" : undefined;
 
   // On search Input
   const onSearch = (e: any) => {

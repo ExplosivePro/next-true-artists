@@ -33,6 +33,11 @@ const useStyles = makeStyles((theme) =>
     },
     linkTextMenu: {
       margin: "10px 15px",
+      "&:hover": {
+        borderBottom: `solid 4px ${colors.standardYellow}`,
+        marginBottom: "-4px",
+        backgroundColor: colors.white,
+      },
     },
     active: {
       borderBottom: `solid 4px ${colors.standardYellow}`,

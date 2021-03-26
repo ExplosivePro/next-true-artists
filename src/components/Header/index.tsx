@@ -60,7 +60,7 @@ export default function Header({ userProfile }: Props) {
   };
 
   // Desktop menu
-  const menuId = "primary-search-account-menu";
+  const menuId = "primary-account-menu";
   const renderMenu = userProfile && (
     <Menu
       anchorEl={anchorEl}
@@ -77,7 +77,7 @@ export default function Header({ userProfile }: Props) {
   );
 
   // Mobile menu
-  const mobileMenuId = "primary-search-account-menu-mobile";
+  const mobileMenuId = "primary-account-menu-mobile";
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
