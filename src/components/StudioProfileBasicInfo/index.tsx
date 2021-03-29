@@ -4,15 +4,13 @@ import Hidden from "@material-ui/core/Hidden";
 
 // Material UI
 import { Grid, Typography } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import MenuItem from "@material-ui/core/MenuItem";
-
 // Custom Components
 import OperationBlockList from "./OperationBlockList";
 import ImageCarousel from "./ImageCarousel";
 import AddressBlock from "./AddressBlock";
 import Portfolio from "./Portfolio";
 import Preview from "./Review";
+import WorkingHourList from "../WorkingHourList";
 
 const styles = () =>
   createStyles({
@@ -30,13 +28,6 @@ const styles = () =>
   });
 
 const useStyles = makeStyles(styles);
-
-const styleList = [
-  {
-    label: "Any style",
-    value: "any style",
-  },
-];
 
 const operationList = [
   { icon: "/images/icons/conversation-icon.svg", name: "Consult with the Studio" },
@@ -61,22 +52,7 @@ export default function StudioProfileBasicInfo({
           </Typography>
           <Typography>{bio}</Typography>
 
-          <TextField
-            id="outlined-select-currency"
-            select
-            label="Art style"
-            value={styleList[0].value}
-            variant="outlined"
-            fullWidth
-            className={classes.block}
-            disabled
-          >
-            {styleList.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
+          <WorkingHourList className={classes.block} />
 
           <OperationBlockList className={classes.block} list={operationList} />
         </Grid>

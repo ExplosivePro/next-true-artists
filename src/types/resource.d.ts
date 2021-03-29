@@ -75,7 +75,7 @@ declare namespace Resource {
     avatar: Image;
     bio?: string;
     street_address?: string;
-    cover?: string;
+    hero_banner?: Image;
     lat?: number;
     long?: number;
   }

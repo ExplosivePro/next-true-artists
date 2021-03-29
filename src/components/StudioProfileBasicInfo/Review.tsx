@@ -96,7 +96,7 @@ export default function Review({ className, list = [] }: Props) {
                   secondary={
                     <span className={classes.reviewBlock}>
                       <span className={classes.ratingStar}>{getRatingStar(item.rate)}</span>
-                      <Typography className={classes.inline} color="textPrimary">
+                      <Typography component={"span"} className={classes.inline} color="textPrimary">
                         {item.comment}
                       </Typography>
                     </span>

@@ -22,6 +22,7 @@ const useStyles = makeStyles(() =>
 export default function Studio({ currentStudio, reviews }: Props) {
   const classes = useStyles();
 
+  console.log(currentStudio);
   return (
     <BodyContent>
       <Head>
@@ -32,7 +33,7 @@ export default function Studio({ currentStudio, reviews }: Props) {
       </Head>
       {currentStudio && (
         <Grid container className={classes.root}>
-          <FullWidthCover src={currentStudio.cover || ""} />
+          <FullWidthCover src={currentStudio.hero_banner} />
           <StudioProfileHeader data={currentStudio} />
           <StudioProfileTab data={{ data: currentStudio, reviews }} />
         </Grid>
