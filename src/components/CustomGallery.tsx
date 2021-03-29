@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import clsx from "clsx";
 
 // Generate image into 4 groups
 const generateImageList = (list: Resource.TattooDetail[]) => {
@@ -60,7 +61,7 @@ const generateImageList = (list: Resource.TattooDetail[]) => {
   return imageGroups;
 };
 
-export default function CustomGallery({ tattoos }: Props) {
+export default function CustomGallery({ tattoos, className }: Props) {
   const router = useRouter();
 
   const [images, setImages] = useState(generateImageList(tattoos));
@@ -75,7 +76,7 @@ export default function CustomGallery({ tattoos }: Props) {
   }, [tattoos]);
 
   return (
-    <div className="row">
+    <div className={clsx("row", className)}>
       <div className="column">
         {images[0].map((image: any, index: number) => {
           return (

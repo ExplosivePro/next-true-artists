@@ -49,7 +49,9 @@ declare namespace Resource {
     tattoos: TattooDetail[];
     avatar?: Image;
     hero_banner?: Image;
-    bio: string;
+    bio?: string;
+    lat?: number;
+    long?: number;
   }
 
   interface ArtistListResponse {

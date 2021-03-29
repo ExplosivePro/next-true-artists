@@ -7,14 +7,6 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Grid from "@material-ui/core/Grid";
 import AppBar from "@material-ui/core/AppBar";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import InstagramIcon from "@material-ui/icons/Instagram";
-import FacebookIcon from "@material-ui/icons/Facebook";
-import TwitterIcon from "@material-ui/icons/Twitter";
 
 // Custom Components
 import TabPanel from "./TabPannel";
@@ -22,6 +14,7 @@ import TabPanel from "./TabPannel";
 import colors from "../../palette";
 import { Typography } from "@material-ui/core";
 import CustomGallery from "../CustomGallery";
+import AddressBlock from "../StudioProfileBasicInfo/AddressBlock";
 
 const useStyles = makeStyles({
   root: {
@@ -46,9 +39,12 @@ const useStyles = makeStyles({
   swipeView: {
     borderTop: "solid 1px #e9e9e9",
   },
+  profileContent: {
+    marginTop: "15px",
+  },
 });
 
-export default function ProfileTab({ data: { tattoos, bio, street_address, country, city } }: Props) {
+export default function ProfileTab({ data: { tattoos, bio, street_address, country, city, lat, long } }: Props) {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
@@ -85,50 +81,31 @@ export default function ProfileTab({ data: { tattoos, bio, street_address, count
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
             {tattoos.length === 0 && (
-              <Grid container justify={"center"}>
+              <Grid container justify={"center"} className={classes.profileContent}>
                 <Typography>This artist does not have any image yet.</Typography>
               </Grid>
             )}
-            <CustomGallery tattoos={tattoos} />
+            <CustomGallery tattoos={tattoos} className={classes.profileContent} />
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
-            {bio ? (
-              <Typography>{bio}</Typography>
-            ) : (
-              <>
-                <Grid container justify={"center"}>
-                  <Typography>This artist does not have description yet.</Typography>
-                </Grid>
-                <List component="nav" aria-label="main mailbox folders">
-                  <ListItem button>
-                    <ListItemIcon>
-                      <FacebookIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Facebook" />
-                  </ListItem>
-                  <ListItem button>
-                    <ListItemIcon>
-                      <InstagramIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Instagram" />
-                  </ListItem>
-                  <ListItem button>
-                    <ListItemIcon>
-                      <TwitterIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Twitter" />
-                  </ListItem>
-                </List>
-              </>
+            <Typography className={classes.profileContent}>{bio}</Typography>
+            {!bio && (
+              <Grid container justify={"center"} className={classes.profileContent}>
+                <Typography>This artist does not have description yet.</Typography>
+              </Grid>
             )}
           </TabPanel>
           <TabPanel value={value} index={2} dir={theme.direction}>
-            <Grid container alignItems={"center"}>
-              <LocationOnIcon />
-              <Typography display={"inline"}>
-                {street_address} {`${city ? `,${city}` : ""}`} {`${country ? `,${country}` : ""}`}
-              </Typography>
-            </Grid>
+            <AddressBlock
+              name={"Taiko Gallery"}
+              address={street_address}
+              city={city}
+              country={country}
+              lat={lat}
+              long={long}
+              spacing
+              className={classes.profileContent}
+            />
           </TabPanel>
         </SwipeableViews>
       </AppBar>

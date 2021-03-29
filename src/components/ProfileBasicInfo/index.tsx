@@ -92,7 +92,7 @@ export default function ProfileBasicInfo({ data }: Props) {
       </List>
       <Grid container alignItems={"center"} spacing={1} className={classes.chipContainer}>
         <Grid item>
-          <Chip label="Styles" className={classes.yellowChip} />
+          <Chip label="Styles:" className={classes.yellowChip} />
         </Grid>
         {data.styles &&
           data.styles.map((style, index) => {
@@ -102,6 +102,11 @@ export default function ProfileBasicInfo({ data }: Props) {
               </Grid>
             );
           })}
+        {(!data.styles || data.styles.length === 0) && (
+          <Grid item>
+            <Chip label={"None"} className={classes.violetChip} />
+          </Grid>
+        )}
       </Grid>
     </Grid>
   );

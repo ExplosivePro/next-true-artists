@@ -27,6 +27,9 @@ const useStyles = makeStyles(() =>
         marginTop: 0,
       },
     },
+    fullHeight: {
+      height: "100%",
+    },
   }),
 );
 
@@ -38,11 +41,12 @@ export default function AddressBlock({
   country,
   lat = 10.7718225,
   long = 106.7041598,
+  spacing = false,
 }: Props) {
   const classes = useStyles();
 
   return (
-    <Grid container className={clsx(className)}>
+    <Grid container className={clsx(className)} spacing={spacing ? 4 : 0}>
       <Grid item lg={4} md={4} sm={12} xs={12}>
         <GoogleWithSearch
           height={200}
@@ -68,7 +72,7 @@ export default function AddressBlock({
               {address} {city} {`${country ? `, ${country}` : ""}`}
             </Typography>
           }
-          className={classes.cardHeader}
+          className={clsx(classes.cardHeader, { [classes.fullHeight]: spacing })}
         />
       </Grid>
     </Grid>
@@ -83,4 +87,5 @@ interface Props {
   country?: string;
   lat?: number;
   long?: number;
+  spacing?: boolean;
 }
