@@ -13,6 +13,8 @@ import TabPanel from "./TabPannel";
 import StudioProfileBasicInfo from "../StudioProfileBasicInfo";
 
 import colors from "../../palette";
+import CustomGallery from "../CustomGallery";
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {},
@@ -22,18 +24,21 @@ const useStyles = makeStyles({
   },
   tabWrapper: {
     "& .MuiTabs-indicator": {
-      backgroundColor: colors.black,
+      backgroundColor: colors.standardYellow,
     },
   },
   tabItem: {
     textTransform: "none",
     fontSize: "16px",
     "&.Mui-selected": {
-      color: colors.black,
+      color: colors.bluePastel,
     },
   },
   swipeView: {
     borderTop: "solid 1px #e9e9e9",
+  },
+  profileContent: {
+    marginTop: "15px",
   },
 });
 
@@ -76,13 +81,18 @@ export default function StudioProfileTab({ data }: Props) {
             <StudioProfileBasicInfo data={data} />
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
-            <Grid container justify={"center"}>
-              No Data
+            {data.data.tattoos.length === 0 && (
+              <Grid container justify={"center"} className={classes.profileContent}>
+                <Typography>This studio does not have any portfolio yet.</Typography>
+              </Grid>
+            )}
+            <Grid container justify={"center"} className={classes.profileContent}>
+              <CustomGallery tattoos={data.data.tattoos} />
             </Grid>
           </TabPanel>
           <TabPanel value={value} index={2} dir={theme.direction}>
-            <Grid container justify={"center"}>
-              No Data
+            <Grid container justify={"center"} className={classes.profileContent}>
+              <Typography>This studio does not associate with any artist yet.</Typography>
             </Grid>
           </TabPanel>
         </SwipeableViews>

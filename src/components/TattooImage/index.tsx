@@ -64,7 +64,7 @@ export default function TattooImage({ data, relatedTattoos }: Props) {
           <List dense className={classes.title}>
             <ListItem className={classes.spaceAtLeft}>
               <ListItemAvatar>
-                <Avatar alt={data?.artist.name} src={`${data?.artist.avatar?.image_url}`} />
+                <Avatar alt={data?.artist.name} src={`${data?.artist?.avatar?.image_url}`} />
               </ListItemAvatar>
               <ListItemText
                 primary={<Typography variant={"h6"}>{data?.artist.name}</Typography>}
@@ -105,7 +105,7 @@ export default function TattooImage({ data, relatedTattoos }: Props) {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Avatar alt={`Image`} src={auth.user?.avatar.image_url} className={classes.commentAvatar} />
+                    <Avatar alt={`Image`} src={auth.user?.avatar?.image_url} className={classes.commentAvatar} />
                   </InputAdornment>
                 ),
               }}

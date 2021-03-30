@@ -37,7 +37,7 @@ export default function Portfolio({ className, data }: Props) {
         <Typography variant={"h5"}>Portfolio</Typography>
         {data.length === 0 && (
           <Grid container alignItems={"center"} justify={"center"}>
-            <Typography> No Data </Typography>
+            <Typography> Studio does not have any portfolio yet </Typography>
           </Grid>
         )}
 

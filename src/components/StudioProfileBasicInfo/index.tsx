@@ -1,6 +1,6 @@
 import React from "react";
+import clsx from "clsx";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import Hidden from "@material-ui/core/Hidden";
 
 // Material UI
 import { Grid, Typography } from "@material-ui/core";
@@ -10,6 +10,7 @@ import ImageCarousel from "./ImageCarousel";
 import AddressBlock from "./AddressBlock";
 import Portfolio from "./Portfolio";
 import Preview from "./Review";
+import Hidden from "@material-ui/core/Hidden";
 import WorkingHourList from "../WorkingHourList";
 
 const styles = () =>
@@ -40,12 +41,13 @@ export default function StudioProfileBasicInfo({
     data: { bio, street_address, city, country, name, lat, long, tattoos },
     reviews,
   },
+  className,
 }: Props) {
   const classes = useStyles();
 
   return (
     <>
-      <Grid container className={classes.root}>
+      <Grid container className={clsx(classes.root, className)}>
         <Grid item lg={6} md={6} sm={12} xs={12}>
           <Typography variant={"h5"} className={classes.title}>
             About the Studio
@@ -87,4 +89,5 @@ interface Data {
 
 interface Props {
   data: Data;
+  className?: string;
 }

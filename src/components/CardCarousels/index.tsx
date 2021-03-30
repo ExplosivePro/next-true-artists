@@ -87,6 +87,7 @@ export default function CardCarousels({
   const [currentPage, setCurrentPage] = useState(current_page);
   const [lastPage, setLastPage] = useState<boolean>(last_page);
 
+  // Single row carousel settings
   const settings = {
     dots: false,
     infinite: false,
@@ -105,7 +106,7 @@ export default function CardCarousels({
       {
         breakpoint: 960,
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 2,
         },
       },
       {
