@@ -11,6 +11,10 @@ const generateImageList = (list: Resource.TattooDetail[]) => {
     3: [],
   };
 
+  if (!list) {
+    return imageGroups;
+  }
+
   // Only get tattoo has images
   const availableImages: any[] = list.filter((item) => item.image);
 

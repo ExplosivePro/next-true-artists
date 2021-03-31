@@ -78,6 +78,7 @@ declare namespace Resource {
     hero_banner?: Image;
     lat?: number;
     long?: number;
+    artists: ArtistDetail[];
   }
 
   interface StudioListResponse {

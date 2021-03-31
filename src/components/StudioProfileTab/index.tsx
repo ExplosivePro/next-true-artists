@@ -7,14 +7,15 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Grid from "@material-ui/core/Grid";
 import AppBar from "@material-ui/core/AppBar";
+import { Typography } from "@material-ui/core";
 
 // Custom Components
 import TabPanel from "./TabPannel";
 import StudioProfileBasicInfo from "../StudioProfileBasicInfo";
+import CustomGallery from "../CustomGallery";
+import ArtistProfileItem from "../ArtistProfileItem";
 
 import colors from "../../palette";
-import CustomGallery from "../CustomGallery";
-import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {},
@@ -92,7 +93,10 @@ export default function StudioProfileTab({ data }: Props) {
           </TabPanel>
           <TabPanel value={value} index={2} dir={theme.direction}>
             <Grid container justify={"center"} className={classes.profileContent}>
-              <Typography>This studio does not associate with any artist yet.</Typography>
+              <ArtistProfileItem data={data.data.artists} />
+              {(!data.data.artists || data.data.artists.length === 0) && (
+                <Typography>This studio does not associate with any artist yet.</Typography>
+              )}
             </Grid>
           </TabPanel>
         </SwipeableViews>
