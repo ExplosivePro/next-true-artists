@@ -27,7 +27,7 @@ import useStyles from "./styles";
 // Constants
 import { navLinks } from "../../constants";
 
-export default function Header({ userProfile }: Props) {
+export default function Header({ userProfile, openSearch }: Props) {
   const classes = useStyles();
   const router = useRouter();
 
@@ -164,7 +164,13 @@ export default function Header({ userProfile }: Props) {
               ))}
             </List>
           </Grid>
-          <IconButton edge="end" aria-label="search" color="inherit" className={classes.searchButton}>
+          <IconButton
+            edge="end"
+            aria-label="search"
+            color="inherit"
+            className={classes.searchButton}
+            onClick={openSearch}
+          >
             <SearchIcon />
           </IconButton>
 
@@ -233,4 +239,5 @@ export default function Header({ userProfile }: Props) {
 
 interface Props {
   userProfile: any;
+  openSearch: () => void;
 }

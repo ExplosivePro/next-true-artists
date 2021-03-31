@@ -79,7 +79,7 @@ export default function ProfileTab({ data: { tattoos, bio, street_address, count
           onChangeIndex={handleChangeIndex}
           className={classes.swipeView}
         >
-          <TabPanel value={value} index={0} dir={theme.direction}>
+          <TabPanel value={value} index={0} dir={theme.direction} aria-label="tattoos">
             {tattoos.length === 0 && (
               <Grid container justify={"center"} className={classes.profileContent}>
                 <Typography>This artist does not have any image yet.</Typography>
@@ -87,7 +87,7 @@ export default function ProfileTab({ data: { tattoos, bio, street_address, count
             )}
             <CustomGallery tattoos={tattoos} className={classes.profileContent} />
           </TabPanel>
-          <TabPanel value={value} index={1} dir={theme.direction}>
+          <TabPanel value={value} index={1} dir={theme.direction} aria-label="description">
             <Typography className={classes.profileContent}>{bio}</Typography>
             {!bio && (
               <Grid container justify={"center"} className={classes.profileContent}>
@@ -95,7 +95,7 @@ export default function ProfileTab({ data: { tattoos, bio, street_address, count
               </Grid>
             )}
           </TabPanel>
-          <TabPanel value={value} index={2} dir={theme.direction}>
+          <TabPanel value={value} index={2} dir={theme.direction} aria-label="address">
             <AddressBlock
               name={"Taiko Gallery"}
               address={street_address}
