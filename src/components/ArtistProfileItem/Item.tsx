@@ -16,6 +16,12 @@ import CustomGallery from "../CustomGallery";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
+    root: {
+      marginBottom: "15px",
+      [theme.breakpoints.down("sm")]: {
+        marginBottom: "25px",
+      },
+    },
     cardHeader: {
       width: "100%",
       "& .MuiCardHeader-content": {
@@ -32,8 +38,8 @@ const useStyles = makeStyles((theme) =>
       height: theme.spacing(9),
     },
     chipContainer: {
-      [theme.breakpoints.down("md")]: {
-        justifyContent: "center",
+      [theme.breakpoints.down("sm")]: {
+        // justifyContent: "center",
       },
     },
     yellowChip: {
@@ -56,13 +62,13 @@ const useStyles = makeStyles((theme) =>
   }),
 );
 
-export default function Item({ data: { avatar, name, styles, tattoos } }: Props) {
+export default function Item({ data: { avatar, name, styles, tattoos, id } }: Props) {
   const classes = useStyles();
 
   return (
-    <>
+    <div className={classes.root}>
       <Grid container>
-        <Grid container item lg={4} md={4} sm={4} xs={4}>
+        <Grid container item lg={4} md={4} sm={12} xs={12}>
           <CardHeader
             avatar={<Avatar aria-label="recipe" src={avatar?.image_url} className={classes.avatar} />}
             title={
@@ -71,7 +77,7 @@ export default function Item({ data: { avatar, name, styles, tattoos } }: Props)
               </Typography>
             }
             subheader={
-              <PrimaryButton variant="outlined" color="primary" size="small" bluePastel>
+              <PrimaryButton variant="outlined" color="primary" size="small" bluePastel href={`/artists/${id}`}>
                 See Profile
               </PrimaryButton>
             }
@@ -83,8 +89,8 @@ export default function Item({ data: { avatar, name, styles, tattoos } }: Props)
           item
           lg={8}
           md={8}
-          sm={8}
-          xs={8}
+          sm={12}
+          xs={12}
           alignItems={"center"}
           spacing={1}
           className={classes.chipContainer}
@@ -108,7 +114,7 @@ export default function Item({ data: { avatar, name, styles, tattoos } }: Props)
         </Grid>
       </Grid>
       <CustomGallery tattoos={tattoos} />
-    </>
+    </div>
   );
 }
 

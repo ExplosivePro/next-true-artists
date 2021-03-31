@@ -13,7 +13,6 @@ export default function ArtistProfileItem({ data }: Props) {
       {data.map((item, index) => {
         return <Item data={item} key={index} />;
       })}
-      <Item data={data[0]} />
     </Container>
   );
 }

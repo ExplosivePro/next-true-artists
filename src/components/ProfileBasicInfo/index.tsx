@@ -53,11 +53,12 @@ const styles = (theme: Theme) =>
       fontSize: "14px",
     },
     violetChip: {
-      color: colors.standardViolet,
-      border: `solid 1px ${colors.standardViolet}`,
+      color: colors.black,
+      border: `solid 1px ${colors.black}`,
       backgroundColor: colors.white,
       cursor: "pointer",
       fontSize: "14px",
+      borderRadius: "5px",
     },
   });
 
