@@ -20,6 +20,12 @@ import FormInput from "../components/FormInput";
 import colors from "../palette";
 import IconButton from "@material-ui/core/IconButton";
 
+// API
+import { requestResetPassword } from "../api";
+
+// Context
+import { useApp } from "../contexts";
+
 const useStyles = makeStyles({
   container: {
     height: "100vh",
@@ -62,6 +68,8 @@ const useStyles = makeStyles({
 });
 
 export default function Register() {
+  const app = useApp();
+
   // Validation schema
   const validationSchema = useMemo(
     () =>
@@ -75,7 +83,18 @@ export default function Register() {
   const resolver = useYupValidationResolver(validationSchema);
   const { control, handleSubmit, errors } = useForm({ resolver });
 
-  const onSubmit = () => {};
+  const onSubmit = async (data: FormSubmit) => {
+    const { error, errors } = await requestResetPassword({
+      email: data.email,
+    });
+
+    // No error happens
+    if (!error) {
+      app.showErrorDialog(true, "A reset password link has been just sent to your email. Please check it");
+    } else {
+      app.showErrorDialog(true, errors ? errors.toString() : "Internal Server Error");
+    }
+  };
 
   return (
     <Container maxWidth={false} className={classes.container}>
@@ -126,4 +145,8 @@ export default function Register() {
       </Grid>
     </Container>
   );
+}
+
+interface FormSubmit {
+  email: string;
 }

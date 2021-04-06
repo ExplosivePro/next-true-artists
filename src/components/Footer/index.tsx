@@ -84,65 +84,65 @@ export default function Footer() {
     usefulLinks: [
       {
         label: "Tatoos",
-        url: "",
+        url: "/tattoos",
       },
       {
         label: "Artists",
-        url: "",
+        url: "/artists",
       },
       {
         label: "Studios",
-        url: "",
+        url: "/studios",
       },
       {
         label: "Watch",
-        url: "",
+        url: "/",
       },
       {
         label: "Articles",
-        url: "",
+        url: "/",
       },
       {
         label: "Guides",
-        url: "",
+        url: "/",
       },
     ],
     trueArtists: [
       {
         label: "About",
-        url: "",
+        url: "/",
       },
       {
         label: "Partners",
-        url: "",
+        url: "/",
       },
       {
         label: "Press",
-        url: "",
+        url: "/",
       },
       {
         label: "Careers",
-        url: "",
+        url: "/",
       },
       {
         label: "Help",
-        url: "",
+        url: "/",
       },
     ],
     legal: [
       {
         label: "Term & Conditions",
-        url: "",
+        url: "/",
       },
       {
         label: "Privacy Policy",
-        url: "",
+        url: "/",
       },
     ],
     forArtistsAndStudios: [
       {
         label: "TrueArtist Pro",
-        url: "",
+        url: "/",
       },
     ],
   };
@@ -151,7 +151,7 @@ export default function Footer() {
   const navLinks = [
     { title: `Privacy`, path: `/privacy` },
     { title: `Term`, path: `/term` },
-    { title: `© 2021 TrueArtist`, path: `` },
+    { title: `© 2021 TrueArtist`, path: `/` },
   ];
 
   return (

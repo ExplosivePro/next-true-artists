@@ -9,6 +9,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import RoomIcon from "@material-ui/icons/Room";
 import { Grid, List } from "@material-ui/core";
 import Chip from "@material-ui/core/Chip";
+import Typography from "@material-ui/core/Typography";
 
 import colors from "../../palette";
 
@@ -52,55 +53,66 @@ const styles = (theme: Theme) =>
       fontSize: "14px",
     },
     violetChip: {
-      color: colors.standardViolet,
-      border: `solid 1px ${colors.standardViolet}`,
+      color: colors.black,
+      border: `solid 1px ${colors.black}`,
       backgroundColor: colors.white,
       cursor: "pointer",
       fontSize: "14px",
+      borderRadius: "5px",
     },
   });
 
 const useStyles = makeStyles(styles);
 
-export default function ProfileBasicInfo() {
+export default function ProfileBasicInfo({ data }: Props) {
   const classes = useStyles();
 
   return (
     <Grid container alignItems={"center"} className={classes.root}>
       <List component="nav" aria-labelledby="main navigation" className={classes.buttonList}>
-        <ListItem button>
+        <ListItem>
           <ListItemIcon className={classes.listItemIcon}>
             <BusinessCenterIcon className={classes.icon} />
           </ListItemIcon>
           <ListItemText primary="Taiko Gallery" className={classes.itemText} />
         </ListItem>
-        <ListItem button>
+        <ListItem>
           <ListItemIcon>
             <RoomIcon className={classes.icon} />
           </ListItemIcon>
-          <ListItemText primary="Berlin, Germany" className={classes.itemText} />
+          <ListItemText
+            primary={
+              <Typography>
+                {data.street_address}
+                {`${data.city ? `, ${data.city}` : ""}`}
+              </Typography>
+            }
+            className={classes.itemText}
+          />
         </ListItem>
       </List>
       <Grid container alignItems={"center"} spacing={1} className={classes.chipContainer}>
         <Grid item>
-          <Chip label="Styles" className={classes.yellowChip} />
+          <Chip label="Styles:" className={classes.yellowChip} />
         </Grid>
-        <Grid item>
-          <Chip label="Old School" className={classes.violetChip} />
-        </Grid>
-        <Grid item>
-          <Chip label="Black & Gray" className={classes.violetChip} />
-        </Grid>
-        <Grid item>
-          <Chip label="Blackwork" className={classes.violetChip} />
-        </Grid>
-        <Grid item>
-          <Chip label="Illustrative" className={classes.violetChip} />
-        </Grid>
-        <Grid item>
-          <Chip label="Realism" className={classes.violetChip} />
-        </Grid>
+        {data.styles &&
+          data.styles.map((style, index) => {
+            return (
+              <Grid item key={index}>
+                <Chip label={style.name} className={classes.violetChip} />
+              </Grid>
+            );
+          })}
+        {(!data.styles || data.styles.length === 0) && (
+          <Grid item>
+            <Chip label={"None"} className={classes.violetChip} />
+          </Grid>
+        )}
       </Grid>
     </Grid>
   );
+}
+
+interface Props {
+  data: Resource.ArtistDetail;
 }

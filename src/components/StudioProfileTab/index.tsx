@@ -7,10 +7,13 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Grid from "@material-ui/core/Grid";
 import AppBar from "@material-ui/core/AppBar";
+import { Typography } from "@material-ui/core";
 
 // Custom Components
 import TabPanel from "./TabPannel";
 import StudioProfileBasicInfo from "../StudioProfileBasicInfo";
+import CustomGallery from "../CustomGallery";
+import ArtistProfileItem from "../ArtistProfileItem";
 
 import colors from "../../palette";
 
@@ -22,22 +25,25 @@ const useStyles = makeStyles({
   },
   tabWrapper: {
     "& .MuiTabs-indicator": {
-      backgroundColor: colors.black,
+      backgroundColor: colors.standardYellow,
     },
   },
   tabItem: {
     textTransform: "none",
     fontSize: "16px",
     "&.Mui-selected": {
-      color: colors.black,
+      color: colors.bluePastel,
     },
   },
   swipeView: {
     borderTop: "solid 1px #e9e9e9",
   },
+  profileContent: {
+    marginTop: "15px",
+  },
 });
 
-export default function StudioProfileTab() {
+export default function StudioProfileTab({ data }: Props) {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
@@ -62,7 +68,7 @@ export default function StudioProfileTab() {
           className={classes.tabWrapper}
         >
           <Tab label="Studio" className={classes.tabItem} />
-          <Tab label="Porfolio" className={classes.tabItem} />
+          <Tab label="Portfolio" className={classes.tabItem} />
           <Tab label="Artists" className={classes.tabItem} />
         </Tabs>
 
@@ -73,16 +79,37 @@ export default function StudioProfileTab() {
           className={classes.swipeView}
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
-            <StudioProfileBasicInfo />
+            <StudioProfileBasicInfo data={data} />
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
-            Item Two
+            {data.data.tattoos.length === 0 && (
+              <Grid container justify={"center"} className={classes.profileContent}>
+                <Typography>This studio does not have any portfolio yet.</Typography>
+              </Grid>
+            )}
+            <Grid container justify={"center"} className={classes.profileContent}>
+              <CustomGallery tattoos={data.data.tattoos} />
+            </Grid>
           </TabPanel>
           <TabPanel value={value} index={2} dir={theme.direction}>
-            Item Three
+            <Grid container justify={"center"} className={classes.profileContent}>
+              <ArtistProfileItem data={data.data.artists} />
+              {(!data.data.artists || data.data.artists.length === 0) && (
+                <Typography>This studio does not associate with any artist yet.</Typography>
+              )}
+            </Grid>
           </TabPanel>
         </SwipeableViews>
       </AppBar>
     </Grid>
   );
+}
+
+interface Data {
+  data: Resource.StudioDetail;
+  reviews: Resource.Review[];
+}
+
+interface Props {
+  data: Data;
 }

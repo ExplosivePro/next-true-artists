@@ -80,13 +80,15 @@ export default function Comments({ className, list = [] }: Props) {
                 <ListItemText
                   primary={<Typography className={classes.name}>{item.name}</Typography>}
                   secondary={
-                    <div className={classes.reviewBlock}>
-                      <Typography className={classes.inline} color="textPrimary">
+                    <span className={classes.reviewBlock}>
+                      <Typography component={"span"} className={classes.inline} color="textPrimary">
                         {item.comment}
                       </Typography>
 
-                      <Typography className={clsx(classes.time, classes.greyText)}>10 weeks ago</Typography>
-                    </div>
+                      <Typography component={"span"} className={clsx(classes.time, classes.greyText)}>
+                        10 weeks ago
+                      </Typography>
+                    </span>
                   }
                 />
               </ListItem>

@@ -12,6 +12,15 @@ import FormInput from "./FormInput";
 import { useYupValidationResolver } from "../utils";
 import PrimaryButton from "./PrimaryButton";
 
+import { PasswordValidationRegex } from "../constants";
+import Link from "next/link";
+import colors from "../palette";
+
+import { editUser, registerUser, setAuthHeader } from "../api";
+
+// Context
+import { useApp } from "../contexts";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -41,16 +50,25 @@ const useStyles = makeStyles((theme: Theme) =>
     buttonWrapper: {
       marginTop: "25px",
     },
+    signInText: {
+      fontWeight: 500,
+      color: colors.lightYellow,
+      marginLeft: "5px",
+      cursor: "pointer",
+      fontSize: "14px",
+    },
   }),
 );
 
 export default function RightBarRegisterPersonalDetail({
+  currentUserId,
   onPreviousStep,
   onNext,
-}: {
-  onPreviousStep?: () => void;
-  onNext?: () => void;
-}) {
+  currentData,
+  role,
+}: Props) {
+  const app = useApp();
+
   // Validation schema
   const validationSchema = useMemo(
     () =>
@@ -59,9 +77,18 @@ export default function RightBarRegisterPersonalDetail({
         lastName: yup.string().required("Last name field is required"),
         email: yup.string().required("Email address field is required").email("* Wrong email format"),
         phoneNumber: yup.string().required("Phone number field is required"),
-        streetAddress: yup.string().required("Street address field is required"),
-        zipCode: yup.string().required("Zip code field is required"),
-        country: yup.string().required("Country field is required"),
+        password: yup
+          .string()
+          .required("Password is required")
+          .matches(PasswordValidationRegex, "Password has to contain 6-10 characters, at least 1 letter and 1  number"),
+        confirmPassword: yup
+          .string()
+          .required("Confirm password field is required")
+          .matches(
+            PasswordValidationRegex,
+            "Confirm password has to contain 6-10 characters, at least 1 letter and 1  number",
+          )
+          .oneOf([yup.ref("password")], "This field have to be same as Password field"),
       }),
     [],
   );
@@ -70,8 +97,48 @@ export default function RightBarRegisterPersonalDetail({
   const resolver = useYupValidationResolver(validationSchema);
   const { control, handleSubmit, errors } = useForm({ resolver });
 
-  const onSubmit = () => {
-    onNext && onNext();
+  const onSubmit = async ({ firstName, lastName, email, password, confirmPassword, phoneNumber }: SubmitFormData) => {
+    // Call APIs to submit register data
+    // Edit user
+    if (currentUserId) {
+      const response = await editUser({
+        id: currentUserId,
+        email,
+        first_name: firstName,
+        last_name: lastName,
+      });
+
+      const { error, data, errors } = response;
+      // No error happens
+      if (!error) {
+        onNext && onNext(data?.id, { firstName, lastName, email, phoneNumber, password, confirmPassword });
+      } else {
+        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+      }
+    } else {
+      // Create the new one
+      const response = await registerUser({
+        email,
+        password,
+        name: `${firstName} ${lastName}`,
+      });
+
+      const { error, data, errors } = response;
+      // No error happens
+      if (!error) {
+        // Set token for auth APIs call later
+        setAuthHeader(data.auth_token);
+
+        onNext &&
+          onNext(
+            data?.user.id,
+            { firstName, lastName, email, phoneNumber, password, confirmPassword },
+            data.auth_token,
+          );
+      } else {
+        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+      }
+    }
   };
 
   return (
@@ -81,7 +148,15 @@ export default function RightBarRegisterPersonalDetail({
           <Typography variant={"h5"} className={classes.titleText}>
             Artist Account
           </Typography>
-          <Typography variant={"subtitle2"}>Add your name and work email to get started with TrueArtists</Typography>
+          <Typography variant={"subtitle2"}>Add your name and work email to get started with TrueArtists.</Typography>
+          <Typography variant={"subtitle2"}>
+            Already a member?
+            <Link href={`/login?callback=register-selection&type=${role}`}>
+              <Typography className={classes.signInText} display={"inline"}>
+                Sign in
+              </Typography>
+            </Link>
+          </Typography>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -95,7 +170,7 @@ export default function RightBarRegisterPersonalDetail({
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={""}
+                defaultValue={currentData.firstName || ""}
                 errors={errors.firstName}
               />
             </Grid>
@@ -108,7 +183,7 @@ export default function RightBarRegisterPersonalDetail({
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={""}
+                defaultValue={currentData.lastName || ""}
                 errors={errors.lastName}
               />
             </Grid>
@@ -123,7 +198,7 @@ export default function RightBarRegisterPersonalDetail({
             fullWidth
             control={control}
             variant={"outlined"}
-            defaultValue={""}
+            defaultValue={currentData.email || ""}
             errors={errors.email}
           />
 
@@ -136,47 +211,36 @@ export default function RightBarRegisterPersonalDetail({
             fullWidth
             control={control}
             variant={"outlined"}
-            defaultValue={""}
+            defaultValue={currentData.phoneNumber || ""}
             errors={errors.phoneNumber}
           />
 
           <FormInput
-            name="streetAddress"
-            classes={{ root: classes.formInput }}
-            label={"Street Address"}
-            id="streetAddress"
-            placeholder={"Street Address"}
+            name="password"
+            className={classes.formInput}
+            label={"Password"}
+            id="password"
+            placeholder={"Password"}
             fullWidth
             control={control}
             variant={"outlined"}
-            defaultValue={""}
-            errors={errors.streetAddress}
+            defaultValue={currentData.password || ""}
+            type={"password"}
+            errors={errors.password}
           />
 
           <FormInput
-            name="zipCode"
-            classes={{ root: classes.formInput }}
-            label={"Zip Code"}
-            id="zipCode"
-            placeholder={"Zip Code"}
+            name="confirmPassword"
+            className={classes.formInput}
+            label={"Confirm Password"}
+            id="confirmPassword"
+            placeholder={"Confirm Password"}
             fullWidth
             control={control}
             variant={"outlined"}
-            defaultValue={""}
-            errors={errors.zipCode}
-          />
-
-          <FormInput
-            name="country"
-            classes={{ root: classes.formInput }}
-            label={"Country"}
-            id="zipCode"
-            placeholder={"Country"}
-            fullWidth
-            control={control}
-            variant={"outlined"}
-            defaultValue={""}
-            errors={errors.country}
+            defaultValue={currentData.confirmPassword || ""}
+            type={"password"}
+            errors={errors.confirmPassword}
           />
 
           <Grid container spacing={2} className={classes.buttonWrapper}>
@@ -203,4 +267,21 @@ export default function RightBarRegisterPersonalDetail({
       </div>
     </Grid>
   );
+}
+
+interface SubmitFormData {
+  confirmPassword: "string";
+  email: "string";
+  firstName: "string";
+  lastName: "string";
+  password: "string";
+  phoneNumber: "string";
+}
+
+interface Props {
+  role: string;
+  currentUserId: number | undefined;
+  currentData: any;
+  onPreviousStep?: () => void;
+  onNext?: (userId: number, data: any, token?: string) => void;
 }

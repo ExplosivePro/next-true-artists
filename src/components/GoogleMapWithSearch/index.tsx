@@ -149,7 +149,7 @@ export default function GoogleWithSearch({
 interface Marker {
   lat: number;
   lng: number;
-  name: string;
+  name?: string;
 }
 
 interface Props {

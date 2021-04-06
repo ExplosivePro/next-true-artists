@@ -1,18 +1,29 @@
 // External import
-import React from "react";
-import { makeStyles, createStyles, fade } from "@material-ui/core/styles";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
+import { createStyles, fade, makeStyles } from "@material-ui/core/styles";
 
 import { Grid, Typography } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
+import FilterListIcon from "@material-ui/icons/FilterList";
+import IconButton from "@material-ui/core/IconButton";
+import Popover from "@material-ui/core/Popover";
 
 // Custom Components
 import BodyContent from "../../components/BodyContent";
-import PrimaryButton from "../../components/PrimaryButton";
 import CustomGallery from "../../components/CustomGallery";
+import Filters from "../../components/Filters";
+import FilterBlock from "../../components/Filters/FilterBlock";
+
+// APIs
+import { getTattooList, getWorkingStyleList, getCityList } from "../../api";
+import Loading from "../../components/Loading";
+
+// Hooks
+import { useDebounce } from "../../hooks";
 import colors from "../../palette";
 
 const useStyles = makeStyles((theme) =>
@@ -65,6 +76,9 @@ const useStyles = makeStyles((theme) =>
       color: "inherit",
       paddingLeft: "10px",
       height: "100%",
+      "& input": {
+        width: "100%",
+      },
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 0),
@@ -82,20 +96,129 @@ const useStyles = makeStyles((theme) =>
       padding: "20px 5px 60px 5px",
       backgroundColor: colors.standardGreyFooter,
     },
+    filterWrapper: {
+      padding: "0 8px",
+      marginTop: "15px",
+    },
   }),
 );
 
-const cities = [
-  {
-    value: "all",
-    label: "All Cities",
-  },
-];
-
-export default function Tattoos() {
+export default function Tattoos({ tattoos: { tattoos }, workingStyles, cities: { locations } }: Props) {
   const classes = useStyles();
 
-  /// TODO: Load studios data
+  const [loading, setLoading] = useState(false);
+  const [searchInput, setSearchInput] = useState(""); // Direct search input value before debounce
+  const [currentSearchInput, setCurrentSearchInput] = useState(""); // Debounce search value which is used for query
+  const [images, setImages] = useState(tattoos);
+  const debouncedSearchTerm = useDebounce(searchInput, 500);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [filters, setFilters] = useState<any[]>([]);
+  const [filterByGroups, setFilterByGroups] = useState<any>({});
+  const [cities, setCities] = useState<any[]>(locations);
+
+  // On filter button click
+  const handleFilterClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  // On filter close
+  const handleFilterClose = () => {
+    setAnchorEl(null);
+  };
+
+  // Filter open
+  const open = Boolean(anchorEl);
+  const id = open ? "filter-popover" : undefined;
+
+  // On search Input
+  const onSearch = (e: any) => {
+    setSearchInput(e.target.value);
+  };
+
+  // Search
+  const search = async (keyword: string) => {
+    // Clear all current result first
+    setImages([]);
+
+    // Show loading
+    setLoading(true);
+
+    const { tattoos } = await getTattooList(1, keyword, filterByGroups);
+    setImages(tattoos);
+
+    setCurrentSearchInput(keyword);
+
+    // Hide loading
+    setLoading(false);
+  };
+
+  // Do filter
+  const doFilter = async (filter: any) => {
+    // Clear all current result first
+    setImages([]);
+
+    // Show loading
+    setLoading(true);
+
+    const { tattoos } = await getTattooList(1, currentSearchInput, filter);
+    setImages(tattoos);
+
+    // Hide loading
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    search(debouncedSearchTerm);
+  }, [debouncedSearchTerm]);
+
+  // Filter
+  const applyFilter = (data: any) => {
+    // Store this group data
+    setFilterByGroups(data);
+
+    // Call API do do filter
+    doFilter(data);
+
+    const filterArr: any[] = [];
+    Object.keys(data).map((key) => {
+      data[key].map((item: any) => {
+        filterArr.push(item);
+      });
+    });
+
+    setFilters(filterArr);
+    handleFilterClose();
+  };
+
+  // Remove filter
+  const removeFilter = (id: number, group: string) => {
+    setFilters(filters.filter((item) => (item.id !== id && item.group === group) || item.group !== group));
+
+    const newFilter = filterByGroups;
+
+    newFilter[group] = filterByGroups[group].filter(
+      (item: any) => (item.id !== id && item.group === group) || item.group !== group,
+    );
+    setFilterByGroups(newFilter);
+
+    doFilter(newFilter);
+  };
+
+  // On city selection change
+  const onCityChange = (e: any) => {
+    let newFilter = filterByGroups;
+
+    newFilter = { ...filterByGroups, location: [{ id: e.target.value, name: e.target.value, group: "location" }] };
+
+    setFilterByGroups(newFilter);
+    doFilter(newFilter);
+  };
+
+  useEffect(() => {
+    // Add All Cities option to selection list
+    setCities([{ id: null, city: "All Cities" }].concat(cities));
+  }, []);
+
   return (
     <BodyContent variant={"div"} className={classes.root}>
       <Grid container>
@@ -105,25 +228,56 @@ export default function Tattoos() {
           </Typography>
 
           <Grid container className={classes.operationContainer}>
-            <Grid item lg={8} md={12} sm={12} xs={12} className={clsx(classes.padding, classes.mobileMargin)}>
+            <Grid item lg={9} md={12} sm={12} xs={12} className={clsx(classes.padding, classes.mobileMargin)}>
               <div className={classes.search}>
                 <div className={classes.searchIcon}>
                   <SearchIcon />
                 </div>
                 <InputBase
+                  fullWidth
+                  value={searchInput}
                   placeholder="Search Tattoo"
                   classes={{
                     root: classes.inputRoot,
                     input: classes.inputInput,
                   }}
                   inputProps={{ "aria-label": "search" }}
+                  onChange={onSearch}
+                  endAdornment={
+                    <>
+                      <IconButton onClick={handleFilterClick}>
+                        <FilterListIcon />
+                      </IconButton>
+                      <Popover
+                        id={id}
+                        open={open}
+                        anchorEl={anchorEl}
+                        onClose={handleFilterClose}
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "center",
+                        }}
+                        transformOrigin={{
+                          vertical: "top",
+                          horizontal: "center",
+                        }}
+                      >
+                        <Filters
+                          data={filterByGroups}
+                          workingStyles={workingStyles}
+                          onClose={handleFilterClose}
+                          onApply={applyFilter}
+                        />
+                      </Popover>
+                    </>
+                  }
                 />
               </div>
             </Grid>
             <Grid
               container
               item
-              lg={2}
+              lg={3}
               md={12}
               sm={12}
               xs={12}
@@ -131,51 +285,66 @@ export default function Tattoos() {
               className={clsx(classes.padding, classes.mobileMargin)}
             >
               <TextField
-                id="standard-select-currency"
+                id="standard-select-city"
                 select
                 label="Select City"
                 variant="outlined"
-                value={cities[0].value}
                 fullWidth
+                onChange={onCityChange}
+                defaultValue={""}
               >
                 {cities.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid item lg={2} md={12} sm={12} xs={12} className={clsx(classes.padding, classes.mobileMargin)}>
-              <TextField
-                id="standard-select-currency"
-                select
-                label="Art Style"
-                value={cities[0].value}
-                variant="outlined"
-                fullWidth
-              >
-                {cities.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.city}
                   </MenuItem>
                 ))}
               </TextField>
             </Grid>
           </Grid>
+
+          <Grid container item alignItems={"center"} className={classes.filterWrapper}>
+            {filters.map((filter, index) => {
+              return (
+                <FilterBlock
+                  key={index}
+                  name={filter.name}
+                  group={filter.group}
+                  id={filter.id}
+                  removeFilter={removeFilter}
+                />
+              );
+            })}
+          </Grid>
         </div>
+
+        {loading && <Loading />}
 
         <Grid container className={classes.galleryContainer}>
           <div className={classes.galleryWrapper}>
-            <CustomGallery />
+            {images.length === 0 && (
+              <Grid container justify={"center"}>
+                <Typography>No data</Typography>
+              </Grid>
+            )}
+            <CustomGallery tattoos={images} />
           </div>
-        </Grid>
-
-        <Grid container alignItems={"center"} justify={"center"}>
-          <PrimaryButton variant="contained" color="primary" size="medium" yellow className={classes.seeMoreButton}>
-            See More
-          </PrimaryButton>
         </Grid>
       </Grid>
     </BodyContent>
   );
 }
+
+interface Props {
+  tattoos: Resource.TattooListResponse;
+  workingStyles: Resource.WorkingStyle[];
+  cities: Resource.CityListResponse;
+}
+
+export const getStaticProps = async () => {
+  // Preload studios, top cities, feature studios list
+  const tattoos = await getTattooList(1);
+  const workingStyles = await getWorkingStyleList();
+  const cities = await getCityList(1);
+
+  return { props: { tattoos, workingStyles, cities }, revalidate: 300 };
+};

@@ -1,5 +1,5 @@
 // External
-import React from "react";
+import React, { useState } from "react";
 
 // Material UI Components
 import { makeStyles } from "@material-ui/core/styles";
@@ -15,7 +15,11 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import PrimaryButton from "./PrimaryButton";
 import colors from "../palette";
 
-import { workStyles } from "../constants";
+// APIs
+import { editArtistProfile, editStudioProfile } from "../api";
+
+// Context
+import { useApp } from "../contexts";
 
 const useStyles = makeStyles({
   root: {
@@ -62,8 +66,67 @@ const useStyles = makeStyles({
   },
 });
 
-export default function RightBarRegisterWorkStyle({ onSkip, onNext }: { onSkip?: () => void; onNext?: () => void }) {
+export default function RightBarRegisterWorkStyle({ data = [], currentUserId, role, onSkip, onNext }: Props) {
   const classes = useStyles();
+  const app = useApp();
+
+  const [optionValues, setOptionValues] = useState({});
+
+  // Get style id array from object array data
+  const getSelectedIds = () => {
+    const results: number[] = [];
+    Object.keys(optionValues).map((key) => {
+      // Checked value
+      if (optionValues[key]) {
+        results.push(parseInt(key));
+      }
+    });
+
+    return results;
+  };
+
+  // On check change
+  const handleChange = (e: any) => {
+    setOptionValues({ ...optionValues, [e.target.name]: e.target.checked });
+  };
+
+  const goNext = async () => {
+    if (currentUserId) {
+      // Edit artist profile
+      if (role === "artist") {
+        // Call APIs to submit register data
+        const response = await editArtistProfile({
+          id: currentUserId,
+          styles: getSelectedIds(),
+        });
+
+        const { error, errors } = response;
+        // No error happens
+        if (!error) {
+          onNext && onNext();
+        } else {
+          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        }
+      }
+
+      // Edit studio profile
+      if (role === "studio") {
+        // Call APIs to submit register data
+        const response = await editStudioProfile({
+          id: currentUserId,
+          styles: getSelectedIds(),
+        });
+
+        const { error, errors } = response;
+        // No error happens
+        if (!error) {
+          onNext && onNext();
+        } else {
+          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        }
+      }
+    }
+  };
 
   return (
     <Grid container className={classes.root} alignItems={"center"} justify={"center"}>
@@ -75,20 +138,22 @@ export default function RightBarRegisterWorkStyle({ onSkip, onNext }: { onSkip?:
           <Typography variant={"subtitle2"}>Add your name and work email to get started with TrueArtists</Typography>
         </div>
 
-        {workStyles.map((workStyle, index) => (
+        {data.map((workStyle, index) => (
           <Box className={classes.box} key={index}>
             <FormGroup row>
               <FormControlLabel
-                value={workStyle.value}
+                value={workStyle.id}
                 classes={{ root: classes.formControlLabel }}
                 control={
                   <Checkbox
+                    name={workStyle.id.toString()}
                     classes={{ root: classes.checkBox }}
                     icon={<RadioButtonUncheckedIcon />}
                     checkedIcon={<CheckCircleIcon classes={{ root: classes.checkedIcon }} />}
                   />
                 }
-                label={workStyle.label}
+                onChange={handleChange}
+                label={workStyle.name}
                 labelPlacement="start"
               />
             </FormGroup>
@@ -110,7 +175,7 @@ export default function RightBarRegisterWorkStyle({ onSkip, onNext }: { onSkip?:
             </PrimaryButton>
           </Grid>
           <Grid item lg={6} md={6} sm={12} xs={12}>
-            <PrimaryButton variant="contained" color="primary" size="large" onClick={onNext} fullWidth bluePastel>
+            <PrimaryButton variant="contained" color="primary" size="large" onClick={goNext} fullWidth bluePastel>
               Next
             </PrimaryButton>
           </Grid>
@@ -118,4 +183,12 @@ export default function RightBarRegisterWorkStyle({ onSkip, onNext }: { onSkip?:
       </div>
     </Grid>
   );
+}
+
+interface Props {
+  data: Resource.WorkingStyle[];
+  currentUserId: number | undefined;
+  role: string;
+  onSkip?: () => void;
+  onNext?: () => void;
 }

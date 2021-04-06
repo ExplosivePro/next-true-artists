@@ -66,7 +66,7 @@ export default function Review({ className, list = [] }: Props) {
   const getRatingStar = (rate: number) => {
     const stars = [];
     for (let i = 1; i <= rate; i++) {
-      stars.push(<StarRateIcon />);
+      stars.push(<StarRateIcon key={i} />);
     }
 
     return stars;
@@ -89,17 +89,17 @@ export default function Review({ className, list = [] }: Props) {
             return (
               <ListItem alignItems="flex-start" key={index}>
                 <ListItemAvatar className={classes.avatarWrapper}>
-                  <Avatar alt="Remy Sharp" src={item.avatar} className={classes.avatar} />
+                  <Avatar alt="Remy Sharp" src={item.avatar?.image_url} className={classes.avatar} />
                 </ListItemAvatar>
                 <ListItemText
                   primary={<Typography className={classes.name}>{item.name}</Typography>}
                   secondary={
-                    <div className={classes.reviewBlock}>
+                    <span className={classes.reviewBlock}>
                       <span className={classes.ratingStar}>{getRatingStar(item.rate)}</span>
-                      <Typography className={classes.inline} color="textPrimary">
+                      <Typography component={"span"} className={classes.inline} color="textPrimary">
                         {item.comment}
                       </Typography>
-                    </div>
+                    </span>
                   }
                 />
               </ListItem>
@@ -111,14 +111,7 @@ export default function Review({ className, list = [] }: Props) {
   );
 }
 
-interface Review {
-  name: string;
-  rate: number;
-  comment: string;
-  avatar: string;
-}
-
 interface Props {
   className?: any;
-  list: Review[];
+  list: Resource.Review[];
 }

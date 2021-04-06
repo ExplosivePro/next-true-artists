@@ -1,7 +1,5 @@
 import React from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-// @ts-ignore
-import Gallery from "react-grid-gallery";
 
 // Material UI
 import SwipeableViews from "react-swipeable-views";
@@ -14,6 +12,9 @@ import AppBar from "@material-ui/core/AppBar";
 import TabPanel from "./TabPannel";
 
 import colors from "../../palette";
+import { Typography } from "@material-ui/core";
+import CustomGallery from "../CustomGallery";
+import AddressBlock from "../StudioProfileBasicInfo/AddressBlock";
 
 const useStyles = makeStyles({
   root: {
@@ -38,108 +39,12 @@ const useStyles = makeStyles({
   swipeView: {
     borderTop: "solid 1px #e9e9e9",
   },
+  profileContent: {
+    marginTop: "15px",
+  },
 });
 
-const images = [
-  {
-    src: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
-    thumbnail: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_n.jpg",
-    thumbnailWidth: 320,
-    thumbnailHeight: 174,
-  },
-  {
-    src: "https://c6.staticflickr.com/9/8890/28897154101_a8f55be225_b.jpg",
-    thumbnail: "https://c6.staticflickr.com/9/8890/28897154101_a8f55be225_n.jpg",
-    thumbnailWidth: 320,
-    thumbnailHeight: 183,
-  },
-  {
-    src: "https://c7.staticflickr.com/9/8106/28941228886_86d1450016_b.jpg",
-    thumbnail: "https://c7.staticflickr.com/9/8106/28941228886_86d1450016_n.jpg",
-    thumbnailWidth: 271,
-    thumbnailHeight: 320,
-  },
-  {
-    src: "https://c6.staticflickr.com/9/8342/28897193381_800db6419e_b.jpg",
-    thumbnail: "https://c6.staticflickr.com/9/8342/28897193381_800db6419e_n.jpg",
-    thumbnailWidth: 320,
-    thumbnailHeight: 213,
-  },
-  {
-    src: "https://c8.staticflickr.com/9/8104/28973555735_ae7c208970_b.jpg",
-    thumbnail: "https://c8.staticflickr.com/9/8104/28973555735_ae7c208970_n.jpg",
-    thumbnailWidth: 320,
-    thumbnailHeight: 213,
-  },
-  {
-    src: "https://c1.staticflickr.com/9/8707/28868704912_cba5c6600e_b.jpg",
-    thumbnail: "https://c1.staticflickr.com/9/8707/28868704912_cba5c6600e_n.jpg",
-    thumbnailWidth: 320,
-    thumbnailHeight: 213,
-  },
-  {
-    src: "https://c4.staticflickr.com/9/8578/28357117603_97a8233cf5_b.jpg",
-    thumbnail: "https://c4.staticflickr.com/9/8578/28357117603_97a8233cf5_n.jpg",
-    thumbnailWidth: 320,
-    thumbnailHeight: 213,
-  },
-  {
-    src: "https://c1.staticflickr.com/9/8056/28354485944_148d6a5fc1_b.jpg",
-    thumbnail: "https://c1.staticflickr.com/9/8056/28354485944_148d6a5fc1_n.jpg",
-    thumbnailWidth: 257,
-    thumbnailHeight: 320,
-  },
-  {
-    src: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
-    thumbnail: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_n.jpg",
-    thumbnailWidth: 320,
-    thumbnailHeight: 174,
-  },
-  {
-    src: "https://c6.staticflickr.com/9/8890/28897154101_a8f55be225_b.jpg",
-    thumbnail: "https://c6.staticflickr.com/9/8890/28897154101_a8f55be225_n.jpg",
-    thumbnailWidth: 320,
-    thumbnailHeight: 183,
-  },
-  {
-    src: "https://c7.staticflickr.com/9/8106/28941228886_86d1450016_b.jpg",
-    thumbnail: "https://c7.staticflickr.com/9/8106/28941228886_86d1450016_n.jpg",
-    thumbnailWidth: 271,
-    thumbnailHeight: 320,
-  },
-  {
-    src: "https://c6.staticflickr.com/9/8342/28897193381_800db6419e_b.jpg",
-    thumbnail: "https://c6.staticflickr.com/9/8342/28897193381_800db6419e_n.jpg",
-    thumbnailWidth: 320,
-    thumbnailHeight: 213,
-  },
-  {
-    src: "https://c8.staticflickr.com/9/8104/28973555735_ae7c208970_b.jpg",
-    thumbnail: "https://c8.staticflickr.com/9/8104/28973555735_ae7c208970_n.jpg",
-    thumbnailWidth: 320,
-    thumbnailHeight: 213,
-  },
-  {
-    src: "https://c1.staticflickr.com/9/8707/28868704912_cba5c6600e_b.jpg",
-    thumbnail: "https://c1.staticflickr.com/9/8707/28868704912_cba5c6600e_n.jpg",
-    thumbnailWidth: 320,
-    thumbnailHeight: 213,
-  },
-  {
-    src: "https://c4.staticflickr.com/9/8578/28357117603_97a8233cf5_b.jpg",
-    thumbnail: "https://c4.staticflickr.com/9/8578/28357117603_97a8233cf5_n.jpg",
-    thumbnailWidth: 320,
-    thumbnailHeight: 213,
-  },
-  {
-    src: "https://c1.staticflickr.com/9/8056/28354485944_148d6a5fc1_b.jpg",
-    thumbnail: "https://c1.staticflickr.com/9/8056/28354485944_148d6a5fc1_n.jpg",
-    thumbnailWidth: 257,
-    thumbnailHeight: 320,
-  },
-];
-
-export default function ProfileTab() {
+export default function ProfileTab({ data: { tattoos, bio, street_address, country, city, lat, long } }: Props) {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
@@ -174,17 +79,40 @@ export default function ProfileTab() {
           onChangeIndex={handleChangeIndex}
           className={classes.swipeView}
         >
-          <TabPanel value={value} index={0} dir={theme.direction}>
-            <Gallery images={images} enableImageSelection={false} showCloseButton={false} />,
+          <TabPanel value={value} index={0} dir={theme.direction} aria-label="tattoos">
+            {tattoos.length === 0 && (
+              <Grid container justify={"center"} className={classes.profileContent}>
+                <Typography>This artist does not have any image yet.</Typography>
+              </Grid>
+            )}
+            <CustomGallery tattoos={tattoos} className={classes.profileContent} />
           </TabPanel>
-          <TabPanel value={value} index={1} dir={theme.direction}>
-            Item Two
+          <TabPanel value={value} index={1} dir={theme.direction} aria-label="description">
+            <Typography className={classes.profileContent}>{bio}</Typography>
+            {!bio && (
+              <Grid container justify={"center"} className={classes.profileContent}>
+                <Typography>This artist does not have description yet.</Typography>
+              </Grid>
+            )}
           </TabPanel>
-          <TabPanel value={value} index={2} dir={theme.direction}>
-            Item Three
+          <TabPanel value={value} index={2} dir={theme.direction} aria-label="address">
+            <AddressBlock
+              name={"Taiko Gallery"}
+              address={street_address}
+              city={city}
+              country={country}
+              lat={lat}
+              long={long}
+              spacing
+              className={classes.profileContent}
+            />
           </TabPanel>
         </SwipeableViews>
       </AppBar>
     </Grid>
   );
+}
+
+interface Props {
+  data: Resource.ArtistDetail;
 }

@@ -5,8 +5,6 @@ import clsx from "clsx";
 import TextField, { TextFieldProps } from "@material-ui/core/TextField";
 import ErrorMessage from "./ErrorMessage";
 import { Controller } from "react-hook-form";
-import InputLabel from "@material-ui/core/InputLabel";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import Visibility from "@material-ui/icons/Visibility";
@@ -53,22 +51,28 @@ export default function FormInput(props: CustomTextFieldProps) {
                 fullWidth
                 className={clsx(props.className, `${props.errors && props.errors.message ? "error" : ""}`)}
               >
-                <InputLabel htmlFor="outlined-adornment-password">{customProps.label}</InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-password"
-                  type={showPassword ? "text" : "password"}
+                <TextField
+                  label={customProps.label}
+                  id={props.id}
+                  {...customProps}
+                  className={clsx(props.className, `${props.errors && props.errors.message ? "error" : ""}`)}
                   value={value}
                   onChange={(e) => {
                     onChange(e.target.value);
                   }}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword} edge="end">
-                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  labelWidth={70}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </FormControl>
             )}

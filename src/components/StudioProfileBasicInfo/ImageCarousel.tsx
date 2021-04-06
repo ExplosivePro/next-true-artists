@@ -3,10 +3,9 @@ import React from "react";
 import Slider from "react-slick";
 import Image from "next/image";
 
-// TODO: load all studio image
-const list = [1, 2, 3];
+import { defaultStudioPortfolioImage } from "../../constants";
 
-export default function ImageCarousels() {
+export default function ImageCarousels({ data }: Props) {
   const settings = {
     dots: true,
     infinite: false,
@@ -18,10 +17,17 @@ export default function ImageCarousels() {
   };
 
   return (
-    <Slider {...settings}>
-      {list.map((item, index) => {
-        return <Image src="/images/studio-profile-image.png" alt="fb" width={446} height={500} key={index} />;
-      })}
-    </Slider>
+    <>
+      {data.length === 0 && <Image src={defaultStudioPortfolioImage} alt="fb" width={446} height={500} />}
+      <Slider {...settings}>
+        {data.map((item, index) => {
+          return <Image src="/images/studio-profile-image.png" alt="fb" width={446} height={500} key={index} />;
+        })}
+      </Slider>
+    </>
   );
+}
+
+interface Props {
+  data: Resource.Image[];
 }

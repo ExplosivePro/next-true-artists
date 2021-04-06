@@ -4,22 +4,24 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useRouter } from "next/router";
 import clsx from "clsx";
 import Slider from "react-slick";
+import Link from "next/link";
+import Image from "next/image";
 
 // Material UI Components
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
 import Avatar from "@material-ui/core/Avatar";
+import { Typography } from "@material-ui/core";
 
 // Custom Components
 import PrimaryButton from "../PrimaryButton";
-import { Typography } from "@material-ui/core";
 import ChipRating from "./ChipRating";
 import colors from "../../palette";
 
+import { defaultStudioTattoo } from "../../constants";
+
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345,
     "& .MuiPaper-elevation1": {
       boxShadow:
         "0px 0px 1px -1px rgb(0 0 0 / 20%), 0px 0px 0px 0px rgb(0 0 0 / 14%), 0px 0px 3px 0px rgb(0 0 0 / 12%)",
@@ -33,10 +35,12 @@ const useStyles = makeStyles({
   cardHeader: {
     "& .MuiCardHeader-content": {
       paddingRight: "20px",
+      maxWidth: "45%",
     },
     alignSelf: "center",
     "& .MuiCardHeader-action": {
       alignSelf: "center",
+      marginLeft: "auto",
     },
   },
   rateText: {
@@ -50,12 +54,34 @@ const useStyles = makeStyles({
     bottom: 0,
     textAlign: "left",
   },
+  onClickComponent: {
+    cursor: "pointer",
+    "& a": {
+      fontWeight: "bold",
+      textDecoration: "none",
+      color: colors.black,
+    },
+    "&:hover": {
+      textDecoration: "underline",
+    },
+  },
+  subHeader: {
+    fontSize: "14px",
+    color: colors.standardGreyBorder,
+  },
+  bookButton: {
+    maxHeight: "33px",
+    maxWidth: "104px",
+    fontSize: "16px",
+    lineHeight: "normal",
+    padding: "7px 16px",
+  },
 });
 
-// TODO: load all studio image
-const list = [1, 2, 3];
-
-export default function CardCarouselsItem({ className }: Props) {
+export default function CardCarouselsItem({
+  className,
+  data: { name, rating, totalRating, city, country, avatar, tattoos, id },
+}: Props) {
   const router = useRouter();
   const classes = useStyles();
 
@@ -70,39 +96,77 @@ export default function CardCarouselsItem({ className }: Props) {
   };
 
   const viewProfile = () => {
-    router.push("/artists/1");
+    router.push(`/studios/${id}`);
   };
 
   return (
     <Card className={clsx(classes.root, className)} elevation={1}>
       <Slider {...settings}>
-        {list.map((item, index) => {
+        {tattoos.map((tattoo, index) => {
           return (
-            <CardMedia className={classes.media} image="/images/feature-studio.jpg" title="Paella dish" key={index}>
+            <>
+              <Image
+                src={tattoo.image.image_url}
+                width={370}
+                height={200}
+                alt={name}
+                layout={"responsive"}
+                key={index}
+              />
               <ChipRating
                 text={
                   <Typography className={classes.rateText}>
-                    <b>5.0</b> <span className={classes.colorGrey}>(2314)</span>
+                    <b>{Number(rating).toFixed(1)}</b> <span className={classes.colorGrey}>({totalRating})</span>
                   </Typography>
                 }
               />
-            </CardMedia>
+            </>
           );
         })}
+        {tattoos.length === 0 && (
+          <>
+            <Image src={defaultStudioTattoo} width={370} height={200} alt={name} layout={"responsive"} />
+            <ChipRating
+              text={
+                <Typography className={classes.rateText}>
+                  <b>{Number(0).toFixed(1)}</b> <span className={classes.colorGrey}>({0})</span>
+                </Typography>
+              }
+            />
+          </>
+        )}
       </Slider>
       <CardHeader
-        avatar={<Avatar aria-label="recipe" src="/images/tatooer.png" />}
+        avatar={
+          <Avatar
+            aria-label="recipe"
+            src={avatar.image_url}
+            className={classes.onClickComponent}
+            onClick={viewProfile}
+          />
+        }
         action={
-          <PrimaryButton variant="contained" color="primary" size="large" bluePastel onClick={viewProfile}>
+          <PrimaryButton
+            variant="contained"
+            color="primary"
+            size="large"
+            bluePastel
+            onClick={viewProfile}
+            className={classes.bookButton}
+          >
             Book now
           </PrimaryButton>
         }
         title={
-          <Typography>
-            <b>Mango</b>
+          <Typography className={classes.onClickComponent} noWrap>
+            <Link href={`/studios/${id}`}>{name}</Link>
           </Typography>
         }
-        subheader="Barcelona, Catalunya"
+        subheader={
+          <Typography className={clsx(classes.onClickComponent, classes.subHeader)} onClick={viewProfile} noWrap>
+            {city} {`${country ? `, ${country}` : ""}`}
+          </Typography>
+        }
         className={classes.cardHeader}
       />
     </Card>
@@ -111,4 +175,5 @@ export default function CardCarouselsItem({ className }: Props) {
 
 interface Props {
   className?: any;
+  data: Resource.StudioDetail;
 }

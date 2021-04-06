@@ -53,13 +53,13 @@ const useStyles = makeStyles((theme) =>
   }),
 );
 
-export default function StudioProfileHeader() {
+export default function StudioProfileHeader({ data: { avatar, name, rating, totalRating } }: Props) {
   const classes = useStyles();
 
   return (
     <Grid container item lg={12} md={12} sm={12} xs={12}>
       <CardHeader
-        avatar={<Avatar aria-label="recipe" src="/images/tatooer.png" className={classes.avatar} />}
+        avatar={<Avatar aria-label="recipe" src={avatar.image_url} className={classes.avatar} />}
         action={
           <div className={classes.buttonWrapper}>
             <PrimaryButton
@@ -84,14 +84,14 @@ export default function StudioProfileHeader() {
         }
         title={
           <Typography>
-            <b>Black Ship BCN Tattoo</b>
+            <b>{name}</b>
           </Typography>
         }
         subheader={
           <Grid container alignItems={"center"}>
             <StarIcon className={classes.icon} />
             <Typography className={classes.rateText} display={"inline"}>
-              <b>5.0</b> <span className={classes.colorGrey}>(2314)</span>
+              <b>{Number(rating || 0).toFixed(1)}</b> <span className={classes.colorGrey}>({totalRating || 0})</span>
             </Typography>
           </Grid>
         }
@@ -107,4 +107,8 @@ export default function StudioProfileHeader() {
       </Grid>
     </Grid>
   );
+}
+
+interface Props {
+  data: Resource.StudioDetail;
 }

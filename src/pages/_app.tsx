@@ -7,7 +7,7 @@ import Head from "next/head";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
-import { AuthContext } from "../contexts";
+import { AuthContext, AppContext } from "../contexts";
 
 import theme from "../theme";
 import "../scss/index.scss";
@@ -32,9 +32,11 @@ export default function MyApp(props: any) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <AuthContext>
-          <Component {...pageProps} />
-        </AuthContext>
+        <AppContext>
+          <AuthContext>
+            <Component {...pageProps} />
+          </AuthContext>
+        </AppContext>
       </ThemeProvider>
     </React.Fragment>
   );

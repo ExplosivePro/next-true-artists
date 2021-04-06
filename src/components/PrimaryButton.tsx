@@ -28,8 +28,8 @@ const useStyles = makeStyles({
     color: colors.bluePastel,
     "&:hover": {
       borderColor: colors.bluePastel,
-      backgroundColor: colors.lightGrey,
-      color: colors.bluePastel,
+      backgroundColor: colors.darkBluePastel,
+      color: colors.white,
     },
   },
   yellowStyle: {
@@ -57,6 +57,7 @@ export default function PrimaryButton(props: CustomButtonProps) {
 
   // Remove invalid prop of material component
   delete customPropsValue.bluePastel;
+  delete customPropsValue.yellow;
 
   return (
     <Button

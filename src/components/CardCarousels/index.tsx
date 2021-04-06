@@ -1,15 +1,31 @@
+// External import
 import Grid from "@material-ui/core/Grid";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Slider from "react-slick";
 import clsx from "clsx";
+import React, { useState } from "react";
 
+// Material UI Import
+import { Typography } from "@material-ui/core";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+
+// Customer Import
+import PrimaryButton from "../PrimaryButton";
+import Loading from "../Loading";
+import CardCarouselsItem from "./CarouselItem";
+
+import colors from "../../palette";
+
+import { getStudioList } from "../../api";
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
       marginTop: "50px",
+    },
+    fullWidth: {
+      width: "100%",
     },
     title: {
       marginBottom: "30px",
@@ -45,47 +61,52 @@ const styles = (theme: Theme) =>
     },
     singleCardItem: {
       margin: theme.spacing(2),
-      [theme.breakpoints.down("md")]: {
-        margin: `${theme.spacing(2)}px auto`,
-      },
     },
     cardItem: {
       boxShadow: `0 4px 4px 0 rgb(136 118 118 / 15%)`,
+    },
+    loadingIcon: {
+      marginTop: "100px",
     },
   });
 
 const useStyles = makeStyles(styles);
 
-import CardCarouselsItem from "./CarouselItem";
-import { Typography } from "@material-ui/core";
-import colors from "../../palette";
-import PrimaryButton from "../PrimaryButton";
-import React, { useState } from "react";
-
-export default function CardCarousels({ name, mode = Mode.GRID }: Props) {
+export default function CardCarousels({
+  name,
+  mode = Mode.GRID,
+  data: {
+    studios,
+    meta: { last_page, current_page },
+  },
+}: Props) {
   const classes = useStyles();
 
-  // TODO: load all tatoo artist list here, do pagination etc
-  const list = [1, 2, 3, 4, 5, 6, 7];
+  const [loading, setLoading] = useState(false);
+  const [studioList, setStudioList] = useState<Resource.StudioDetail[]>(studios);
+  const [currentPage, setCurrentPage] = useState(current_page);
+  const [lastPage, setLastPage] = useState<boolean>(last_page);
 
+  // Single row carousel settings
   const settings = {
     dots: false,
-    infinite: true,
+    infinite: false,
     speed: 500,
     slidesToScroll: 1,
     arrows: false,
     slidesToShow: 3,
+    adaptiveHeight: true,
     responsive: [
       {
         breakpoint: 1280,
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 2,
         },
       },
       {
         breakpoint: 960,
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 2,
         },
       },
       {
@@ -108,13 +129,32 @@ export default function CardCarousels({ name, mode = Mode.GRID }: Props) {
     slider.slickPrev();
   };
 
+  // Load more
+  const loadMore = async () => {
+    setLoading(true);
+
+    // Increase current page
+    setCurrentPage(currentPage + 1);
+
+    // Get artist by current page
+    const {
+      studios: newStudios,
+      meta: { last_page: newLastPage },
+    } = await getStudioList(currentPage + 1);
+
+    setStudioList(studioList.concat(newStudios));
+    setLastPage(newLastPage);
+
+    setLoading(false);
+  };
+
   return (
     <div className={classes.root}>
       <Grid container item justify={"flex-start"} alignItems={"center"} className={classes.title}>
         <Typography variant={"h5"} display={"inline"}>
           <b>{name}</b>
         </Typography>
-        {mode === "singleRow" && (
+        {mode === "singleRow" && studioList.length > 3 && (
           <div className={classes.navigationButtons}>
             <ChevronLeftIcon className={classes.arrowButton} onClick={previous} />
             <ChevronRightIcon className={classes.arrowButton} onClick={next} />
@@ -123,28 +163,52 @@ export default function CardCarousels({ name, mode = Mode.GRID }: Props) {
       </Grid>
 
       {mode === "grid" && (
-        <Grid container alignItems={"center"} spacing={4}>
-          {list.map((item, index) => {
-            return (
-              <Grid container item lg={4} md={6} sm={6} xs={12} key={index} justify={"center"}>
-                <CardCarouselsItem className={classes.cardItem} />
-              </Grid>
-            );
-          })}
-        </Grid>
+        <>
+          {studioList.length === 0 && (
+            <Grid container justify={"center"}>
+              <Typography>No data</Typography>
+            </Grid>
+          )}
+          <Grid container alignItems={"center"} spacing={4}>
+            {studioList.map((item, index) => {
+              return (
+                <Grid container item lg={4} md={6} sm={6} xs={12} key={index} justify={"center"}>
+                  <CardCarouselsItem className={clsx(classes.cardItem, classes.fullWidth)} data={item} />
+                </Grid>
+              );
+            })}
+          </Grid>
+        </>
       )}
 
       {mode === "singleRow" && (
-        <Slider ref={(c) => setSlider(c)} {...settings}>
-          {list.map((item, index) => {
-            return <CardCarouselsItem key={index} className={clsx(classes.cardItem, classes.singleCardItem)} />;
-          })}
-        </Slider>
+        <>
+          {studioList.length === 0 && (
+            <Grid container justify={"center"}>
+              <Typography>No data</Typography>
+            </Grid>
+          )}
+          {studioList.length > 0 && (
+            <Slider ref={(c) => setSlider(c)} {...settings}>
+              {studioList.map((item, index) => {
+                return (
+                  <CardCarouselsItem
+                    key={index}
+                    className={clsx(classes.cardItem, classes.singleCardItem)}
+                    data={item}
+                  />
+                );
+              })}
+            </Slider>
+          )}
+        </>
       )}
 
-      {mode === "grid" && (
+      {loading && <Loading className={classes.loadingIcon} />}
+
+      {mode === "grid" && !lastPage && (
         <Grid container alignItems={"center"} justify={"center"} className={classes.seeMoreButton}>
-          <PrimaryButton variant="contained" color="primary" size="medium" yellow>
+          <PrimaryButton variant="contained" color="primary" size="medium" yellow onClick={loadMore}>
             See More
           </PrimaryButton>
         </Grid>
@@ -153,12 +217,13 @@ export default function CardCarousels({ name, mode = Mode.GRID }: Props) {
   );
 }
 
-enum Mode {
+export enum Mode {
   GRID = "grid",
   SINGLE_ROW = "singleRow",
 }
 
 interface Props {
   name: string;
+  data: Resource.StudioListResponse;
   mode?: Mode;
 }

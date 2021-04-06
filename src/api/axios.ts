@@ -4,6 +4,10 @@ export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
+export const nextApi = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+});
+
 export function setAuthHeader(token: string) {
   api.defaults.headers.Authorization = `Bearer ${token}`;
 }
