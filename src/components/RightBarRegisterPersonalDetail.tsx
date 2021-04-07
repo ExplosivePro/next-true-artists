@@ -140,11 +140,10 @@ export default function RightBarRegisterPersonalDetail({
       <div className={classes.formWrapper}>
         <div className={classes.titleWrapper}>
           <Typography variant={"h5"} className={classes.titleText}>
-            {role === "artist" ? "Artist" : "Studio"} Account
+            {role === "artist" ? "Create Artist" : "Create Studio"} Account
           </Typography>
-          <Typography>Add your name and work email to get started with TrueArtists.</Typography>
           <Typography>
-            Already a member?
+            To get started create your account. Already a member?
             <Link href={`/login?callback=register-selection&type=${role}`}>
               <Typography component={"span"} className={classes.signInText} display={"inline"}>
                 Sign in

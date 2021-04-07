@@ -41,11 +41,11 @@ export default function RightBarRegisterAccountType({ onNext }: { onNext: (role:
     <Grid container className={classes.root} alignItems={"center"} justify={"center"}>
       <div>
         <div className={classes.titleWrapper}>
-          <Typography variant={"h5"} className={classes.titleText}>
+          <Typography variant={"h4"} className={classes.titleText}>
             What type of account would you like to create?
           </Typography>
-          <Typography variant={"subtitle2"}>
-            Nullam et dui feugiat porta velit non imperdiet leo. Ut hendrerit purus vel velit dictum
+          <Typography variant={"subtitle1"}>
+            As a studio you can invite artists and as an artist you can join studios.
           </Typography>
         </div>
         <OperationCard

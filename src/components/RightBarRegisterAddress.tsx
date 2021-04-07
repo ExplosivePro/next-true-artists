@@ -92,9 +92,9 @@ export default function RightBarRegisterAddress({ onPreviousStep, onNext, curren
       <div className={classes.formWrapper}>
         <div className={classes.titleWrapper}>
           <Typography variant={"h5"} className={classes.titleText}>
-            Working Address
+            Your studio address
           </Typography>
-          <Typography>Add your working location to get started with TrueArtists</Typography>
+          <Typography>Enter your studio address</Typography>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
