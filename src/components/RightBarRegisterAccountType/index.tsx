@@ -25,7 +25,7 @@ const useStyles = makeStyles({
 export default function RightBarRegisterAccountType({ onNext }: { onNext: (role: string) => void }) {
   const classes = useStyles();
 
-  const [cardSelected, setCardSelected] = useState<number>();
+  const [cardSelected] = useState<number>();
 
   const goNext = (index: number) => {
     if (index === 0) {
@@ -54,9 +54,6 @@ export default function RightBarRegisterAccountType({ onNext }: { onNext: (role:
           imageUrl={"/images/icons/artist.svg"}
           selected={cardSelected === 0}
           onSelect={() => {
-            setCardSelected(0);
-          }}
-          onNext={() => {
             goNext(0);
           }}
         />
@@ -66,9 +63,6 @@ export default function RightBarRegisterAccountType({ onNext }: { onNext: (role:
           imageUrl={"/images/icons/studio.svg"}
           selected={cardSelected === 1}
           onSelect={() => {
-            setCardSelected(1);
-          }}
-          onNext={() => {
             goNext(1);
           }}
         />

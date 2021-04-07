@@ -12,7 +12,7 @@ import FormInput from "./FormInput";
 import { useYupValidationResolver } from "../utils";
 import PrimaryButton from "./PrimaryButton";
 
-import { createArtistProfile, createStudioProfile } from "../api";
+import { createArtistProfile } from "../api";
 import { useApp } from "../contexts";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -47,13 +47,14 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function RightBarRegisterAddress({ onPreviousStep, onNext, currentUserId, role }: Props) {
+export default function RightBarRegisterAddress({ onPreviousStep, onNext, currentUserId }: Props) {
   const app = useApp();
 
   // Validation schema
   const validationSchema = useMemo(
     () =>
       yup.object({
+        phoneNumber: yup.string().required("Phone number field is required"),
         streetAddress: yup.string().required("Street address field is required"),
         zipCode: yup.string().required("Zip code field is required"),
         country: yup.string().required("Country field is required"),
@@ -65,42 +66,23 @@ export default function RightBarRegisterAddress({ onPreviousStep, onNext, curren
   const resolver = useYupValidationResolver(validationSchema);
   const { control, handleSubmit, errors } = useForm({ resolver });
 
-  const onSubmit = async ({ streetAddress, zipCode, country }: submitFormData) => {
+  const onSubmit = async ({ streetAddress, zipCode, country, phoneNumber }: submitFormData) => {
     if (currentUserId) {
       // Call APIs to create artist profile
-      if (role === "artist") {
-        const response = await createArtistProfile({
-          user_id: currentUserId,
-          street_address: streetAddress, // Put this down temporarily due to missing APIs
-          zip_code: zipCode,
-          country,
-        });
+      const response = await createArtistProfile({
+        user_id: currentUserId,
+        street_address: streetAddress, // Put this down temporarily due to missing APIs
+        zip_code: zipCode,
+        country,
+        phone_number: phoneNumber,
+      });
 
-        const { error, data, errors } = response;
-        // No error happens
-        if (!error) {
-          onNext && onNext(data.id, { streetAddress, zipCode, country });
-        } else {
-          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
-        }
-      }
-
-      // Call APIs to create studio profile
-      if (role === "studio") {
-        const response = await createStudioProfile({
-          user_id: currentUserId,
-          street_address: streetAddress, // Put this down temporarily due to missing APIs
-          zip_code: zipCode,
-          country,
-        });
-
-        const { error, data, errors } = response;
-        // No error happens
-        if (!error) {
-          onNext && onNext(data.id, { streetAddress, zipCode, country });
-        } else {
-          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
-        }
+      const { error, data, errors } = response;
+      // No error happens
+      if (!error) {
+        onNext && onNext(data.id, { streetAddress, zipCode, country, phoneNumber });
+      } else {
+        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
       }
     }
   };
@@ -112,10 +94,23 @@ export default function RightBarRegisterAddress({ onPreviousStep, onNext, curren
           <Typography variant={"h5"} className={classes.titleText}>
             Working Address
           </Typography>
-          <Typography variant={"subtitle2"}>Add your working location to get started with TrueArtists</Typography>
+          <Typography>Add your working location to get started with TrueArtists</Typography>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
+          <FormInput
+            name="phoneNumber"
+            classes={{ root: classes.formInput }}
+            label={"Phone number"}
+            id="phoneNumber"
+            placeholder={"Phone number"}
+            fullWidth
+            control={control}
+            variant={"outlined"}
+            defaultValue={""}
+            errors={errors.phoneNumber}
+          />
+
           <FormInput
             name="streetAddress"
             classes={{ root: classes.formInput }}
@@ -193,4 +188,5 @@ interface submitFormData {
   streetAddress: string;
   zipCode: string;
   country: string;
+  phoneNumber: "string";
 }

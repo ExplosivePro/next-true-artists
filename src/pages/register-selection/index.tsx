@@ -12,8 +12,9 @@ import LeftBarRegisterSelection from "../../components/LeftBarRegisterSelection"
 import RightBarRegisterAccountType from "../../components/RightBarRegisterAccountType";
 import RightBarRegisterPersonalDetail from "../../components/RightBarRegisterPersonalDetail";
 import RightBarRegisterAddress from "../../components/RightBarRegisterAddress";
-// import RightBarRegisterWorkingLocation from "../components/RightBarRegisterWorkingLocation";
+import RightBarStudioRegisterInformation from "../../components/RightBarStudioRegisterInformation";
 import RightBarRegisterWorkStyle from "../../components/RightBarRegisterWorkStyle";
+import RightBarRegisterBusinessSettings from "../../components/RightBarRegisterBusinessSettings";
 
 import { getWorkingStyleList } from "../../api";
 import { useAuth, useApp } from "../../contexts";
@@ -47,9 +48,11 @@ const useStyles = makeStyles((theme) =>
     rightContainer: {
       height: "100%",
       padding: "50px 65px",
+      overflow: "scroll",
       backgroundColor: colors.lightGrey,
       [theme.breakpoints.down("sm")]: {
         padding: "50px 22px",
+        overflow: "inherit",
       },
     },
     title: {
@@ -127,7 +130,7 @@ export default function RegisterSelection({ workingStyles }: Props) {
           justify={"center"}
           className={clsx(classes.relativeContainer, classes.leftBarContainer)}
         >
-          <LeftBarRegisterSelection step={step} />
+          <LeftBarRegisterSelection step={step} role={role} />
         </Grid>
 
         <Grid item lg={9} md={9} sm={12} xs={12} className={clsx(classes.relativeContainer, classes.rightContainer)}>
@@ -166,8 +169,29 @@ export default function RegisterSelection({ workingStyles }: Props) {
             />
           )}
 
-          {step === 2 && (
+          {step === 2 && role === "artist" && (
             <RightBarRegisterAddress
+              role={role}
+              currentUserId={currentUserId}
+              currentData={stepData[2] || {}}
+              onNext={(id: number, data) => {
+                const thisStepData = { 2: data };
+
+                // Save current user role id
+                setCurrentUserRoleId(id);
+
+                // Store step data to edit later
+                setStepData({ ...stepData, ...thisStepData });
+
+                setStep(3);
+              }}
+              onPreviousStep={() => {
+                setStep(1);
+              }}
+            />
+          )}
+          {step === 2 && role === "studio" && (
+            <RightBarStudioRegisterInformation
               role={role}
               currentUserId={currentUserId}
               currentData={stepData[2] || {}}
@@ -207,8 +231,25 @@ export default function RegisterSelection({ workingStyles }: Props) {
           {/*    }}*/}
           {/*  />*/}
           {/*)}*/}
-          {step === 3 && (
+          {role === "artist" && step === 3 && (
             <RightBarRegisterWorkStyle
+              role={role}
+              data={workingStyles}
+              currentUserId={currentUserRoleId}
+              onNext={() => {
+                if (token) {
+                  auth.loginByToken(token);
+                }
+              }}
+              onSkip={() => {
+                if (token) {
+                  auth.loginByToken(token);
+                }
+              }}
+            />
+          )}
+          {role === "studio" && step === 3 && (
+            <RightBarRegisterBusinessSettings
               role={role}
               data={workingStyles}
               currentUserId={currentUserRoleId}

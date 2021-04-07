@@ -76,7 +76,6 @@ export default function RightBarRegisterPersonalDetail({
         firstName: yup.string().required("First name is required"),
         lastName: yup.string().required("Last name field is required"),
         email: yup.string().required("Email address field is required").email("* Wrong email format"),
-        phoneNumber: yup.string().required("Phone number field is required"),
         password: yup
           .string()
           .required("Password is required")
@@ -97,7 +96,7 @@ export default function RightBarRegisterPersonalDetail({
   const resolver = useYupValidationResolver(validationSchema);
   const { control, handleSubmit, errors } = useForm({ resolver });
 
-  const onSubmit = async ({ firstName, lastName, email, password, confirmPassword, phoneNumber }: SubmitFormData) => {
+  const onSubmit = async ({ firstName, lastName, email, password, confirmPassword }: SubmitFormData) => {
     // Call APIs to submit register data
     // Edit user
     if (currentUserId) {
@@ -111,7 +110,7 @@ export default function RightBarRegisterPersonalDetail({
       const { error, data, errors } = response;
       // No error happens
       if (!error) {
-        onNext && onNext(data?.id, { firstName, lastName, email, phoneNumber, password, confirmPassword });
+        onNext && onNext(data?.id, { firstName, lastName, email, password, confirmPassword });
       } else {
         app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
       }
@@ -129,12 +128,7 @@ export default function RightBarRegisterPersonalDetail({
         // Set token for auth APIs call later
         setAuthHeader(data.auth_token);
 
-        onNext &&
-          onNext(
-            data?.user.id,
-            { firstName, lastName, email, phoneNumber, password, confirmPassword },
-            data.auth_token,
-          );
+        onNext && onNext(data?.user.id, { firstName, lastName, email, password, confirmPassword }, data.auth_token);
       } else {
         app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
       }
@@ -146,13 +140,13 @@ export default function RightBarRegisterPersonalDetail({
       <div className={classes.formWrapper}>
         <div className={classes.titleWrapper}>
           <Typography variant={"h5"} className={classes.titleText}>
-            Artist Account
+            {role === "artist" ? "Artist" : "Studio"} Account
           </Typography>
-          <Typography variant={"subtitle2"}>Add your name and work email to get started with TrueArtists.</Typography>
-          <Typography variant={"subtitle2"}>
+          <Typography>Add your name and work email to get started with TrueArtists.</Typography>
+          <Typography>
             Already a member?
             <Link href={`/login?callback=register-selection&type=${role}`}>
-              <Typography className={classes.signInText} display={"inline"}>
+              <Typography component={"span"} className={classes.signInText} display={"inline"}>
                 Sign in
               </Typography>
             </Link>
@@ -200,19 +194,6 @@ export default function RightBarRegisterPersonalDetail({
             variant={"outlined"}
             defaultValue={currentData.email || ""}
             errors={errors.email}
-          />
-
-          <FormInput
-            name="phoneNumber"
-            classes={{ root: classes.formInput }}
-            label={"Phone number"}
-            id="phoneNumber"
-            placeholder={"Phone number"}
-            fullWidth
-            control={control}
-            variant={"outlined"}
-            defaultValue={currentData.phoneNumber || ""}
-            errors={errors.phoneNumber}
           />
 
           <FormInput

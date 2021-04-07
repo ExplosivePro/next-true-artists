@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function LeftBarRegisterSelection({ step }: { step: number }) {
+export default function LeftBarRegisterSelection({ step, role }: { step: number; role: string }) {
   const classes = useStyles();
 
   const StepItem = ({
@@ -120,16 +120,24 @@ export default function LeftBarRegisterSelection({ step }: { step: number }) {
             <StepItem name={"Account Type"} selected={step === 0} checked={step > 0} />
           </Grid>
           <Grid container item lg={12} md={12} sm={12} alignItems={"center"}>
-            <StepItem name={"Personal Details"} selected={step === 1} checked={step > 1} />
+            <StepItem name={"Account Details"} selected={step === 1} checked={step > 1} />
           </Grid>
           <Grid container item lg={12} md={12} sm={12} alignItems={"center"}>
-            <StepItem name={"Working Location"} selected={step === 2} checked={step > 2} />
+            <StepItem
+              name={role === "artist" ? "Working Location" : "Studio Information"}
+              selected={step === 2}
+              checked={step > 2}
+            />
           </Grid>
           {/*<Grid container item lg={12} md={12} sm={12} alignItems={"center"}>*/}
           {/*  <StepItem name={"Working Location"} selected={step === 3} checked={step > 3} />*/}
           {/*</Grid>*/}
           <Grid container item lg={12} md={12} sm={12} alignItems={"center"}>
-            <StepItem name={"Your Style of Work"} selected={step === 4} checked={step > 4} />
+            <StepItem
+              name={role === "artist" ? "Your Style of Work" : "Business Settings"}
+              selected={step === 4}
+              checked={step > 4}
+            />
           </Grid>
         </Grid>
         <div className={classes.imageWrapper}>
