@@ -1,19 +1,14 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
-import List from "@material-ui/core/List";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import { Grid, Typography } from "@material-ui/core";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import Switch from "@material-ui/core/Switch";
+import { Grid } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
+import Typography from "@material-ui/core/Typography";
 
 import colors from "../../palette";
 
-import { currencies } from "../../constants";
+import { currencies, paymentMethods } from "../../constants";
 
 const useStyles = makeStyles({
   root: {
@@ -22,23 +17,8 @@ const useStyles = makeStyles({
   },
   groupName: {
     color: colors.black,
-    fontSize: "16px",
     fontWeight: "bold",
-  },
-  listSubHeader: {
-    marginBottom: "10px",
-  },
-  title: {
-    color: colors.black,
-    fontWeight: 500,
-  },
-  subTitle: {
-    color: colors.standardGreyBorder,
-  },
-  listItem: {
-    cursor: "pointer",
-    paddingTop: "15px",
-    paddingBottom: "15px",
+    paddingLeft: "16px",
   },
   inputWrapper: {
     padding: "8px 15px",
@@ -48,26 +28,36 @@ const useStyles = makeStyles({
   },
 });
 
-const PricingList = ({ currency, pricePerHour, minimumRate, onPriceChange }: Props) => {
+const PricingList = ({ currency, paymentMethod, pricePerHour, minimumRate, onPriceChange }: Props) => {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <List
-        subheader={
-          <ListSubheader className={classes.listSubHeader} disableSticky={true}>
-            {<Typography className={classes.groupName}>Pricing</Typography>}
-          </ListSubheader>
-        }
-      >
-        <ListItem className={classes.listItem}>
-          <ListItemText primary={<Typography className={classes.title}>Cash Only</Typography>} />
-          <ListItemSecondaryAction>
-            <Switch edge="end" inputProps={{ "aria-labelledby": "cash-only" }} />
-          </ListItemSecondaryAction>
-        </ListItem>
-      </List>
-
+      <Typography className={classes.groupName}>Pricing</Typography>
+      <Grid container spacing={2} className={classes.inputWrapper}>
+        <Grid item lg={12} md={12} xs={12}>
+          <TextField
+            name="paymentMethod"
+            select
+            classes={{ root: classes.formInput }}
+            label={"Payment Method"}
+            id="payment-method"
+            placeholder={"Payment Method"}
+            fullWidth
+            variant={"outlined"}
+            value={paymentMethod}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              onPriceChange(e, "paymentMethod");
+            }}
+          >
+            {paymentMethods.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+      </Grid>
       <Grid container spacing={2} className={classes.inputWrapper}>
         <Grid item lg={9} md={9} xs={12}>
           <TextField
@@ -78,7 +68,6 @@ const PricingList = ({ currency, pricePerHour, minimumRate, onPriceChange }: Pro
             placeholder={"Price per Hour"}
             fullWidth
             variant={"outlined"}
-            defaultValue={""}
             value={pricePerHour}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               onPriceChange(e, "pricePerHour");
@@ -119,7 +108,6 @@ const PricingList = ({ currency, pricePerHour, minimumRate, onPriceChange }: Pro
             placeholder={"Minimum Rate"}
             fullWidth
             variant={"outlined"}
-            defaultValue={""}
             value={minimumRate}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               onPriceChange(e, "minimumRate");
@@ -155,6 +143,7 @@ const PricingList = ({ currency, pricePerHour, minimumRate, onPriceChange }: Pro
 
 interface Props {
   currency: string;
+  paymentMethod: string;
   pricePerHour: number;
   minimumRate: number;
   onPriceChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;

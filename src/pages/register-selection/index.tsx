@@ -87,7 +87,7 @@ export default function RegisterSelection({ workingStyles }: Props) {
   const [token, setToken] = useState<string>(); // Keep token temporarily, at the end of this registration, will store this one to loggin
 
   // Step 1: Account type
-  const [role, setRole] = useState<string>("artist");
+  const [role, setRole] = useState<string>("studio");
 
   useEffect(() => {
     // User back from login page

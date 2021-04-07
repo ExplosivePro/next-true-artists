@@ -9,6 +9,7 @@ import { Grid, Typography } from "@material-ui/core";
 import PrimaryButton from "../PrimaryButton";
 import SettingList from "./SettingList";
 import PricingList from "./PricingList";
+import InputFields from "./InputFields";
 
 import colors from "../../palette";
 
@@ -65,18 +66,41 @@ const useStyles = makeStyles({
   },
 });
 
+const getDefaultValue = (settings: any[]) => {
+  const checkList: any[] = [];
+  settings.map((item) => {
+    item.settings.map((setting: any) => {
+      if (setting.defaultValue) {
+        checkList.push(setting.name);
+      }
+    });
+  });
+
+  return checkList;
+};
+
 export default function RightBarRegisterBusinessSettings({ currentUserId, onSkip, onNext }: Props) {
   const classes = useStyles();
   const app = useApp();
 
   const [currency, setCurrency] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
   const [pricePerHour, setPricePerHour] = useState<number>(0);
   const [minimumRate, setMinimumRate] = useState<number>(0);
+  const [specialty, setSpecialty] = useState("");
+  const [services, setServices] = useState("");
+  const [language, setLanguage] = useState("");
+  const [checked, setChecked] = React.useState<string[]>(getDefaultValue(settingList));
 
+  // On price change
   const onPriceChange = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
     switch (name) {
       case "currency": {
         setCurrency(event.target.value);
+        break;
+      }
+      case "paymentMethod": {
+        setPaymentMethod(event.target.value);
         break;
       }
       case "pricePerHour": {
@@ -90,6 +114,38 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, onSkip
     }
   };
 
+  // On input change
+  const onInputChange = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
+    switch (name) {
+      case "specialty": {
+        setSpecialty(event.target.value);
+        break;
+      }
+      case "services": {
+        setServices(event.target.value);
+        break;
+      }
+      case "language": {
+        setLanguage(event.target.value);
+        break;
+      }
+    }
+  };
+
+  // Handle toggle setting buttons
+  const handleToggle = (value: string) => () => {
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setChecked(newChecked);
+  };
+
   const goNext = async () => {
     if (currentUserId) {
       // Edit studio profile
@@ -99,6 +155,20 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, onSkip
         minimum_spend: minimumRate,
         price_per_hour: pricePerHour,
         currency_code: currency,
+        accepted_payment_methods: paymentMethod,
+        accepting_guest_artist: checked.includes("appointment_only"),
+        appointment_only: checked.includes("appointment_only"),
+        piercings: checked.includes("piercings"),
+        cosmetic_tattoos: checked.includes("cosmetic_tattoos"),
+        vegan_ink: checked.includes("vegan_ink"),
+        wifi: checked.includes("wifi"),
+        privacy_dividers: checked.includes("privacy_dividers"),
+        wheelchair_access: checked.includes("wheelchair_access"),
+        parking: checked.includes("parking"),
+        lgbt_friendly: checked.includes("lgbt_friendly"),
+        specialty,
+        languages: language,
+        services,
       });
 
       const { error, errors } = response;
@@ -121,13 +191,22 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, onSkip
           <Typography>Include information about your studio that’s useful for customers.</Typography>
         </div>
 
-        {settingList.map((setting, index) => {
+        <InputFields specialty={specialty} language={language} services={services} onInputChange={onInputChange} />
+        {settingList.map((setting: any, index) => {
           return (
-            <SettingList key={index} id={setting.groupName} groupName={setting.groupName} items={setting.settings} />
+            <SettingList
+              key={index}
+              id={setting.groupName}
+              groupName={setting.groupName}
+              items={setting.settings}
+              checked={checked}
+              handleToggle={handleToggle}
+            />
           );
         })}
 
         <PricingList
+          paymentMethod={paymentMethod}
           currency={currency}
           pricePerHour={pricePerHour}
           minimumRate={minimumRate}

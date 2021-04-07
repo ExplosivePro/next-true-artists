@@ -38,7 +38,7 @@ const useStyles = makeStyles({
   },
 });
 
-const SettingList = ({ id, groupName, items }: Props) => {
+const SettingList = ({ id, groupName, items, handleToggle, checked }: Props) => {
   const classes = useStyles();
 
   return (
@@ -50,16 +50,16 @@ const SettingList = ({ id, groupName, items }: Props) => {
         </ListSubheader>
       }
     >
-      {items.map(({ title, subTitle }, index) => {
+      {items.map(({ title, subTitle, name }, index) => {
         return (
-          <ListItem key={index} divider={true} className={classes.listItem}>
+          <ListItem key={index} divider={true} className={classes.listItem} onClick={handleToggle(name)}>
             <ListItemText
               id={id}
               primary={<Typography className={classes.title}>{title}</Typography>}
               secondary={<Typography className={classes.subTitle}>{subTitle}</Typography>}
             />
             <ListItemSecondaryAction>
-              <Switch edge="end" inputProps={{ "aria-labelledby": id }} />
+              <Switch edge="end" checked={checked.indexOf(name) !== -1} inputProps={{ "aria-labelledby": id }} />
             </ListItemSecondaryAction>
           </ListItem>
         );
@@ -71,12 +71,16 @@ const SettingList = ({ id, groupName, items }: Props) => {
 interface Setting {
   title: string;
   subTitle: string;
+  defaultValue: boolean;
+  name: string;
 }
 
 interface Props {
   id: string;
   groupName: string;
   items: Setting[];
+  handleToggle: (name: string) => () => void;
+  checked: string[];
 }
 
 export default SettingList;

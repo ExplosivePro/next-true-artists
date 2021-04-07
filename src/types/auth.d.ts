@@ -78,6 +78,20 @@ declare namespace Register {
     minimum_spend?: number;
     price_per_hour?: number;
     currency_code?: string;
+    accepted_payment_methods?: string;
+    appointment_only?: boolean;
+    accepting_guest_artist?: boolean;
+    piercings?: boolean;
+    cosmetic_tattoos?: boolean;
+    vegan_ink?: boolean;
+    wifi?: boolean;
+    privacy_dividers?: boolean;
+    wheelchair_access?: boolean;
+    parking?: boolean;
+    lgbt_friendly?: boolean;
+    specialty?: string;
+    languages?: string;
+    services?: string;
   }
 
   interface FormData {
