@@ -113,10 +113,10 @@ export default function RightBarRegisterWorkStyle({ data = [], currentUserId, on
     <Grid container className={classes.root} alignItems={"center"} justify={"center"}>
       <div className={classes.formWrapper}>
         <div className={classes.titleWrapper}>
-          <Typography variant={"h5"} className={classes.titleText}>
-            Style your work
+          <Typography variant={"h4"} className={classes.titleText}>
+            Your tattoo style of work
           </Typography>
-          <Typography variant={"subtitle2"}>Add your name and work email to get started with TrueArtists</Typography>
+          <Typography variant={"h6"}>Select tattoo styles you mostly like to work on.</Typography>
         </div>
 
         {data.map((workStyle, index) => (
