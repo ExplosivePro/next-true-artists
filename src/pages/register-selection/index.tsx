@@ -11,10 +11,12 @@ import Grid from "@material-ui/core/Grid";
 import LeftBarRegisterSelection from "../../components/LeftBarRegisterSelection";
 import RightBarRegisterAccountType from "../../components/RightBarRegisterAccountType";
 import RightBarRegisterPersonalDetail from "../../components/RightBarRegisterPersonalDetail";
-import RightBarRegisterAddress from "../../components/RightBarRegisterAddress";
+import RightBarArtistRegisterInformation from "../../components/RightBarArtistRegisterInformation";
 import RightBarStudioRegisterInformation from "../../components/RightBarStudioRegisterInformation";
 import RightBarRegisterWorkStyle from "../../components/RightBarRegisterWorkStyle";
 import RightBarRegisterBusinessSettings from "../../components/RightBarRegisterBusinessSettings";
+import RightBarRegisterAvatarUpload from "../../components/RightBarRegisterAvatarUpload";
+import RightBarRegisterTattooUpload from "../../components/RightBarRegisterTattooUpload";
 
 import { getWorkingStyleList } from "../../api";
 import { useAuth, useApp } from "../../contexts";
@@ -26,6 +28,9 @@ const useStyles = makeStyles((theme) =>
     container: {
       height: "100vh",
       padding: 0,
+      [theme.breakpoints.down("sm")]: {
+        height: "100%",
+      },
     },
     leftBarContainer: {
       [theme.breakpoints.down("sm")]: {
@@ -170,7 +175,7 @@ export default function RegisterSelection({ workingStyles }: Props) {
           )}
 
           {step === 2 && role === "artist" && (
-            <RightBarRegisterAddress
+            <RightBarArtistRegisterInformation
               role={role}
               currentUserId={currentUserId}
               currentData={stepData[2] || {}}
@@ -211,40 +216,23 @@ export default function RegisterSelection({ workingStyles }: Props) {
               }}
             />
           )}
-          {/*{step === 2 && (*/}
-          {/*  <RightBarRegisterSetPassword*/}
-          {/*    onNext={() => {*/}
-          {/*      setStep(3);*/}
-          {/*    }}*/}
-          {/*    onPreviousStep={() => {*/}
-          {/*      setStep(1);*/}
-          {/*    }}*/}
-          {/*  />*/}
-          {/*)}*/}
-          {/*{step === 3 && (*/}
-          {/*  <RightBarRegisterWorkingLocation*/}
-          {/*    onNext={() => {*/}
-          {/*      setStep(4);*/}
-          {/*    }}*/}
-          {/*    onPreviousStep={() => {*/}
-          {/*      setStep(2);*/}
-          {/*    }}*/}
-          {/*  />*/}
-          {/*)}*/}
+
           {role === "artist" && step === 3 && (
             <RightBarRegisterWorkStyle
               role={role}
               data={workingStyles}
               currentUserId={currentUserRoleId}
-              onNext={() => {
-                if (token) {
-                  auth.loginByToken(token);
-                }
+              onNext={(data) => {
+                const thisStepData = { 3: data };
+
+                // Store step data to edit later
+                setStepData({ ...stepData, ...thisStepData });
+
+                // Next step
+                setStep(4);
               }}
               onSkip={() => {
-                if (token) {
-                  auth.loginByToken(token);
-                }
+                setStep(2);
               }}
             />
           )}
@@ -253,12 +241,52 @@ export default function RegisterSelection({ workingStyles }: Props) {
               role={role}
               data={workingStyles}
               currentUserId={currentUserRoleId}
+              onNext={(data) => {
+                const thisStepData = { 3: data };
+
+                // Store step data to edit later
+                setStepData({ ...stepData, ...thisStepData });
+
+                // Next step
+                setStep(4);
+              }}
+              onSkip={() => {
+                setStep(2);
+              }}
+            />
+          )}
+
+          {step === 4 && (
+            <RightBarRegisterAvatarUpload
+              role={role}
+              currentUserId={currentUserRoleId}
+              currentData={stepData[4] || {}}
+              onNext={(data) => {
+                const thisStepData = { 4: data };
+
+                // Store step data to edit later
+                setStepData({ ...stepData, ...thisStepData });
+
+                // Next step
+                setStep(5);
+              }}
+              onPreviousStep={() => {
+                setStep(3);
+              }}
+            />
+          )}
+
+          {step === 5 && (
+            <RightBarRegisterTattooUpload
+              role={role}
+              currentUserId={currentUserRoleId}
+              currentData={stepData[4] || {}}
               onNext={() => {
                 if (token) {
                   auth.loginByToken(token);
                 }
               }}
-              onSkip={() => {
+              onPreviousStep={() => {
                 if (token) {
                   auth.loginByToken(token);
                 }

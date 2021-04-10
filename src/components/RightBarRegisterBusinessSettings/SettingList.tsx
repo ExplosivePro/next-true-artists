@@ -59,7 +59,12 @@ const SettingList = ({ id, groupName, items, handleToggle, checked }: Props) => 
               secondary={<Typography className={classes.subTitle}>{subTitle}</Typography>}
             />
             <ListItemSecondaryAction>
-              <Switch edge="end" checked={checked.indexOf(name) !== -1} inputProps={{ "aria-labelledby": id }} />
+              <Switch
+                edge="end"
+                checked={checked.indexOf(name) !== -1}
+                inputProps={{ "aria-labelledby": id }}
+                onClick={handleToggle(name)}
+              />
             </ListItemSecondaryAction>
           </ListItem>
         );

@@ -35,6 +35,16 @@ label{
   background-color: $white !important;
 }
 
+.MuiOutlinedInput-multiline{
+  background-color: $white !important;
+}
+
+.MuiInputBase-root{
+ &.MuiOutlinedInput-adornedStart{
+   background-color: $white !important;
+ }
+}
+
 
 
 

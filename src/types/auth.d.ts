@@ -29,11 +29,25 @@ declare namespace Register {
     first_name?: string;
     last_name?: string;
     email?: string;
+    bio?: string;
+    seeking_guest_spot?: boolean;
+    guest_artist?: boolean;
+    licensed?: boolean;
+    cpr_certified?: boolean;
+    years_of_experience?: number;
+    minimum_spend?: number;
+    price_per_hour?: number;
+    currency_code?: string;
+    website?: string;
+    facebook?: string;
+    instagram?: string;
+    twitter?: string;
     street_address?: string;
     zip_code?: string;
     country?: string;
     styles?: number[];
     phone_number?: string;
+    specialty?: string;
   }
 
   interface ApiEditArtistPayload {
@@ -45,6 +59,11 @@ declare namespace Register {
     zip_code?: string;
     country?: string;
     styles?: number[];
+  }
+
+  interface ApiUpdateArtistAvatarPayload {
+    id: number;
+    file: any;
   }
 
   interface ApiCreateStudioPayload {

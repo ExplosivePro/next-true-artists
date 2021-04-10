@@ -16,7 +16,7 @@ import PrimaryButton from "./PrimaryButton";
 import colors from "../palette";
 
 // APIs
-import { editArtistProfile, editStudioProfile } from "../api";
+import { editArtistProfile } from "../api";
 
 // Context
 import { useApp } from "../contexts";
@@ -66,7 +66,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function RightBarRegisterWorkStyle({ data = [], currentUserId, role, onSkip, onNext }: Props) {
+export default function RightBarRegisterWorkStyle({ data = [], currentUserId, onSkip, onNext }: Props) {
   const classes = useStyles();
   const app = useApp();
 
@@ -93,37 +93,18 @@ export default function RightBarRegisterWorkStyle({ data = [], currentUserId, ro
   const goNext = async () => {
     if (currentUserId) {
       // Edit artist profile
-      if (role === "artist") {
-        // Call APIs to submit register data
-        const response = await editArtistProfile({
-          id: currentUserId,
-          styles: getSelectedIds(),
-        });
+      // Call APIs to submit register data
+      const response = await editArtistProfile({
+        id: currentUserId,
+        styles: getSelectedIds(),
+      });
 
-        const { error, errors } = response;
-        // No error happens
-        if (!error) {
-          onNext && onNext();
-        } else {
-          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
-        }
-      }
-
-      // Edit studio profile
-      if (role === "studio") {
-        // Call APIs to submit register data
-        const response = await editStudioProfile({
-          id: currentUserId,
-          styles: getSelectedIds(),
-        });
-
-        const { error, errors } = response;
-        // No error happens
-        if (!error) {
-          onNext && onNext();
-        } else {
-          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
-        }
+      const { error, errors } = response;
+      // No error happens
+      if (!error) {
+        onNext && onNext(optionValues);
+      } else {
+        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
       }
     }
   };
@@ -171,7 +152,7 @@ export default function RightBarRegisterWorkStyle({ data = [], currentUserId, ro
               fullWidth
               onClick={onSkip}
             >
-              Skip
+              Previous Step
             </PrimaryButton>
           </Grid>
           <Grid item lg={6} md={6} sm={12} xs={12}>
@@ -190,5 +171,5 @@ interface Props {
   currentUserId: number | undefined;
   role: string;
   onSkip?: () => void;
-  onNext?: () => void;
+  onNext?: (data: any) => void;
 }

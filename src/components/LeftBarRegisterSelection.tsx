@@ -124,7 +124,7 @@ export default function LeftBarRegisterSelection({ step, role }: { step: number;
           </Grid>
           <Grid container item lg={12} md={12} sm={12} alignItems={"center"}>
             <StepItem
-              name={role === "artist" ? "Working Location" : "Studio Information"}
+              name={role === "artist" ? "Artist Information" : "Studio Information"}
               selected={step === 2}
               checked={step > 2}
             />
@@ -135,9 +135,19 @@ export default function LeftBarRegisterSelection({ step, role }: { step: number;
           <Grid container item lg={12} md={12} sm={12} alignItems={"center"}>
             <StepItem
               name={role === "artist" ? "Your Style of Work" : "Business Settings"}
+              selected={step === 3}
+              checked={step > 3}
+            />
+          </Grid>
+          <Grid container item lg={12} md={12} sm={12} alignItems={"center"}>
+            <StepItem
+              name={role === "artist" ? "Avatar Upload" : "Logo Upload"}
               selected={step === 4}
               checked={step > 4}
             />
+          </Grid>
+          <Grid container item lg={12} md={12} sm={12} alignItems={"center"}>
+            <StepItem name={"Work showcase"} selected={step === 5} checked={step > 5} />
           </Grid>
         </Grid>
         <div className={classes.imageWrapper}>
@@ -156,7 +166,8 @@ export default function LeftBarRegisterSelection({ step, role }: { step: number;
           <StepCircle active={step > 1} selected={step === 1} />
           <StepCircle active={step > 2} selected={step === 2} />
           <StepCircle active={step > 3} selected={step === 3} />
-          {/*<StepCircle active={step > 4} selected={step === 4} />*/}
+          <StepCircle active={step > 4} selected={step === 4} />
+          <StepCircle active={step > 5} selected={step === 5} />
         </div>
       </Grid>
     </>

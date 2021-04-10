@@ -87,9 +87,8 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, onSkip
   const [paymentMethod, setPaymentMethod] = useState("");
   const [pricePerHour, setPricePerHour] = useState<number>(0);
   const [minimumRate, setMinimumRate] = useState<number>(0);
-  const [specialty, setSpecialty] = useState("");
-  const [services, setServices] = useState("");
-  const [language, setLanguage] = useState("");
+  const [services, setServices] = useState<string[]>([]);
+  const [language, setLanguage] = useState<string[]>([]);
   const [checked, setChecked] = React.useState<string[]>(getDefaultValue(settingList));
 
   // On price change
@@ -115,18 +114,14 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, onSkip
   };
 
   // On input change
-  const onInputChange = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
+  const onInputChange = (event: string[], name: string) => {
     switch (name) {
-      case "specialty": {
-        setSpecialty(event.target.value);
-        break;
-      }
       case "services": {
-        setServices(event.target.value);
+        setServices(event);
         break;
       }
       case "language": {
-        setLanguage(event.target.value);
+        setLanguage(event);
         break;
       }
     }
@@ -166,15 +161,23 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, onSkip
         wheelchair_access: checked.includes("wheelchair_access"),
         parking: checked.includes("parking"),
         lgbt_friendly: checked.includes("lgbt_friendly"),
-        specialty,
-        languages: language,
-        services,
+        languages: language.join(","),
+        services: services.join(","),
       });
 
       const { error, errors } = response;
       // No error happens
       if (!error) {
-        onNext && onNext();
+        onNext &&
+          onNext({
+            minimumRate,
+            pricePerHour,
+            currency,
+            paymentMethod,
+            checked,
+            language,
+            services,
+          });
       } else {
         app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
       }
@@ -191,7 +194,7 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, onSkip
           <Typography>Include information about your studio that’s useful for customers.</Typography>
         </div>
 
-        <InputFields specialty={specialty} language={language} services={services} onInputChange={onInputChange} />
+        <InputFields language={language} services={services} onInputChange={onInputChange} />
         {settingList.map((setting: any, index) => {
           return (
             <SettingList
@@ -243,5 +246,5 @@ interface Props {
   currentUserId: number | undefined;
   role: string;
   onSkip?: () => void;
-  onNext?: () => void;
+  onNext?: (data: any) => void;
 }
