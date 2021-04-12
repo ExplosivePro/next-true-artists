@@ -12,6 +12,7 @@ import IconButton from "@material-ui/core/IconButton";
 // Custom component
 import PrimaryButton from "./PrimaryButton";
 
+// APIs
 import { updateArtistAvatar } from "../api";
 
 // Context
@@ -59,14 +60,20 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function RightBarRegisterAvatarUpload({ currentUserId, onPreviousStep, onNext, role }: Props) {
+export default function RightBarRegisterAvatarUpload({
+  currentUserId,
+  currentData,
+  onPreviousStep,
+  onNext,
+  role,
+}: Props) {
   const app = useApp();
   const classes = useStyles();
 
   // Create a reference to the hidden file input element
   const hiddenFileInput = React.useRef(null);
-  const [fileData, setFileData] = useState<File | null>();
-  const [preview, setPreview] = useState<any>("");
+  const [fileData, setFileData] = useState<File | null>(currentData.fileData || null);
+  const [preview, setPreview] = useState<any>(currentData.preview || "");
 
   const handleClick = () => {
     // @ts-ignore
@@ -94,11 +101,11 @@ export default function RightBarRegisterAvatarUpload({ currentUserId, onPrevious
         file: fileData,
       });
 
-      const { error, data, errors } = response;
+      const { error, errors } = response;
       // No error happens
       if (!error) {
         onNext &&
-          onNext(data.id, {
+          onNext({
             fileData,
             preview,
           });
@@ -174,5 +181,5 @@ interface Props {
   currentUserId: number | undefined;
   currentData: any;
   onPreviousStep?: () => void;
-  onNext?: (userId: number, data: any, token?: string) => void;
+  onNext?: (data: any) => void;
 }

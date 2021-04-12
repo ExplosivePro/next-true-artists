@@ -66,11 +66,13 @@ const useStyles = makeStyles({
   },
 });
 
-export default function RightBarRegisterWorkStyle({ data = [], currentUserId, onSkip, onNext }: Props) {
+export default function RightBarRegisterWorkStyle({ data = [], currentUserId, currentData, onSkip, onNext }: Props) {
   const classes = useStyles();
   const app = useApp();
 
-  const [optionValues, setOptionValues] = useState({});
+  console.log(currentData);
+
+  const [optionValues, setOptionValues] = useState(currentData || {});
 
   // Get style id array from object array data
   const getSelectedIds = () => {
@@ -131,9 +133,10 @@ export default function RightBarRegisterWorkStyle({ data = [], currentUserId, on
                     classes={{ root: classes.checkBox }}
                     icon={<RadioButtonUncheckedIcon />}
                     checkedIcon={<CheckCircleIcon classes={{ root: classes.checkedIcon }} />}
+                    checked={optionValues[workStyle.id] || false}
+                    onChange={handleChange}
                   />
                 }
-                onChange={handleChange}
                 label={workStyle.name}
                 labelPlacement="start"
               />
@@ -169,6 +172,7 @@ export default function RightBarRegisterWorkStyle({ data = [], currentUserId, on
 interface Props {
   data: Resource.WorkingStyle[];
   currentUserId: number | undefined;
+  currentData: any;
   role: string;
   onSkip?: () => void;
   onNext?: (data: any) => void;

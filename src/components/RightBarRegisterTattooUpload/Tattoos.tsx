@@ -1,9 +1,11 @@
+// External
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import clsx from "clsx";
 import React, { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
+// Material UI Components
 import AddIcon from "@material-ui/icons/Add";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -12,12 +14,17 @@ import { Grid, Typography } from "@material-ui/core";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 
+// Custom Components
+import FormInput from "../FormInput";
+import PrimaryButton from "../PrimaryButton";
+
+import { useYupValidationResolver } from "../../utils";
+
 import colors from "../../palette";
 
-import FormInput from "../FormInput";
+// Contexts
+import { useApp } from "../../contexts";
 import { placements } from "../../constants";
-import { useYupValidationResolver } from "../../utils";
-import PrimaryButton from "../PrimaryButton";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -125,6 +132,7 @@ const ImageItem = ({ data, className }: { data: Image; className?: any }) => {
 };
 
 const AddImageItem = ({ onAdd }: { onAdd: (data: any) => void }) => {
+  const app = useApp();
   // Import class styles
   const classes = useStyles();
 
@@ -186,14 +194,19 @@ const AddImageItem = ({ onAdd }: { onAdd: (data: any) => void }) => {
 
   // On Submit tattoo detail form
   const onSubmit = ({ workplace }: { workplace: string }) => {
-    // Save file with its info
-    onAdd({
-      ...filePreview,
-      workplace,
-      placement,
-    });
+    // Only done if user choose 1 picture
+    if (filePreview) {
+      // Save file with its info
+      onAdd({
+        ...filePreview,
+        workplace,
+        placement,
+      });
 
-    handleClose();
+      handleClose();
+    } else {
+      app.showErrorDialog(true, "Please choose 1 image to upload");
+    }
   };
 
   return (

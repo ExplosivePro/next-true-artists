@@ -14,13 +14,13 @@ import SettingList from "../RightBarRegisterBusinessSettings/SettingList";
 import { useYupValidationResolver } from "../../utils";
 import PrimaryButton from "../PrimaryButton";
 import MultipleSelection from "./MutilpleSelection";
+import PricingList from "./PricingList";
 
-import { createArtistProfile } from "../../api";
+import { createArtistProfile, editArtistProfile } from "../../api";
 import { useApp } from "../../contexts";
 
 // Constants
 import { artistSettingList, specialtyList, baseInstagramUrl, baseFacebookUrl, baseTwitterUrl } from "../../constants";
-import PricingList from "./PricingList";
 import colors from "../../palette";
 
 // Styles
@@ -65,21 +65,35 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const getDefaultValue = (settings: any[]) => {
-  const checkList: any[] = [];
-  settings.map((item) => {
-    item.settings.map((setting: any) => {
-      if (setting.defaultValue) {
-        checkList.push(setting.name);
-      }
+// Get initial value for setting list
+const getDefaultValue = (settings: any[], values?: any) => {
+  // Already have value
+  if (values) {
+    return values;
+  } else {
+    const checkList: any[] = [];
+    settings.map((item) => {
+      item.settings.map((setting: any) => {
+        if (setting.defaultValue) {
+          checkList.push(setting.name);
+        }
+      });
     });
-  });
 
-  return checkList;
+    return checkList;
+  }
 };
 
-export default function RightBarArtistRegisterInformation({ onPreviousStep, onNext, currentUserId }: Props) {
+export default function RightBarArtistRegisterInformation({
+  onPreviousStep,
+  onNext,
+  currentUserId, // User Id
+  currentUserRoleId, // Artist Id (After creation), if this exists, user are editing their profile
+  currentData,
+}: Props) {
   const app = useApp();
+
+  console.log(currentData);
 
   // Validation schema
   const validationSchema = useMemo(
@@ -98,11 +112,24 @@ export default function RightBarArtistRegisterInformation({ onPreviousStep, onNe
   const classes = useStyles();
   const resolver = useYupValidationResolver(validationSchema);
   const { control, handleSubmit, errors } = useForm({ resolver });
-  const [checked, setChecked] = useState<string[]>(getDefaultValue(artistSettingList));
-  const [currency, setCurrency] = useState("");
-  const [pricePerHour, setPricePerHour] = useState<number>(0);
-  const [minimumSpend, setMinimumSpend] = useState<number>(0);
-  const [specialties, setSpecialties] = React.useState<string[]>([]);
+  const [checked, setChecked] = useState<string[]>(getDefaultValue(artistSettingList, currentData.checked));
+  const [currency, setCurrency] = useState(currentData.currency || "");
+  const [pricePerHour, setPricePerHour] = useState<number>(currentData.pricePerHour || 0);
+  const [minimumSpend, setMinimumSpend] = useState<number>(currentData.minimumSpend || 0);
+  const [specialties, setSpecialties] = React.useState<string[]>(currentData.specialties || []);
+
+  const {
+    bio,
+    yearsOfExperience,
+    phoneNumber,
+    streetAddress,
+    zipCode,
+    country,
+    facebook,
+    website,
+    twitter,
+    instagram,
+  } = currentData;
 
   const onSubmit = async ({
     bio,
@@ -117,49 +144,104 @@ export default function RightBarArtistRegisterInformation({ onPreviousStep, onNe
     twitter,
   }: submitFormData) => {
     if (currentUserId) {
-      // Call APIs to create artist profile
-      const response = await createArtistProfile({
-        bio,
-        seeking_guest_spot: checked.includes("seeking_guest_spot"),
-        guest_artist: checked.includes("guest_artist"),
-        licensed: checked.includes("licensed"),
-        cpr_certified: checked.includes("cpr_certified"),
-        years_of_experience: yearsOfExperience,
-        minimum_spend: minimumSpend,
-        price_per_hour: pricePerHour,
-        currency_code: currency,
-        user_id: currentUserId,
-        street_address: streetAddress,
-        zip_code: zipCode,
-        country,
-        phone_number: phoneNumber,
-        website,
-        facebook: `${baseFacebookUrl}${facebook}`,
-        instagram: `${baseInstagramUrl}${instagram}`,
-        twitter: `${baseTwitterUrl}${twitter}`,
-        specialty: specialties.join(","),
-      });
+      // Edit
+      if (currentUserRoleId) {
+        // Call APIs to edit artist profile
+        const response = await editArtistProfile({
+          id: currentUserRoleId as number,
+          bio,
+          seeking_guest_spot: checked.includes("seeking_guest_spot"),
+          guest_artist: checked.includes("guest_artist"),
+          licensed: checked.includes("licensed"),
+          cpr_certified: checked.includes("cpr_certified"),
+          years_of_experience: yearsOfExperience,
+          minimum_spend: minimumSpend,
+          price_per_hour: pricePerHour,
+          currency_code: currency,
+          street_address: streetAddress,
+          zip_code: zipCode,
+          country,
+          phone_number: phoneNumber,
+          website,
+          facebook: `${baseFacebookUrl}${facebook}`,
+          instagram: `${baseInstagramUrl}${instagram}`,
+          twitter: `${baseTwitterUrl}${twitter}`,
+          specialty: specialties.join(","),
+        });
 
-      const { error, data, errors } = response;
-      // No error happens
-      if (!error) {
-        onNext &&
-          onNext(data.id, {
-            checked,
-            minimumSpend,
-            pricePerHour,
-            currency,
-            website,
-            facebook,
-            instagram,
-            twitter,
-            streetAddress,
-            zipCode,
-            country,
-            phoneNumber,
-          });
+        const { error, data, errors } = response;
+        // No error happens
+        if (!error) {
+          onNext &&
+            onNext(data.id, {
+              bio,
+              yearsOfExperience,
+              checked,
+              minimumSpend,
+              pricePerHour,
+              currency,
+              website,
+              facebook,
+              instagram,
+              twitter,
+              streetAddress,
+              zipCode,
+              country,
+              phoneNumber,
+              specialties,
+            });
+        } else {
+          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        }
       } else {
-        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        // Create the new one
+        // Call APIs to create artist profile
+        const response = await createArtistProfile({
+          bio,
+          seeking_guest_spot: checked.includes("seeking_guest_spot"),
+          guest_artist: checked.includes("guest_artist"),
+          licensed: checked.includes("licensed"),
+          cpr_certified: checked.includes("cpr_certified"),
+          years_of_experience: yearsOfExperience,
+          minimum_spend: minimumSpend,
+          price_per_hour: pricePerHour,
+          currency_code: currency,
+          user_id: currentUserId,
+          street_address: streetAddress,
+          zip_code: zipCode,
+          country,
+          phone_number: phoneNumber,
+          website,
+          facebook: `${baseFacebookUrl}${facebook}`,
+          instagram: `${baseInstagramUrl}${instagram}`,
+          twitter: `${baseTwitterUrl}${twitter}`,
+          specialty: specialties.join(","),
+        });
+
+        const { error, data, errors } = response;
+        // No error happens
+        if (!error) {
+          onNext &&
+            onNext(data.id, {
+              bio,
+              yearsOfExperience,
+              checked,
+              minimumSpend,
+              pricePerHour,
+              currency,
+              website,
+              facebook,
+              instagram,
+              twitter,
+              streetAddress,
+              zipCode,
+              country,
+              phoneNumber,
+              specialties,
+            });
+        } else {
+          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        }
       }
     }
   };
@@ -226,7 +308,7 @@ export default function RightBarArtistRegisterInformation({ onPreviousStep, onNe
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={""}
+                defaultValue={bio || ""}
                 multiline={true}
                 rows={4}
                 errors={errors.bio}
@@ -245,7 +327,7 @@ export default function RightBarArtistRegisterInformation({ onPreviousStep, onNe
                 type={"number"}
                 control={control}
                 variant={"outlined"}
-                defaultValue={""}
+                defaultValue={yearsOfExperience || 0}
                 errors={errors.yearsOfExperience}
               />
             </Grid>
@@ -294,7 +376,7 @@ export default function RightBarArtistRegisterInformation({ onPreviousStep, onNe
             fullWidth
             control={control}
             variant={"outlined"}
-            defaultValue={""}
+            defaultValue={phoneNumber || ""}
             errors={errors.phoneNumber}
           />
 
@@ -307,7 +389,7 @@ export default function RightBarArtistRegisterInformation({ onPreviousStep, onNe
             fullWidth
             control={control}
             variant={"outlined"}
-            defaultValue={""}
+            defaultValue={streetAddress || ""}
             errors={errors.streetAddress}
           />
 
@@ -320,7 +402,7 @@ export default function RightBarArtistRegisterInformation({ onPreviousStep, onNe
             fullWidth
             control={control}
             variant={"outlined"}
-            defaultValue={""}
+            defaultValue={zipCode || ""}
             errors={errors.zipCode}
           />
 
@@ -333,7 +415,7 @@ export default function RightBarArtistRegisterInformation({ onPreviousStep, onNe
             fullWidth
             control={control}
             variant={"outlined"}
-            defaultValue={""}
+            defaultValue={country || ""}
             errors={errors.country}
           />
 
@@ -352,7 +434,7 @@ export default function RightBarArtistRegisterInformation({ onPreviousStep, onNe
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={""}
+                defaultValue={instagram || ""}
                 errors={errors.instagram}
                 InputProps={{
                   startAdornment: <InputAdornment position="start">{baseInstagramUrl}</InputAdornment>,
@@ -369,7 +451,7 @@ export default function RightBarArtistRegisterInformation({ onPreviousStep, onNe
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={""}
+                defaultValue={website || ""}
                 errors={errors.website}
               />
             </Grid>
@@ -386,7 +468,7 @@ export default function RightBarArtistRegisterInformation({ onPreviousStep, onNe
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={""}
+                defaultValue={facebook || ""}
                 errors={errors.facebook}
                 InputProps={{
                   startAdornment: <InputAdornment position="start">{baseFacebookUrl}</InputAdornment>,
@@ -403,7 +485,7 @@ export default function RightBarArtistRegisterInformation({ onPreviousStep, onNe
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={""}
+                defaultValue={twitter || ""}
                 errors={errors.twitter}
                 InputProps={{
                   startAdornment: <InputAdornment position="start">{baseTwitterUrl}</InputAdornment>,
@@ -440,6 +522,7 @@ export default function RightBarArtistRegisterInformation({ onPreviousStep, onNe
 
 interface Props {
   currentUserId: number | undefined;
+  currentUserRoleId: number | undefined;
   currentData: any;
   role: string;
   onPreviousStep?: () => void;

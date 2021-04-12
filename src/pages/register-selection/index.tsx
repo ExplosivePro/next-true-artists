@@ -92,7 +92,7 @@ export default function RegisterSelection({ workingStyles }: Props) {
   const [token, setToken] = useState<string>(); // Keep token temporarily, at the end of this registration, will store this one to loggin
 
   // Step 1: Account type
-  const [role, setRole] = useState<string>("studio");
+  const [role, setRole] = useState<string>("artist");
 
   useEffect(() => {
     // User back from login page
@@ -178,6 +178,7 @@ export default function RegisterSelection({ workingStyles }: Props) {
             <RightBarArtistRegisterInformation
               role={role}
               currentUserId={currentUserId}
+              currentUserRoleId={currentUserRoleId}
               currentData={stepData[2] || {}}
               onNext={(id: number, data) => {
                 const thisStepData = { 2: data };
@@ -220,6 +221,7 @@ export default function RegisterSelection({ workingStyles }: Props) {
           {role === "artist" && step === 3 && (
             <RightBarRegisterWorkStyle
               role={role}
+              currentData={stepData[3] || {}}
               data={workingStyles}
               currentUserId={currentUserRoleId}
               onNext={(data) => {
@@ -287,9 +289,7 @@ export default function RegisterSelection({ workingStyles }: Props) {
                 }
               }}
               onPreviousStep={() => {
-                if (token) {
-                  auth.loginByToken(token);
-                }
+                setStep(4);
               }}
             />
           )}

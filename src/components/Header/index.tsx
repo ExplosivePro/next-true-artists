@@ -131,7 +131,7 @@ export default function Header({ userProfile, openSearch }: Props) {
           onClick={() => {
             goToPage("/login");
           }}
-          className={classes.linkTextMenu}
+          className={clsx(classes.linkTextMenu, classes.noHoverEffect)}
         >
           <Typography color={"error"}>
             <b>Logout</b>
