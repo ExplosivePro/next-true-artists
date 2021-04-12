@@ -93,8 +93,6 @@ export default function RightBarArtistRegisterInformation({
 }: Props) {
   const app = useApp();
 
-  console.log(currentData);
-
   // Validation schema
   const validationSchema = useMemo(
     () =>

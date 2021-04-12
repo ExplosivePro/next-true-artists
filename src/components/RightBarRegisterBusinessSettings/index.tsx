@@ -79,17 +79,27 @@ const getDefaultValue = (settings: any[]) => {
   return checkList;
 };
 
-export default function RightBarRegisterBusinessSettings({ currentUserId, onSkip, onNext }: Props) {
+export default function RightBarRegisterBusinessSettings({ currentUserId, currentData, onPrevious, onNext }: Props) {
   const classes = useStyles();
   const app = useApp();
 
-  const [currency, setCurrency] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("");
-  const [pricePerHour, setPricePerHour] = useState<number>(0);
-  const [minimumRate, setMinimumRate] = useState<number>(0);
-  const [services, setServices] = useState<string[]>([]);
-  const [language, setLanguage] = useState<string[]>([]);
-  const [checked, setChecked] = React.useState<string[]>(getDefaultValue(settingList));
+  const {
+    checked: checkedData,
+    currency: currencyData,
+    language: languageData,
+    minimumRate: minimumRateData,
+    paymentMethod: paymentMethodData,
+    pricePerHour: pricePerHourData,
+    services: servicesData,
+  } = currentData;
+
+  const [currency, setCurrency] = useState(currencyData || "");
+  const [paymentMethod, setPaymentMethod] = useState(paymentMethodData || "");
+  const [pricePerHour, setPricePerHour] = useState<number>(pricePerHourData || 0);
+  const [minimumRate, setMinimumRate] = useState<number>(minimumRateData || 0);
+  const [services, setServices] = useState<string[]>(servicesData || []);
+  const [language, setLanguage] = useState<string[]>(languageData || []);
+  const [checked, setChecked] = React.useState<string[]>(checkedData || getDefaultValue(settingList));
 
   // On price change
   const onPriceChange = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
@@ -225,9 +235,9 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, onSkip
               size="large"
               bluePastel
               fullWidth
-              onClick={onSkip}
+              onClick={onPrevious}
             >
-              Skip
+              Previous Step
             </PrimaryButton>
           </Grid>
           <Grid item lg={6} md={6} sm={12} xs={12}>
@@ -242,9 +252,9 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, onSkip
 }
 
 interface Props {
-  data: Resource.WorkingStyle[];
+  currentData: any;
   currentUserId: number | undefined;
   role: string;
-  onSkip?: () => void;
+  onPrevious?: () => void;
   onNext?: (data: any) => void;
 }

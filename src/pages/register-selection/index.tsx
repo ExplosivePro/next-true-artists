@@ -200,6 +200,7 @@ export default function RegisterSelection({ workingStyles }: Props) {
             <RightBarStudioRegisterInformation
               role={role}
               currentUserId={currentUserId}
+              currentUserRoleId={currentUserRoleId}
               currentData={stepData[2] || {}}
               onNext={(id: number, data) => {
                 const thisStepData = { 2: data };
@@ -241,7 +242,7 @@ export default function RegisterSelection({ workingStyles }: Props) {
           {role === "studio" && step === 3 && (
             <RightBarRegisterBusinessSettings
               role={role}
-              data={workingStyles}
+              currentData={stepData[3] || {}}
               currentUserId={currentUserRoleId}
               onNext={(data) => {
                 const thisStepData = { 3: data };
@@ -252,7 +253,7 @@ export default function RegisterSelection({ workingStyles }: Props) {
                 // Next step
                 setStep(4);
               }}
-              onSkip={() => {
+              onPrevious={() => {
                 setStep(2);
               }}
             />

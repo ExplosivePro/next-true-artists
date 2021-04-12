@@ -13,7 +13,7 @@ import FormInput from "./FormInput";
 import { useYupValidationResolver } from "../utils";
 import PrimaryButton from "./PrimaryButton";
 
-import { createStudioProfile } from "../api";
+import { createStudioProfile, editStudioProfile } from "../api";
 import { useApp } from "../contexts";
 
 import { baseInstagramUrl, baseFacebookUrl, baseTwitterUrl } from "../constants";
@@ -53,8 +53,27 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function RightBarStudioRegisterInformation({ onPreviousStep, onNext, currentUserId }: Props) {
+export default function RightBarStudioRegisterInformation({
+  onPreviousStep,
+  currentData,
+  onNext,
+  currentUserId,
+  currentUserRoleId,
+}: Props) {
   const app = useApp();
+
+  const {
+    streetAddress,
+    state,
+    city,
+    country,
+    zipCode,
+    phoneNumber,
+    facebook,
+    instagram,
+    twitter,
+    website,
+  } = currentData;
 
   // Validation schema
   const validationSchema = useMemo(
@@ -87,39 +106,77 @@ export default function RightBarStudioRegisterInformation({ onPreviousStep, onNe
     twitter,
   }: submitFormData) => {
     if (currentUserId) {
-      // Call APIs to create studio profile
-      const response = await createStudioProfile({
-        user_id: currentUserId,
-        city,
-        country,
-        state,
-        zip_code: zipCode,
-        phone_number: phoneNumber,
-        instagram_ur: `${baseInstagramUrl}${instagram}`,
-        website,
-        facebook_url: `${baseFacebookUrl}${facebook}`,
-        twitter_url: `${baseTwitterUrl}${twitter}`,
-        street_address: streetAddress, // Put this down temporarily due to missing APIs
-      });
+      // Edit
+      if (currentUserRoleId) {
+        // Call APIs to create studio profile
+        const response = await editStudioProfile({
+          id: currentUserRoleId,
+          city,
+          country,
+          state,
+          zip_code: zipCode,
+          phone_number: phoneNumber,
+          instagram_ur: `${baseInstagramUrl}${instagram}`,
+          website,
+          facebook_url: `${baseFacebookUrl}${facebook}`,
+          twitter_url: `${baseTwitterUrl}${twitter}`,
+          street_address: streetAddress, // Put this down temporarily due to missing APIs
+        });
 
-      const { error, data, errors } = response;
-      // No error happens
-      if (!error) {
-        onNext &&
-          onNext(data.id, {
-            streetAddress,
-            city,
-            country,
-            state,
-            zipCode,
-            phoneNumber,
-            instagram,
-            website,
-            facebook,
-            twitter,
-          });
+        const { error, data, errors } = response;
+        // No error happens
+        if (!error) {
+          onNext &&
+            onNext(data.id, {
+              streetAddress,
+              city,
+              country,
+              state,
+              zipCode,
+              phoneNumber,
+              instagram,
+              website,
+              facebook,
+              twitter,
+            });
+        } else {
+          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        }
       } else {
-        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        // Call APIs to create studio profile
+        const response = await createStudioProfile({
+          user_id: currentUserId,
+          city,
+          country,
+          state,
+          zip_code: zipCode,
+          phone_number: phoneNumber,
+          instagram_ur: `${baseInstagramUrl}${instagram}`,
+          website,
+          facebook_url: `${baseFacebookUrl}${facebook}`,
+          twitter_url: `${baseTwitterUrl}${twitter}`,
+          street_address: streetAddress, // Put this down temporarily due to missing APIs
+        });
+
+        const { error, data, errors } = response;
+        // No error happens
+        if (!error) {
+          onNext &&
+            onNext(data.id, {
+              streetAddress,
+              city,
+              country,
+              state,
+              zipCode,
+              phoneNumber,
+              instagram,
+              website,
+              facebook,
+              twitter,
+            });
+        } else {
+          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        }
       }
     }
   };
@@ -148,7 +205,7 @@ export default function RightBarStudioRegisterInformation({ onPreviousStep, onNe
             fullWidth
             control={control}
             variant={"outlined"}
-            defaultValue={""}
+            defaultValue={streetAddress || ""}
             errors={errors.streetAddress}
           />
 
@@ -163,7 +220,7 @@ export default function RightBarStudioRegisterInformation({ onPreviousStep, onNe
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={""}
+                defaultValue={city || ""}
                 errors={errors.city}
               />
             </Grid>
@@ -177,7 +234,7 @@ export default function RightBarStudioRegisterInformation({ onPreviousStep, onNe
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={""}
+                defaultValue={country || ""}
                 errors={errors.country}
               />
             </Grid>
@@ -194,7 +251,7 @@ export default function RightBarStudioRegisterInformation({ onPreviousStep, onNe
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={""}
+                defaultValue={state || ""}
                 errors={errors.state}
               />
             </Grid>
@@ -208,7 +265,7 @@ export default function RightBarStudioRegisterInformation({ onPreviousStep, onNe
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={""}
+                defaultValue={zipCode || ""}
                 errors={errors.zipCode}
               />
             </Grid>
@@ -227,7 +284,7 @@ export default function RightBarStudioRegisterInformation({ onPreviousStep, onNe
             fullWidth
             control={control}
             variant={"outlined"}
-            defaultValue={""}
+            defaultValue={phoneNumber || ""}
             errors={errors.phoneNumber}
           />
 
@@ -242,7 +299,7 @@ export default function RightBarStudioRegisterInformation({ onPreviousStep, onNe
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={""}
+                defaultValue={instagram || ""}
                 errors={errors.instagram}
                 InputProps={{
                   startAdornment: <InputAdornment position="start">{baseInstagramUrl}</InputAdornment>,
@@ -259,7 +316,7 @@ export default function RightBarStudioRegisterInformation({ onPreviousStep, onNe
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={""}
+                defaultValue={website || ""}
                 errors={errors.website}
               />
             </Grid>
@@ -276,7 +333,7 @@ export default function RightBarStudioRegisterInformation({ onPreviousStep, onNe
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={""}
+                defaultValue={facebook || ""}
                 errors={errors.facebook}
                 InputProps={{
                   startAdornment: <InputAdornment position="start">{baseFacebookUrl}</InputAdornment>,
@@ -293,7 +350,7 @@ export default function RightBarStudioRegisterInformation({ onPreviousStep, onNe
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={""}
+                defaultValue={twitter || ""}
                 errors={errors.twitter}
                 InputProps={{
                   startAdornment: <InputAdornment position="start">{baseTwitterUrl}</InputAdornment>,
@@ -330,6 +387,7 @@ export default function RightBarStudioRegisterInformation({ onPreviousStep, onNe
 
 interface Props {
   currentUserId: number | undefined;
+  currentUserRoleId: number | undefined;
   currentData: any;
   role: string;
   onPreviousStep?: () => void;

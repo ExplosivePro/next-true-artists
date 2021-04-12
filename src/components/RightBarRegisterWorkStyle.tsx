@@ -70,8 +70,6 @@ export default function RightBarRegisterWorkStyle({ data = [], currentUserId, cu
   const classes = useStyles();
   const app = useApp();
 
-  console.log(currentData);
-
   const [optionValues, setOptionValues] = useState(currentData || {});
 
   // Get style id array from object array data

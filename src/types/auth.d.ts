@@ -107,7 +107,15 @@ declare namespace Register {
     email?: string;
     street_address?: string;
     zip_code?: string;
+    city?: string;
+    state?: string;
     country?: string;
+    phone_number?: string;
+    instagram_ur?: string;
+    website?: string;
+    facebook_url?: string;
+    instagram_url?: string;
+    twitter_url?: string;
     styles?: number[];
     minimum_spend?: number;
     price_per_hour?: number;
