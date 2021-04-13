@@ -11,6 +11,7 @@ import { AuthContext, AppContext } from "../contexts";
 
 import theme from "../theme";
 import "../scss/index.scss";
+import { DashboardContext } from "../contexts/dashboard";
 
 export default function MyApp(props: any) {
   const { Component, pageProps } = props;
@@ -34,7 +35,9 @@ export default function MyApp(props: any) {
         <CssBaseline />
         <AppContext>
           <AuthContext>
-            <Component {...pageProps} />
+            <DashboardContext>
+              <Component {...pageProps} />
+            </DashboardContext>
           </AuthContext>
         </AppContext>
       </ThemeProvider>

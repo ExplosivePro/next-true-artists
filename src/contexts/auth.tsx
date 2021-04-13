@@ -19,6 +19,9 @@ import { useApp } from "./app";
 // Constants
 import { unauthRoutes } from "../constants";
 
+// Custom Component
+import Loading from "../components/Loading";
+
 // @ts-ignore
 const context = createContext<Context>({});
 
@@ -284,7 +287,9 @@ export function AuthContext({ children }: Props) {
         previousPath,
       }}
     >
-      {children}
+      {status === AuthState.pending ? <Loading fixed /> : null}
+      {status === AuthState.authenticated ? children : null}
+      {status === AuthState.unAuthenticated ? children : null}
     </context.Provider>
   );
 }
