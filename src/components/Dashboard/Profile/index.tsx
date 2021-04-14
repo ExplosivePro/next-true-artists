@@ -60,7 +60,7 @@ const getAvatarByRole = (role: string, profile: any): string => {
 
 export default function UserProfile() {
   const classes = useStyles();
-  const { showErrorDialog } = useApp();
+  const { showErrorDialog, showSuccessDialog } = useApp();
 
   const {
     user,
@@ -141,6 +141,7 @@ export default function UserProfile() {
     if (editUserResponse.error || editArtistResponse.error || avatarUploadResponse?.error) {
       showErrorDialog(true, "Update profile fail");
     } else {
+      showSuccessDialog(true, "Update profile successfully");
       // Get new info
       updateUserData();
       // Back to dashboard

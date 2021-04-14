@@ -14,6 +14,6 @@ export const unauthRoutes = [
 ];
 
 // Only these routes can access to dashboard side bar
-export const dashboardRoutes = ["/dashboard", "/dashboard/profile"];
+export const dashboardRoutes = ["/dashboard", "/dashboard/profile", "/dashboard/upload-tattoos"];
 
 export const PasswordValidationRegex = /(?=.*[a-zA-Z])(?=.*[0-9]).{6,10}/;

@@ -223,6 +223,110 @@ export const placements = [
     value: "Back - full",
     label: "Back - full",
   },
+  {
+    value: "Back - lower",
+    label: "Back - lower",
+  },
+  {
+    value: "Back - upper",
+    label: "Back - upper",
+  },
+  {
+    value: "Behind ear",
+    label: "Behind ear",
+  },
+  {
+    value: "Calf",
+    label: "Calf",
+  },
+  {
+    value: "Chest",
+    label: "Chest",
+  },
+  {
+    value: "Elbow",
+    label: "Elbow",
+  },
+  {
+    value: "Foot",
+    label: "Foot",
+  },
+  {
+    value: "Forearm - inner",
+    label: "Forearm - inner",
+  },
+  {
+    value: "Forearm - outer",
+    label: "Forearm - outer",
+  },
+  {
+    value: "Full sleeve",
+    label: "Full sleeve",
+  },
+  {
+    value: "Hand",
+    label: "Hand",
+  },
+  {
+    value: "Hip",
+    label: "Hip",
+  },
+  {
+    value: "Knee",
+    label: "Knee",
+  },
+  {
+    value: "Neck",
+    label: "Neck",
+  },
+  {
+    value: "Other",
+    label: "Other",
+  },
+  {
+    value: "Ribs",
+    label: "Ribs",
+  },
+  {
+    value: "Shin",
+    label: "Shin",
+  },
+  {
+    value: "Shoulder blade",
+    label: "Shoulder blade",
+  },
+  {
+    value: "Sternum",
+    label: "Sternum",
+  },
+  {
+    value: "Stomach",
+    label: "Stomach",
+  },
+  {
+    value: "Thigh - back",
+    label: "Thigh - back",
+  },
+  {
+    value: "Thigh - front",
+    label: "Thigh - front",
+  },
+  {
+    value: "Throat",
+    label: "Throat",
+  },
+  {
+    value: "Upper arm - inner",
+    label: "Upper arm - inner",
+  },
+  {
+    value: "Upper arm - outer",
+    label: "Upper arm - outer",
+  },
+  {
+    value: "Wrist",
+    label: "Wrist",
+  },
 ];
 
 export const serviceList = [

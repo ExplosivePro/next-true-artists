@@ -235,7 +235,14 @@ export function DashboardContext({ children }: Props) {
                 <b>{name}</b>
               </Typography>
 
-              <PrimaryButton variant="contained" startIcon={<AddIcon />} className={classes.button}>
+              <PrimaryButton
+                variant="contained"
+                startIcon={<AddIcon />}
+                className={classes.button}
+                onClick={() => {
+                  push("/dashboard/upload-tattoos");
+                }}
+              >
                 Upload
               </PrimaryButton>
 
