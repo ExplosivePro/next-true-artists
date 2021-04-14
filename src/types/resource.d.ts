@@ -52,6 +52,14 @@ declare namespace Resource {
     bio?: string;
     lat?: number;
     long?: number;
+    currency_code?: string;
+    price_per_hour?: number;
+    minimum_spend?: number;
+    specialties?: string[];
+    seeking_guest_spot?: boolean;
+    guest_artist?: boolean;
+    licensed?: boolean;
+    cpr_certified?: boolean;
   }
 
   interface ArtistListResponse {

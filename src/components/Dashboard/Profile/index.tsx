@@ -26,7 +26,7 @@ import { editUser, editArtistProfile, updateArtistAvatar } from "../../../api";
 
 // Styles
 import useStyles from "./styles";
-import { baseFacebookUrl, baseInstagramUrl, baseTwitterUrl } from "../../../constants";
+import { artistSettingList, baseFacebookUrl, baseInstagramUrl, baseTwitterUrl } from "../../../constants";
 
 // Get schema by role
 const getSchemaByRole = (role: string): any => {
@@ -58,6 +58,34 @@ const getAvatarByRole = (role: string, profile: any): string => {
   }
 };
 
+// Get initial value for setting list
+const getDefaultValue = (settings: any[], values?: any) => {
+  // Already have value
+  if (values) {
+    const checkList: any[] = [];
+    settings.map((item) => {
+      item.settings.map((setting: any) => {
+        if (values[setting.name]) {
+          checkList.push(setting.name);
+        }
+      });
+    });
+
+    return checkList;
+  } else {
+    const checkList: any[] = [];
+    settings.map((item) => {
+      item.settings.map((setting: any) => {
+        if (setting.defaultValue) {
+          checkList.push(setting.name);
+        }
+      });
+    });
+
+    return checkList;
+  }
+};
+
 export default function UserProfile() {
   const classes = useStyles();
   const { showErrorDialog, showSuccessDialog } = useApp();
@@ -78,6 +106,13 @@ export default function UserProfile() {
   const hiddenFileInput = React.useRef(null);
   const [fileData, setFileData] = useState<File | null>(null);
   const [preview, setPreview] = useState<any>("");
+
+  // Artist detail
+  const [checked, setChecked] = useState<string[]>(getDefaultValue(artistSettingList, artist));
+  const [currency, setCurrency] = useState(artist?.currency_code || "");
+  const [pricePerHour, setPricePerHour] = useState<number>(artist?.price_per_hour || 0);
+  const [minimumSpend, setMinimumSpend] = useState<number>(artist?.minimum_spend || 0);
+  const [specialties, setSpecialties] = React.useState<string[]>(artist?.specialties || []);
 
   const onSubmit = async ({
     email,
@@ -107,10 +142,10 @@ export default function UserProfile() {
     const editArtistResponse = await editArtistProfile({
       id: artist?.id as number,
       bio,
-      seeking_guest_spot: artist?.seeking_guest_spot,
-      guest_artist: artist?.guest_artist,
-      licensed: artist?.licensed,
-      cpr_certified: artist?.cpr_certified,
+      seeking_guest_spot: checked.includes("seeking_guest_spot"),
+      guest_artist: checked.includes("guest_artist"),
+      licensed: checked.includes("licensed"),
+      cpr_certified: checked.includes("cpr_certified"),
       years_of_experience: yearsOfExperience,
       minimum_spend: minimumSpend,
       price_per_hour: pricePerHour,
@@ -167,6 +202,43 @@ export default function UserProfile() {
     };
   };
 
+  // Handle toggle setting buttons
+  const handleToggle = (value: string) => () => {
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setChecked(newChecked);
+  };
+
+  // On price change
+  const onPriceChange = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
+    switch (name) {
+      case "currency": {
+        setCurrency(event.target.value);
+        break;
+      }
+      case "pricePerHour": {
+        setPricePerHour(parseInt(event.target.value) || 0);
+        break;
+      }
+      case "minimumSpend": {
+        setMinimumSpend(parseInt(event.target.value) || 0);
+        break;
+      }
+    }
+  };
+
+  // On multi selection change
+  const onSelectionChange = (value: string[]) => {
+    setSpecialties(value);
+  };
+
   return (
     <>
       <Container className={classes.containerRoot}>
@@ -219,6 +291,14 @@ export default function UserProfile() {
                   className={classes.artistProfile}
                   control={control}
                   errors={errors}
+                  checked={checked}
+                  currency={currency}
+                  pricePerHour={pricePerHour}
+                  minimumSpend={minimumSpend}
+                  handleToggle={handleToggle}
+                  onPriceChange={onPriceChange}
+                  onSelectionChange={onSelectionChange}
+                  specialties={specialties}
                 />
 
                 <Grid container spacing={2} className={classes.buttonWrapper}>

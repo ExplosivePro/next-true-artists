@@ -1,5 +1,5 @@
 // External
-import React, { useState } from "react";
+import React from "react";
 import clsx from "clsx";
 
 // Material UI Components
@@ -57,32 +57,21 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-// Get initial value for setting list
-const getDefaultValue = (settings: any[], values?: any) => {
-  // Already have value
-  if (values) {
-    return values;
-  } else {
-    const checkList: any[] = [];
-    settings.map((item) => {
-      item.settings.map((setting: any) => {
-        if (setting.defaultValue) {
-          checkList.push(setting.name);
-        }
-      });
-    });
-
-    return checkList;
-  }
-};
-
-export default function ArtistProfile({ control, currentData, className, errors }: Props) {
+export default function ArtistProfile({
+  control,
+  currentData,
+  className,
+  errors,
+  handleToggle,
+  onPriceChange,
+  onSelectionChange,
+  checked,
+  currency,
+  pricePerHour,
+  minimumSpend,
+  specialties,
+}: Props) {
   const classes = useStyles();
-  const [checked, setChecked] = useState<string[]>(getDefaultValue(artistSettingList, currentData.checked));
-  const [currency, setCurrency] = useState(currentData.currency || "");
-  const [pricePerHour, setPricePerHour] = useState<number>(currentData.price_per_hour || 0);
-  const [minimumSpend, setMinimumSpend] = useState<number>(currentData.minimum_spend || 0);
-  const [specialties, setSpecialties] = React.useState<string[]>(currentData.specialties || []);
 
   const {
     bio,
@@ -96,43 +85,6 @@ export default function ArtistProfile({ control, currentData, className, errors 
     twitter_url: twitter,
     instagram_url: instagram,
   } = currentData;
-
-  // Handle toggle setting buttons
-  const handleToggle = (value: string) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
-  };
-
-  // On price change
-  const onPriceChange = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
-    switch (name) {
-      case "currency": {
-        setCurrency(event.target.value);
-        break;
-      }
-      case "pricePerHour": {
-        setPricePerHour(parseInt(event.target.value) || 0);
-        break;
-      }
-      case "minimumSpend": {
-        setMinimumSpend(parseInt(event.target.value) || 0);
-        break;
-      }
-    }
-  };
-
-  // On multi selection change
-  const onSelectionChange = (value: string[]) => {
-    setSpecialties(value);
-  };
 
   return (
     <Grid container className={clsx(classes.root, className)} alignItems={"center"} justify={"center"}>
@@ -357,7 +309,14 @@ export const validationSchema = yup.object({
 
 interface Props {
   currentData: any;
-  onNext?: (id: number, data: any) => void;
+  handleToggle: any;
+  checked: string[];
+  currency: string;
+  pricePerHour: number;
+  minimumSpend: number;
+  specialties: string[];
+  onPriceChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
+  onSelectionChange: (value: string[]) => void;
   className?: any;
   control: any;
   errors: any;

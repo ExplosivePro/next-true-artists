@@ -239,6 +239,9 @@ export function AuthContext({ children }: Props) {
 
     // Update status
     setStatus(AuthState.unAuthenticated);
+
+    // Redirect to login page
+    router.replace("/login");
   }
 
   useEffect(() => {

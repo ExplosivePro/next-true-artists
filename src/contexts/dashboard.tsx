@@ -19,6 +19,13 @@ import Grid from "@material-ui/core/Grid";
 import Menu from "@material-ui/core/Menu";
 import Avatar from "@material-ui/core/Avatar";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import MenuIcon from "@material-ui/icons/Menu";
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
+import CloseIcon from "@material-ui/icons/Close";
+import { Divider } from "@material-ui/core";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 // Custom Components
 import PrimaryButton from "../components/PrimaryButton";
@@ -41,10 +48,19 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       display: "flex",
     },
+    menuIcon: {
+      display: "none",
+      [theme.breakpoints.down("sm")]: {
+        display: "inline-block",
+      },
+    },
     drawer: {
       width: drawerWidth,
       flexShrink: 0,
       whiteSpace: "nowrap",
+      [theme.breakpoints.down("sm")]: {
+        display: "none",
+      },
     },
     drawerOpen: {
       width: drawerWidth,
@@ -76,6 +92,16 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     operationContainer: {
       margin: "0 0 24px",
+      [theme.breakpoints.down("sm")]: {
+        display: "inline-block",
+        width: "inherit",
+        margin: "0 0 24px 20px",
+      },
+    },
+    backButton: {
+      [theme.breakpoints.down("sm")]: {
+        display: "none",
+      },
     },
     button: {
       marginLeft: "auto",
@@ -86,6 +112,20 @@ const useStyles = makeStyles((theme: Theme) =>
       "&:hover": {
         backgroundColor: colors.white,
       },
+      [theme.breakpoints.down("sm")]: {
+        display: "none",
+      },
+    },
+    mobileUploadButton: {
+      borderRadius: "15px",
+      color: colors.black,
+      padding: "5px 25px",
+      backgroundColor: colors.white,
+      "&:hover": {
+        backgroundColor: colors.white,
+      },
+      border: `solid 1px ${colors.standardLightGrey}`,
+      width: "100%",
     },
     profileButton: {
       padding: "3px 8px 1px 5px",
@@ -94,12 +134,34 @@ const useStyles = makeStyles((theme: Theme) =>
       border: `solid 1px ${colors.standardGreySubFooter}`,
       backgroundColor: colors.standardGreyFooter,
       marginLeft: "20px",
+      [theme.breakpoints.down("sm")]: {
+        display: "none",
+      },
     },
     accountName: {
       marginLeft: "10px",
       marginRight: "10px",
       fontWeight: 500,
       fontSize: ".8rem",
+    },
+    modal: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    paper: {
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+      height: "100%",
+      width: "100%",
+      "&:hover": {
+        outline: "none",
+      },
+    },
+    modalCloseButton: {
+      position: "absolute",
+      right: "15px",
     },
   }),
 );
@@ -117,7 +179,7 @@ const getRouteDetail = (path: string) => {
 };
 
 export function DashboardContext({ children }: Props) {
-  const { status, user } = useAuth();
+  const { status, user, logOut } = useAuth();
   const classes = useStyles();
   const { pathname, push } = useRouter();
 
@@ -130,6 +192,19 @@ export function DashboardContext({ children }: Props) {
   const [open, setOpen] = React.useState(false);
   // Anchor to show profile drop down menu
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  // Modal open
+  const [modalOpen, setModalOpen] = React.useState(false);
+
+  // Open modal
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+
+  // Close modal
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
 
   // Drop down menu open
   const isMenuOpen = Boolean(anchorEl);
@@ -221,9 +296,11 @@ export function DashboardContext({ children }: Props) {
             </List>
           </Drawer>
           <main className={classes.content}>
+            <MenuIcon className={classes.menuIcon} onClick={handleModalOpen} />
             <Grid container item alignItems={"center"} className={classes.operationContainer}>
               {enableBackButton && (
                 <IconButton
+                  className={classes.backButton}
                   onClick={() => {
                     push(backButtonPath);
                   }}
@@ -264,6 +341,93 @@ export function DashboardContext({ children }: Props) {
             </Grid>
             {children}
           </main>
+
+          <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            className={classes.modal}
+            open={modalOpen}
+            onClose={handleModalClose}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: 500,
+            }}
+          >
+            <Fade in={modalOpen}>
+              <div className={classes.paper}>
+                <CloseIcon className={classes.modalCloseButton} onClick={handleModalClose} />
+                <List>
+                  <ListItem>
+                    <PrimaryButton
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      className={classes.mobileUploadButton}
+                      onClick={() => {
+                        handleModalClose();
+                        push("/dashboard/upload-tattoos");
+                      }}
+                    >
+                      Upload
+                    </PrimaryButton>
+                  </ListItem>
+                  {mainItems.map((item, index) => (
+                    <ListItem
+                      button
+                      key={index}
+                      onClick={() => {
+                        handleModalClose();
+                        push(item.url);
+                      }}
+                    >
+                      <ListItemIcon>{item.icon}</ListItemIcon>
+                      <ListItemText primary={item.name} />
+                    </ListItem>
+                  ))}
+                </List>
+                <Divider />
+                <List>
+                  <ListItem
+                    button
+                    onClick={() => {
+                      handleModalClose();
+                      push("/dashboard/profile");
+                    }}
+                  >
+                    <ListItemText primary="Profile" />
+                  </ListItem>
+                </List>
+                <List className={classes.bottomList}>
+                  {helpItems.map((item, index) => (
+                    <ListItem
+                      button
+                      key={index}
+                      onClick={() => {
+                        handleModalClose();
+                        push(item.url);
+                      }}
+                    >
+                      <ListItemIcon>{item.icon}</ListItemIcon>
+                      <ListItemText primary={item.name} />
+                    </ListItem>
+                  ))}
+
+                  <ListItem
+                    button
+                    onClick={() => {
+                      handleModalClose();
+                      logOut();
+                    }}
+                  >
+                    <ListItemIcon>
+                      <ExitToAppIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Logout" />
+                  </ListItem>
+                </List>
+              </div>
+            </Fade>
+          </Modal>
         </div>
       )}
 

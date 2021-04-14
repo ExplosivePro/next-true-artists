@@ -168,7 +168,7 @@ export const editArtistProfile = async (data: Register.ApiEditArtistPayload) => 
   const submitData = {};
 
   Object.keys(data).map((key) => {
-    if (data[key]) {
+    if (data[key] !== undefined) {
       submitData[key] = data[key];
     }
   });
