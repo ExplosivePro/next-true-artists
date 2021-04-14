@@ -73,14 +73,17 @@ export default function RightBarStudioRegisterInformation({
     instagram,
     twitter,
     website,
+    name,
+    email,
   } = currentData;
 
   // Validation schema
   const validationSchema = useMemo(
     () =>
       yup.object({
-        phoneNumber: yup.string().required("Phone number field is required"),
-        streetAddress: yup.string().required("Studio address field is required"),
+        name: yup.string().required("Studio name is required"),
+        phoneNumber: yup.string().required("Phone number is required"),
+        streetAddress: yup.string().required("Studio address is required"),
         state: yup.string().required("State is required"),
         zipCode: yup.string().required("Zip code is required"),
         city: yup.string().required("City is required"),
@@ -94,6 +97,8 @@ export default function RightBarStudioRegisterInformation({
   const { control, handleSubmit, errors } = useForm({ resolver });
 
   const onSubmit = async ({
+    name,
+    email,
     streetAddress,
     city,
     country,
@@ -111,6 +116,8 @@ export default function RightBarStudioRegisterInformation({
         // Call APIs to create studio profile
         const response = await editStudioProfile({
           id: currentUserRoleId,
+          name,
+          email,
           city,
           country,
           state,
@@ -128,6 +135,8 @@ export default function RightBarStudioRegisterInformation({
         if (!error) {
           onNext &&
             onNext(data.id, {
+              name,
+              email,
               streetAddress,
               city,
               country,
@@ -146,6 +155,8 @@ export default function RightBarStudioRegisterInformation({
         // Call APIs to create studio profile
         const response = await createStudioProfile({
           user_id: currentUserId,
+          name,
+          email,
           city,
           country,
           state,
@@ -195,6 +206,19 @@ export default function RightBarStudioRegisterInformation({
           <Typography variant={"h6"} className={classes.sectionTitle}>
             Address
           </Typography>
+
+          <FormInput
+            name="name"
+            classes={{ root: classes.formInput }}
+            label={"Studio name"}
+            id="name"
+            placeholder={"Studio name"}
+            fullWidth
+            control={control}
+            variant={"outlined"}
+            defaultValue={name || ""}
+            errors={errors.name}
+          />
 
           <FormInput
             name="streetAddress"
@@ -274,6 +298,19 @@ export default function RightBarStudioRegisterInformation({
           <Typography variant={"h6"} className={classes.sectionTitle}>
             Contact Information
           </Typography>
+
+          <FormInput
+            name="email"
+            classes={{ root: classes.formInput }}
+            label={"Studio contact email"}
+            id="email"
+            placeholder={"Studio contact email"}
+            fullWidth
+            control={control}
+            variant={"outlined"}
+            defaultValue={email || ""}
+            errors={errors.email}
+          />
 
           <FormInput
             name="phoneNumber"
@@ -395,6 +432,8 @@ interface Props {
 }
 
 interface submitFormData {
+  name: string;
+  email?: string;
   streetAddress: string;
   city: string;
   country: string;

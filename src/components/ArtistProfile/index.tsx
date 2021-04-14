@@ -1,30 +1,25 @@
 // External
-import React, { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
+import React, { useState } from "react";
+import clsx from "clsx";
 
 // Material UI Components
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { Grid, Typography } from "@material-ui/core";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
 // Custom component
 import FormInput from "../FormInput";
 import SettingList from "../RightBarRegisterBusinessSettings/SettingList";
-import { useYupValidationResolver } from "../../utils";
-import PrimaryButton from "../PrimaryButton";
 import MultipleSelection from "./MutilpleSelection";
 import PricingList from "./PricingList";
-
-import { createArtistProfile, editArtistProfile } from "../../api";
-import { useApp } from "../../contexts";
 
 // Constants
 import { artistSettingList, specialtyList, baseInstagramUrl, baseFacebookUrl, baseTwitterUrl } from "../../constants";
 import colors from "../../palette";
+import * as yup from "yup";
 
 // Styles
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {
       height: "100%",
@@ -44,11 +39,8 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: "12px 0",
     },
     formWrapper: {
-      width: "70%",
+      width: "100%",
       height: "100%",
-      [theme.breakpoints.down("sm")]: {
-        width: "100%",
-      },
     },
     buttonWrapper: {
       marginTop: "25px",
@@ -84,165 +76,26 @@ const getDefaultValue = (settings: any[], values?: any) => {
   }
 };
 
-export default function RightBarArtistRegisterInformation({
-  onPreviousStep,
-  onNext,
-  currentUserId, // User Id
-  currentUserRoleId, // Artist Id (After creation), if this exists, user are editing their profile
-  currentData,
-}: Props) {
-  const app = useApp();
-
-  // Validation schema
-  const validationSchema = useMemo(
-    () =>
-      yup.object({
-        bio: yup.string().required("Bio is required"),
-        yearsOfExperience: yup.string().required("Years of experience is required"),
-        phoneNumber: yup.string().required("Phone number is required"),
-        streetAddress: yup.string().required("Street address is required"),
-        zipCode: yup.string().required("Zip code is required"),
-        country: yup.string().required("Country is required"),
-      }),
-    [],
-  );
-
+export default function ArtistProfile({ control, currentData, className, errors }: Props) {
   const classes = useStyles();
-  const resolver = useYupValidationResolver(validationSchema);
-  const { control, handleSubmit, errors } = useForm({ resolver });
   const [checked, setChecked] = useState<string[]>(getDefaultValue(artistSettingList, currentData.checked));
   const [currency, setCurrency] = useState(currentData.currency || "");
-  const [pricePerHour, setPricePerHour] = useState<number>(currentData.pricePerHour || 0);
-  const [minimumSpend, setMinimumSpend] = useState<number>(currentData.minimumSpend || 0);
+  const [pricePerHour, setPricePerHour] = useState<number>(currentData.price_per_hour || 0);
+  const [minimumSpend, setMinimumSpend] = useState<number>(currentData.minimum_spend || 0);
   const [specialties, setSpecialties] = React.useState<string[]>(currentData.specialties || []);
 
   const {
     bio,
     yearsOfExperience,
-    phoneNumber,
-    streetAddress,
-    zipCode,
+    phone_number: phoneNumber,
+    street_address: streetAddress,
+    zip_code: zipCode,
     country,
-    facebook,
+    facebook_url: facebook,
     website,
-    twitter,
-    instagram,
+    twitter_url: twitter,
+    instagram_url: instagram,
   } = currentData;
-
-  const onSubmit = async ({
-    bio,
-    streetAddress,
-    zipCode,
-    country,
-    phoneNumber,
-    yearsOfExperience,
-    website,
-    facebook,
-    instagram,
-    twitter,
-  }: submitFormData) => {
-    if (currentUserId) {
-      // Edit
-      if (currentUserRoleId) {
-        // Call APIs to edit artist profile
-        const response = await editArtistProfile({
-          id: currentUserRoleId as number,
-          bio,
-          seeking_guest_spot: checked.includes("seeking_guest_spot"),
-          guest_artist: checked.includes("guest_artist"),
-          licensed: checked.includes("licensed"),
-          cpr_certified: checked.includes("cpr_certified"),
-          years_of_experience: yearsOfExperience,
-          minimum_spend: minimumSpend,
-          price_per_hour: pricePerHour,
-          currency_code: currency,
-          street_address: streetAddress,
-          zip_code: zipCode,
-          country,
-          phone_number: phoneNumber,
-          website,
-          facebook_url: `${baseFacebookUrl}${facebook}`,
-          instagram_url: `${baseInstagramUrl}${instagram}`,
-          twitter_url: `${baseTwitterUrl}${twitter}`,
-          specialty: specialties.join(","),
-        });
-
-        const { error, data, errors } = response;
-        // No error happens
-        if (!error) {
-          onNext &&
-            onNext(data.id, {
-              bio,
-              yearsOfExperience,
-              checked,
-              minimumSpend,
-              pricePerHour,
-              currency,
-              website,
-              facebook,
-              instagram,
-              twitter,
-              streetAddress,
-              zipCode,
-              country,
-              phoneNumber,
-              specialties,
-            });
-        } else {
-          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
-        }
-      } else {
-        // Create the new one
-        // Call APIs to create artist profile
-        const response = await createArtistProfile({
-          bio,
-          seeking_guest_spot: checked.includes("seeking_guest_spot"),
-          guest_artist: checked.includes("guest_artist"),
-          licensed: checked.includes("licensed"),
-          cpr_certified: checked.includes("cpr_certified"),
-          years_of_experience: yearsOfExperience,
-          minimum_spend: minimumSpend,
-          price_per_hour: pricePerHour,
-          currency_code: currency,
-          user_id: currentUserId,
-          street_address: streetAddress,
-          zip_code: zipCode,
-          country,
-          phone_number: phoneNumber,
-          website,
-          facebook_url: `${baseFacebookUrl}${facebook}`,
-          instagram_url: `${baseInstagramUrl}${instagram}`,
-          twitter_url: `${baseTwitterUrl}${twitter}`,
-          specialty: specialties.join(","),
-        });
-
-        const { error, data, errors } = response;
-        // No error happens
-        if (!error) {
-          onNext &&
-            onNext(data.id, {
-              bio,
-              yearsOfExperience,
-              checked,
-              minimumSpend,
-              pricePerHour,
-              currency,
-              website,
-              facebook,
-              instagram,
-              twitter,
-              streetAddress,
-              zipCode,
-              country,
-              phoneNumber,
-              specialties,
-            });
-        } else {
-          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
-        }
-      }
-    }
-  };
 
   // Handle toggle setting buttons
   const handleToggle = (value: string) => () => {
@@ -282,16 +135,9 @@ export default function RightBarArtistRegisterInformation({
   };
 
   return (
-    <Grid container className={classes.root} alignItems={"center"} justify={"center"}>
+    <Grid container className={clsx(classes.root, className)} alignItems={"center"} justify={"center"}>
       <div className={classes.formWrapper}>
-        <div className={classes.titleWrapper}>
-          <Typography variant={"h5"} className={classes.titleText}>
-            Artist Information
-          </Typography>
-          <Typography>Fill in the information about your studio to setup your account and profile.</Typography>
-        </div>
-
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <>
           <Typography variant={"h6"} className={classes.sectionTitle}>
             Tell us a little bit about yourself
           </Typography>
@@ -432,7 +278,7 @@ export default function RightBarArtistRegisterInformation({
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={instagram || ""}
+                defaultValue={instagram.replace("instagram.com/", "") || ""}
                 errors={errors.instagram}
                 InputProps={{
                   startAdornment: <InputAdornment position="start">{baseInstagramUrl}</InputAdornment>,
@@ -466,7 +312,7 @@ export default function RightBarArtistRegisterInformation({
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={facebook || ""}
+                defaultValue={facebook.replace("facebook.com/", "") || ""}
                 errors={errors.facebook}
                 InputProps={{
                   startAdornment: <InputAdornment position="start">{baseFacebookUrl}</InputAdornment>,
@@ -483,7 +329,7 @@ export default function RightBarArtistRegisterInformation({
                 fullWidth
                 control={control}
                 variant={"outlined"}
-                defaultValue={twitter || ""}
+                defaultValue={twitter.replace("twitter.com/", "") || ""}
                 errors={errors.twitter}
                 InputProps={{
                   startAdornment: <InputAdornment position="start">{baseTwitterUrl}</InputAdornment>,
@@ -491,51 +337,28 @@ export default function RightBarArtistRegisterInformation({
               />
             </Grid>
           </Grid>
-
-          <Grid container spacing={2} className={classes.buttonWrapper}>
-            <Grid item lg={6} md={6} sm={12} xs={12}>
-              <PrimaryButton
-                type={"button"}
-                variant="outlined"
-                color="primary"
-                size="large"
-                bluePastel
-                fullWidth
-                onClick={onPreviousStep}
-              >
-                Previous Step
-              </PrimaryButton>
-            </Grid>
-            <Grid item lg={6} md={6} sm={12} xs={12}>
-              <PrimaryButton type={"submit"} variant="contained" color="primary" size="large" fullWidth bluePastel>
-                Next
-              </PrimaryButton>
-            </Grid>
-          </Grid>
-        </form>
+        </>
       </div>
     </Grid>
   );
 }
 
-interface Props {
-  currentUserId: number | undefined;
-  currentUserRoleId: number | undefined;
-  currentData: any;
-  role: string;
-  onPreviousStep?: () => void;
-  onNext?: (id: number, data: any) => void;
-}
+// Validation schema
+export const validationSchema = yup.object({
+  fullName: yup.string().required("Full name is required"),
+  email: yup.string().required("email of experience is required"),
+  bio: yup.string().required("Bio is required"),
+  yearsOfExperience: yup.string().required("Years of experience is required"),
+  phoneNumber: yup.string().required("Phone number is required"),
+  streetAddress: yup.string().required("Street address is required"),
+  zipCode: yup.string().required("Zip code is required"),
+  country: yup.string().required("Country is required"),
+});
 
-interface submitFormData {
-  bio: string;
-  streetAddress: string;
-  zipCode: string;
-  country: string;
-  phoneNumber: string;
-  yearsOfExperience: number;
-  website: string;
-  facebook: string;
-  instagram: string;
-  twitter: string;
+interface Props {
+  currentData: any;
+  onNext?: (id: number, data: any) => void;
+  className?: any;
+  control: any;
+  errors: any;
 }

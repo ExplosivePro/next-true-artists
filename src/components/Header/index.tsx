@@ -89,7 +89,11 @@ export default function Header({ userProfile, openSearch }: Props) {
       onClose={handleMobileMenuClose}
     >
       {userProfile && (
-        <MenuItem onClick={handleProfileMenuOpen}>
+        <MenuItem
+          onClick={() => {
+            router.push("/dashboard/profile");
+          }}
+        >
           <Avatar alt={userProfile.full_name || "Avatar"} src={userProfile.avatar?.image_url} />
           <Typography className={classes.mobileDisplayName}>{userProfile.full_name}</Typography>
         </MenuItem>

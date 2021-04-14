@@ -15,6 +15,7 @@ declare namespace Register {
 
   interface ApiEditUserPayload {
     id: number;
+    full_name?: string;
     first_name?: string;
     last_name?: string;
     email?: string;
@@ -39,9 +40,9 @@ declare namespace Register {
     price_per_hour?: number;
     currency_code?: string;
     website?: string;
-    facebook?: string;
-    instagram?: string;
-    twitter?: string;
+    facebook_url?: string;
+    instagram_url?: string;
+    twitter_url?: string;
     street_address?: string;
     zip_code?: string;
     country?: string;
@@ -65,9 +66,9 @@ declare namespace Register {
     price_per_hour?: number;
     currency_code?: string;
     website?: string;
-    facebook?: string;
-    instagram?: string;
-    twitter?: string;
+    facebook_url?: string;
+    instagram_url?: string;
+    twitter_url?: string;
     street_address?: string;
     zip_code?: string;
     country?: string;
@@ -83,6 +84,7 @@ declare namespace Register {
 
   interface ApiCreateStudioPayload {
     user_id: number;
+    name: string;
     first_name?: string;
     last_name?: string;
     email?: string;
@@ -102,6 +104,7 @@ declare namespace Register {
 
   interface ApiEditStudioPayload {
     id: number;
+    name: string;
     first_name?: string;
     last_name?: string;
     email?: string;

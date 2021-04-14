@@ -10,6 +10,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 import { useAuth } from "../../contexts";
 import Typography from "@material-ui/core/Typography";
+import { useRouter } from "next/router";
 
 const StyledMenuItem = withStyles(() => ({
   root: {},
@@ -19,9 +20,18 @@ const StyledMenuItem = withStyles(() => ({
 const AppBarMenuItems = React.forwardRef((props: any, ref) => {
   const { handleMenuClose, ...rest } = props;
   const { user, logOut } = useAuth();
+  const { push } = useRouter();
+
   return (
     <div>
-      <StyledMenuItem onClick={handleMenuClose} ref={ref} {...rest}>
+      <StyledMenuItem
+        onClick={(e) => {
+          handleMenuClose(e);
+          push("/dashboard/profile");
+        }}
+        ref={ref}
+        {...rest}
+      >
         <ListItemIcon>
           <Avatar alt={user?.full_name || "Avatar"} src={user?.avatar?.image_url} />
         </ListItemIcon>

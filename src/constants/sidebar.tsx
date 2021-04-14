@@ -28,3 +28,6 @@ export const helpItems = [
     url: "/settings",
   },
 ];
+
+// Default side bar width
+export const drawerWidth = 240;

@@ -74,7 +74,7 @@ export function AuthContext({ children }: Props) {
             router.push(previousPath);
           } else {
             // Go to home page
-            router.push("/artists");
+            router.push("/dashboard");
           }
         }
       } else {
@@ -101,7 +101,7 @@ export function AuthContext({ children }: Props) {
           setStatus(AuthState.authenticated);
 
           // Navigate to artist page
-          router.replace("/artists");
+          router.replace("/dashboard");
         })
         .catch(() => {
           localStorage.removeItem(TOKEN_KEY);
@@ -137,7 +137,7 @@ export function AuthContext({ children }: Props) {
             router.push(previousPath);
           } else {
             // Go to home page
-            router.push("/artists");
+            router.push("/dashboard");
           }
         }
       } else {
@@ -199,7 +199,7 @@ export function AuthContext({ children }: Props) {
         user.current = data.user;
 
         // Navigate to register selection page
-        router.push("/artists");
+        router.push("/dashboard");
       } else {
         app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
       }
@@ -210,6 +210,21 @@ export function AuthContext({ children }: Props) {
       // Unknown issue or code issues
       return { error: true, data: null, errors: "Internal server. Please try again" };
     }
+  }
+
+  function updateUserData() {
+    verifyUser()
+      .then(({ data }) => {
+        user.current = data;
+      })
+      .catch(() => {
+        localStorage.removeItem(TOKEN_KEY);
+        clearAuthHeader();
+        setStatus(AuthState.unAuthenticated);
+
+        // Redirect to login page
+        router.replace("/login");
+      });
   }
 
   function logOut() {
@@ -284,6 +299,7 @@ export function AuthContext({ children }: Props) {
         loginByToken,
         socialLogin,
         logOut,
+        updateUserData,
         previousPath,
       }}
     >
@@ -308,6 +324,7 @@ export type User = {
   full_name: string;
   avatar: Resource.Image;
   role: Roles;
+  artist: Resource.ArtistDetail;
 };
 
 interface Context {
@@ -320,6 +337,7 @@ interface Context {
   logOut: () => void;
   status: AuthState;
   previousPath: string;
+  updateUserData: () => void;
 }
 
 const TOKEN_KEY = "AUTH_TOKEN";
