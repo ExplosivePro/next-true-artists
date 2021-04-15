@@ -174,6 +174,8 @@ export default function RightBarStudioRegisterInformation({
         if (!error) {
           onNext &&
             onNext(data.id, {
+              name,
+              email,
               streetAddress,
               city,
               country,

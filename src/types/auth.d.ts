@@ -77,7 +77,7 @@ declare namespace Register {
     specialty?: string;
   }
 
-  interface ApiUpdateArtistAvatarPayload {
+  interface ApiUpdateAvatarPayload {
     id: number;
     file: any;
   }

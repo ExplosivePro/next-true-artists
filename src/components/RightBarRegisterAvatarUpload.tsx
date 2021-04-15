@@ -13,7 +13,7 @@ import IconButton from "@material-ui/core/IconButton";
 import PrimaryButton from "./PrimaryButton";
 
 // APIs
-import { updateArtistAvatar } from "../api";
+import { updateArtistAvatar, updateStudioAvatar } from "../api";
 
 // Context
 import { useApp } from "../contexts";
@@ -95,22 +95,44 @@ export default function RightBarRegisterAvatarUpload({
 
   const goNext = async () => {
     if (currentUserId) {
-      // Call APIs to create studio profile
-      const response = await updateArtistAvatar({
-        id: currentUserId,
-        file: fileData,
-      });
+      if (role === "artist") {
+        // Call APIs to create studio profile
+        const response = await updateArtistAvatar({
+          id: currentUserId,
+          file: fileData,
+        });
 
-      const { error, errors } = response;
-      // No error happens
-      if (!error) {
-        onNext &&
-          onNext({
-            fileData,
-            preview,
-          });
-      } else {
-        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        const { error, errors } = response;
+        // No error happens
+        if (!error) {
+          onNext &&
+            onNext({
+              fileData,
+              preview,
+            });
+        } else {
+          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        }
+      }
+
+      if (role === "studio") {
+        // Call APIs to create studio profile
+        const response = await updateStudioAvatar({
+          id: currentUserId,
+          file: fileData,
+        });
+
+        const { error, errors } = response;
+        // No error happens
+        if (!error) {
+          onNext &&
+            onNext({
+              fileData,
+              preview,
+            });
+        } else {
+          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        }
       }
     }
   };
