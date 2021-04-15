@@ -286,20 +286,22 @@ export default function UserProfile() {
                   errors={errors.email}
                 />
 
-                <ArtistProfile
-                  currentData={artist}
-                  className={classes.artistProfile}
-                  control={control}
-                  errors={errors}
-                  checked={checked}
-                  currency={currency}
-                  pricePerHour={pricePerHour}
-                  minimumSpend={minimumSpend}
-                  handleToggle={handleToggle}
-                  onPriceChange={onPriceChange}
-                  onSelectionChange={onSelectionChange}
-                  specialties={specialties}
-                />
+                {role === "artist" && artist && (
+                  <ArtistProfile
+                    currentData={artist}
+                    className={classes.artistProfile}
+                    control={control}
+                    errors={errors}
+                    checked={checked}
+                    currency={currency}
+                    pricePerHour={pricePerHour}
+                    minimumSpend={minimumSpend}
+                    handleToggle={handleToggle}
+                    onPriceChange={onPriceChange}
+                    onSelectionChange={onSelectionChange}
+                    specialties={specialties}
+                  />
+                )}
 
                 <Grid container spacing={2} className={classes.buttonWrapper}>
                   <Grid item lg={6} md={6} sm={12} xs={12}>
