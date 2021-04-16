@@ -126,7 +126,7 @@ export const currencies = [
 ];
 
 // Payment method list
-export const paymentMethods = [
+export const paymentMethodList = [
   {
     value: "Cash",
     label: "Cash",

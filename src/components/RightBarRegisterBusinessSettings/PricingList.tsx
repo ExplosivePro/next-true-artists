@@ -1,14 +1,19 @@
+// External
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
+// Material UI Components
 import { Grid } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 
+// Custom Components
+import MultipleSelection from "../RightBarArtistRegisterInformation/MutilpleSelection";
+
 import colors from "../../palette";
 
-import { currencies, paymentMethods } from "../../constants";
+import { currencies, paymentMethodList } from "../../constants";
 
 const useStyles = makeStyles({
   root: {
@@ -28,7 +33,7 @@ const useStyles = makeStyles({
   },
 });
 
-const PricingList = ({ currency, paymentMethod, pricePerHour, minimumRate, onPriceChange }: Props) => {
+const PricingList = ({ currency, paymentMethods, pricePerHour, minimumRate, onPriceChange }: Props) => {
   const classes = useStyles();
 
   return (
@@ -36,26 +41,14 @@ const PricingList = ({ currency, paymentMethod, pricePerHour, minimumRate, onPri
       <Typography className={classes.groupName}>Pricing</Typography>
       <Grid container spacing={2} className={classes.inputWrapper}>
         <Grid item lg={12} md={12} xs={12}>
-          <TextField
-            name="paymentMethod"
-            select
-            classes={{ root: classes.formInput }}
-            label={"Payment Method"}
-            id="payment-method"
-            placeholder={"Payment Method"}
-            fullWidth
-            variant={"outlined"}
-            value={paymentMethod}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              onPriceChange(e, "paymentMethod");
+          <MultipleSelection
+            name={"Payment Method"}
+            value={paymentMethods}
+            optionList={paymentMethodList.map((method) => method.value)}
+            onChange={(e) => {
+              onPriceChange(e, "paymentMethods");
             }}
-          >
-            {paymentMethods.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
+          />
         </Grid>
       </Grid>
       <Grid container spacing={2} className={classes.inputWrapper}>
@@ -143,7 +136,7 @@ const PricingList = ({ currency, paymentMethod, pricePerHour, minimumRate, onPri
 
 interface Props {
   currency: string;
-  paymentMethod: string;
+  paymentMethods: string[];
   pricePerHour: number;
   minimumRate: number;
   onPriceChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;

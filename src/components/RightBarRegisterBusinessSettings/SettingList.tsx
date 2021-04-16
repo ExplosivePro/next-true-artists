@@ -18,7 +18,6 @@ const useStyles = makeStyles({
   },
   groupName: {
     color: colors.black,
-    fontSize: "16px",
     fontWeight: "bold",
   },
   listSubHeader: {
@@ -46,7 +45,11 @@ const SettingList = ({ id, groupName, items, handleToggle, checked }: Props) => 
       className={classes.root}
       subheader={
         <ListSubheader className={classes.listSubHeader} disableSticky={true}>
-          {<Typography className={classes.groupName}>{groupName}</Typography>}
+          {
+            <Typography variant={"h5"} className={classes.groupName}>
+              {groupName}
+            </Typography>
+          }
         </ListSubheader>
       }
     >

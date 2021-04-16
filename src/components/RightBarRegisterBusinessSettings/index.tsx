@@ -88,13 +88,13 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, curren
     currency: currencyData,
     language: languageData,
     minimumRate: minimumRateData,
-    paymentMethod: paymentMethodData,
+    paymentMethods: paymentMethodData,
     pricePerHour: pricePerHourData,
     services: servicesData,
   } = currentData;
 
   const [currency, setCurrency] = useState(currencyData || "");
-  const [paymentMethod, setPaymentMethod] = useState(paymentMethodData || "");
+  const [paymentMethods, setPaymentMethod] = useState(paymentMethodData || []);
   const [pricePerHour, setPricePerHour] = useState<number>(pricePerHourData || 0);
   const [minimumRate, setMinimumRate] = useState<number>(minimumRateData || 0);
   const [services, setServices] = useState<string[]>(servicesData || []);
@@ -108,8 +108,8 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, curren
         setCurrency(event.target.value);
         break;
       }
-      case "paymentMethod": {
-        setPaymentMethod(event.target.value);
+      case "paymentMethods": {
+        setPaymentMethod(event);
         break;
       }
       case "pricePerHour": {
@@ -160,7 +160,7 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, curren
         minimum_spend: minimumRate,
         price_per_hour: pricePerHour,
         currency_code: currency,
-        accepted_payment_methods: paymentMethod,
+        accepted_payment_methods: paymentMethods.join(","),
         accepting_guest_artist: checked.includes("appointment_only"),
         appointment_only: checked.includes("appointment_only"),
         piercings: checked.includes("piercings"),
@@ -183,7 +183,7 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, curren
             minimumRate,
             pricePerHour,
             currency,
-            paymentMethod,
+            paymentMethods,
             checked,
             language,
             services,
@@ -219,7 +219,7 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, curren
         })}
 
         <PricingList
-          paymentMethod={paymentMethod}
+          paymentMethods={paymentMethods}
           currency={currency}
           pricePerHour={pricePerHour}
           minimumRate={minimumRate}

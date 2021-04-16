@@ -29,6 +29,10 @@ const MenuProps = {
       width: 250,
     },
   },
+  // These fields will fix jumping issues on multi selection list
+  // Ref: https://stackoverflow.com/questions/59785482/multiselect-box-popover-keeps-jumping-when-scroll-or-select-items
+  variant: undefined,
+  getContentAnchorEl: null,
 };
 
 export default function MultipleSelection({ name, optionList, onChange, value }: Props) {
@@ -41,10 +45,10 @@ export default function MultipleSelection({ name, optionList, onChange, value }:
 
   return (
     <FormControl variant={"outlined"} className={classes.formControl}>
-      <InputLabel id={name}>{name}</InputLabel>
+      <InputLabel id={`selection-label-${name}`}>{name}</InputLabel>
       <Select
-        labelId={name}
-        id="specialty"
+        labelId={`selection-label-${name}`}
+        id={`selection-${name}`}
         multiple
         value={value}
         onChange={handleChange}
