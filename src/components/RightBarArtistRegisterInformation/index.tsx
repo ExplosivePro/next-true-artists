@@ -7,6 +7,7 @@ import * as yup from "yup";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { Grid, Typography } from "@material-ui/core";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import MenuItem from "@material-ui/core/MenuItem";
 
 // Custom component
 import FormInput from "../FormInput";
@@ -20,7 +21,15 @@ import { createArtistProfile, editArtistProfile } from "../../api";
 import { useApp } from "../../contexts";
 
 // Constants
-import { artistSettingList, specialtyList, baseInstagramUrl, baseFacebookUrl, baseTwitterUrl } from "../../constants";
+import {
+  artistSettingList,
+  specialtyList,
+  baseInstagramUrl,
+  baseFacebookUrl,
+  baseTwitterUrl,
+  countryList,
+} from "../../constants";
+
 import colors from "../../palette";
 
 // Styles
@@ -408,14 +417,21 @@ export default function RightBarArtistRegisterInformation({
             name="country"
             classes={{ root: classes.formInput }}
             label={"Country"}
-            id="zipCode"
+            id="country"
             placeholder={"Country"}
             fullWidth
+            select
             control={control}
             variant={"outlined"}
             defaultValue={country || ""}
             errors={errors.country}
-          />
+          >
+            {countryList.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </FormInput>
 
           <Typography variant={"h6"} className={classes.sectionTitle}>
             Social Presence

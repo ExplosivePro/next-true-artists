@@ -16,7 +16,8 @@ import PrimaryButton from "./PrimaryButton";
 import { createStudioProfile, editStudioProfile } from "../api";
 import { useApp } from "../contexts";
 
-import { baseInstagramUrl, baseFacebookUrl, baseTwitterUrl } from "../constants";
+import { baseInstagramUrl, baseFacebookUrl, baseTwitterUrl, countryList } from "../constants";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -258,11 +259,18 @@ export default function RightBarStudioRegisterInformation({
                 id="zipCode"
                 placeholder={"Country"}
                 fullWidth
+                select
                 control={control}
                 variant={"outlined"}
                 defaultValue={country || ""}
                 errors={errors.country}
-              />
+              >
+                {countryList.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </FormInput>
             </Grid>
           </Grid>
 
