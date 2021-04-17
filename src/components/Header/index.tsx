@@ -183,7 +183,7 @@ export default function Header({ userProfile, openSearch }: Props) {
               variant="contained"
               color="primary"
               size="large"
-              bluePastel
+              primaryColor
               className={classes.operationButton}
               href={"/register"}
             >
@@ -196,7 +196,7 @@ export default function Header({ userProfile, openSearch }: Props) {
               variant="outlined"
               color="primary"
               size="large"
-              bluePastel
+              primaryColor
               className={classes.operationButton}
               href={"/login"}
             >

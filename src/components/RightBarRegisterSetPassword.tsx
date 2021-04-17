@@ -115,7 +115,7 @@ export default function RightBarRegisterSetPassword({
                 variant="outlined"
                 color="primary"
                 size="large"
-                bluePastel
+                primaryColor
                 fullWidth
                 onClick={onPreviousStep}
               >
@@ -123,7 +123,7 @@ export default function RightBarRegisterSetPassword({
               </PrimaryButton>
             </Grid>
             <Grid item lg={6} md={6} sm={12} xs={12}>
-              <PrimaryButton type={"submit"} variant="contained" color="primary" size="large" fullWidth bluePastel>
+              <PrimaryButton type={"submit"} variant="contained" color="primary" size="large" fullWidth primaryColor>
                 Next
               </PrimaryButton>
             </Grid>

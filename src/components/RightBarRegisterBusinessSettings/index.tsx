@@ -233,7 +233,7 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, curren
               variant="outlined"
               color="primary"
               size="large"
-              bluePastel
+              primaryColor
               fullWidth
               onClick={onPrevious}
             >
@@ -241,7 +241,7 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, curren
             </PrimaryButton>
           </Grid>
           <Grid item lg={6} md={6} sm={12} xs={12}>
-            <PrimaryButton variant="contained" color="primary" size="large" onClick={goNext} fullWidth bluePastel>
+            <PrimaryButton variant="contained" color="primary" size="large" onClick={goNext} fullWidth primaryColor>
               Next
             </PrimaryButton>
           </Grid>

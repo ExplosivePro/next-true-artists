@@ -149,7 +149,7 @@ export default function RightBarRegisterWorkStyle({ data = [], currentUserId, cu
               variant="outlined"
               color="primary"
               size="large"
-              bluePastel
+              primaryColor
               fullWidth
               onClick={onSkip}
             >
@@ -157,7 +157,7 @@ export default function RightBarRegisterWorkStyle({ data = [], currentUserId, cu
             </PrimaryButton>
           </Grid>
           <Grid item lg={6} md={6} sm={12} xs={12}>
-            <PrimaryButton variant="contained" color="primary" size="large" onClick={goNext} fullWidth bluePastel>
+            <PrimaryButton variant="contained" color="primary" size="large" onClick={goNext} fullWidth primaryColor>
               Next
             </PrimaryButton>
           </Grid>

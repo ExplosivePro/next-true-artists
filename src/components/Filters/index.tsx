@@ -200,7 +200,7 @@ export default function Filters({ data, onClose, onApply, workingStyles }: Props
           variant="outlined"
           color="primary"
           size="medium"
-          bluePastel
+          primaryColor
           onClick={reset}
         >
           Reset
@@ -210,7 +210,7 @@ export default function Filters({ data, onClose, onApply, workingStyles }: Props
           variant="contained"
           color="primary"
           size="medium"
-          bluePastel
+          primaryColor
           onClick={() => {
             onApply(optionValues);
           }}

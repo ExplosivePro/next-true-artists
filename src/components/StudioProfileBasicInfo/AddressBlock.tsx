@@ -58,7 +58,7 @@ export default function AddressBlock({
       <Grid container item lg={8} md={8} sm={12} xs={12} alignItems={"center"}>
         <CardHeader
           action={
-            <PrimaryButton variant="outlined" color="primary" size="small" bluePastel>
+            <PrimaryButton variant="outlined" color="primary" size="small" primaryColor>
               Get direction
             </PrimaryButton>
           }

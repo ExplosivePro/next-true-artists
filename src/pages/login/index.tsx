@@ -262,7 +262,7 @@ export default function Login() {
               color="primary"
               size="large"
               fullWidth
-              bluePastel
+              primaryColor
             >
               Login
             </PrimaryButton>
@@ -279,7 +279,7 @@ export default function Login() {
               color="primary"
               size="large"
               className={classes.joinArtistButton}
-              bluePastel
+              primaryColor
               fullWidth
               href={"/register-selection"}
             >

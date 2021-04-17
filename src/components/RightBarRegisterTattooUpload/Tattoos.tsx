@@ -294,7 +294,7 @@ const AddImageItem = ({ onAdd }: { onAdd: (data: any) => void }) => {
                     variant="outlined"
                     color="primary"
                     size="large"
-                    bluePastel
+                    primaryColor
                     fullWidth
                     onClick={handleClose}
                   >
@@ -310,7 +310,7 @@ const AddImageItem = ({ onAdd }: { onAdd: (data: any) => void }) => {
                     fullWidth
                     color="primary"
                     size="large"
-                    bluePastel
+                    primaryColor
                   >
                     Save
                   </PrimaryButton>

@@ -202,7 +202,7 @@ export default function RightBarStudioRegisterInformation({
           <Typography variant={"h5"} className={classes.titleText}>
             Studio Information
           </Typography>
-          <Typography>Fill in the information about your studio to setup your account and profile.</Typography>
+          <Typography>Fill in the information about your studio. Make it easy for clients to contact you.</Typography>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -413,7 +413,7 @@ export default function RightBarStudioRegisterInformation({
                 variant="outlined"
                 color="primary"
                 size="large"
-                bluePastel
+                primaryColor
                 fullWidth
                 onClick={onPreviousStep}
               >
@@ -421,7 +421,7 @@ export default function RightBarStudioRegisterInformation({
               </PrimaryButton>
             </Grid>
             <Grid item lg={6} md={6} sm={12} xs={12}>
-              <PrimaryButton type={"submit"} variant="contained" color="primary" size="large" fullWidth bluePastel>
+              <PrimaryButton type={"submit"} variant="contained" color="primary" size="large" fullWidth primaryColor>
                 Next
               </PrimaryButton>
             </Grid>

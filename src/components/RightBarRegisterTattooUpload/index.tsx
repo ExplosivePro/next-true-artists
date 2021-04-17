@@ -114,7 +114,7 @@ export default function RightBarRegisterTattooUpload({ currentUserId, onPrevious
               variant="outlined"
               color="primary"
               size="large"
-              bluePastel
+              primaryColor
               fullWidth
               onClick={onPreviousStep}
             >
@@ -129,7 +129,7 @@ export default function RightBarRegisterTattooUpload({ currentUserId, onPrevious
               fullWidth
               color="primary"
               size="large"
-              bluePastel
+              primaryColor
             >
               Next
             </PrimaryButton>

@@ -95,7 +95,7 @@ export default function RightBarRegisterWorkingLocation({
               variant="outlined"
               color="primary"
               size="large"
-              bluePastel
+              primaryColor
               fullWidth
               onClick={onPreviousStep}
             >
@@ -103,7 +103,7 @@ export default function RightBarRegisterWorkingLocation({
             </PrimaryButton>
           </Grid>
           <Grid item lg={6} md={6} sm={12} xs={12}>
-            <PrimaryButton variant="contained" color="primary" size="large" onClick={onNext} fullWidth bluePastel>
+            <PrimaryButton variant="contained" color="primary" size="large" onClick={onNext} fullWidth primaryColor>
               Next
             </PrimaryButton>
           </Grid>

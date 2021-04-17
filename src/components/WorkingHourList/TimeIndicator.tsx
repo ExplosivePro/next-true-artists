@@ -10,7 +10,7 @@ const styles = () =>
       flexGrow: 0,
       margin: "3px 8px 0 0",
       padding: "4px",
-      backgroundColor: colors.lightBluePastel,
+      backgroundColor: colors.lightprimaryColor,
     },
     inRing: {
       borderRadius: "50%",
@@ -18,7 +18,7 @@ const styles = () =>
       height: "10px",
       flexGrow: 0,
       opacity: 1,
-      backgroundColor: colors.bluePastel,
+      backgroundColor: colors.primaryColor,
     },
   });
 

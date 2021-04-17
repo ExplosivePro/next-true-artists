@@ -8,27 +8,27 @@ import Button, { ButtonProps } from "@material-ui/core/Button";
 
 import colors from "../palette";
 
-type CustomButtonProps = ButtonProps & { bluePastel?: boolean; yellow?: boolean };
+type CustomButtonProps = ButtonProps & { primaryColor?: boolean; yellow?: boolean };
 
 const useStyles = makeStyles({
   root: {
     textTransform: "none",
     boxShadow: "none",
   },
-  bluePastelStyle: {
+  primaryColorStyle: {
     color: colors.white,
-    backgroundColor: colors.bluePastel,
+    backgroundColor: colors.primaryColor,
     "&:hover": {
-      backgroundColor: colors.darkBluePastel,
+      backgroundColor: colors.primaryColor,
     },
   },
-  bluePastelOutlineStyle: {
-    borderColor: colors.bluePastel,
+  primaryColorOutlineStyle: {
+    borderColor: colors.primaryColor,
     backgroundColor: colors.white,
-    color: colors.bluePastel,
+    color: colors.primaryColor,
     "&:hover": {
-      borderColor: colors.bluePastel,
-      backgroundColor: colors.darkBluePastel,
+      borderColor: "none",
+      backgroundColor: colors.primaryColor,
       color: colors.white,
     },
   },
@@ -56,15 +56,15 @@ export default function PrimaryButton(props: CustomButtonProps) {
   const customPropsValue = { ...props };
 
   // Remove invalid prop of material component
-  delete customPropsValue.bluePastel;
+  delete customPropsValue.primaryColor;
   delete customPropsValue.yellow;
 
   return (
     <Button
       {...customPropsValue}
       className={clsx(classes.root, props.className, {
-        [classes.bluePastelStyle]: props.bluePastel,
-        [classes.bluePastelOutlineStyle]: props.variant === "outlined" && props.bluePastel,
+        [classes.primaryColorStyle]: props.primaryColor,
+        [classes.primaryColorOutlineStyle]: props.variant === "outlined" && props.primaryColor,
         [classes.yellowStyle]: props.yellow,
         [classes.yellowOutlineStyle]: props.variant === "outlined" && props.yellow,
       })}

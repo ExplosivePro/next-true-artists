@@ -77,7 +77,7 @@ export default function Item({ data: { avatar, name, styles, tattoos, id } }: Pr
               </Typography>
             }
             subheader={
-              <PrimaryButton variant="outlined" color="primary" size="small" bluePastel href={`/artists/${id}`}>
+              <PrimaryButton variant="outlined" color="primary" size="small" primaryColor href={`/artists/${id}`}>
                 See Profile
               </PrimaryButton>
             }

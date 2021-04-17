@@ -248,7 +248,7 @@ export default function UserProfile() {
             <input className={classes.fileInput} type={"file"} ref={hiddenFileInput} onChange={handleChange} />
           </Grid>
           <Grid container item justify={"center"} className={classes.changePhotoButton}>
-            <PrimaryButton variant="outlined" color="primary" size="small" bluePastel onClick={handleClick}>
+            <PrimaryButton variant="outlined" color="primary" size="small" primaryColor onClick={handleClick}>
               Change Photo
             </PrimaryButton>
           </Grid>
@@ -310,7 +310,7 @@ export default function UserProfile() {
                       variant="outlined"
                       color="primary"
                       size="large"
-                      bluePastel
+                      primaryColor
                       fullWidth
                       onClick={() => {
                         push("/dashboard");
@@ -326,7 +326,7 @@ export default function UserProfile() {
                       color="primary"
                       size="large"
                       fullWidth
-                      bluePastel
+                      primaryColor
                     >
                       Save
                     </PrimaryButton>

@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) =>
       },
     },
     resetButton: {
-      color: colors.bluePastel,
+      color: colors.primaryColor,
       marginRight: "50px",
       cursor: "pointer",
       fontWeight: 600,
@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme) =>
       fontWeight: 500,
     },
     selected: {
-      color: colors.bluePastel,
+      color: colors.primaryColor,
     },
   }),
 );

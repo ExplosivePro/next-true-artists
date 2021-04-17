@@ -172,7 +172,7 @@ export default function RightBarRegisterAvatarUpload({
               variant="outlined"
               color="primary"
               size="large"
-              bluePastel
+              primaryColor
               fullWidth
               onClick={onPreviousStep}
             >
@@ -187,7 +187,7 @@ export default function RightBarRegisterAvatarUpload({
               fullWidth
               color="primary"
               size="large"
-              bluePastel
+              primaryColor
             >
               Next
             </PrimaryButton>
