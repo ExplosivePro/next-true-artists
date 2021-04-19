@@ -329,6 +329,18 @@ export const placements = [
   },
 ];
 
+// Colors
+export const colors = [
+  {
+    value: "Color",
+    label: "Color",
+  },
+  {
+    value: "Black & Grey",
+    label: "Black & Grey",
+  },
+];
+
 export const serviceList = [
   {
     value: "Tattoo Consultation",

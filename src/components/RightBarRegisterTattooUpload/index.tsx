@@ -6,10 +6,10 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { Grid, Typography } from "@material-ui/core";
 
 // Custom component
-import PrimaryButton from "../PrimaryButton";
 import Tattoos, { Image } from "./Tattoos";
+import PrimaryButton from "../PrimaryButton";
 
-import { uploadTattoos } from "../../api";
+import { uploadTattoos, updateTattoos } from "../../api";
 
 // Context
 import { useApp } from "../../contexts";
@@ -46,26 +46,25 @@ const useStyles = makeStyles((theme: Theme) =>
       width: 0,
     },
     buttonWrapper: {
-      position: "absolute",
-      bottom: "40px",
-      left: "50%",
-      transform: "translate(-50%)",
-      width: "70%",
+      // position: "absolute",
+      // bottom: "40px",
+      // left: "50%",
+      // transform: "translate(-50%)",
+      padding: "50px 0",
+      width: "100%",
+      margin: 0,
     },
   }),
 );
 
-export default function RightBarRegisterTattooUpload({ currentUserId, onPreviousStep, onNext }: Props) {
+export default function RightBarRegisterTattooUpload({ role, currentUserId, onPreviousStep, onNext }: Props) {
   const app = useApp();
   const classes = useStyles();
 
   const [tattoos, setTattoos] = useState<Image[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleUploadImage = (data: any) => {
-    setTattoos([...tattoos, data]);
-  };
-
-  const goNext = async () => {
+  const uploadImages = async (tattoos: Image[]) => {
     if (currentUserId) {
       const formData = new FormData();
       const metaData: any[] = [];
@@ -76,6 +75,9 @@ export default function RightBarRegisterTattooUpload({ currentUserId, onPrevious
         metaData.push({
           placement: tattoo.placement,
           workplace: tattoo.workplace,
+          color: tattoo.color,
+          caption: tattoo.caption,
+          featured: tattoo.featured,
         });
       });
 
@@ -83,14 +85,60 @@ export default function RightBarRegisterTattooUpload({ currentUserId, onPrevious
 
       const response = await uploadTattoos(formData);
 
-      const { error, errors } = response;
+      const { error, errors, data } = response;
       // No error happens
       if (!error) {
-        onNext && onNext();
+        return data;
       } else {
-        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        app.showErrorDialog(true, errors ? errors.toString() : "Upload fail");
       }
+    } else {
+      app.showErrorDialog(true, "Upload fail");
     }
+  };
+
+  const handleUploadImage = async (data: any) => {
+    const rs = await uploadImages(data);
+
+    if (rs) {
+      rs.results.map((image: any, index: number) => {
+        // Attach id to existing file
+        if (data[index].file.name === image.body.image.name) {
+          data[index].id = image.body.id;
+        }
+      });
+      setTattoos([...tattoos, ...data]);
+    }
+
+    // Hide loading
+    setLoading(false);
+  };
+
+  const onFieldsChange = (index: number, name: string, value: any) => {
+    const tattooDetail = tattoos[index];
+
+    tattooDetail[name] = value;
+
+    // Simply remove old object then add the new item
+    setTattoos([...tattoos.slice(0, index), tattooDetail, ...tattoos.slice(index + 1)]);
+  };
+
+  // On tattoos update
+  const onUpdate = async (tattooId: number, payload: any) => {
+    const response = await updateTattoos(currentUserId as number, tattooId, payload, role);
+
+    const { error, errors, data } = response;
+    // No error happens
+    if (!error) {
+      app.showSuccessDialog(true, "Update successfully");
+      return data;
+    } else {
+      app.showErrorDialog(true, errors ? errors.toString() : "Upload fail");
+    }
+  };
+
+  const goNext = async () => {
+    onNext && onNext();
   };
 
   return (
@@ -100,11 +148,24 @@ export default function RightBarRegisterTattooUpload({ currentUserId, onPrevious
           <Typography variant={"h5"} className={classes.titleText}>
             {"Upload Images of Your Work"}
           </Typography>
-          <Typography>Upload your work to showcase your skills and share your portfolio with the community.</Typography>
+          <Typography>
+            Upload a minimum of 5 images of your best tattoo artwork in order to complete your profile and to be
+            approved. Make sure to fill out all the info for each image in order to show up in as many search results as
+            possible. These photos will also be posted on your public profile.
+          </Typography>
         </div>
 
         <Grid container>
-          <Tattoos data={tattoos} addImage={handleUploadImage} />
+          <Tattoos
+            data={tattoos}
+            addImage={handleUploadImage}
+            loading={loading}
+            onSetLoading={(value) => {
+              setLoading(value);
+            }}
+            onChange={onFieldsChange}
+            onUpdate={onUpdate}
+          />
         </Grid>
 
         <Grid container item justify={"center"} alignItems={"center"} className={classes.buttonWrapper} spacing={2}>

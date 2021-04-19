@@ -86,14 +86,14 @@ export default function RegisterSelection({ workingStyles }: Props) {
   const auth = useAuth();
   const { setRegistrationCallbackData, registrationCallback, userInfo } = useApp();
 
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(0);
   const [currentUserId, setCurrentUserId] = useState<number>();
   const [currentUserRoleId, setCurrentUserRoleId] = useState<number>(); // This is can be artist id or studio id
   const [stepData, setStepData] = useState({});
   const [token, setToken] = useState<string>(); // Keep token temporarily, at the end of this registration, will store this one to loggin
 
   // Step 1: Account type
-  const [role, setRole] = useState<string>("studio");
+  const [role, setRole] = useState<string>("artist");
 
   useEffect(() => {
     // User back from login page
