@@ -136,7 +136,7 @@ export default function Register() {
               color="primary"
               size="large"
               fullWidth
-              bluePastel
+              primaryColor
             >
               Reset Password
             </PrimaryButton>

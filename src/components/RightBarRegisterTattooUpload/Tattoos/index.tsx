@@ -82,7 +82,7 @@ const AddImageItem = ({ onAdd, setLoading }: { onAdd: (data: any) => void; setLo
 
   return (
     <>
-      <PrimaryButton variant="outlined" color="primary" size="medium" bluePastel onClick={handleClick}>
+      <PrimaryButton variant="outlined" color="primary" primaryColor size="medium" onClick={handleClick}>
         Upload images
       </PrimaryButton>
       <input className={classes.fileInput} type={"file"} multiple ref={hiddenFileInput} onChange={handleChange} />

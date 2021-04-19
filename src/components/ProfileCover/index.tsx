@@ -89,7 +89,7 @@ export default function ProfileCover({ data: { avatar, hero_banner, name } }: Pr
         </Typography>
       </div>
 
-      <PrimaryButton variant="contained" color="primary" size="large" bluePastel className={classes.bookButton}>
+      <PrimaryButton variant="contained" color="primary" size="large" primaryColor className={classes.bookButton}>
         Book Appointment
       </PrimaryButton>
     </div>

@@ -21,13 +21,13 @@ const styles = () =>
     },
     viewAllTextWrapper: {
       marginLeft: "auto",
-      color: colors.bluePastel,
+      color: colors.primaryColor,
       cursor: "pointer",
       display: "flex",
       alignItems: "center",
     },
     viewAllText: {
-      color: colors.bluePastel,
+      color: colors.primaryColor,
       fontSize: "14px",
     },
     reviewBlock: {

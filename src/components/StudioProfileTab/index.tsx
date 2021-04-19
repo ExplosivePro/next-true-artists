@@ -32,7 +32,7 @@ const useStyles = makeStyles({
     textTransform: "none",
     fontSize: "16px",
     "&.Mui-selected": {
-      color: colors.bluePastel,
+      color: colors.primaryColor,
     },
   },
   swipeView: {

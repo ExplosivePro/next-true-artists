@@ -79,7 +79,7 @@ export default function UploadTattoos() {
               variant="outlined"
               color="primary"
               size="large"
-              bluePastel
+              primaryColor
               fullWidth
               onClick={() => {
                 push("/dashboard");
@@ -96,7 +96,7 @@ export default function UploadTattoos() {
               fullWidth
               color="primary"
               size="large"
-              bluePastel
+              primaryColor
             >
               Next
             </PrimaryButton>

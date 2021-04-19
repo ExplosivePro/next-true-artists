@@ -325,7 +325,7 @@ export default function Register() {
               color="primary"
               size="large"
               fullWidth
-              bluePastel
+              primaryColor
             >
               Sign up
             </PrimaryButton>
@@ -342,7 +342,7 @@ export default function Register() {
               color="primary"
               size="large"
               className={classes.joinArtistButton}
-              bluePastel
+              primaryColor
               fullWidth
               href={"/register-selection"}
             >

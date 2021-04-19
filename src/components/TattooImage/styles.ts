@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) =>
       },
     },
     title: {
-      backgroundColor: colors.bluePastel,
+      backgroundColor: colors.primaryColor,
       borderTopRightRadius: "20px",
       [theme.breakpoints.down("xs")]: {
         borderTopLeftRadius: "20px",
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) =>
     },
     leftSide: {
       zIndex: 1,
-      backgroundColor: colors.extremeDarkBluePastel,
+      backgroundColor: colors.extremesecondaryColor,
       borderRadius: "20px",
       boxShadow: "6px 3px 6px 0px rgb(0 0 0 / 22%)",
       "& img": {

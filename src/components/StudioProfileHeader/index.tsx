@@ -66,7 +66,7 @@ export default function StudioProfileHeader({ data: { avatar, name, rating, tota
               variant="outlined"
               color="primary"
               size="small"
-              bluePastel
+              primaryColor
               className={classes.operationButton}
             >
               Save
@@ -75,7 +75,7 @@ export default function StudioProfileHeader({ data: { avatar, name, rating, tota
               variant="contained"
               color="primary"
               size="small"
-              bluePastel
+              primaryColor
               className={classes.operationButton}
             >
               Book
@@ -98,10 +98,16 @@ export default function StudioProfileHeader({ data: { avatar, name, rating, tota
         className={classes.cardHeader}
       />
       <Grid container item justify={"center"} className={classes.buttonWrapperMobile}>
-        <PrimaryButton variant="outlined" color="primary" size="small" bluePastel className={classes.operationButton}>
+        <PrimaryButton variant="outlined" color="primary" size="small" primaryColor className={classes.operationButton}>
           Save
         </PrimaryButton>
-        <PrimaryButton variant="contained" color="primary" size="small" bluePastel className={classes.operationButton}>
+        <PrimaryButton
+          variant="contained"
+          color="primary"
+          size="small"
+          primaryColor
+          className={classes.operationButton}
+        >
           Book
         </PrimaryButton>
       </Grid>

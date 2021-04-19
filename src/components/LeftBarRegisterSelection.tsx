@@ -141,7 +141,7 @@ export default function LeftBarRegisterSelection({ step, role }: { step: number;
           </Grid>
           <Grid container item lg={12} md={12} sm={12} alignItems={"center"}>
             <StepItem
-              name={role === "artist" ? "Avatar Upload" : "Logo Upload"}
+              name={role === "artist" ? "Upload Avatar" : "Upload Logo"}
               selected={step === 4}
               checked={step > 4}
             />
@@ -150,9 +150,6 @@ export default function LeftBarRegisterSelection({ step, role }: { step: number;
             <StepItem name={"Work showcase"} selected={step === 5} checked={step > 5} />
           </Grid>
         </Grid>
-        <div className={classes.imageWrapper}>
-          <img className={classes.imageItem} src={"/images/left-bar-register-selection.svg"} alt={"icon"} />
-        </div>
       </Grid>
       <Grid container className={clsx(classes.mobileDisplay)} alignItems={"center"} justify={"center"}>
         <Link href={"/artists"}>
