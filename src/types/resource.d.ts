@@ -20,6 +20,8 @@ declare namespace Resource {
     role: string;
     status: string;
     registerType?: string;
+    artist?: Resource.ArtistDetail;
+    studio?: Resource.StudioDetail;
   }
 
   interface Image {
@@ -45,6 +47,14 @@ declare namespace Resource {
     street_address?: string;
     city?: string;
     country?: string;
+    years_of_experience?: number;
+    website?: string;
+    facebook_url?: string;
+    instagram_url?: string;
+    twitter_url?: string;
+    zip_code?: string;
+    phone_number?: string;
+    specialty?: string;
     styles?: WorkingStyle[];
     tattoos: TattooDetail[];
     avatar?: Image;

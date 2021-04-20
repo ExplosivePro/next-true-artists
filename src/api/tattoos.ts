@@ -37,7 +37,12 @@ export const uploadTattoos = async (data: any): Promise<RestApi.Response> => {
   }
 };
 
-export const updateTattoos = async (artistId: number, tattooId: number, data: any, role: string): Promise<RestApi.Response> => {
+export const updateTattoos = async (
+  artistId: number,
+  tattooId: number,
+  data: any,
+  role: string,
+): Promise<RestApi.Response> => {
   try {
     return await api
       .put(`/api/v1/${role}s/${artistId}/tattoos/${tattooId}`, data)

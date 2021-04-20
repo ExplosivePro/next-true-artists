@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
+import { useRouter } from "next/router";
 
 // Material UI Components
 import Container from "@material-ui/core/Container";
@@ -11,16 +12,22 @@ import Grid from "@material-ui/core/Grid";
 import LeftBarRegisterSelection from "../../components/LeftBarRegisterSelection";
 import RightBarRegisterAccountType from "../../components/RightBarRegisterAccountType";
 import RightBarRegisterPersonalDetail from "../../components/RightBarRegisterPersonalDetail";
-import RightBarArtistRegisterInformation from "../../components/RightBarArtistRegisterInformation";
+import RightBarArtistRegisterInformation, {
+  preloadRightBarArtistRegisterInformationData,
+} from "../../components/RightBarArtistRegisterInformation";
 import RightBarStudioRegisterInformation from "../../components/RightBarStudioRegisterInformation";
-import RightBarRegisterWorkStyle from "../../components/RightBarRegisterWorkStyle";
+import RightBarRegisterWorkStyle, {
+  preloadRightBarRegisterWorkStyleData,
+} from "../../components/RightBarRegisterWorkStyle";
 import RightBarRegisterBusinessSettings from "../../components/RightBarRegisterBusinessSettings";
-import RightBarRegisterAvatarUpload from "../../components/RightBarRegisterAvatarUpload";
+import RightBarRegisterAvatarUpload, {
+  preloadRightBarRegisterAvatarUploadData,
+} from "../../components/RightBarRegisterAvatarUpload";
 import RightBarRegisterTattooUpload from "../../components/RightBarRegisterTattooUpload";
 
 // Utils
 import { getWorkingStyleList } from "../../api";
-import { useAuth, useApp } from "../../contexts";
+import { useApp, useAuth, AuthState, User } from "../../contexts";
 
 import colors from "../../palette";
 
@@ -83,37 +90,49 @@ const useStyles = makeStyles((theme) =>
 
 export default function RegisterSelection({ workingStyles }: Props) {
   const classes = useStyles();
-  const auth = useAuth();
-  const { setRegistrationCallbackData, registrationCallback, userInfo } = useApp();
+  const { replace } = useRouter();
+  const { user, status } = useAuth();
+  const { setRegistrationCallbackData, userInfo } = useApp();
 
   const [step, setStep] = useState(0);
   const [currentUserId, setCurrentUserId] = useState<number>();
   const [currentUserRoleId, setCurrentUserRoleId] = useState<number>(); // This is can be artist id or studio id
   const [stepData, setStepData] = useState({});
-  const [token, setToken] = useState<string>(); // Keep token temporarily, at the end of this registration, will store this one to loggin
 
   // Step 1: Account type
   const [role, setRole] = useState<string>("artist");
 
   useEffect(() => {
-    // User back from login page
-    if (registrationCallback) {
-      const token = localStorage.getItem("AUTH_TOKEN");
-      if (token && userInfo.registerType) {
-        setToken(token);
-        setRole(userInfo.registerType);
-
-        const thisStepData = { 1: { firstName: userInfo.full_name, email: userInfo.email } };
-
-        // Save current user id
-        setCurrentUserId(userInfo.id);
-
-        // Store step data to edit later
-        setStepData({ ...stepData, ...thisStepData });
-
-        // Next step
-        setStep(2);
+    // User already logged in, skip step 1, bring user to the next step
+    if (status === AuthState.authenticated) {
+      if (role === "artist") {
+        setRole("artist");
+        setCurrentUserRoleId(user?.artist?.id);
       }
+
+      if (role === "studio") {
+        setRole("studio");
+        setCurrentUserRoleId(user?.studio?.id);
+      }
+
+      // Step data
+      const preloadStepData = {
+        1: { firstName: user?.full_name, email: user?.email },
+        2: preloadRightBarArtistRegisterInformationData(user?.artist as Resource.ArtistDetail),
+        3: preloadRightBarRegisterWorkStyleData(user?.artist as Resource.ArtistDetail),
+        4: preloadRightBarRegisterAvatarUploadData(user as User),
+      };
+
+      console.log(preloadStepData);
+
+      // Save current user id
+      setCurrentUserId(user?.id);
+
+      // Store step data to edit later
+      setStepData({ ...stepData, ...preloadStepData });
+
+      // Next step
+      setStep(2);
     }
 
     // Reset these value at destructure
@@ -153,11 +172,7 @@ export default function RegisterSelection({ workingStyles }: Props) {
               role={role}
               currentUserId={currentUserId}
               currentData={stepData[1] || {}}
-              onNext={(userId: number, data, token) => {
-                if (token) {
-                  setToken(token);
-                }
-
+              onNext={(userId: number, data) => {
                 const thisStepData = { 1: data };
 
                 // Save current user id
@@ -286,9 +301,7 @@ export default function RegisterSelection({ workingStyles }: Props) {
               currentUserId={currentUserRoleId}
               currentData={stepData[4] || {}}
               onNext={() => {
-                if (token) {
-                  auth.loginByToken(token);
-                }
+                replace("/dashboard");
               }}
               onPreviousStep={() => {
                 setStep(4);

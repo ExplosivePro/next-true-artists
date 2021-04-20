@@ -34,7 +34,7 @@ export enum AuthState {
 enum Roles {
   USERS = "users",
   ARTISTS = "artist",
-  STUDIOS = "studios",
+  STUDIO = "studio",
 }
 
 /*
@@ -90,7 +90,7 @@ export function AuthContext({ children }: Props) {
   }
 
   // Login by token
-  async function loginByToken(token: string) {
+  async function loginByToken(token: string, redirectAfterSuccess = true) {
     try {
       verifyUser(token)
         .then(({ data }) => {
@@ -100,8 +100,10 @@ export function AuthContext({ children }: Props) {
           setAuthHeader(token);
           setStatus(AuthState.authenticated);
 
-          // Navigate to artist page
-          router.replace("/dashboard");
+          // Navigate to dashboard page if redirect allowed
+          if (redirectAfterSuccess) {
+            router.replace("/dashboard");
+          }
         })
         .catch(() => {
           localStorage.removeItem(TOKEN_KEY);
@@ -327,13 +329,14 @@ export type User = {
   full_name: string;
   avatar: Resource.Image;
   role: Roles;
-  artist: Resource.ArtistDetail;
+  artist?: Resource.ArtistDetail;
+  studio?: Resource.StudioDetail;
 };
 
 interface Context {
-  user?: User;
+  user: User;
   login: (email: string, password: string, preventRedirect: boolean) => Promise<RestApi.Response>;
-  loginByToken: (token: string) => void;
+  loginByToken: (token: string, redirectAfterSuccess: boolean) => void;
   socialLogin: (socialId: number, email: string, preventRedirect: boolean) => Promise<RestApi.Response>;
   register: (payload: Register.ApiPayload) => void;
   socialRegister: (payload: Register.ApiSocialPayload) => Promise<RestApi.Response>;

@@ -1,5 +1,5 @@
 // External
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // Material UI Components
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
@@ -16,7 +16,7 @@ import PrimaryButton from "./PrimaryButton";
 import { updateArtistAvatar, updateStudioAvatar } from "../api";
 
 // Context
-import { useApp } from "../contexts";
+import { useApp, User } from "../contexts";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -75,6 +75,10 @@ export default function RightBarRegisterAvatarUpload({
   const [fileData, setFileData] = useState<File | null>(currentData.fileData || null);
   const [preview, setPreview] = useState<any>(currentData.preview || "");
 
+  useEffect(() => {
+    setPreview(currentData.preview || "");
+  }, [currentData]);
+
   const handleClick = () => {
     // @ts-ignore
     hiddenFileInput?.current?.click();
@@ -96,42 +100,59 @@ export default function RightBarRegisterAvatarUpload({
   const goNext = async () => {
     if (currentUserId) {
       if (role === "artist") {
-        // Call APIs to create studio profile
-        const response = await updateArtistAvatar({
-          id: currentUserId,
-          file: fileData,
-        });
+        if (fileData) {
+          // Call APIs to create studio profile
+          const response = await updateArtistAvatar({
+            id: currentUserId,
+            file: fileData,
+          });
 
-        const { error, errors } = response;
-        // No error happens
-        if (!error) {
+          const { error, errors } = response;
+          // No error happens
+          if (!error) {
+            onNext &&
+              onNext({
+                fileData,
+                preview,
+              });
+          } else {
+            app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+          }
+        } else {
+          // Skip to the next step
           onNext &&
             onNext({
               fileData,
               preview,
             });
-        } else {
-          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
         }
       }
 
       if (role === "studio") {
-        // Call APIs to create studio profile
-        const response = await updateStudioAvatar({
-          id: currentUserId,
-          file: fileData,
-        });
+        if (fileData) {
+          // Call APIs to create studio profile
+          const response = await updateStudioAvatar({
+            id: currentUserId,
+            file: fileData,
+          });
 
-        const { error, errors } = response;
-        // No error happens
-        if (!error) {
+          const { error, errors } = response;
+          // No error happens
+          if (!error) {
+            onNext &&
+              onNext({
+                fileData,
+                preview,
+              });
+          } else {
+            app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+          }
+        } else {
           onNext &&
             onNext({
               fileData,
               preview,
             });
-        } else {
-          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
         }
       }
     }
@@ -197,6 +218,31 @@ export default function RightBarRegisterAvatarUpload({
     </Grid>
   );
 }
+
+export const preloadRightBarRegisterAvatarUploadData = ({ role, artist, studio }: User) => {
+  switch (role) {
+    case "artist": {
+      return {
+        file: null,
+        preview: artist?.avatar?.image_url,
+      };
+    }
+
+    case "studio": {
+      return {
+        file: null,
+        preview: studio?.avatar?.image_url,
+      };
+    }
+
+    default: {
+      return {
+        file: null,
+        preview: "",
+      };
+    }
+  }
+};
 
 interface Props {
   role: string;

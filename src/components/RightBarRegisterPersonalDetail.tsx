@@ -16,10 +16,10 @@ import { PasswordValidationRegex } from "../constants";
 import Link from "next/link";
 import colors from "../palette";
 
-import { editUser, registerUser, setAuthHeader } from "../api";
+import { editUser, registerUser } from "../api";
 
 // Context
-import { useApp } from "../contexts";
+import { useApp, useAuth } from "../contexts";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -68,6 +68,7 @@ export default function RightBarRegisterPersonalDetail({
   role,
 }: Props) {
   const app = useApp();
+  const { loginByToken } = useAuth();
 
   // Validation schema
   const validationSchema = useMemo(
@@ -125,8 +126,8 @@ export default function RightBarRegisterPersonalDetail({
       const { error, data, errors } = response;
       // No error happens
       if (!error) {
-        // Set token for auth APIs call later
-        setAuthHeader(data.auth_token);
+        // Log in
+        loginByToken(data.auth_token, false);
 
         onNext && onNext(data?.user.id, { firstName, lastName, email, password, confirmPassword }, data.auth_token);
       } else {

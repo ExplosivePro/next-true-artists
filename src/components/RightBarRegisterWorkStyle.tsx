@@ -167,6 +167,15 @@ export default function RightBarRegisterWorkStyle({ data = [], currentUserId, cu
   );
 }
 
+export const preloadRightBarRegisterWorkStyleData = (data: Resource.ArtistDetail) => {
+  const styleData = {};
+  data.styles?.map((style) => {
+    styleData[style.id] = true;
+  });
+
+  return styleData;
+};
+
 interface Props {
   data: Resource.WorkingStyle[];
   currentUserId: number | undefined;

@@ -93,6 +93,20 @@ const getDefaultValue = (settings: any[], values?: any) => {
   }
 };
 
+// Preload setting values base on data returned from server
+const preloadSettingValues = (settingMap: any[], artistProfile: Resource.ArtistDetail) => {
+  const checkList: any[] = [];
+  settingMap.map((item) => {
+    item.settings.map((setting: any) => {
+      if (artistProfile[setting.name]) {
+        checkList.push(setting.name);
+      }
+    });
+  });
+
+  return checkList;
+};
+
 export default function RightBarArtistRegisterInformation({
   onPreviousStep,
   onNext,
@@ -533,6 +547,47 @@ export default function RightBarArtistRegisterInformation({
     </Grid>
   );
 }
+
+// export const preloadSettingValues = (artistDetails: Resource.ArtistDetail) => {
+//   return preloadSettingValues(artistSettingList, artistDetails)
+// }
+
+export const preloadRightBarArtistRegisterInformationData = (data: Resource.ArtistDetail) => {
+  const {
+    bio,
+    years_of_experience,
+    minimum_spend,
+    price_per_hour,
+    currency_code,
+    website,
+    facebook_url,
+    instagram_url,
+    twitter_url,
+    street_address,
+    zip_code,
+    country,
+    phone_number,
+    specialty,
+  } = data;
+
+  return {
+    bio,
+    yearsOfExperience: years_of_experience,
+    checked: preloadSettingValues(artistSettingList, data),
+    minimumSpend: minimum_spend,
+    pricePerHour: price_per_hour,
+    currency: currency_code,
+    website,
+    facebook: facebook_url,
+    instagram: instagram_url,
+    twitter: twitter_url,
+    streetAddress: street_address,
+    zipCode: zip_code,
+    country,
+    phoneNumber: phone_number,
+    specialties: specialty?.split(","),
+  };
+};
 
 interface Props {
   currentUserId: number | undefined;
