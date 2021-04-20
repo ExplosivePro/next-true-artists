@@ -14,11 +14,17 @@ export const useStyles = makeStyles({
   tableContainer: {
     marginTop: "10px",
   },
-  tableActions: {
-    textAlign: "center",
+  divider: {
+    marginTop: "15px",
+    marginBottom: "15px",
   },
   paginationWrapper: {
     border: "solid thin lightGrey",
+  },
+  avatar: {
+    textAlign: "center",
+    width: "120px",
+    height: "120px",
   },
 });
 
@@ -53,22 +59,52 @@ export const useLayoutStyles = makeStyles(() =>
 export const useMenuStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: drawerWidth,
+      width: "100%",
+      maxWidth: 360,
+      backgroundColor: theme.palette.background.paper,
+    },
+    list: {
+      paddingRight: "10px",
+    },
+    listItem: {
+      borderTopRightRadius: "25px",
+      borderBottomRightRadius: "25px",
+      cursor: "pointer",
     },
     nested: {
-      paddingLeft: theme.spacing(4),
-      backgroundColor: colors.white,
-    },
-    activeMenu: {
-      width: drawerWidth,
-      backgroundColor: colors.brightBlue,
-      paddingLeft: theme.spacing(2),
+      paddingLeft: theme.spacing(8),
       borderTopRightRadius: "25px",
       borderBottomRightRadius: "25px",
       "& .MuiListItemText-root": {
-        borderLeft: `solid 4px ${colors.bluePastel}`,
         paddingLeft: "10px",
       },
+    },
+    activeBar: {
+      backgroundColor: colors.defaultColor,
+      borderTopRightRadius: "25px",
+      borderBottomRightRadius: "25px",
+      color: "white",
+      fontWeight: "bold",
+      "&:hover": {
+        backgroundColor: colors.defaultColor,
+        borderTopRightRadius: "25px",
+        borderBottomRightRadius: "25px",
+      },
+      "& span": {
+        fontWeight: "bold",
+      },
+      "& svg": {
+        fill: colors.white,
+      },
+    },
+    activeSubBar: {
+      "& .MuiListItemText-root": {
+        borderLeft: `solid 4px ${colors.defaultColor}`,
+        color: colors.defaultColor,
+      },
+    },
+    listItemRoot: {
+      minWidth: "35px",
     },
   }),
 );

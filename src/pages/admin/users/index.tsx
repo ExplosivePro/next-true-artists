@@ -19,6 +19,7 @@ import Typography from "@material-ui/core/Typography";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 
 import AdminBody from "src/components/Admin/AdminBody";
+import Loading from "src/components/Loading";
 
 import { getUserList } from "../api";
 import { useStyles, StyledTableCell, StyledTableRow } from "../styles";
@@ -74,7 +75,7 @@ export default function Users() {
         <Grid item xs={12} sm={6} md={8} lg={8}>
           <Breadcrumbs>
             <Typography variant="h6">
-              <Link href="/admin">Admin</Link>
+              <Link href="/admin">Dashboard</Link>
             </Typography>
             <Typography variant="h6">Users</Typography>
           </Breadcrumbs>
@@ -104,7 +105,10 @@ export default function Users() {
 
       <Grid item xs={12}>
         {userListStatus === "loading" ? (
-          <Alert severity="info">Loading... </Alert>
+          <>
+            <Alert severity="info">Loading... </Alert>
+            <Loading />
+          </>
         ) : userListStatus === "error" ? (
           <Alert severity="error">{`Retrieving Users - ${userListError}`}</Alert>
         ) : userListData.length > 0 ? (
