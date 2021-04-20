@@ -26,6 +26,9 @@ export const useStyles = makeStyles({
     width: "120px",
     height: "120px",
   },
+  editUserCard: {
+    width: "65%",
+  },
 });
 
 export const useLayoutStyles = makeStyles(() =>

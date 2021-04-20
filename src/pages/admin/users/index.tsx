@@ -105,10 +105,10 @@ export default function Users() {
 
       <Grid item xs={12}>
         {userListStatus === "loading" ? (
-          <>
+          <React.Fragment>
             <Alert severity="info">Loading... </Alert>
             <Loading />
-          </>
+          </React.Fragment>
         ) : userListStatus === "error" ? (
           <Alert severity="error">{`Retrieving Users - ${userListError}`}</Alert>
         ) : userListData.length > 0 ? (
