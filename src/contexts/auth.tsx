@@ -34,7 +34,7 @@ export enum AuthState {
 enum Roles {
   USERS = "users",
   ARTISTS = "artist",
-  STUDIO = "studio",
+  STUDIO = "studio_manager",
 }
 
 /*
@@ -334,7 +334,7 @@ export type User = {
 };
 
 interface Context {
-  user: User;
+  user?: User;
   login: (email: string, password: string, preventRedirect: boolean) => Promise<RestApi.Response>;
   loginByToken: (token: string, redirectAfterSuccess: boolean) => void;
   socialLogin: (socialId: number, email: string, preventRedirect: boolean) => Promise<RestApi.Response>;

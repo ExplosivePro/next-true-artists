@@ -432,6 +432,36 @@ export default function RightBarStudioRegisterInformation({
   );
 }
 
+export const preloadRightBarStudioRegisterInformationData = ({
+  name,
+  email,
+  street_address,
+  city,
+  country,
+  state,
+  zip_code,
+  phone_number,
+  instagram_url,
+  website_url,
+  facebook_url,
+  twitter_url,
+}: Resource.StudioDetail) => {
+  return {
+    name,
+    email,
+    streetAddress: street_address,
+    city,
+    country,
+    state,
+    zipCode: zip_code,
+    phoneNumber: phone_number,
+    instagram: instagram_url,
+    website: website_url,
+    facebook: facebook_url,
+    twitter: twitter_url,
+  };
+};
+
 interface Props {
   currentUserId: number | undefined;
   currentUserRoleId: number | undefined;

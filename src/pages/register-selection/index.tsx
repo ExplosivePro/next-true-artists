@@ -15,11 +15,15 @@ import RightBarRegisterPersonalDetail from "../../components/RightBarRegisterPer
 import RightBarArtistRegisterInformation, {
   preloadRightBarArtistRegisterInformationData,
 } from "../../components/RightBarArtistRegisterInformation";
-import RightBarStudioRegisterInformation from "../../components/RightBarStudioRegisterInformation";
+import RightBarStudioRegisterInformation, {
+  preloadRightBarStudioRegisterInformationData,
+} from "../../components/RightBarStudioRegisterInformation";
 import RightBarRegisterWorkStyle, {
   preloadRightBarRegisterWorkStyleData,
 } from "../../components/RightBarRegisterWorkStyle";
-import RightBarRegisterBusinessSettings from "../../components/RightBarRegisterBusinessSettings";
+import RightBarRegisterBusinessSettings, {
+  preloadRightBarRegisterBusinessSettingsData,
+} from "../../components/RightBarRegisterBusinessSettings";
 import RightBarRegisterAvatarUpload, {
   preloadRightBarRegisterAvatarUploadData,
 } from "../../components/RightBarRegisterAvatarUpload";
@@ -102,15 +106,43 @@ export default function RegisterSelection({ workingStyles }: Props) {
   // Step 1: Account type
   const [role, setRole] = useState<string>("artist");
 
+  const getPreloadData = (step: number) => {
+    switch (step) {
+      case 2: {
+        if (user.role === "artist") {
+          return preloadRightBarArtistRegisterInformationData(user?.artist as Resource.ArtistDetail);
+        }
+
+        if (user.role === "studio_manager") {
+          return preloadRightBarStudioRegisterInformationData(user?.studio as Resource.StudioDetail);
+        }
+
+        return {};
+      }
+      case 3: {
+        if (user.role === "artist") {
+          return preloadRightBarRegisterWorkStyleData(user?.artist as Resource.ArtistDetail);
+        }
+
+        if (user.role === "studio_manager") {
+          return preloadRightBarRegisterBusinessSettingsData(user?.studio as Resource.StudioDetail);
+        }
+      }
+      default: {
+        return {};
+      }
+    }
+  };
+
   useEffect(() => {
     // User already logged in, skip step 1, bring user to the next step
     if (status === AuthState.authenticated) {
-      if (role === "artist") {
+      if (user.role === "artist") {
         setRole("artist");
         setCurrentUserRoleId(user?.artist?.id);
       }
 
-      if (role === "studio") {
+      if (user.role === "studio_manager") {
         setRole("studio");
         setCurrentUserRoleId(user?.studio?.id);
       }
@@ -118,12 +150,10 @@ export default function RegisterSelection({ workingStyles }: Props) {
       // Step data
       const preloadStepData = {
         1: { firstName: user?.full_name, email: user?.email },
-        2: preloadRightBarArtistRegisterInformationData(user?.artist as Resource.ArtistDetail),
-        3: preloadRightBarRegisterWorkStyleData(user?.artist as Resource.ArtistDetail),
+        2: getPreloadData(2),
+        3: getPreloadData(3),
         4: preloadRightBarRegisterAvatarUploadData(user as User),
       };
-
-      console.log(preloadStepData);
 
       // Save current user id
       setCurrentUserId(user?.id);

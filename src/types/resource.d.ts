@@ -85,6 +85,20 @@ declare namespace Resource {
   interface StudioDetail {
     id: number;
     name: string;
+    email?: string;
+    state?: string;
+    zip_code?: string;
+    phone_number?: string;
+    instagram_url?: string;
+    website_url?: string;
+    facebook_url?: string;
+    twitter_url?: string;
+    accepted_payment_methods?: string;
+    price_per_hour?: number;
+    languages?: string;
+    services?: string;
+    minimum_spend?: string;
+    currency_code?: string;
     city: string;
     country: string;
     rating: number;

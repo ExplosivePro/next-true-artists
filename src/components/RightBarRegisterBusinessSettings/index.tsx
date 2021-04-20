@@ -79,6 +79,19 @@ const getDefaultValue = (settings: any[]) => {
   return checkList;
 };
 
+const getPreloadSettingValue = (settings: any[], data: Resource.StudioDetail) => {
+  const checkList: any[] = [];
+  settings.map((item) => {
+    item.settings.map((setting: any) => {
+      if (data[setting.name]) {
+        checkList.push(setting.name);
+      }
+    });
+  });
+
+  return checkList;
+};
+
 export default function RightBarRegisterBusinessSettings({ currentUserId, currentData, onPrevious, onNext }: Props) {
   const classes = useStyles();
   const app = useApp();
@@ -250,6 +263,20 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, curren
     </Grid>
   );
 }
+
+export const preloadRightBarRegisterBusinessSettingsData = (data: Resource.StudioDetail) => {
+  const { accepted_payment_methods, price_per_hour, languages, services, minimum_spend, currency_code } = data;
+
+  return {
+    minimumRate: minimum_spend || "",
+    pricePerHour: price_per_hour,
+    currency: currency_code || "",
+    paymentMethods: accepted_payment_methods?.split(","),
+    checked: getPreloadSettingValue(settingList, data),
+    language: languages?.split(","),
+    services: services?.split(","),
+  };
+};
 
 interface Props {
   currentData: any;

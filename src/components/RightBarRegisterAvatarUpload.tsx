@@ -228,7 +228,7 @@ export const preloadRightBarRegisterAvatarUploadData = ({ role, artist, studio }
       };
     }
 
-    case "studio": {
+    case "studio_manager": {
       return {
         file: null,
         preview: studio?.avatar?.image_url,
