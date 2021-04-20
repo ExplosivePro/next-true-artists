@@ -4834,9 +4834,10 @@ react-slick@^0.28.0:
     lodash.debounce "^4.0.8"
     resize-observer-polyfill "^1.5.0"
 
-"react-social-login@https://github.com/hdminh247/react-social-login.git":
+react-social-login@^3.4.13:
   version "3.4.13"
-  resolved "https://github.com/hdminh247/react-social-login.git#52f83cce14d6f2554be7eadbea38e3faa0ea5b4b"
+  resolved "https://registry.yarnpkg.com/react-social-login/-/react-social-login-3.4.13.tgz#ec9c5bd3b76b2d874bae6fcb124bfa8abda590c4"
+  integrity sha512-jZgx9WQSUEQg4liwTidnlc+LJSt3sndUof8AgrRwBWqlBiHd6m73eR7AZMJV3Ap1S6VHtf9iCDzzm6tsLIzXpA==
   dependencies:
     fetch-jsonp "1.1.3"
     prop-types "15.7.2"

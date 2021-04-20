@@ -26,6 +26,7 @@ const colors = {
   darkYellow: "#eca400",
   chipYellow: "#f4c55b",
   standardViolet: "#7c44c3",
+  defaultColor: "rgb(84, 105, 212)",
 };
 
 export default colors;
