@@ -54,35 +54,35 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-  children: JSX.Element;
+  children: JSX.Element[];
 }
 
 export default function AdminBody({ children }: Props) {
   const classes = useStyles();
-  const { user, logOut } = useAuth();
+  // const { user, logOut } = useAuth();
 
-  if (user?.role?.toLowerCase() === "admin")
-    return (
-      <div className={classes.root}>
-        <AppBar />
-        <nav className={classes.drawer}>
-          <Drawer
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            variant="permanent"
-            open
-          >
-            <LeftBar />
-          </Drawer>
-        </nav>
-        <main className={classes.content}>
-          <div className={classes.toolbar} />
+  return (
+    <div className={classes.root}>
+      <AppBar />
+      <nav className={classes.drawer}>
+        <Drawer
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+          variant="permanent"
+          open
+        >
+          <LeftBar />
+        </Drawer>
+      </nav>
+      <main className={classes.content}>
+        <div className={classes.toolbar} />
+        {children}
+      </main>
+    </div>
+  );
 
-          {children}
-        </main>
-      </div>
-    );
+  /*   // if (user?.role?.toLowerCase() === "admin")
   else
     return (
       <div className={classes.root}>
@@ -105,5 +105,5 @@ export default function AdminBody({ children }: Props) {
           )}
         </main>
       </div>
-    );
+    ); */
 }
