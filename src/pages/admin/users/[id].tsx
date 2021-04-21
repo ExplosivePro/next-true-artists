@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
 import Link from "next/link";
 import Head from "next/head";
 
@@ -14,7 +15,6 @@ import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Avatar from "@material-ui/core/Avatar";
 
-import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -23,9 +23,11 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import AdminBody from "src/components/Admin/AdminBody";
 import Loading from "src/components/Loading";
 import PrimaryButton from "src/components/PrimaryButton";
+import { TextInput, SelectInput, InfoAlert } from "src/components/Admin/FormInputs";
+import { user_roles, user_status } from "../constants";
 
 import { useStyles } from "../styles";
-import { getUser } from "../api";
+import { getUser, updateUser, resetUserPassword } from "../api";
 
 export default function User() {
   const router = useRouter();
@@ -49,6 +51,9 @@ export default function User() {
     }
   }, []);
 
+  // Create an Alert for info feedback
+  const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
+
   const [editMode, setEditMode] = useState(false);
   const [resetPasswordConfirm, setResetPasswordConfirm] = useState(false);
 
@@ -66,6 +71,23 @@ export default function User() {
 
   const resetPasswordConfirmClose = () => {
     setResetPasswordConfirm(false);
+  };
+
+  // reset user password
+  const handleResetPassword = async () => {
+    resetPasswordConfirmClose();
+    if (!userData?.email) setInfoAlert({ severity: "error", message: "User e-mail not found !" });
+    else
+      try {
+        const response = await resetUserPassword({ email: userData?.email });
+        if (!response) setInfoAlert({ severity: "error", message: "Error resetting password !" });
+        else setInfoAlert({ severity: "success", message: "Password reset successfull" });
+      } catch (error) {
+        setInfoAlert({ severity: "error", message: `Error resetting password! - ${error}` });
+      }
+    setTimeout(() => {
+      setInfoAlert({ severity: "info", message: "" });
+    }, 4500);
   };
 
   return (
@@ -108,8 +130,27 @@ export default function User() {
                     <Grid container item justify="center">
                       <Avatar alt={userData?.full_name} src="" className={classes.avatar} />
                     </Grid>
-                    <Typography align="center">{userData?.full_name}</Typography>
-                    <Typography align="center">{userData?.role}</Typography>
+
+                    <Grid container justify="center">
+                      <Grid item xs={10}>
+                        <Typography color="textPrimary" align="center">
+                          <b>{userData?.full_name}</b>
+                        </Typography>
+                        <pre>
+                          <Typography variant="body2">
+                            <b>Role:</b>
+                            {"   "}
+                            {userData?.role}
+                          </Typography>
+                          <Typography variant="body2">
+                            <b>Status:</b>
+                            {"   "}
+                            {userData?.status}
+                          </Typography>
+                        </pre>
+                      </Grid>
+                    </Grid>
+
                     <Grid container item justify="space-around" className={classes.buttonWrapper}>
                       <PrimaryButton
                         variant={editMode ? "outlined" : "contained"}
@@ -125,7 +166,10 @@ export default function User() {
                     </Grid>
                   </CardContent>
                 </Card>
+
+                {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
                 <Divider className={classes.divider} />
+
                 <Card>
                   <Typography>
                     <b>Contact Information</b>
@@ -155,6 +199,7 @@ export default function User() {
           name={userData?.full_name}
           close={resetPasswordConfirmClose}
           isOpen={resetPasswordConfirm}
+          handleResetPassword={handleResetPassword}
         />
       ) : (
         <React.Fragment />
@@ -166,42 +211,102 @@ export default function User() {
 function EditProfile({ userData, editModeClose }: any) {
   const classes = useStyles();
 
+  // Create an Alert for info feedback
+  const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
+
+  const getFormDefaultValues = () => ({
+    email: userData.email,
+    role: userData.role,
+    status: userData.status,
+  });
+
+  const {
+    register,
+    handleSubmit,
+    errors,
+    control,
+    formState: { isSubmitting },
+  } = useForm({
+    defaultValues: getFormDefaultValues(),
+    shouldUnregister: false,
+  });
+
+  const onSubmit = async (formValues: Admin.User) => {
+    try {
+      const response = await updateUser(formValues, userData?.id);
+      if (!response) setInfoAlert({ severity: "error", message: "Error updating User !" });
+      else setInfoAlert({ severity: "success", message: "User updated successfully" });
+    } catch (error) {
+      setInfoAlert({ severity: "error", message: `Error updating User! - ${error}` });
+    }
+    setTimeout(() => {
+      setInfoAlert({ severity: "info", message: "" });
+    }, 4500);
+  };
+
   return (
     <React.Fragment>
       <Card className={classes.editUserCard}>
         <Typography>
           <b>Edit Profile</b>
         </Typography>
+        {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <CardContent>
+            <Grid container direction="column" spacing={2}>
+              <Grid item xs={12} md={6}>
+                <TextInput
+                  name="email"
+                  register={register}
+                  required={true}
+                  label="Email Address *"
+                  errors={!!errors.email}
+                  errorMessage={errors.email?.message}
+                />
+              </Grid>
 
-        <CardContent>
-          <Grid container item xs={6} direction="column">
-            <TextField variant="outlined" margin="dense" label="Name" defaultValue={userData.full_name} />
-            <TextField
-              variant="outlined"
-              margin="dense"
-              label="Email Address"
-              type="email"
-              defaultValue={userData.email}
-            />
-            <TextField variant="outlined" margin="dense" label="Role" defaultValue={userData.role} />
-            <TextField variant="outlined" margin="dense" label="Status" defaultValue={userData.status ?? "Pending"} />
-          </Grid>
-        </CardContent>
+              <Grid item xs={12} md={6}>
+                <SelectInput
+                  name="role"
+                  control={control}
+                  label="Role *"
+                  errors={!!errors.role}
+                  errorMessage={errors.role?.message}
+                  dropDownList={user_roles.map((role) => ({ id: role, name: role }))}
+                />
+              </Grid>
 
-        <CardActions>
-          <PrimaryButton variant="outlined" size="small" bluePastel onClick={editModeClose}>
-            Cancel
-          </PrimaryButton>
-          <PrimaryButton size="small" bluePastel onClick={editModeClose}>
-            Save Profile
-          </PrimaryButton>
-        </CardActions>
+              <Grid item xs={12} md={6}>
+                <SelectInput
+                  name="status"
+                  control={control}
+                  label="Status"
+                  errors={!!errors.status}
+                  errorMessage={errors.status?.message}
+                  dropDownList={user_status.map((status) => ({ id: status, name: status }))}
+                />
+              </Grid>
+            </Grid>
+          </CardContent>
+
+          <CardActions>
+            <Grid container item xs={12} md={6} justify="space-around">
+              <PrimaryButton variant="outlined" size="small" bluePastel onClick={editModeClose}>
+                Cancel
+              </PrimaryButton>
+
+              <PrimaryButton size="small" bluePastel disabled={isSubmitting} type="submit">
+                Save Profile
+              </PrimaryButton>
+            </Grid>
+          </CardActions>
+        </form>
       </Card>
     </React.Fragment>
   );
 }
 
-function ConfirmResetPassword({ name, close, isOpen }: any) {
+function ConfirmResetPassword({ name, close, isOpen, handleResetPassword }: any) {
   return (
     <React.Fragment>
       <Dialog open={isOpen} onClose={close}>
@@ -215,7 +320,7 @@ function ConfirmResetPassword({ name, close, isOpen }: any) {
           <PrimaryButton variant="outlined" size="small" bluePastel onClick={close}>
             Cancel
           </PrimaryButton>
-          <PrimaryButton size="small" bluePastel onClick={() => console.log(name)}>
+          <PrimaryButton size="small" bluePastel onClick={handleResetPassword}>
             Reset Password
           </PrimaryButton>
         </DialogActions>

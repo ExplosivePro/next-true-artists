@@ -97,7 +97,7 @@ export const flagTattoo = async (tattooId: number | undefined) => {
 };
 
 // reset password
-export const resetUserPassword = async (email: string) => {
-  const { data } = await api.post(`/api/v1/admin/passwords`, email);
+export const resetUserPassword = async (payload: { email: string }) => {
+  const { data } = await api.post(`/api/v1/admin/passwords`, payload);
   return data;
 };
