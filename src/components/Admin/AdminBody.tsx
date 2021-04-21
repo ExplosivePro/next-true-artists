@@ -1,14 +1,13 @@
 import React from "react";
 import Link from "next/link";
 
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import Typography from "@material-ui/core/Typography";
 
 import AppBar from "src/components/Admin/AppBar";
 import LeftBar from "src/components/Admin/LeftBar";
 import { useAuth } from "src/contexts";
-import { useLayoutStyles } from "src/pages/admin/styles";
+import { useLayoutStyles } from "./styles";
 
 interface Props {
   children: JSX.Element[];

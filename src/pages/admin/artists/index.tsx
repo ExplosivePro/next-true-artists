@@ -23,7 +23,7 @@ import AdminBody from "src/components/Admin/AdminBody";
 import Loading from "src/components/Loading";
 
 import { getArtistList } from "./api";
-import { useStyles, StyledTableCell, StyledTableRow } from "../styles";
+import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
 
 export default function Artists() {
   const classes = useStyles();

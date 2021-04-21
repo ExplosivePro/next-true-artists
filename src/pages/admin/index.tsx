@@ -9,10 +9,11 @@ import AdminBody from "src/components/Admin/AdminBody";
 export default function Dashboard() {
   return (
     <AdminBody>
+      <Head>
+        <title>Admin - Dashboard</title>
+      </Head>
+
       <Container maxWidth="lg">
-        <Head>
-          <title>Admin - Dashboard</title>
-        </Head>
         <Typography variant={"h5"}>
           <b>Admin Dashboard</b>
         </Typography>

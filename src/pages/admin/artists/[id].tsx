@@ -31,7 +31,7 @@ import PrimaryButton from "src/components/PrimaryButton";
 import { TextInput, SelectInput, InfoAlert } from "src/components/Admin/FormInputs";
 import { user_roles, user_status } from "../constants";
 
-import { useStyles } from "../styles";
+import { useStyles } from "./styles";
 import { getArtist, approveArtist, rejectArtist } from "./api";
 
 export default function Artist() {
