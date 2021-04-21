@@ -45,7 +45,7 @@ export default function Users() {
     router.replace({
       pathname: router.pathname,
       query: searchValue
-        ? { full_name: `*${searchValue}*`, per_page: rowsPerPage, page: page + 1 }
+        ? { query: searchValue, per_page: rowsPerPage, page: page + 1 }
         : { per_page: rowsPerPage, page: page + 1 },
     });
     setTimeout(() => userListRefetch(), 500);

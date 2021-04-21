@@ -29,6 +29,10 @@ export const useStyles = makeStyles({
   editUserCard: {
     width: "65%",
   },
+  closeButton: {
+    float: "right",
+    color: colors.grey[500],
+  },
 });
 
 export const useLayoutStyles = makeStyles(() =>

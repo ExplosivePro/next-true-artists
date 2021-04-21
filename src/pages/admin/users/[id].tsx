@@ -19,6 +19,8 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 
 import AdminBody from "src/components/Admin/AdminBody";
 import Loading from "src/components/Loading";
@@ -152,13 +154,8 @@ export default function User() {
                     </Grid>
 
                     <Grid container item justify="space-around" className={classes.buttonWrapper}>
-                      <PrimaryButton
-                        variant={editMode ? "outlined" : "contained"}
-                        size="small"
-                        bluePastel
-                        onClick={editMode ? editModeClose : editModeOpen}
-                      >
-                        {editMode ? "Cancel Edit" : "Edit Profile"}
+                      <PrimaryButton variant="contained" size="small" bluePastel onClick={editModeOpen}>
+                        Edit Profile
                       </PrimaryButton>
                       <PrimaryButton size="small" bluePastel onClick={resetPasswordConfirmOpen}>
                         Reset Password
@@ -247,9 +244,13 @@ function EditProfile({ userData, editModeClose }: any) {
   return (
     <React.Fragment>
       <Card className={classes.editUserCard}>
+        <IconButton className={classes.closeButton} onClick={editModeClose}>
+          <CloseIcon />
+        </IconButton>
         <Typography>
           <b>Edit Profile</b>
         </Typography>
+
         {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
         <form onSubmit={handleSubmit(onSubmit)}>
           <CardContent>
