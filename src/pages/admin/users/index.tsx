@@ -22,7 +22,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 import AdminBody from "src/components/Admin/AdminBody";
 import Loading from "src/components/Loading";
 
-import { getUserList } from "../api";
+import { getUserList } from "./api";
 import { useStyles, StyledTableCell, StyledTableRow } from "../styles";
 
 export default function Users() {

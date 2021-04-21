@@ -3,6 +3,7 @@ declare namespace Admin {
     id?: number;
     full_name: string;
     email: string;
+    slug: string;
     role: string;
     status: string;
     password: string;
@@ -43,12 +44,10 @@ declare namespace Admin {
     state: string;
     city: string;
     country: string;
-    lat: number;
-    lon: number;
     cosmetic_tattoos: boolean;
     accepted_payment_methods: string;
     accepting_guest_artist: boolean;
-    parking: string;
+    parking: boolean;
     piercings: boolean;
     vegan_ink: boolean;
     services: string;

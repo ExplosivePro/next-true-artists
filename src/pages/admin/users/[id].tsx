@@ -29,7 +29,7 @@ import { TextInput, SelectInput, InfoAlert } from "src/components/Admin/FormInpu
 import { user_roles, user_status } from "../constants";
 
 import { useStyles } from "../styles";
-import { getUser, updateUser, resetUserPassword } from "../api";
+import { getUser, updateUser, resetUserPassword } from "./api";
 
 export default function User() {
   const router = useRouter();

@@ -32,7 +32,7 @@ import { TextInput, SelectInput, InfoAlert } from "src/components/Admin/FormInpu
 import { user_roles, user_status } from "../constants";
 
 import { useStyles } from "../styles";
-import { getArtist, approveArtist, rejectArtist } from "../api";
+import { getArtist, approveArtist, rejectArtist } from "./api";
 
 export default function Artist() {
   const router = useRouter();

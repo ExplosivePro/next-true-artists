@@ -1,7 +1,6 @@
 import { makeStyles, createStyles, Theme, withStyles } from "@material-ui/core/styles";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
-import Tooltip from "@material-ui/core/Tooltip";
 
 import colors from "src/palette";
 
@@ -131,15 +130,6 @@ export const useMenuStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const useFormInputStyles = makeStyles({
-  alertWrapper: {
-    marginTop: "10px",
-  },
-  buttonWrapper: {
-    marginTop: "15px",
-  },
-});
-
 export const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
     head: {
@@ -173,17 +163,6 @@ export const StyledTableRow = withStyles((theme: Theme) =>
     },
   }),
 )(TableRow);
-
-export const StyledTooltip = withStyles(() =>
-  createStyles({
-    arrow: {
-      color: colors.chipYellow,
-    },
-    tooltip: {
-      backgroundColor: colors.darkBluePastel,
-    },
-  }),
-)(Tooltip);
 
 export const useImageStyles = makeStyles(() =>
   createStyles({

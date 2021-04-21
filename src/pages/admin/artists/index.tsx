@@ -22,7 +22,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 import AdminBody from "src/components/Admin/AdminBody";
 import Loading from "src/components/Loading";
 
-import { getArtistList } from "../api";
+import { getArtistList } from "./api";
 import { useStyles, StyledTableCell, StyledTableRow } from "../styles";
 
 export default function Artists() {
@@ -32,7 +32,7 @@ export default function Artists() {
   // Fetch Artist list
   const {
     status: artistListStatus,
-    data: { artists: artistListData = [], meta = { limit_value: 0, total_count: 0 } } = {},
+    data: { artists: artistListData = [], meta = { limit_value: 60, total_count: 0 } } = {},
     error: artistListError,
     refetch: artistListRefetch,
   } = useQuery("artistList", async () => await getArtistList(location.search));
