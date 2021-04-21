@@ -1,11 +1,11 @@
 import { makeStyles, createStyles, Theme, withStyles } from "@material-ui/core/styles";
-import colors from "src/palette";
-
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import Tooltip from "@material-ui/core/Tooltip";
 
-const drawerWidth = 150;
+import colors from "src/palette";
+
+const drawerWidth = 180;
 
 export const useStyles = makeStyles({
   buttonWrapper: {
@@ -15,8 +15,8 @@ export const useStyles = makeStyles({
     marginTop: "10px",
   },
   divider: {
-    marginTop: "15px",
-    marginBottom: "15px",
+    marginTop: "10px",
+    marginBottom: "10px",
   },
   paginationWrapper: {
     border: "solid thin lightGrey",
@@ -25,6 +25,7 @@ export const useStyles = makeStyles({
     textAlign: "center",
     width: "120px",
     height: "120px",
+    marginBottom: "10px",
   },
   editUserCard: {
     width: "65%",
@@ -33,32 +34,46 @@ export const useStyles = makeStyles({
     float: "right",
     color: colors.grey[500],
   },
+  chips: {
+    margin: "2px",
+    padding: 0,
+  },
 });
 
-export const useLayoutStyles = makeStyles(() =>
+export const useLayoutStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: "flex",
     },
-    header: {
-      height: "145px",
-      marginLeft: "5vw",
-    },
     drawer: {
-      flexShrink: 0,
+      [theme.breakpoints.up("sm")]: {
+        width: drawerWidth,
+        flexShrink: 0,
+      },
     },
+    appBar: {
+      [theme.breakpoints.up("sm")]: {
+        width: `calc(100% - ${drawerWidth}px)`,
+        marginLeft: drawerWidth,
+      },
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+      [theme.breakpoints.up("sm")]: {
+        display: "none",
+      },
+    },
+    // necessary for content to be below app bar
+    toolbar: theme.mixins.toolbar,
     drawerPaper: {
       width: drawerWidth,
-      marginTop: "150px",
-      marginLeft: "5vw",
-      height: "40vh",
-      borderRadius: "10px",
-      backgroundColor: colors.lightGrey,
+      top: "64px",
+      zIndex: 0,
     },
     content: {
       flexGrow: 1,
-      marginLeft: drawerWidth + 100,
-      marginRight: 20,
+      padding: theme.spacing(3),
+      backgroundColor: colors.white,
     },
   }),
 );

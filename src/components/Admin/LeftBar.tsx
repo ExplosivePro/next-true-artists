@@ -1,6 +1,5 @@
 // External import
 import React, { useState } from "react";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { useRouter } from "next/router";
 import clsx from "clsx";
 
