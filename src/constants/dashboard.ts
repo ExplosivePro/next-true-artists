@@ -9,7 +9,7 @@ export const dashboardRouteDetails = [
   },
   {
     path: "/dashboard/profile",
-    name: "Edit Profile",
+    name: "Profile Settings",
     backButton: {
       enable: true,
       path: "/dashboard",

@@ -2,12 +2,23 @@
 import { useForm } from "react-hook-form";
 import React, { useMemo, useState } from "react";
 import * as yup from "yup";
+import clsx from "clsx";
 
 // Material UI Components
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import { Typography } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
+import Badge from "@material-ui/core/Badge";
+import CameraAltOutlinedIcon from "@material-ui/icons/CameraAltOutlined";
+import IconButton from "@material-ui/core/IconButton";
+import MenuItem from "@material-ui/core/MenuItem";
+import PersonOutlineOutlinedIcon from "@material-ui/icons/PersonOutlineOutlined";
+import VpnKeyOutlinedIcon from "@material-ui/icons/VpnKeyOutlined";
+import GroupOutlinedIcon from "@material-ui/icons/GroupOutlined";
+import Divider from "@material-ui/core/Divider";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
 
 // Custom Components UI
 import PrimaryButton from "../../../components/PrimaryButton";
@@ -26,7 +37,13 @@ import { editUser, editArtistProfile, updateArtistAvatar } from "../../../api";
 
 // Styles
 import useStyles from "./styles";
-import { artistSettingList, baseFacebookUrl, baseInstagramUrl, baseTwitterUrl } from "../../../constants";
+import {
+  artistSettingList,
+  baseFacebookUrl,
+  baseInstagramUrl,
+  baseTwitterUrl,
+  defaultArtistBannerImage,
+} from "../../../constants";
 
 // Get schema by role
 const getSchemaByRole = (role: string): any => {
@@ -102,6 +119,10 @@ export default function UserProfile() {
 
   const resolver = useYupValidationResolver(validationSchema);
   const { control, handleSubmit, errors } = useForm({ resolver });
+
+  // Tab management
+  const [activeTab, setActiveTab] = useState(0);
+
   // Create a reference to the hidden file input element
   const hiddenFileInput = React.useRef(null);
   const [fileData, setFileData] = useState<File | null>(null);
@@ -114,6 +135,12 @@ export default function UserProfile() {
   const [minimumSpend, setMinimumSpend] = useState<number>(artist?.minimum_spend || 0);
   const [specialties, setSpecialties] = React.useState<string[]>(artist?.specialties || []);
 
+  // Switch setting tab
+  const switchTab = (index: number) => {
+    setActiveTab(index);
+  };
+
+  // Submit the form
   const onSubmit = async ({
     email,
     fullName,
@@ -184,6 +211,7 @@ export default function UserProfile() {
     }
   };
 
+  // Open file picker
   const handleClick = () => {
     // @ts-ignore
     hiddenFileInput?.current?.click();
@@ -242,98 +270,176 @@ export default function UserProfile() {
   return (
     <>
       <Container className={classes.containerRoot}>
-        <Grid container item alignItems={"center"}>
-          <Grid container item justify={"center"}>
-            <Avatar alt={full_name} src={preview || getAvatarByRole(role as string, user)} className={classes.avatar} />
-            <input className={classes.fileInput} type={"file"} ref={hiddenFileInput} onChange={handleChange} />
-          </Grid>
-          <Grid container item justify={"center"} className={classes.changePhotoButton}>
-            <PrimaryButton variant="outlined" color="primary" size="small" primaryColor onClick={handleClick}>
-              Change Photo
-            </PrimaryButton>
-          </Grid>
-
-          <Grid container className={classes.root} alignItems={"center"} justify={"center"}>
-            <div className={classes.formWrapper}>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Typography variant={"h6"} className={classes.sectionTitle}>
-                  Basic Information
+        <Grid container>
+          <Grid item lg={4} md={4} sm={12} xs={12} className={classes.leftBar}>
+            <div className={classes.barHeader}>
+              <Grid container item justify={"center"}>
+                <Badge
+                  overlap="circle"
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  badgeContent={
+                    <IconButton className={classes.uploadIconButton} onClick={handleClick}>
+                      <CameraAltOutlinedIcon />
+                    </IconButton>
+                  }
+                >
+                  <>
+                    <Avatar
+                      alt={full_name}
+                      src={preview || getAvatarByRole(role as string, user)}
+                      className={classes.avatar}
+                    />
+                    <input className={classes.fileInput} type={"file"} ref={hiddenFileInput} onChange={handleChange} />
+                  </>
+                </Badge>
+              </Grid>
+              <Grid container item justify={"center"} className={classes.changePhotoButton}>
+                <Typography variant={"h6"}>
+                  <b>{full_name}</b>
                 </Typography>
-
-                <FormInput
-                  name="fullName"
-                  classes={{ root: classes.formInput }}
-                  label={"Full name"}
-                  id="fullName"
-                  placeholder={"Full name"}
-                  fullWidth
-                  control={control}
-                  variant={"outlined"}
-                  defaultValue={full_name || ""}
-                  errors={errors.fullName}
-                />
-
-                <FormInput
-                  name="email"
-                  classes={{ root: classes.formInput }}
-                  label={"Email"}
-                  id="email"
-                  placeholder={"Email"}
-                  fullWidth
-                  control={control}
-                  variant={"outlined"}
-                  defaultValue={email || ""}
-                  errors={errors.email}
-                />
-
-                {role === "artist" && artist && (
-                  <ArtistProfile
-                    currentData={artist}
-                    className={classes.artistProfile}
-                    control={control}
-                    errors={errors}
-                    checked={checked}
-                    currency={currency}
-                    pricePerHour={pricePerHour}
-                    minimumSpend={minimumSpend}
-                    handleToggle={handleToggle}
-                    onPriceChange={onPriceChange}
-                    onSelectionChange={onSelectionChange}
-                    specialties={specialties}
-                  />
-                )}
-
-                <Grid container spacing={2} className={classes.buttonWrapper}>
-                  <Grid item lg={6} md={6} sm={12} xs={12}>
-                    <PrimaryButton
-                      type={"button"}
-                      variant="outlined"
-                      color="primary"
-                      size="large"
-                      primaryColor
-                      fullWidth
-                      onClick={() => {
-                        push("/dashboard");
-                      }}
-                    >
-                      Cancel
-                    </PrimaryButton>
-                  </Grid>
-                  <Grid item lg={6} md={6} sm={12} xs={12}>
-                    <PrimaryButton
-                      type={"submit"}
-                      variant="contained"
-                      color="primary"
-                      size="large"
-                      fullWidth
-                      primaryColor
-                    >
-                      Save
-                    </PrimaryButton>
-                  </Grid>
-                </Grid>
-              </form>
+              </Grid>
             </div>
+            <Divider />
+            <div className={classes.menuItemList}>
+              <MenuItem
+                className={clsx({ [classes.menuActive]: activeTab === 0 })}
+                onClick={() => {
+                  switchTab(0);
+                }}
+              >
+                <ListItemIcon>
+                  <PersonOutlineOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText primary={<Typography>Edit Profile</Typography>} />
+              </MenuItem>
+              <MenuItem
+                className={clsx({ [classes.menuActive]: activeTab === 1 })}
+                onClick={() => {
+                  switchTab(1);
+                }}
+              >
+                <ListItemIcon>
+                  <VpnKeyOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText primary={<Typography>Change Password</Typography>} />
+              </MenuItem>
+              <MenuItem
+                className={clsx({ [classes.menuActive]: activeTab === 2 })}
+                onClick={() => {
+                  switchTab(2);
+                }}
+              >
+                <ListItemIcon>
+                  <GroupOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText primary={<Typography>Social Profile</Typography>} />
+              </MenuItem>
+            </div>
+          </Grid>
+          <Grid item lg={7} md={7} sm={12} xs={12} className={classes.rightBar}>
+            <div className={classes.coverWrapper}>
+              <img src={defaultArtistBannerImage} alt={"cover"} />
+            </div>
+            <Grid container item alignItems={"center"} className={classes.formContainer}>
+              <div className={classes.barDescriptionTitleWrapper}>
+                <Typography variant={"h6"} display={"block"}>
+                  Edit Profile
+                </Typography>
+                <Typography variant={"caption"} display={"block"}>
+                  Set Up Your Personal Information
+                </Typography>
+              </div>
+
+              <div className={classes.divider}>
+                <Divider />
+              </div>
+
+              <Grid container className={classes.root} alignItems={"center"} justify={"center"}>
+                <div className={classes.formWrapper}>
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <Typography variant={"h6"} className={classes.sectionTitle}>
+                      Basic Information
+                    </Typography>
+
+                    <FormInput
+                      name="fullName"
+                      classes={{ root: classes.formInput }}
+                      label={"Full name"}
+                      id="fullName"
+                      placeholder={"Full name"}
+                      fullWidth
+                      control={control}
+                      variant={"outlined"}
+                      defaultValue={full_name || ""}
+                      errors={errors.fullName}
+                    />
+
+                    <FormInput
+                      name="email"
+                      classes={{ root: classes.formInput }}
+                      label={"Email"}
+                      id="email"
+                      placeholder={"Email"}
+                      fullWidth
+                      control={control}
+                      variant={"outlined"}
+                      defaultValue={email || ""}
+                      errors={errors.email}
+                    />
+
+                    {role === "artist" && artist && (
+                      <ArtistProfile
+                        currentData={artist}
+                        className={classes.artistProfile}
+                        control={control}
+                        errors={errors}
+                        checked={checked}
+                        currency={currency}
+                        pricePerHour={pricePerHour}
+                        minimumSpend={minimumSpend}
+                        handleToggle={handleToggle}
+                        onPriceChange={onPriceChange}
+                        onSelectionChange={onSelectionChange}
+                        specialties={specialties}
+                      />
+                    )}
+
+                    <Grid container spacing={2} className={classes.buttonWrapper}>
+                      <Grid item lg={6} md={6} sm={12} xs={12}>
+                        <PrimaryButton
+                          type={"button"}
+                          variant="outlined"
+                          color="primary"
+                          size="large"
+                          primaryColor
+                          fullWidth
+                          onClick={() => {
+                            push("/dashboard");
+                          }}
+                        >
+                          Cancel
+                        </PrimaryButton>
+                      </Grid>
+                      <Grid item lg={6} md={6} sm={12} xs={12}>
+                        <PrimaryButton
+                          type={"submit"}
+                          variant="contained"
+                          color="primary"
+                          size="large"
+                          fullWidth
+                          primaryColor
+                        >
+                          Save
+                        </PrimaryButton>
+                      </Grid>
+                    </Grid>
+                  </form>
+                </div>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Container>
