@@ -14,23 +14,29 @@ import Chip from "@material-ui/core/Chip";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardMedia from "@material-ui/core/CardMedia";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
 
 import FacebookIcon from "@material-ui/icons/Facebook";
 import InstagramIcon from "@material-ui/icons/Instagram";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import LanguageIcon from "@material-ui/icons/Language";
 
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableContainer from "@material-ui/core/TableContainer";
+
 import AdminBody from "src/components/Admin/AdminBody";
 import Loading from "src/components/Loading";
 import PrimaryButton from "src/components/PrimaryButton";
 import { InfoAlert } from "src/components/Admin/FormInputs";
 
-import { useStyles } from "../styles";
-import { getArtist } from "../api";
+import { useStyles, StyledTableCell, StyledTableRow, useImageStyles } from "./styles";
+import { getArtist, approveArtist, rejectArtist, flagTattoo } from "./api";
 
 export default function Artist() {
   const router = useRouter();
@@ -40,7 +46,7 @@ export default function Artist() {
   const [tabIndex, setTabIndex] = useState(0);
 
   // Fetch Artist data using param
-  const { status: artistDataStatus, data: artistData, error: artistDataError } = useQuery(
+  const { status: artistDataStatus, data: artistData, error: artistDataError, refetch: artistDataRefetch } = useQuery(
     "artistData",
     async () => await getArtist(artistId),
     {
@@ -49,11 +55,8 @@ export default function Artist() {
   );
 
   useEffect(() => {
-    const { id } = router.query;
-    if (id) {
-      setArtistId(id.toString());
-    }
-  }, []);
+    router.query.id ? setArtistId(router.query.id?.toString()) : null;
+  }, [router.query.id]);
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -62,6 +65,25 @@ export default function Artist() {
 
   // Create an Alert for info feedback
   const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
+
+  const updateStatus = async (status: string) => {
+    try {
+      let response;
+      if (status === "approve") response = await approveArtist(artistData?.id);
+      if (status === "reject") response = await rejectArtist(artistData?.id);
+
+      if (!response) setInfoAlert({ severity: "error", message: "Error updating artist !" });
+      else {
+        setInfoAlert({ severity: "success", message: "Artist updated successfully" });
+        artistDataRefetch();
+      }
+    } catch (error) {
+      setInfoAlert({ severity: "error", message: `Error updating artist! - ${error}` });
+    }
+    setTimeout(() => {
+      setInfoAlert({ severity: "info", message: "" });
+    }, 4500);
+  };
 
   return (
     <AdminBody>
@@ -122,10 +144,10 @@ export default function Artist() {
                     </Grid>
 
                     <Grid container item justify="space-evenly">
-                      <PrimaryButton size="small" bluePastel onClick={() => console.log(artistData)}>
+                      <PrimaryButton size="small" bluePastel onClick={() => updateStatus("approve")}>
                         Approve
                       </PrimaryButton>
-                      <PrimaryButton size="small" yellow onClick={() => console.log(artistData)}>
+                      <PrimaryButton size="small" yellow onClick={() => updateStatus("reject")}>
                         Reject
                       </PrimaryButton>
                     </Grid>
@@ -137,15 +159,9 @@ export default function Artist() {
                 <Divider className={classes.divider} />
                 <Card variant="outlined">
                   <CardContent>
-                    <Typography variant="h5" component="h2">
-                      Styles
-                    </Typography>
-                    {
-                      //artistData?.styles.
-                      ["payöoad", "motessori", "punk", "digger"].map((style, index) => (
-                        <Chip label={style} size="small" key={index} className={classes.chips} />
-                      ))
-                    }
+                    {artistData?.styles.map((style: string, index: number) => (
+                      <Chip label={style} size="small" key={index} className={classes.chips} />
+                    ))}
                   </CardContent>
                 </Card>
 
@@ -189,57 +205,80 @@ export default function Artist() {
                 </Card>
 
                 <Divider className={classes.divider} />
-                <Card>
+                <Card variant="outlined">
                   <b>Contact Information</b>
-                  <List dense>
-                    <ListItem>
-                      <b>Phone : </b> {artistData?.phone_number}
-                    </ListItem>
-                    <ListItem>
-                      <b>Country : </b> {artistData?.country}
-                    </ListItem>
-                    <ListItem>
-                      <b>City : </b> {artistData?.city}
-                    </ListItem>
-                    <ListItem>
-                      <b>State : </b> {artistData?.state}
-                    </ListItem>
-                    <ListItem>
-                      <b>Street : </b> {artistData?.street_address}
-                    </ListItem>
-                    <ListItem>
-                      <b>Zip Code : </b> {artistData?.zip_code}
-                    </ListItem>
-                  </List>
+                  <TableContainer>
+                    <Table size="small">
+                      <colgroup>
+                        <col width="30%" />
+                        <col width="70%" />
+                      </colgroup>
+                      <TableBody>
+                        <StyledTableRow>
+                          <StyledTableCell>
+                            <b>Phone :</b>
+                          </StyledTableCell>
+                          <StyledTableCell>{artistData?.phone_number}</StyledTableCell>
+                        </StyledTableRow>
+
+                        <StyledTableRow>
+                          <StyledTableCell>
+                            <b>Country :</b>
+                          </StyledTableCell>
+                          <StyledTableCell>{artistData?.country}</StyledTableCell>
+                        </StyledTableRow>
+
+                        <StyledTableRow>
+                          <StyledTableCell>
+                            <b>City :</b>
+                          </StyledTableCell>
+                          <StyledTableCell>{artistData?.city}</StyledTableCell>
+                        </StyledTableRow>
+
+                        <StyledTableRow>
+                          <StyledTableCell>
+                            <b>State :</b>
+                          </StyledTableCell>
+                          <StyledTableCell>{artistData?.state}</StyledTableCell>
+                        </StyledTableRow>
+
+                        <StyledTableRow>
+                          <StyledTableCell>
+                            <b>Street :</b>
+                          </StyledTableCell>
+                          <StyledTableCell>{artistData?.street_address}</StyledTableCell>
+                        </StyledTableRow>
+
+                        <StyledTableRow>
+                          <StyledTableCell>
+                            <b>Zip Code :</b>
+                          </StyledTableCell>
+                          <StyledTableCell>{artistData?.zip_code}</StyledTableCell>
+                        </StyledTableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
                 </Card>
               </Grid>
 
               <Grid item xs={12} md={9} lg={9}>
-                <Card style={{ height: "70%" }}>
-                  <CardContent>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        <Tabs value={tabIndex} onChange={handleChange} indicatorColor="primary">
-                          <Tab label="Business Settings" />
-                          <Tab label="Tattoo Images" />
-                        </Tabs>
-                      </Grid>
-
-                      <Grid item xs={10}>
-                        <TabPanel value={tabIndex} index={0}>
-                          <Typography variant="h5" align="center">
-                            <b>Business Settings</b>
-                          </Typography>
-                        </TabPanel>
-
-                        <TabPanel value={tabIndex} index={1}>
-                          <Typography variant="h5" align="center">
-                            <b>Tattoo Images</b>
-                          </Typography>
-                        </TabPanel>
-                      </Grid>
+                <Card style={{ height: "100%" }}>
+                  <Grid container>
+                    <Grid item xs={12}>
+                      <Tabs value={tabIndex} onChange={handleChange} indicatorColor="primary">
+                        <Tab label="Business Settings" />
+                        <Tab label="Tattoo Images" />
+                      </Tabs>
                     </Grid>
-                  </CardContent>
+                    <Grid item xs={12}>
+                      <TabPanel value={tabIndex} index={0}>
+                        <BusinessSettings artistData={artistData} />
+                      </TabPanel>
+                      <TabPanel value={tabIndex} index={1}>
+                        <TattooImages tattoos={artistData.tattoos} />
+                      </TabPanel>
+                    </Grid>
+                  </Grid>
                 </Card>
               </Grid>
             </Grid>
@@ -258,6 +297,252 @@ function TabPanel(props: any) {
   return (
     <Grid role="tabpanel" hidden={value !== index} id={`info-panel-${index}`} {...other}>
       {value === index && children}
+    </Grid>
+  );
+}
+
+function BusinessSettings({ artistData }: { artistData: Admin.ArtistProfile }) {
+  const classes = useStyles();
+
+  const {
+    specialty,
+    licensed,
+    years_of_experience,
+    currency_code,
+    price_per_hour,
+    minimum_spend,
+    guest_artist,
+    seeking_guest_spot,
+    bio,
+  } = artistData;
+
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <TableContainer className={classes.tableContainer}>
+          <Table>
+            <colgroup>
+              <col width="40%" />
+              <col width="60%" />
+            </colgroup>
+            <TableBody>
+              <StyledTableRow>
+                <StyledTableCell>Years of Experience :</StyledTableCell>
+                <StyledTableCell>{years_of_experience}</StyledTableCell>
+              </StyledTableRow>
+
+              <StyledTableRow>
+                <StyledTableCell>Speciality :</StyledTableCell>
+                <StyledTableCell>{specialty}</StyledTableCell>
+              </StyledTableRow>
+
+              <StyledTableRow>
+                <StyledTableCell>Licensed :</StyledTableCell>
+                <StyledTableCell>{licensed}</StyledTableCell>
+              </StyledTableRow>
+
+              <StyledTableRow>
+                <StyledTableCell>Currency Code :</StyledTableCell>
+                <StyledTableCell>{currency_code}</StyledTableCell>
+              </StyledTableRow>
+
+              <StyledTableRow>
+                <StyledTableCell>Price per Hour :</StyledTableCell>
+                <StyledTableCell>{price_per_hour}</StyledTableCell>
+              </StyledTableRow>
+
+              <StyledTableRow>
+                <StyledTableCell>Minimum Spend:</StyledTableCell>
+                <StyledTableCell>{minimum_spend}</StyledTableCell>
+              </StyledTableRow>
+
+              <StyledTableRow>
+                <StyledTableCell>Guest Artist :</StyledTableCell>
+                <StyledTableCell>{guest_artist}</StyledTableCell>
+              </StyledTableRow>
+
+              <StyledTableRow>
+                <StyledTableCell>Seeking Guest Spot :</StyledTableCell>
+                <StyledTableCell>{seeking_guest_spot}</StyledTableCell>
+              </StyledTableRow>
+
+              <StyledTableRow>
+                <StyledTableCell colSpan={2}>
+                  <Typography variant="body1">
+                    <b>Bio :</b>
+                  </Typography>
+                  {bio}
+                </StyledTableCell>
+              </StyledTableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
+      <Grid item xs={12} md={12} lg={6}></Grid>
+    </Grid>
+  );
+}
+
+function TattooImages({ tattoos }: { tattoos: Admin.Tattoo[] }) {
+  return (
+    <React.Fragment>
+      {tattoos.length > 0 ? (
+        tattoos?.map((tattoo, index) => <TattooImage tattoo={tattoo} key={index} />)
+      ) : (
+        <Alert severity="info">No tattoo images found...</Alert>
+      )}
+      ;
+    </React.Fragment>
+  );
+}
+
+function TattooImage({ tattoo }: { tattoo: Admin.Tattoo }) {
+  const classes = useImageStyles();
+
+  // Create a Alert for feedback info
+  const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
+
+  const updateStatus = async () => {
+    try {
+      const response = await flagTattoo(tattoo?.image.id);
+
+      if (response) setInfoAlert({ severity: "error", message: "Error updating image !" });
+      else {
+        setInfoAlert({ severity: "success", message: "Image updated successfully" });
+      }
+    } catch (error) {
+      setInfoAlert({ severity: "error", message: `Error updating image! - ${error}` });
+    }
+    setTimeout(() => {
+      setInfoAlert({ severity: "info", message: "" });
+    }, 4500);
+  };
+
+  return (
+    <Grid container spacing={2} className={classes.tattooItemWrapper}>
+      <Grid item xs={12} sm={6} md={4}>
+        <Card className={classes.root} elevation={1} onClick={() => console.log(tattoo)}>
+          <CardMedia className={classes.media} image={tattoo.image.image_url} title={tattoo.color} />
+          <CardHeader subheader={tattoo.image.name} className={classes.cardHeader} />
+        </Card>
+
+        <Grid container item xs={12} justify="space-evenly" className={classes.buttonWrapper}>
+          <Typography variant="body2">
+            <b>Status : </b>
+            {tattoo.image.status}
+          </Typography>
+
+          <PrimaryButton size="small" yellow onClick={updateStatus}>
+            Flag
+          </PrimaryButton>
+        </Grid>
+      </Grid>
+
+      <Grid item xs={12} sm={12} md={8}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6} lg={6}>
+            <TableContainer>
+              <Table size="small">
+                <colgroup>
+                  <col width="30%" />
+                  <col width="70%" />
+                </colgroup>
+                <TableBody>
+                  <StyledTableRow>
+                    <StyledTableCell>
+                      <b>Color :</b>
+                    </StyledTableCell>
+                    <StyledTableCell>{tattoo.color}</StyledTableCell>
+                  </StyledTableRow>
+
+                  <StyledTableRow>
+                    <StyledTableCell>
+                      <b>Size :</b>
+                    </StyledTableCell>
+                    <StyledTableCell>{tattoo.size}</StyledTableCell>
+                  </StyledTableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
+
+          <Grid item xs={12} sm={6} lg={6}>
+            <TableContainer>
+              <Table size="small">
+                <colgroup>
+                  <col width="40%" />
+                  <col width="60%" />
+                </colgroup>
+                <TableBody>
+                  <StyledTableRow>
+                    <StyledTableCell>
+                      <b>Placement :</b>
+                    </StyledTableCell>
+                    <StyledTableCell>{tattoo.placement}</StyledTableCell>
+                  </StyledTableRow>
+
+                  <StyledTableRow>
+                    <StyledTableCell>
+                      <b>Featured :</b>
+                    </StyledTableCell>
+                    <StyledTableCell>{tattoo.featured ? "Yes" : "No"}</StyledTableCell>
+                  </StyledTableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
+
+          <Grid item xs={12}>
+            <TableContainer>
+              <Table size="small">
+                <TableBody>
+                  <StyledTableRow>
+                    <StyledTableCell>
+                      <b>Caption :</b>
+                      {tattoo.caption}
+                    </StyledTableCell>
+                  </StyledTableRow>
+
+                  <StyledTableRow>
+                    <StyledTableCell>
+                      <b>Description :</b>
+                      {tattoo.description}
+                    </StyledTableCell>
+                  </StyledTableRow>
+
+                  <StyledTableRow>
+                    <StyledTableCell>
+                      <b>Styles :</b>
+                      {tattoo.styles}
+                    </StyledTableCell>
+                  </StyledTableRow>
+
+                  <StyledTableRow>
+                    <StyledTableCell>
+                      <b>Categories :</b>
+                      {tattoo.categories}
+                    </StyledTableCell>
+                  </StyledTableRow>
+
+                  <StyledTableRow>
+                    <StyledTableCell>
+                      <b>Tags :</b>
+                      {tattoo.tags.map((style: string, index: number) => (
+                        <Chip label={style} size="small" key={index} className={classes.chips} />
+                      ))}
+                    </StyledTableCell>
+                  </StyledTableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
+        </Grid>
+      </Grid>
+
+      <Grid item xs={12}>
+        {/* Show info alerts for update status */}
+        {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
+      </Grid>
     </Grid>
   );
 }

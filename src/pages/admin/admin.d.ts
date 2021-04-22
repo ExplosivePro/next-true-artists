@@ -1,6 +1,6 @@
 declare namespace Admin {
   declare interface User {
-    id?: number;
+    id: number;
     full_name: string;
     email: string;
     slug: string;
@@ -9,34 +9,66 @@ declare namespace Admin {
     password: string;
   }
 
+  declare interface ImageAsset {
+    id: number;
+    name: string;
+    image_url: strin;
+    status: string;
+  }
+
+  declare interface Tattoo {
+    id: number;
+    caption: string;
+    color: string;
+    size: string;
+    status: string;
+    placement: string;
+    categories: string;
+    styles: string;
+    description: string;
+    featured: boolean;
+    tags: [];
+    image: ImageAsset;
+  }
+
   declare interface ArtistProfile {
-    id?: number;
-    user_id?: number;
+    id: number;
+    user_id: number;
     name: string;
     status: string;
+    avatar: ImageAsset;
+    hero_banner: ImageAsset;
+    slug: string;
     currency_code: string;
-    phone_number: string;
     price_per_hour: number;
     minimum_spend: number;
-    zipCode: string;
+    phone_number: string;
+    street_address: string;
+    zip_code: string;
     city: string;
+    state: string;
     country: string;
-    licensed: string;
+    licensed: boolean;
     years_of_experience: number;
     guest_artist: boolean;
     seeking_guest_spot: boolean;
-    styles: string;
+    specialty: string;
     bio: string;
     website: string;
     facebook_url: string;
     instagram_url: string;
     twitter_url: string;
+    styles: [];
+    tattoos: Tattoo[];
   }
 
   declare interface StudioProfile {
-    id?: number;
-    user_id?: number;
+    id: number;
+    user_id: number;
     name: string;
+    status: string;
+    avatar: ImageAsset;
+    hero_banner: ImageAsset;
     phone_number: string;
     email: string;
     street_address: string;
@@ -59,34 +91,13 @@ declare namespace Admin {
     lgbt_friendly: boolean;
     wifi: boolean;
     wheelchair_access: boolean;
-    status: string;
-    styles: string;
     languages: string;
     bio: string;
     website_url: string;
     facebook_url: string;
     instagram_url: string;
     twitter_url: string;
-  }
-
-  declare interface Tattoo {
-    color: string;
-    size: string;
-    placement: string;
-    categories: string;
-    styles: string;
-    description: string;
-    tags: string;
-    image: {
-      id: number;
-      name: string;
-      image_url: string;
-      status: string;
-    };
-  }
-
-  declare interface Image {
-    avatar: { id: number; name: string; image_url: strin; status: string };
-    hero_banner: { id: number; name: string; image_url: string; status: string };
+    styles: [];
+    tattoos: Tattoo[];
   }
 }

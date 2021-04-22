@@ -6,7 +6,7 @@ export const getUserList = async (filter = "") => {
   return data;
 };
 
-export const getUser = async (userId: string) => {
+export const getUser = async (userId: string | undefined) => {
   const { data } = await api.get(`/api/v1/admin/users/${userId}`);
   return data;
 };

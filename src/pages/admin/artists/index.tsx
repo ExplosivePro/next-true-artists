@@ -89,7 +89,9 @@ export default function Artists() {
           <Autocomplete
             freeSolo
             options={
-              artistListStatus === "success" ? artistListData?.map((option: Admin.ArtistProfile) => option.name) : []
+              artistListStatus === "success"
+                ? artistListData?.map((option: Admin.ArtistProfile) => option.name ?? "")
+                : []
             }
             inputValue={searchInputValue}
             onInputChange={(event, newInputValue) => {

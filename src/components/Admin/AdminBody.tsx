@@ -4,7 +4,7 @@ import Drawer from "@material-ui/core/Drawer";
 
 import AppBar from "src/components/Admin/AppBar";
 import LeftBar from "src/components/Admin/LeftBar";
-import { useLayoutStyles } from "src/pages/admin/styles";
+import { useLayoutStyles } from "./styles";
 
 interface Props {
   children: JSX.Element[];

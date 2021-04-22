@@ -86,9 +86,14 @@ export const useImageStyles = makeStyles(() =>
       marginTop: "15px",
     },
     tattooItemWrapper: {
+      display: "flex",
       marginTop: "20px",
       border: "solid thin lightGrey",
       borderRadius: 8,
+    },
+    chips: {
+      margin: "2px",
+      padding: 0,
     },
   }),
 );

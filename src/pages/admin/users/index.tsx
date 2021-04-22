@@ -85,7 +85,9 @@ export default function Users() {
         <Grid item xs={12} sm={6} md={4} lg={4}>
           <Autocomplete
             freeSolo
-            options={userListStatus === "success" ? userListData?.map((option: Admin.User) => option.full_name) : []}
+            options={
+              userListStatus === "success" ? userListData?.map((option: Admin.User) => option.full_name ?? "") : []
+            }
             inputValue={searchInputValue}
             onInputChange={(event, newInputValue) => {
               setSearchInputValue(newInputValue);

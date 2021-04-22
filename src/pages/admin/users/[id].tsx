@@ -47,11 +47,8 @@ export default function User() {
   );
 
   useEffect(() => {
-    const { id } = router.query;
-    if (id) {
-      setUserId(id.toString());
-    }
-  }, []);
+    router.query.id ? setUserId(router.query.id?.toString()) : null;
+  }, [router.query.id]);
 
   // Create an Alert for info feedback
   const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
