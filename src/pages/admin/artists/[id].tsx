@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
-import { useForm } from "react-hook-form";
 import Link from "next/link";
 import Head from "next/head";
 
@@ -28,11 +27,10 @@ import LanguageIcon from "@material-ui/icons/Language";
 import AdminBody from "src/components/Admin/AdminBody";
 import Loading from "src/components/Loading";
 import PrimaryButton from "src/components/PrimaryButton";
-import { TextInput, SelectInput, InfoAlert } from "src/components/Admin/FormInputs";
-import { user_roles, user_status } from "../constants";
+import { InfoAlert } from "src/components/Admin/FormInputs";
 
 import { useStyles } from "../styles";
-import { getArtist, approveArtist, rejectArtist } from "../api";
+import { getArtist } from "../api";
 
 export default function Artist() {
   const router = useRouter();
@@ -42,7 +40,7 @@ export default function Artist() {
   const [tabIndex, setTabIndex] = useState(0);
 
   // Fetch Artist data using param
-  const { status: artistDataStatus, data: artistData, error: artistDataError, refetch: artistDataRefetch } = useQuery(
+  const { status: artistDataStatus, data: artistData, error: artistDataError } = useQuery(
     "artistData",
     async () => await getArtist(artistId),
     {
@@ -96,10 +94,11 @@ export default function Artist() {
           ) : artistData ? (
             <Grid container spacing={2}>
               <Grid item xs={12} md={3} lg={3}>
-                <Card>
-                  <b>Profile Details</b>
-
+                <Card variant="outlined">
                   <CardContent>
+                    <Typography variant="h5" component="h2">
+                      Profile Details
+                    </Typography>
                     <Grid container item justify="center">
                       <Avatar
                         alt={artistData?.name ?? "Null"}
@@ -136,9 +135,11 @@ export default function Artist() {
                 {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
 
                 <Divider className={classes.divider} />
-                <Card>
-                  <b>Styles</b>
+                <Card variant="outlined">
                   <CardContent>
+                    <Typography variant="h5" component="h2">
+                      Styles
+                    </Typography>
                     {
                       //artistData?.styles.
                       ["payöoad", "motessori", "punk", "digger"].map((style, index) => (
@@ -149,37 +150,42 @@ export default function Artist() {
                 </Card>
 
                 <Divider className={classes.divider} />
-                <Card>
-                  <b>Social Handles</b>
-                  <List dense>
-                    {artistData?.facebook_url ? (
-                      <ListItem>
-                        <FacebookIcon />
-                        <Link href={artistData?.facebook_url}>Facebook</Link>
-                      </ListItem>
-                    ) : null}
+                <Card variant="outlined">
+                  <CardContent>
+                    <Typography variant="h5" component="h2">
+                      Social Handles
+                    </Typography>
 
-                    {artistData?.instagram_url ? (
-                      <ListItem>
-                        <InstagramIcon />
-                        <Link href={artistData?.instagram_url}>Instagram</Link>
-                      </ListItem>
-                    ) : null}
+                    <List dense>
+                      {artistData?.facebook_url ? (
+                        <ListItem>
+                          <FacebookIcon />
+                          <Link href={artistData?.facebook_url}>Facebook</Link>
+                        </ListItem>
+                      ) : null}
 
-                    {artistData?.twitter_url ? (
-                      <ListItem>
-                        <TwitterIcon />
-                        <Link href={artistData?.twitter_url}>Twitter</Link>
-                      </ListItem>
-                    ) : null}
+                      {artistData?.instagram_url ? (
+                        <ListItem>
+                          <InstagramIcon />
+                          <Link href={artistData?.instagram_url}>Instagram</Link>
+                        </ListItem>
+                      ) : null}
 
-                    {artistData?.website ? (
-                      <ListItem>
-                        <LanguageIcon />
-                        <Link href={artistData?.website}>Website</Link>
-                      </ListItem>
-                    ) : null}
-                  </List>
+                      {artistData?.twitter_url ? (
+                        <ListItem>
+                          <TwitterIcon />
+                          <Link href={artistData?.twitter_url}>Twitter</Link>
+                        </ListItem>
+                      ) : null}
+
+                      {artistData?.website ? (
+                        <ListItem>
+                          <LanguageIcon />
+                          <Link href={artistData?.website}>Website</Link>
+                        </ListItem>
+                      ) : null}
+                    </List>
+                  </CardContent>
                 </Card>
 
                 <Divider className={classes.divider} />
@@ -210,28 +216,30 @@ export default function Artist() {
 
               <Grid item xs={12} md={9} lg={9}>
                 <Card style={{ height: "70%" }}>
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <Tabs value={tabIndex} onChange={handleChange} indicatorColor="primary">
-                        <Tab label="Business Settings" />
-                        <Tab label="Tattoo Images" />
-                      </Tabs>
-                    </Grid>
+                  <CardContent>
+                    <Grid container>
+                      <Grid item xs={12}>
+                        <Tabs value={tabIndex} onChange={handleChange} indicatorColor="primary">
+                          <Tab label="Business Settings" />
+                          <Tab label="Tattoo Images" />
+                        </Tabs>
+                      </Grid>
 
-                    <Grid item xs={10}>
-                      <TabPanel value={tabIndex} index={0}>
-                        <Typography variant="h5" align="center">
-                          <b>Business Settings</b>
-                        </Typography>
-                      </TabPanel>
+                      <Grid item xs={10}>
+                        <TabPanel value={tabIndex} index={0}>
+                          <Typography variant="h5" align="center">
+                            <b>Business Settings</b>
+                          </Typography>
+                        </TabPanel>
 
-                      <TabPanel value={tabIndex} index={1}>
-                        <Typography variant="h5" align="center">
-                          <b>Tattoo Images</b>
-                        </Typography>
-                      </TabPanel>
+                        <TabPanel value={tabIndex} index={1}>
+                          <Typography variant="h5" align="center">
+                            <b>Tattoo Images</b>
+                          </Typography>
+                        </TabPanel>
+                      </Grid>
                     </Grid>
-                  </Grid>
+                  </CardContent>
                 </Card>
               </Grid>
             </Grid>

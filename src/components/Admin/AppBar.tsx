@@ -1,8 +1,5 @@
 // External Import
-import React, { useEffect } from "react";
 import { fade, makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-// import { useLocation } from "react-router";
-// import qs from "qs";
 
 // Material UI Import
 import AppBar from "@material-ui/core/AppBar";
@@ -14,8 +11,6 @@ import Menu from "@material-ui/core/Menu";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import Avatar from "@material-ui/core/Avatar";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-// import SearchIcon from "@material-ui/icons/Search";
-// import InputBase from "@material-ui/core/InputBase";
 
 import { useAuth } from "../../contexts";
 import color from "../../palette";
@@ -129,7 +124,7 @@ export default function PrimarySearchAppBar() {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  /* 
+  /*
   // Map query url to search input
   useEffect(() => {
     // Get query string
