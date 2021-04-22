@@ -8,7 +8,6 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Alert from "@material-ui/lab/Alert";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import Divider from "@material-ui/core/Divider";
 import Avatar from "@material-ui/core/Avatar";
 import Chip from "@material-ui/core/Chip";
 
@@ -105,7 +104,6 @@ export default function Artist() {
         </Grid>
 
         <Grid item xs={12}>
-          <Divider className={classes.divider} />
           {artistDataStatus === "loading" ? (
             <React.Fragment>
               <Alert severity="info">Loading... </Alert>
@@ -116,9 +114,9 @@ export default function Artist() {
           ) : artistData ? (
             <Grid container spacing={2}>
               <Grid item xs={12} md={3} lg={3}>
-                <Card variant="outlined">
+                <Card variant="outlined" className={classes.divider}>
                   <CardContent>
-                    <Typography variant="h5" component="h2">
+                    <Typography variant="h6" component="h2">
                       Profile Details
                     </Typography>
                     <Grid container item justify="center">
@@ -156,8 +154,7 @@ export default function Artist() {
 
                 {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
 
-                <Divider className={classes.divider} />
-                <Card variant="outlined">
+                <Card variant="outlined" className={classes.divider}>
                   <CardContent>
                     {artistData?.styles.map((style: string, index: number) => (
                       <Chip label={style} size="small" key={index} className={classes.chips} />
@@ -165,10 +162,9 @@ export default function Artist() {
                   </CardContent>
                 </Card>
 
-                <Divider className={classes.divider} />
-                <Card variant="outlined">
+                <Card variant="outlined" className={classes.divider}>
                   <CardContent>
-                    <Typography variant="h5" component="h2">
+                    <Typography variant="h6" component="h2">
                       Social Handles
                     </Typography>
 
@@ -204,60 +200,63 @@ export default function Artist() {
                   </CardContent>
                 </Card>
 
-                <Divider className={classes.divider} />
-                <Card variant="outlined">
-                  <b>Contact Information</b>
-                  <TableContainer>
-                    <Table size="small">
-                      <colgroup>
-                        <col width="30%" />
-                        <col width="70%" />
-                      </colgroup>
-                      <TableBody>
-                        <StyledTableRow>
-                          <StyledTableCell>
-                            <b>Phone :</b>
-                          </StyledTableCell>
-                          <StyledTableCell>{artistData?.phone_number}</StyledTableCell>
-                        </StyledTableRow>
+                <Card variant="outlined" className={classes.divider}>
+                  <CardContent>
+                    <Typography variant="h6" component="h2">
+                      Contact Information
+                    </Typography>
+                    <TableContainer>
+                      <Table size="small">
+                        <colgroup>
+                          <col width="30%" />
+                          <col width="70%" />
+                        </colgroup>
+                        <TableBody>
+                          <StyledTableRow>
+                            <StyledTableCell>
+                              <b>Phone</b>
+                            </StyledTableCell>
+                            <StyledTableCell>{artistData?.phone_number}</StyledTableCell>
+                          </StyledTableRow>
 
-                        <StyledTableRow>
-                          <StyledTableCell>
-                            <b>Country :</b>
-                          </StyledTableCell>
-                          <StyledTableCell>{artistData?.country}</StyledTableCell>
-                        </StyledTableRow>
+                          <StyledTableRow>
+                            <StyledTableCell>
+                              <b>Country</b>
+                            </StyledTableCell>
+                            <StyledTableCell>{artistData?.country}</StyledTableCell>
+                          </StyledTableRow>
 
-                        <StyledTableRow>
-                          <StyledTableCell>
-                            <b>City :</b>
-                          </StyledTableCell>
-                          <StyledTableCell>{artistData?.city}</StyledTableCell>
-                        </StyledTableRow>
+                          <StyledTableRow>
+                            <StyledTableCell>
+                              <b>City</b>
+                            </StyledTableCell>
+                            <StyledTableCell>{artistData?.city}</StyledTableCell>
+                          </StyledTableRow>
 
-                        <StyledTableRow>
-                          <StyledTableCell>
-                            <b>State :</b>
-                          </StyledTableCell>
-                          <StyledTableCell>{artistData?.state}</StyledTableCell>
-                        </StyledTableRow>
+                          <StyledTableRow>
+                            <StyledTableCell>
+                              <b>State</b>
+                            </StyledTableCell>
+                            <StyledTableCell>{artistData?.state}</StyledTableCell>
+                          </StyledTableRow>
 
-                        <StyledTableRow>
-                          <StyledTableCell>
-                            <b>Street :</b>
-                          </StyledTableCell>
-                          <StyledTableCell>{artistData?.street_address}</StyledTableCell>
-                        </StyledTableRow>
+                          <StyledTableRow>
+                            <StyledTableCell>
+                              <b>Street</b>
+                            </StyledTableCell>
+                            <StyledTableCell>{artistData?.street_address}</StyledTableCell>
+                          </StyledTableRow>
 
-                        <StyledTableRow>
-                          <StyledTableCell>
-                            <b>Zip Code :</b>
-                          </StyledTableCell>
-                          <StyledTableCell>{artistData?.zip_code}</StyledTableCell>
-                        </StyledTableRow>
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
+                          <StyledTableRow>
+                            <StyledTableCell>
+                              <b>Zip Code</b>
+                            </StyledTableCell>
+                            <StyledTableCell>{artistData?.zip_code}</StyledTableCell>
+                          </StyledTableRow>
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </CardContent>
                 </Card>
               </Grid>
 
@@ -421,9 +420,11 @@ function TattooImage({ tattoo }: { tattoo: Admin.Tattoo }) {
   return (
     <Grid container spacing={2} className={classes.tattooItemWrapper}>
       <Grid item xs={12} sm={6} md={4}>
-        <Card className={classes.root} elevation={1} onClick={() => console.log(tattoo)}>
-          <CardMedia className={classes.media} image={tattoo.image.image_url} title={tattoo.color} />
-          <CardHeader subheader={tattoo.image.name} className={classes.cardHeader} />
+        <Card variant="outlined">
+          <CardContent>
+            <CardMedia className={classes.media} image={tattoo.image.image_url} title={tattoo.color} />
+            <CardHeader subheader={tattoo.image.name} className={classes.cardHeader} />
+          </CardContent>
         </Card>
 
         <Grid container item xs={12} justify="space-evenly" className={classes.buttonWrapper}>
@@ -433,7 +434,7 @@ function TattooImage({ tattoo }: { tattoo: Admin.Tattoo }) {
           </Typography>
 
           <PrimaryButton size="small" yellow onClick={updateStatus}>
-            Flag
+            Flag image
           </PrimaryButton>
         </Grid>
       </Grid>
@@ -500,13 +501,6 @@ function TattooImage({ tattoo }: { tattoo: Admin.Tattoo }) {
                     <StyledTableCell>
                       <b>Caption :</b>
                       {tattoo.caption}
-                    </StyledTableCell>
-                  </StyledTableRow>
-
-                  <StyledTableRow>
-                    <StyledTableCell>
-                      <b>Description :</b>
-                      {tattoo.description}
                     </StyledTableCell>
                   </StyledTableRow>
 
