@@ -1,10 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
 
-import { withStyles } from "@material-ui/core/styles";
-import MenuItem from "@material-ui/core/MenuItem";
 import Divider from "@material-ui/core/Divider";
-
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
@@ -13,16 +10,7 @@ import VpnKeyIcon from "@material-ui/icons/VpnKey";
 
 import { useAuth } from "../../contexts";
 
-const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: theme.palette.common.white,
-      },
-    },
-  },
-}))(MenuItem);
+import { StyledMenuItem } from "./styles";
 
 declare interface BarItems {
   handleMenuClose(): void;

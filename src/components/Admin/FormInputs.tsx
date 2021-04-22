@@ -107,8 +107,8 @@ export const SearchInput = ({ name, control, required, label, errors, errorMessa
       name={name}
       control={control}
       rules={{ required: required }}
-      onChange={([e, value]: any) => value}
-      render={({ onChange, ...props }) => (
+      onChange={([value]: any) => value}
+      render={({ onChange }) => (
         <Autocomplete
           options={searchList ?? []}
           disableClearable

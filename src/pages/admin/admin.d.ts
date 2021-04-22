@@ -3,6 +3,7 @@ declare namespace Admin {
     id?: number;
     full_name: string;
     email: string;
+    slug: string;
     role: string;
     status: string;
     password: string;
@@ -15,7 +16,6 @@ declare namespace Admin {
     status: string;
     currency_code: string;
     phone_number: string;
-    email: string;
     price_per_hour: number;
     minimum_spend: number;
     zipCode: string;
@@ -27,6 +27,10 @@ declare namespace Admin {
     seeking_guest_spot: boolean;
     styles: string;
     bio: string;
+    website: string;
+    facebook_url: string;
+    instagram_url: string;
+    twitter_url: string;
   }
 
   declare interface StudioProfile {
@@ -43,12 +47,10 @@ declare namespace Admin {
     state: string;
     city: string;
     country: string;
-    lat: number;
-    lon: number;
     cosmetic_tattoos: boolean;
     accepted_payment_methods: string;
     accepting_guest_artist: boolean;
-    parking: string;
+    parking: boolean;
     piercings: boolean;
     vegan_ink: boolean;
     services: string;
@@ -61,11 +63,6 @@ declare namespace Admin {
     styles: string;
     languages: string;
     bio: string;
-  }
-
-  declare interface Contact {
-    phone_number: string;
-    email: string;
     website_url: string;
     facebook_url: string;
     instagram_url: string;

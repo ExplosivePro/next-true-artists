@@ -14,7 +14,7 @@ import PeopleIcon from "@material-ui/icons/People";
 import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 
 import { menuAdminBar } from "src/constants";
-import { useMenuStyles } from "src/pages/admin/styles";
+import { useMenuStyles } from "./styles";
 
 interface NavigationType {
   mainBar: string;
