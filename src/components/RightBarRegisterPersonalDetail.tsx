@@ -51,11 +51,12 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: "25px",
     },
     signInText: {
-      fontWeight: 500,
-      color: colors.lightYellow,
+      fontWeight: "bold",
+      color: colors.extremeDarkYellow,
       marginLeft: "5px",
       cursor: "pointer",
       fontSize: "14px",
+      textDecoration: "underline",
     },
   }),
 );

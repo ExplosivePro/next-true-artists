@@ -109,22 +109,22 @@ export default function RegisterSelection({ workingStyles }: Props) {
   const getPreloadData = (step: number) => {
     switch (step) {
       case 2: {
-        if (user.role === "artist") {
+        if (user?.role === "artist") {
           return preloadRightBarArtistRegisterInformationData(user?.artist as Resource.ArtistDetail);
         }
 
-        if (user.role === "studio_manager") {
+        if (user?.role === "studio_manager") {
           return preloadRightBarStudioRegisterInformationData(user?.studio as Resource.StudioDetail);
         }
 
         return {};
       }
       case 3: {
-        if (user.role === "artist") {
+        if (user?.role === "artist") {
           return preloadRightBarRegisterWorkStyleData(user?.artist as Resource.ArtistDetail);
         }
 
-        if (user.role === "studio_manager") {
+        if (user?.role === "studio_manager") {
           return preloadRightBarRegisterBusinessSettingsData(user?.studio as Resource.StudioDetail);
         }
       }
@@ -137,12 +137,12 @@ export default function RegisterSelection({ workingStyles }: Props) {
   useEffect(() => {
     // User already logged in, skip step 1, bring user to the next step
     if (status === AuthState.authenticated) {
-      if (user.role === "artist") {
+      if (user?.role === "artist") {
         setRole("artist");
         setCurrentUserRoleId(user?.artist?.id);
       }
 
-      if (user.role === "studio_manager") {
+      if (user?.role === "studio_manager") {
         setRole("studio");
         setCurrentUserRoleId(user?.studio?.id);
       }

@@ -28,6 +28,7 @@ const colors = {
   standardBlack: "#242424",
   standardYellow: "#f4c55b",
   darkYellow: "#eca400",
+  extremeDarkYellow: "#e0a00d",
   chipYellow: "#f4c55b",
   standardViolet: "#7c44c3",
 };
