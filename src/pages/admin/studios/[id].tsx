@@ -28,6 +28,7 @@ import LanguageIcon from "@material-ui/icons/Language";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
+import TablePagination from "@material-ui/core/TablePagination";
 
 import AdminBody from "src/components/Admin/AdminBody";
 import Loading from "src/components/Loading";
@@ -35,26 +36,26 @@ import PrimaryButton from "src/components/PrimaryButton";
 import { InfoAlert } from "src/components/Admin/FormInputs";
 
 import { useStyles, StyledTableCell, StyledTableRow, useImageStyles } from "./styles";
-import { getArtist, approveArtist, rejectArtist, flagTattoo } from "./api";
+import { getStudio, approveStudio, rejectStudio, flagTattoo } from "./api";
 
-export default function Artist() {
+export default function Studio() {
   const router = useRouter();
   const classes = useStyles();
 
-  const [artistId, setArtistId] = useState("");
+  const [studioId, setStudioId] = useState("");
   const [tabIndex, setTabIndex] = useState(0);
 
-  // Fetch Artist data using param
-  const { status: artistDataStatus, data: artistData, error: artistDataError, refetch: artistDataRefetch } = useQuery(
-    "artistData",
-    async () => await getArtist(artistId),
+  // Fetch Studio data using param
+  const { status: studioDataStatus, data: studioData, error: studioDataError, refetch: studioDataRefetch } = useQuery(
+    "studioData",
+    async () => await getStudio(studioId),
     {
-      enabled: artistId ? true : false,
+      enabled: studioId ? true : false,
     },
   );
 
   useEffect(() => {
-    router.query.id ? setArtistId(router.query.id?.toString()) : null;
+    router.query.id ? setStudioId(router.query.id?.toString()) : null;
   }, [router.query.id]);
 
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -68,16 +69,16 @@ export default function Artist() {
   const updateStatus = async (status: string) => {
     try {
       let response;
-      if (status === "approve") response = await approveArtist(artistData?.id);
-      if (status === "reject") response = await rejectArtist(artistData?.id);
+      if (status === "approve") response = await approveStudio(studioData?.id);
+      if (status === "reject") response = await rejectStudio(studioData?.id);
 
-      if (!response) setInfoAlert({ severity: "error", message: "Error updating artist !" });
+      if (!response) setInfoAlert({ severity: "error", message: "Error updating studio !" });
       else {
-        setInfoAlert({ severity: "success", message: "Artist updated successfully" });
-        artistDataRefetch();
+        setInfoAlert({ severity: "success", message: "Studio updated successfully" });
+        studioDataRefetch();
       }
     } catch (error) {
-      setInfoAlert({ severity: "error", message: `Error updating artist! - ${error}` });
+      setInfoAlert({ severity: "error", message: `Error updating studio! - ${error}` });
     }
     setTimeout(() => {
       setInfoAlert({ severity: "info", message: "" });
@@ -87,7 +88,7 @@ export default function Artist() {
   return (
     <AdminBody>
       <Head>
-        <title>Admin - {artistData?.name ?? "Null"}</title>
+        <title>Admin - {studioData?.name ?? "Null"}</title>
       </Head>
 
       <Grid container>
@@ -97,21 +98,21 @@ export default function Artist() {
               <Link href="/admin">Dashboard</Link>
             </Typography>
             <Typography variant="body1">
-              <Link href="/admin/artists">Artists</Link>
+              <Link href="/admin/studios">Studios</Link>
             </Typography>
             <Typography variant="body1">Profile</Typography>
           </Breadcrumbs>
         </Grid>
 
         <Grid item xs={12}>
-          {artistDataStatus === "loading" ? (
+          {studioDataStatus === "loading" ? (
             <React.Fragment>
               <Alert severity="info">Loading... </Alert>
               <Loading />
             </React.Fragment>
-          ) : artistDataStatus === "error" ? (
-            <Alert severity="error">{`Retrieving Artist record - ${artistDataError}`}</Alert>
-          ) : artistData ? (
+          ) : studioDataStatus === "error" ? (
+            <Alert severity="error">{`Retrieving Studio record - ${studioDataError}`}</Alert>
+          ) : studioData ? (
             <Grid container spacing={2}>
               <Grid item xs={12} md={3} lg={3}>
                 <Card variant="outlined" className={classes.divider}>
@@ -121,8 +122,8 @@ export default function Artist() {
                     </Typography>
                     <Grid container item justify="center">
                       <Avatar
-                        alt={artistData?.name ?? "Null"}
-                        src={artistData?.avatar.image_url}
+                        alt={studioData?.name ?? "Null"}
+                        src={studioData?.avatar?.image_url}
                         className={classes.avatar}
                       />
                     </Grid>
@@ -130,12 +131,12 @@ export default function Artist() {
                     <Grid container>
                       <Grid item xs={12}>
                         <Typography color="textPrimary" align="center">
-                          <b>{artistData?.name ?? "Null"}</b>
+                          <b>{studioData?.name ?? "Null"}</b>
                         </Typography>
                         <pre>
                           <Typography variant="body2" align="center">
                             <b>Status:{"   "}</b>
-                            {artistData?.status}
+                            {studioData?.status}
                           </Typography>
                         </pre>
                       </Grid>
@@ -156,9 +157,12 @@ export default function Artist() {
 
                 <Card variant="outlined" className={classes.divider}>
                   <CardContent>
-                    {artistData?.styles.map((style: string, index: number) => (
-                      <Chip label={style} size="small" key={index} className={classes.chips} />
-                    ))}
+                    {
+                      //studioData?.services?
+                      ["Eeny", "Meeny", "Miney", "Moe"].map((style: string, index: number) => (
+                        <Chip label={style} size="small" key={index} className={classes.chips} />
+                      ))
+                    }
                   </CardContent>
                 </Card>
 
@@ -169,31 +173,31 @@ export default function Artist() {
                     </Typography>
 
                     <List dense>
-                      {artistData?.facebook_url ? (
+                      {studioData?.facebook_url ? (
                         <ListItem>
                           <FacebookIcon />
-                          <Link href={artistData?.facebook_url}>Facebook</Link>
+                          <Link href={studioData?.facebook_url}>Facebook</Link>
                         </ListItem>
                       ) : null}
 
-                      {artistData?.instagram_url ? (
+                      {studioData?.instagram_url ? (
                         <ListItem>
                           <InstagramIcon />
-                          <Link href={artistData?.instagram_url}>Instagram</Link>
+                          <Link href={studioData?.instagram_url}>Instagram</Link>
                         </ListItem>
                       ) : null}
 
-                      {artistData?.twitter_url ? (
+                      {studioData?.twitter_url ? (
                         <ListItem>
                           <TwitterIcon />
-                          <Link href={artistData?.twitter_url}>Twitter</Link>
+                          <Link href={studioData?.twitter_url}>Twitter</Link>
                         </ListItem>
                       ) : null}
 
-                      {artistData?.website ? (
+                      {studioData?.website_url ? (
                         <ListItem>
                           <LanguageIcon />
-                          <Link href={artistData?.website}>Website</Link>
+                          <Link href={studioData?.website_url}>Website</Link>
                         </ListItem>
                       ) : null}
                     </List>
@@ -213,45 +217,52 @@ export default function Artist() {
                         </colgroup>
                         <TableBody>
                           <StyledTableRow>
+                            <StyledTableCell colSpan={2}>
+                              <b>Email </b>
+                              <Link href={`mailto:${studioData?.email}`}>{studioData?.email}</Link>
+                            </StyledTableCell>
+                          </StyledTableRow>
+
+                          <StyledTableRow>
                             <StyledTableCell>
                               <b>Phone</b>
                             </StyledTableCell>
-                            <StyledTableCell>{artistData?.phone_number}</StyledTableCell>
+                            <StyledTableCell>{studioData?.phone_number}</StyledTableCell>
                           </StyledTableRow>
 
                           <StyledTableRow>
                             <StyledTableCell>
                               <b>Country</b>
                             </StyledTableCell>
-                            <StyledTableCell>{artistData?.country}</StyledTableCell>
+                            <StyledTableCell>{studioData?.country}</StyledTableCell>
                           </StyledTableRow>
 
                           <StyledTableRow>
                             <StyledTableCell>
                               <b>City</b>
                             </StyledTableCell>
-                            <StyledTableCell>{artistData?.city}</StyledTableCell>
+                            <StyledTableCell>{studioData?.city}</StyledTableCell>
                           </StyledTableRow>
 
                           <StyledTableRow>
                             <StyledTableCell>
                               <b>State</b>
                             </StyledTableCell>
-                            <StyledTableCell>{artistData?.state}</StyledTableCell>
+                            <StyledTableCell>{studioData?.state}</StyledTableCell>
                           </StyledTableRow>
 
                           <StyledTableRow>
                             <StyledTableCell>
                               <b>Street</b>
                             </StyledTableCell>
-                            <StyledTableCell>{artistData?.street_address}</StyledTableCell>
+                            <StyledTableCell>{studioData?.street_address}</StyledTableCell>
                           </StyledTableRow>
 
                           <StyledTableRow>
                             <StyledTableCell>
                               <b>Zip Code</b>
                             </StyledTableCell>
-                            <StyledTableCell>{artistData?.zip_code}</StyledTableCell>
+                            <StyledTableCell>{studioData?.zip_code}</StyledTableCell>
                           </StyledTableRow>
                         </TableBody>
                       </Table>
@@ -266,15 +277,19 @@ export default function Artist() {
                     <Grid item xs={12}>
                       <Tabs value={tabIndex} onChange={handleChange} indicatorColor="primary">
                         <Tab label="Business Settings" />
+                        <Tab label="Studio Artists" />
                         <Tab label="Tattoo Images" />
                       </Tabs>
                     </Grid>
                     <Grid item xs={12}>
                       <TabPanel value={tabIndex} index={0}>
-                        <BusinessSettings artistData={artistData} />
+                        <BusinessSettings studioData={studioData} />
                       </TabPanel>
                       <TabPanel value={tabIndex} index={1}>
-                        <TattooImages tattoos={artistData.tattoos} />
+                        <StudioArtists artists={studioData.artists} />
+                      </TabPanel>
+                      <TabPanel value={tabIndex} index={2}>
+                        <TattooImages tattoos={studioData.tattoos} />
                       </TabPanel>
                     </Grid>
                   </Grid>
@@ -282,7 +297,7 @@ export default function Artist() {
               </Grid>
             </Grid>
           ) : (
-            <Alert severity="info">Artist record not found...</Alert>
+            <Alert severity="info">Studio record not found...</Alert>
           )}
         </Grid>
       </Grid>
@@ -300,20 +315,24 @@ function TabPanel(props: any) {
   );
 }
 
-function BusinessSettings({ artistData }: { artistData: Admin.ArtistProfile }) {
+function BusinessSettings({ studioData }: { studioData: Admin.StudioProfile }) {
   const classes = useStyles();
 
   const {
-    specialty,
-    licensed,
-    years_of_experience,
-    currency_code,
+    cosmetic_tattoos,
+    accepted_payment_methods,
     price_per_hour,
-    minimum_spend,
-    guest_artist,
-    seeking_guest_spot,
+    lgbt_friendly,
+    accepting_guest_artist,
+    parking,
+    languages,
     bio,
-  } = artistData;
+    piercings,
+    privacy_dividers,
+    vegan_ink,
+    wheelchair_access,
+    wifi,
+  } = studioData;
 
   return (
     <Grid container spacing={2}>
@@ -326,18 +345,8 @@ function BusinessSettings({ artistData }: { artistData: Admin.ArtistProfile }) {
             </colgroup>
             <TableBody>
               <StyledTableRow>
-                <StyledTableCell>Years of Experience :</StyledTableCell>
-                <StyledTableCell>{years_of_experience}</StyledTableCell>
-              </StyledTableRow>
-
-              <StyledTableRow>
-                <StyledTableCell>Speciality :</StyledTableCell>
-                <StyledTableCell>{specialty}</StyledTableCell>
-              </StyledTableRow>
-
-              <StyledTableRow>
-                <StyledTableCell>Currency Code :</StyledTableCell>
-                <StyledTableCell>{currency_code}</StyledTableCell>
+                <StyledTableCell>Languages :</StyledTableCell>
+                <StyledTableCell>{languages}</StyledTableCell>
               </StyledTableRow>
 
               <StyledTableRow>
@@ -346,23 +355,53 @@ function BusinessSettings({ artistData }: { artistData: Admin.ArtistProfile }) {
               </StyledTableRow>
 
               <StyledTableRow>
-                <StyledTableCell>Minimum Spend:</StyledTableCell>
-                <StyledTableCell>{minimum_spend}</StyledTableCell>
+                <StyledTableCell>Accepted Payment Methods :</StyledTableCell>
+                <StyledTableCell>{accepted_payment_methods}</StyledTableCell>
               </StyledTableRow>
 
               <StyledTableRow>
-                <StyledTableCell>Licensed :</StyledTableCell>
-                <StyledTableCell>{licensed ? "Yes" : "No"}</StyledTableCell>
+                <StyledTableCell>Accepting Guest Artist :</StyledTableCell>
+                <StyledTableCell>{accepting_guest_artist ? "Yes" : "No"}</StyledTableCell>
               </StyledTableRow>
 
               <StyledTableRow>
-                <StyledTableCell>Guest Artist :</StyledTableCell>
-                <StyledTableCell>{guest_artist ? "Yes" : "No"}</StyledTableCell>
+                <StyledTableCell>Cosmetic Tattoos :</StyledTableCell>
+                <StyledTableCell>{cosmetic_tattoos ? "Yes" : "No"}</StyledTableCell>
               </StyledTableRow>
 
               <StyledTableRow>
-                <StyledTableCell>Seeking Guest Spot :</StyledTableCell>
-                <StyledTableCell>{seeking_guest_spot ? "Yes" : "No"}</StyledTableCell>
+                <StyledTableCell>Vegan Ink:</StyledTableCell>
+                <StyledTableCell>{vegan_ink ? "Yes" : "No"}</StyledTableCell>
+              </StyledTableRow>
+
+              <StyledTableRow>
+                <StyledTableCell>Piercings :</StyledTableCell>
+                <StyledTableCell>{piercings ? "Yes" : "No"}</StyledTableCell>
+              </StyledTableRow>
+
+              <StyledTableRow>
+                <StyledTableCell>Privacy Dividers :</StyledTableCell>
+                <StyledTableCell>{privacy_dividers ? "Yes" : "No"}</StyledTableCell>
+              </StyledTableRow>
+
+              <StyledTableRow>
+                <StyledTableCell>LGBT_Friendly :</StyledTableCell>
+                <StyledTableCell>{lgbt_friendly ? "Yes" : "No"}</StyledTableCell>
+              </StyledTableRow>
+
+              <StyledTableRow>
+                <StyledTableCell>Wi-Fi :</StyledTableCell>
+                <StyledTableCell>{wifi ? "Yes" : "No"}</StyledTableCell>
+              </StyledTableRow>
+
+              <StyledTableRow>
+                <StyledTableCell>Parking :</StyledTableCell>
+                <StyledTableCell>{parking ? "Yes" : "No"}</StyledTableCell>
+              </StyledTableRow>
+
+              <StyledTableRow>
+                <StyledTableCell>Wheelchair Access :</StyledTableCell>
+                <StyledTableCell>{wheelchair_access ? "Yes" : "No"}</StyledTableCell>
               </StyledTableRow>
 
               <StyledTableRow>
@@ -536,6 +575,70 @@ function TattooImage({ tattoo }: { tattoo: Admin.Tattoo }) {
       <Grid item xs={12}>
         {/* Show info alerts for update status */}
         {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
+      </Grid>
+    </Grid>
+  );
+}
+
+function StudioArtists({ artists }: { artists: Admin.ArtistProfile[] }) {
+  const classes = useStyles();
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  return (
+    <Grid container>
+      <Grid item xs={12}>
+        {artists.length > 0 ? (
+          <React.Fragment>
+            <TableContainer className={classes.tableContainer}>
+              <Table size="small">
+                <colgroup>
+                  <col width="auto" />
+                  <col width="auto" />
+                  <col width="auto" />
+                  <col width="auto" />
+                  <col width="30%" />
+                </colgroup>
+                <TableBody>
+                  {artists.map((artist, index) => (
+                    <StyledTableRow key={index}>
+                      <StyledTableCell>
+                        <Link href={`/admin/artists/${artist.id}`}>{artist.name ?? "Null"}</Link>
+                      </StyledTableCell>
+                      <StyledTableCell>{artist.phone_number}</StyledTableCell>
+                      <StyledTableCell>{artist.city}</StyledTableCell>
+                      <StyledTableCell>{artist.country}</StyledTableCell>
+                      <StyledTableCell></StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+
+            <TablePagination
+              component="div"
+              rowsPerPageOptions={[5, 10, 20, 40, 60, { value: artists.length, label: "All" }]}
+              rowsPerPage={rowsPerPage}
+              count={artists.length}
+              page={page}
+              onChangePage={handleChangePage}
+              onChangeRowsPerPage={handleChangeRowsPerPage}
+              className={classes.paginationWrapper}
+            />
+          </React.Fragment>
+        ) : (
+          <Alert severity="info">No studio artists found...</Alert>
+        )}
       </Grid>
     </Grid>
   );

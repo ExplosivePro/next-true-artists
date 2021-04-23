@@ -133,8 +133,8 @@ export default function Artists() {
                     <TableRow>
                       <StyledTableCell>Name</StyledTableCell>
                       <StyledTableCell>Phone</StyledTableCell>
-                      <StyledTableCell>E-Mail</StyledTableCell>
                       <StyledTableCell>City</StyledTableCell>
+                      <StyledTableCell>Country</StyledTableCell>
                       <StyledTableCell>Status</StyledTableCell>
                     </TableRow>
                   </TableHead>
@@ -146,8 +146,8 @@ export default function Artists() {
                           <Link href={`${router.pathname}/${artist.id}`}>{artist.name ?? "Null"}</Link>
                         </StyledTableCell>
                         <StyledTableCell>{artist.phone_number}</StyledTableCell>
-                        <StyledTableCell>{artist.email}</StyledTableCell>
                         <StyledTableCell>{artist.city}</StyledTableCell>
+                        <StyledTableCell>{artist.country}</StyledTableCell>
                         <StyledTableCell>{artist.status}</StyledTableCell>
                       </StyledTableRow>
                     ))}

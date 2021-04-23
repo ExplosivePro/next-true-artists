@@ -64,10 +64,6 @@ export const useImageStyles = makeStyles(() =>
   createStyles({
     root: {
       maxWidth: 345,
-      "& .MuiPaper-elevation1": {
-        boxShadow:
-          "0px 0px 1px -1px rgb(0 0 0 / 20%), 0px 0px 0px 0px rgb(0 0 0 / 14%), 0px 0px 3px 0px rgb(0 0 0 / 12%)",
-      },
     },
     media: {
       height: 0,
@@ -86,9 +82,13 @@ export const useImageStyles = makeStyles(() =>
       marginTop: "15px",
     },
     tattooItemWrapper: {
-      marginTop: "20px",
-      border: "solid thin lightGrey",
-      borderRadius: 8,
+      display: "flex",
+      padding: "20px",
+      border: "none",
+    },
+    chips: {
+      margin: "2px",
+      padding: 0,
     },
   }),
 );
