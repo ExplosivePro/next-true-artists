@@ -29,7 +29,7 @@ import ArtistProfile, { validationSchema as artistSchema } from "../../../compon
 import { useYupValidationResolver } from "../../../utils";
 
 // Contexts
-import { useApp, useAuth } from "../../../contexts";
+import { useApp, useAuth, Roles } from "../../../contexts";
 import { useRouter } from "next/router";
 
 // APIs
@@ -140,32 +140,26 @@ export default function UserProfile() {
     setActiveTab(index);
   };
 
-  // Submit the form
-  const onSubmit = async ({
-    email,
-    fullName,
-    bio,
-    yearsOfExperience,
-    minimumSpend,
-    pricePerHour,
-    currency,
-    streetAddress,
-    zipCode,
-    country,
-    phoneNumber,
-    website,
-    facebook,
-    instagram,
-    twitter,
-    specialties,
-  }: any) => {
-    // Call API to edit normal user role first
-    const editUserResponse = await editUser({
-      id: id as number,
-      email: email,
-      full_name: fullName,
-    });
-
+  // Submit edit profile for artist role
+  const submitEditArtistProfile = async (
+    {
+      bio,
+      yearsOfExperience,
+      minimumSpend,
+      pricePerHour,
+      currency,
+      streetAddress,
+      zipCode,
+      country,
+      phoneNumber,
+      website,
+      facebook,
+      instagram,
+      twitter,
+      specialties,
+    }: any,
+    editUserResponse: RestApi.Response,
+  ) => {
     const editArtistResponse = await editArtistProfile({
       id: artist?.id as number,
       bio,
@@ -208,6 +202,52 @@ export default function UserProfile() {
       updateUserData();
       // Back to dashboard
       push("/dashboard");
+    }
+  };
+
+  // Submit regular role
+  const submitEditRegularProfile = (editUserResponse: RestApi.Response) => {
+    // Show errors if there is any errors
+    if (editUserResponse.error) {
+      showErrorDialog(true, "Update profile fail");
+    } else {
+      showSuccessDialog(true, "Update profile successfully");
+      // Get new info
+      updateUserData();
+      // Back to dashboard
+      push("/dashboard");
+    }
+  };
+
+  // Submit the form
+  const onSubmit = async (data: any) => {
+    // Call API to edit normal user role first
+    const editUserResponse = await editUser({
+      id: id as number,
+      email: data.email,
+      full_name: data.fullName,
+    });
+
+    // Submit by role
+    switch (role) {
+      case Roles.ARTIST: {
+        submitEditArtistProfile(data, editUserResponse);
+        break;
+      }
+
+      case Roles.STUDIO: {
+        break;
+      }
+
+      case Roles.REGULAR: {
+        submitEditRegularProfile(editUserResponse);
+        break;
+      }
+
+      default: {
+        submitEditRegularProfile(editUserResponse);
+        break;
+      }
     }
   };
 
