@@ -16,8 +16,10 @@ const useStyles = makeStyles((theme) =>
       flexWrap: "wrap",
     },
     imageBox: {
-      width: "100px",
-      height: "100px",
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      alignItems: "center",
       minWidth: "100px",
       textAlign: "center",
       backgroundColor: colors.standardLightGrey,
@@ -25,8 +27,8 @@ const useStyles = makeStyles((theme) =>
       margin: "5px",
       overflow: "hidden",
       "& img": {
-        maxWidth: "100px",
-        maxHeight: "100px",
+        maxWidth: "100%",
+        maxHeight: "auto",
       },
     },
     addImageBox: {

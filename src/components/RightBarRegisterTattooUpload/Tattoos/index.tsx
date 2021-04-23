@@ -107,10 +107,10 @@ const Tattoos = ({ data, addImage, loading = false, onSetLoading, onUpdate, onCh
         {data.map((item, index) => {
           return (
             <Grid container key={index} spacing={2} className={classes.tattooCard}>
-              <Grid item lg={3} md={3} sm={12} xs={12}>
+              <Grid item lg={5} md={5} sm={12} xs={12}>
                 <ImageItem data={item} className={classes.alignCenter} />
               </Grid>
-              <Grid item lg={9} md={9} sm={12} xs={12}>
+              <Grid item lg={7} md={7} sm={12} xs={12}>
                 <IconButton className={classes.deleteIcon}>
                   <DeleteIcon />
                 </IconButton>

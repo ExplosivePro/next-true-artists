@@ -31,11 +31,8 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: "25px",
     },
     formWrapper: {
-      width: "70%",
+      width: "100%",
       height: "100%",
-      [theme.breakpoints.down("sm")]: {
-        width: "100%",
-      },
     },
     avatar: {
       width: theme.spacing(20),
