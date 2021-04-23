@@ -1,25 +1,19 @@
 // External
-import React, { useMemo } from "react";
-import { useForm } from "react-hook-form";
+import React from "react";
 import * as yup from "yup";
 
 // Material UI Components
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { Grid, Typography } from "@material-ui/core";
 import InputAdornment from "@material-ui/core/InputAdornment";
-
-// Custom component
-import FormInput from "./FormInput";
-import { useYupValidationResolver } from "../utils";
-import PrimaryButton from "./PrimaryButton";
-
-import { createStudioProfile, editStudioProfile } from "../api";
-import { useApp } from "../contexts";
-
-import { baseInstagramUrl, baseFacebookUrl, baseTwitterUrl, countryList } from "../constants";
 import MenuItem from "@material-ui/core/MenuItem";
 
-const useStyles = makeStyles((theme: Theme) =>
+// Custom component
+import FormInput from "../FormInput";
+
+import { baseInstagramUrl, baseFacebookUrl, baseTwitterUrl, countryList } from "../../constants";
+
+const useStyles = makeStyles(() =>
   createStyles({
     root: {
       height: "100%",
@@ -42,11 +36,8 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: "12px 0",
     },
     formWrapper: {
-      width: "70%",
+      width: "100%",
       height: "100%",
-      [theme.breakpoints.down("sm")]: {
-        width: "100%",
-      },
     },
     buttonWrapper: {
       marginTop: "25px",
@@ -57,157 +48,28 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function RightBarStudioRegisterInformation({
-  currentData,
-  onNext,
-  currentUserId,
-  currentUserRoleId,
-}: Props) {
-  const app = useApp();
-
+export default function StudioProfile({ currentData, control, errors }: Props) {
   const {
-    streetAddress,
+    street_address: streetAddress,
     state,
     city,
     country,
-    zipCode,
-    phoneNumber,
-    facebook,
-    instagram,
-    twitter,
-    website,
+    zip_code: zipCode,
+    phone_number: phoneNumber,
+    facebook_url: facebook,
+    instagram_url: instagram,
+    twitter_url: twitter,
+    website_url: website,
     name,
     email,
   } = currentData;
 
-  // Validation schema
-  const validationSchema = useMemo(
-    () =>
-      yup.object({
-        name: yup.string().required("Studio name is required"),
-        phoneNumber: yup.string().required("Phone number is required"),
-        streetAddress: yup.string().required("Studio address is required"),
-        state: yup.string().required("State is required"),
-        zipCode: yup.string().required("Zip code is required"),
-        city: yup.string().required("City is required"),
-        country: yup.string().required("Country is required"),
-      }),
-    [],
-  );
-
   const classes = useStyles();
-  const resolver = useYupValidationResolver(validationSchema);
-  const { control, handleSubmit, errors } = useForm({ resolver });
-
-  const onSubmit = async ({
-    name,
-    email,
-    streetAddress,
-    city,
-    country,
-    state,
-    zipCode,
-    phoneNumber,
-    instagram,
-    website,
-    facebook,
-    twitter,
-  }: submitFormData) => {
-    if (currentUserId) {
-      // Edit
-      if (currentUserRoleId) {
-        // Call APIs to create studio profile
-        const response = await editStudioProfile({
-          id: currentUserRoleId,
-          name,
-          email,
-          city,
-          country,
-          state,
-          zip_code: zipCode,
-          phone_number: phoneNumber,
-          instagram_ur: `${baseInstagramUrl}${instagram}`,
-          website,
-          facebook_url: `${baseFacebookUrl}${facebook}`,
-          twitter_url: `${baseTwitterUrl}${twitter}`,
-          street_address: streetAddress,
-        });
-
-        const { error, data, errors } = response;
-        // No error happens
-        if (!error) {
-          onNext &&
-            onNext(data.id, {
-              name,
-              email,
-              streetAddress,
-              city,
-              country,
-              state,
-              zipCode,
-              phoneNumber,
-              instagram,
-              website,
-              facebook,
-              twitter,
-            });
-        } else {
-          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
-        }
-      } else {
-        // Call APIs to create studio profile
-        const response = await createStudioProfile({
-          user_id: currentUserId,
-          name,
-          email,
-          city,
-          country,
-          state,
-          zip_code: zipCode,
-          phone_number: phoneNumber,
-          instagram_ur: `${baseInstagramUrl}${instagram}`,
-          website,
-          facebook_url: `${baseFacebookUrl}${facebook}`,
-          twitter_url: `${baseTwitterUrl}${twitter}`,
-          street_address: streetAddress, // Put this down temporarily due to missing APIs
-        });
-
-        const { error, data, errors } = response;
-        // No error happens
-        if (!error) {
-          onNext &&
-            onNext(data.id, {
-              name,
-              email,
-              streetAddress,
-              city,
-              country,
-              state,
-              zipCode,
-              phoneNumber,
-              instagram,
-              website,
-              facebook,
-              twitter,
-            });
-        } else {
-          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
-        }
-      }
-    }
-  };
 
   return (
     <Grid container className={classes.root} alignItems={"center"} justify={"center"}>
       <div className={classes.formWrapper}>
-        <div className={classes.titleWrapper}>
-          <Typography variant={"h5"} className={classes.titleText}>
-            Studio Information
-          </Typography>
-          <Typography>Fill in the information about your studio. Make it easy for clients to contact you.</Typography>
-        </div>
-
-        <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
+        <>
           <Typography variant={"h6"} className={classes.sectionTitle}>
             Address
           </Typography>
@@ -407,70 +269,28 @@ export default function RightBarStudioRegisterInformation({
               />
             </Grid>
           </Grid>
-
-          <Grid container spacing={2} className={classes.buttonWrapper}>
-            <Grid item lg={12} md={12} sm={12} xs={12}>
-              <PrimaryButton type={"submit"} variant="contained" color="primary" size="large" fullWidth primaryColor>
-                Next
-              </PrimaryButton>
-            </Grid>
-          </Grid>
-        </form>
+        </>
       </div>
     </Grid>
   );
 }
 
-export const preloadRightBarStudioRegisterInformationData = ({
-  name,
-  email,
-  street_address,
-  city,
-  country,
-  state,
-  zip_code,
-  phone_number,
-  instagram_url,
-  website_url,
-  facebook_url,
-  twitter_url,
-}: Resource.StudioDetail) => {
-  return {
-    name,
-    email,
-    streetAddress: street_address,
-    city,
-    country,
-    state,
-    zipCode: zip_code,
-    phoneNumber: phone_number,
-    instagram: instagram_url,
-    website: website_url,
-    facebook: facebook_url,
-    twitter: twitter_url,
-  };
-};
+// Validation schema
+export const validationSchema = yup.object({
+  fullName: yup.string().required("Full name is required"),
+  email: yup.string().required("email of experience is required"),
+  name: yup.string().required("Studio name is required"),
+  phoneNumber: yup.string().required("Phone number is required"),
+  streetAddress: yup.string().required("Studio address is required"),
+  state: yup.string().required("State is required"),
+  zipCode: yup.string().required("Zip code is required"),
+  city: yup.string().required("City is required"),
+  country: yup.string().required("Country is required"),
+});
 
 interface Props {
-  currentUserId: number | undefined;
-  currentUserRoleId: number | undefined;
   currentData: any;
-  role: string;
-  onPreviousStep?: () => void;
-  onNext?: (id: number, data: any) => void;
-}
-
-interface submitFormData {
-  name: string;
-  email?: string;
-  streetAddress: string;
-  city: string;
-  country: string;
-  state: string;
-  zipCode: string;
-  phoneNumber: string;
-  instagram?: string;
-  website?: string;
-  facebook?: string;
-  twitter?: string;
+  className?: any;
+  control: any;
+  errors: any;
 }

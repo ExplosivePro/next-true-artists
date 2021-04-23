@@ -24,6 +24,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import PrimaryButton from "../../../components/PrimaryButton";
 import FormInput from "../../../components/FormInput";
 import ArtistProfile, { validationSchema as artistSchema } from "../../../components/ArtistProfile";
+import StudioProfile, { validationSchema as studioSchema } from "../../StudioProfile";
 
 // Utils
 import { useYupValidationResolver } from "../../../utils";
@@ -33,7 +34,7 @@ import { useApp, useAuth, Roles } from "../../../contexts";
 import { useRouter } from "next/router";
 
 // APIs
-import { editUser, editArtistProfile, updateArtistAvatar } from "../../../api";
+import { editUser, editArtistProfile, updateArtistAvatar, editStudioProfile } from "../../../api";
 
 // Styles
 import useStyles from "./styles";
@@ -48,8 +49,11 @@ import {
 // Get schema by role
 const getSchemaByRole = (role: string): any => {
   switch (role) {
-    case "artist": {
+    case Roles.ARTIST: {
       return artistSchema;
+    }
+    case Roles.STUDIO: {
+      return studioSchema;
     }
     default: {
       return yup.object({
@@ -109,7 +113,7 @@ export default function UserProfile() {
 
   const {
     user,
-    user: { id, email, full_name, role, artist } = { email: "", full_name: "" },
+    user: { id, email, full_name, role, artist, studio } = { email: "", full_name: "" },
     updateUserData,
   } = useAuth();
   const { push } = useRouter();
@@ -205,6 +209,63 @@ export default function UserProfile() {
     }
   };
 
+  // Submit edit profile for studio role
+  const submitEditStudioProfile = async (
+    {
+      name,
+      email,
+      streetAddress,
+      city,
+      country,
+      state,
+      zipCode,
+      phoneNumber,
+      instagram,
+      website,
+      facebook,
+      twitter,
+    }: any,
+    editUserResponse: RestApi.Response,
+  ) => {
+    const editArtistResponse = await editStudioProfile({
+      id: studio?.id as number,
+      name,
+      email,
+      city,
+      country,
+      state,
+      zip_code: zipCode,
+      phone_number: phoneNumber,
+      instagram_ur: `${baseInstagramUrl}${instagram}`,
+      website,
+      facebook_url: `${baseFacebookUrl}${facebook}`,
+      twitter_url: `${baseTwitterUrl}${twitter}`,
+      street_address: streetAddress,
+    });
+
+    let avatarUploadResponse: RestApi.Response = { error: false };
+
+    // Update avatar
+    if (fileData) {
+      // Call APIs to create studio profile
+      avatarUploadResponse = await updateArtistAvatar({
+        id: artist?.id as number,
+        file: fileData,
+      });
+    }
+
+    // Show errors if there is any errors
+    if (editUserResponse.error || editArtistResponse.error || avatarUploadResponse?.error) {
+      showErrorDialog(true, "Update profile fail");
+    } else {
+      showSuccessDialog(true, "Update profile successfully");
+      // Get new info
+      updateUserData();
+      // Back to dashboard
+      push("/dashboard");
+    }
+  };
+
   // Submit regular role
   const submitEditRegularProfile = (editUserResponse: RestApi.Response) => {
     // Show errors if there is any errors
@@ -236,6 +297,7 @@ export default function UserProfile() {
       }
 
       case Roles.STUDIO: {
+        submitEditStudioProfile(data, editUserResponse);
         break;
       }
 
@@ -430,7 +492,7 @@ export default function UserProfile() {
                       errors={errors.email}
                     />
 
-                    {role === "artist" && artist && (
+                    {role === Roles.ARTIST && artist && (
                       <ArtistProfile
                         currentData={artist}
                         className={classes.artistProfile}
@@ -445,6 +507,10 @@ export default function UserProfile() {
                         onSelectionChange={onSelectionChange}
                         specialties={specialties}
                       />
+                    )}
+
+                    {role === Roles.STUDIO && studio && (
+                      <StudioProfile control={control} errors={errors} currentData={studio} />
                     )}
 
                     <Grid container spacing={2} className={classes.buttonWrapper}>
