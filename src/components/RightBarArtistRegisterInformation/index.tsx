@@ -49,6 +49,9 @@ const useStyles = makeStyles((theme: Theme) =>
     titleWrapper: {
       marginBottom: "35px",
     },
+    form: {
+      paddingBottom: "25px",
+    },
     formInput: {
       margin: "12px 0",
     },
@@ -61,6 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     buttonWrapper: {
       marginTop: "25px",
+      marginBottom: "100px",
     },
     sectionTitle: {
       marginTop: "15px",
@@ -108,7 +112,6 @@ const preloadSettingValues = (settingMap: any[], artistProfile: Resource.ArtistD
 };
 
 export default function RightBarArtistRegisterInformation({
-  onPreviousStep,
   onNext,
   currentUserId, // User Id
   currentUserRoleId, // Artist Id (After creation), if this exists, user are editing their profile
@@ -125,6 +128,7 @@ export default function RightBarArtistRegisterInformation({
         phoneNumber: yup.string().required("Phone number is required"),
         streetAddress: yup.string().required("Street address is required"),
         zipCode: yup.string().required("Zip code is required"),
+        city: yup.string().required("City is required"),
         country: yup.string().required("Country is required"),
       }),
     [],
@@ -145,6 +149,7 @@ export default function RightBarArtistRegisterInformation({
     phoneNumber,
     streetAddress,
     zipCode,
+    city,
     country,
     facebook,
     website,
@@ -156,6 +161,7 @@ export default function RightBarArtistRegisterInformation({
     bio,
     streetAddress,
     zipCode,
+    city,
     country,
     phoneNumber,
     yearsOfExperience,
@@ -181,6 +187,7 @@ export default function RightBarArtistRegisterInformation({
           currency_code: currency,
           street_address: streetAddress,
           zip_code: zipCode,
+          city,
           country,
           phone_number: phoneNumber,
           website,
@@ -207,6 +214,7 @@ export default function RightBarArtistRegisterInformation({
               twitter,
               streetAddress,
               zipCode,
+              city,
               country,
               phoneNumber,
               specialties,
@@ -230,6 +238,7 @@ export default function RightBarArtistRegisterInformation({
           user_id: currentUserId,
           street_address: streetAddress,
           zip_code: zipCode,
+          city,
           country,
           phone_number: phoneNumber,
           website,
@@ -314,7 +323,7 @@ export default function RightBarArtistRegisterInformation({
           <Typography>Fill in the information about your studio. Make it easy for clients to contact you.</Typography>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
           <Typography variant={"h6"} className={classes.sectionTitle}>
             Tell us a little bit about yourself
           </Typography>
@@ -428,6 +437,19 @@ export default function RightBarArtistRegisterInformation({
           />
 
           <FormInput
+            name="city"
+            classes={{ root: classes.formInput }}
+            label={"City"}
+            id="city"
+            placeholder={"City"}
+            fullWidth
+            control={control}
+            variant={"outlined"}
+            defaultValue={city || ""}
+            errors={errors.city}
+          />
+
+          <FormInput
             name="country"
             classes={{ root: classes.formInput }}
             label={"Country"}
@@ -523,20 +545,7 @@ export default function RightBarArtistRegisterInformation({
           </Grid>
 
           <Grid container spacing={2} className={classes.buttonWrapper}>
-            <Grid item lg={6} md={6} sm={12} xs={12}>
-              <PrimaryButton
-                type={"button"}
-                variant="outlined"
-                color="primary"
-                size="large"
-                primaryColor
-                fullWidth
-                onClick={onPreviousStep}
-              >
-                Previous Step
-              </PrimaryButton>
-            </Grid>
-            <Grid item lg={6} md={6} sm={12} xs={12}>
+            <Grid item lg={12} md={12} sm={12} xs={12}>
               <PrimaryButton type={"submit"} variant="contained" color="primary" size="large" fullWidth primaryColor>
                 Next
               </PrimaryButton>
@@ -602,6 +611,7 @@ interface submitFormData {
   bio: string;
   streetAddress: string;
   zipCode: string;
+  city: string;
   country: string;
   phoneNumber: string;
   yearsOfExperience: number;

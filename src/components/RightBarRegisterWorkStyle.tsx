@@ -46,6 +46,7 @@ const useStyles = makeStyles({
   },
   buttonWrapper: {
     marginTop: "25px",
+    paddingBottom: "100px",
   },
   box: {
     backgroundColor: colors.white,

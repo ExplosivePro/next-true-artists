@@ -215,7 +215,7 @@ const Tattoos = ({ data, addImage, loading = false, onSetLoading, onUpdate, onCh
                     fullWidth
                     color="primary"
                     size="large"
-                    bluePastel
+                    primaryColor
                     onClick={() => {
                       onUpdate(item.id as number, {
                         color: item.color,

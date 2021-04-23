@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme: Theme) =>
     titleWrapper: {
       marginBottom: "35px",
     },
+    form: {
+      paddingBottom: "120px",
+    },
     formInput: {
       margin: "12px 0",
     },
@@ -55,7 +58,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function RightBarStudioRegisterInformation({
-  onPreviousStep,
   currentData,
   onNext,
   currentUserId,
@@ -205,7 +207,7 @@ export default function RightBarStudioRegisterInformation({
           <Typography>Fill in the information about your studio. Make it easy for clients to contact you.</Typography>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
           <Typography variant={"h6"} className={classes.sectionTitle}>
             Address
           </Typography>
@@ -407,20 +409,7 @@ export default function RightBarStudioRegisterInformation({
           </Grid>
 
           <Grid container spacing={2} className={classes.buttonWrapper}>
-            <Grid item lg={6} md={6} sm={12} xs={12}>
-              <PrimaryButton
-                type={"button"}
-                variant="outlined"
-                color="primary"
-                size="large"
-                primaryColor
-                fullWidth
-                onClick={onPreviousStep}
-              >
-                Previous Step
-              </PrimaryButton>
-            </Grid>
-            <Grid item lg={6} md={6} sm={12} xs={12}>
+            <Grid item lg={12} md={12} sm={12} xs={12}>
               <PrimaryButton type={"submit"} variant="contained" color="primary" size="large" fullWidth primaryColor>
                 Next
               </PrimaryButton>

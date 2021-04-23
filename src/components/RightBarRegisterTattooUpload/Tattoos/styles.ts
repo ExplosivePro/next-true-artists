@@ -101,7 +101,7 @@ const useStyles = makeStyles((theme) =>
       position: "relative",
     },
     deleteIcon: {
-      color: colors.bluePastel,
+      color: colors.standardRed,
       position: "absolute",
       right: 0,
       top: 0,

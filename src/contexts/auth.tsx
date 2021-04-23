@@ -31,10 +31,11 @@ export enum AuthState {
   "authenticated",
 }
 
-enum Roles {
+export enum Roles {
   USERS = "users",
-  ARTISTS = "artist",
+  ARTIST = "artist",
   STUDIO = "studio_manager",
+  REGULAR = "regular",
 }
 
 /*

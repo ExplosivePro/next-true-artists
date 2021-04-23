@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 
 // Material UI Components
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { Grid, Typography } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import Badge from "@material-ui/core/Badge";
@@ -16,7 +16,7 @@ import PrimaryButton from "./PrimaryButton";
 import { updateArtistAvatar, updateStudioAvatar } from "../api";
 
 // Context
-import { useApp, User } from "../contexts";
+import { Roles, useApp, User } from "../contexts";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     buttonWrapper: {
       position: "absolute",
-      bottom: "40px",
+      bottom: "50px",
       left: "50%",
       transform: "translate(-50%)",
       width: "70%",
@@ -221,14 +221,14 @@ export default function RightBarRegisterAvatarUpload({
 
 export const preloadRightBarRegisterAvatarUploadData = ({ role, artist, studio }: User) => {
   switch (role) {
-    case "artist": {
+    case Roles.ARTIST: {
       return {
         file: null,
         preview: artist?.avatar?.image_url,
       };
     }
 
-    case "studio_manager": {
+    case Roles.STUDIO: {
       return {
         file: null,
         preview: studio?.avatar?.image_url,

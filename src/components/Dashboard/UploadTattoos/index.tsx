@@ -8,7 +8,7 @@ import { Grid, Typography } from "@material-ui/core";
 import PrimaryButton from "../../PrimaryButton";
 import Tattoos, { Image } from "../../../components/RightBarRegisterTattooUpload/Tattoos";
 
-import { uploadTattoos } from "../../../api";
+import { updateTattoos, uploadTattoos } from "../../../api";
 
 // Context
 import { useApp } from "../../../contexts";
@@ -24,9 +24,46 @@ export default function UploadTattoos() {
   const classes = useStyles();
 
   const [tattoos, setTattoos] = useState<Image[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleUploadImage = (data: any) => {
-    setTattoos([...tattoos, data]);
+  const handleUploadImage = async (data: any) => {
+    const rs = await uploadImages(data);
+
+    if (rs) {
+      rs.results.map((image: any, index: number) => {
+        // Attach id to existing file
+        if (data[index].file.name === image.body.image.name) {
+          data[index].id = image.body.id;
+        }
+      });
+      setTattoos([...tattoos, ...data]);
+    }
+
+    // Hide loading
+    setLoading(false);
+  };
+
+  const onFieldsChange = (index: number, name: string, value: any) => {
+    const tattooDetail = tattoos[index];
+
+    tattooDetail[name] = value;
+
+    // Simply remove old object then add the new item
+    setTattoos([...tattoos.slice(0, index), tattooDetail, ...tattoos.slice(index + 1)]);
+  };
+
+  // On tattoos update
+  const onUpdate = async (tattooId: number, payload: any) => {
+    const response = await updateTattoos(currentUserId as number, tattooId, payload, role);
+
+    const { error, errors, data } = response;
+    // No error happens
+    if (!error) {
+      app.showSuccessDialog(true, "Update successfully");
+      return data;
+    } else {
+      app.showErrorDialog(true, errors ? errors.toString() : "Upload fail");
+    }
   };
 
   const goNext = async () => {
@@ -69,7 +106,16 @@ export default function UploadTattoos() {
         </div>
 
         <Grid container>
-          <Tattoos data={tattoos} addImage={handleUploadImage} />
+          <Tattoos
+            data={tattoos}
+            addImage={handleUploadImage}
+            loading={loading}
+            onSetLoading={(value) => {
+              setLoading(value);
+            }}
+            onChange={onFieldsChange}
+            onUpdate={onUpdate}
+          />
         </Grid>
 
         <Grid container item justify={"center"} alignItems={"center"} className={classes.buttonWrapper} spacing={2}>

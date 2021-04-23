@@ -127,6 +127,9 @@ export default function RightBarRegisterPersonalDetail({
       const { error, data, errors } = response;
       // No error happens
       if (!error) {
+        // Save current registration type, so that we can recover registration step later
+        localStorage.setItem("pendingRegistrationType", role);
+
         // Log in
         loginByToken(data.auth_token, false);
 
