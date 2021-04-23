@@ -623,7 +623,11 @@ function StudioArtists({ artists }: { artists: Admin.ArtistProfile[] }) {
                   {artists.map((artist, index) => (
                     <StyledTableRow key={index}>
                       <StyledTableCell>
-                        <Link href={`/admin/artists/${artist.id}`}>{artist.name ?? "Null"}</Link>
+                        <Link href={`/admin/artists/${artist.id}`}>
+                          <a target="_blank" rel="noreferrer">
+                            {artist.name ?? "Null"}
+                          </a>
+                        </Link>
                       </StyledTableCell>
                       <StyledTableCell>{artist.phone_number}</StyledTableCell>
                       <StyledTableCell>{artist.city}</StyledTableCell>
