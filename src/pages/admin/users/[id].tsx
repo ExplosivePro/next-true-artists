@@ -38,7 +38,7 @@ export default function User() {
   const [userId, setUserId] = useState("");
 
   // Fetch User data using param
-  const { status: userDataStatus, data: userData, error: userDataError } = useQuery(
+  const { status: userDataStatus, data: userData, error: userDataError, refetch: refetchUserData } = useQuery(
     "userData",
     async () => await getUser(userId),
     {
@@ -79,8 +79,8 @@ export default function User() {
     else
       try {
         const response = await resetUserPassword({ email: userData?.email });
-        if (!response) setInfoAlert({ severity: "error", message: "Error resetting password !" });
-        else setInfoAlert({ severity: "success", message: "Password reset successfull" });
+        if (response) setInfoAlert({ severity: "error", message: "Error resetting password !" });
+        else setInfoAlert({ severity: "success", message: "Password reset request successfull" });
       } catch (error) {
         setInfoAlert({ severity: "error", message: `Error resetting password! - ${error}` });
       }
@@ -110,6 +110,11 @@ export default function User() {
 
         <Grid item xs={12}>
           <Divider className={classes.divider} />
+          {infoAlert.message ? (
+            <Grid container item xs={6}>
+              <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} />
+            </Grid>
+          ) : null}
           {userDataStatus === "loading" ? (
             <React.Fragment>
               <Alert severity="info">Loading... </Alert>
@@ -161,10 +166,7 @@ export default function User() {
                   </CardContent>
                 </Card>
 
-                {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
-                <Divider className={classes.divider} />
-
-                <Card>
+                <Card className={classes.divider}>
                   <Typography>
                     <b>Contact Information</b>
                   </Typography>
@@ -178,7 +180,7 @@ export default function User() {
               </Grid>
               {editMode ? (
                 <Grid item xs={12} md={9}>
-                  <EditProfile userData={userData} editModeClose={editModeClose} />
+                  <EditProfile userData={userData} editModeClose={editModeClose} refetchUserData={refetchUserData} />
                 </Grid>
               ) : null}
             </Grid>
@@ -202,7 +204,15 @@ export default function User() {
   );
 }
 
-function EditProfile({ userData, editModeClose }: any) {
+function EditProfile({
+  userData,
+  editModeClose,
+  refetchUserData,
+}: {
+  userData: Admin.User;
+  editModeClose: () => void;
+  refetchUserData: () => void;
+}) {
   const classes = useStyles();
 
   // Create an Alert for info feedback
@@ -229,7 +239,10 @@ function EditProfile({ userData, editModeClose }: any) {
     try {
       const response = await updateUser(formValues, userData?.id);
       if (!response) setInfoAlert({ severity: "error", message: "Error updating User !" });
-      else setInfoAlert({ severity: "success", message: "User updated successfully" });
+      else {
+        setInfoAlert({ severity: "success", message: "User updated successfully" });
+        refetchUserData();
+      }
     } catch (error) {
       setInfoAlert({ severity: "error", message: `Error updating User! - ${error}` });
     }

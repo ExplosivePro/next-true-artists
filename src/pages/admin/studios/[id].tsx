@@ -10,6 +10,9 @@ import Alert from "@material-ui/lab/Alert";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Avatar from "@material-ui/core/Avatar";
 import Chip from "@material-ui/core/Chip";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CancelIcon from "@material-ui/icons/Cancel";
+import { green, red } from "@material-ui/core/colors";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -334,6 +337,13 @@ function BusinessSettings({ studioData }: { studioData: Admin.StudioProfile }) {
     wifi,
   } = studioData;
 
+  const showBoolean = (value: boolean) =>
+    value ? (
+      <CheckCircleIcon fontSize="small" style={{ color: green[500] }} />
+    ) : (
+      <CancelIcon fontSize="small" style={{ color: red[500] }} />
+    );
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -361,47 +371,47 @@ function BusinessSettings({ studioData }: { studioData: Admin.StudioProfile }) {
 
               <StyledTableRow>
                 <StyledTableCell>Accepting Guest Artist :</StyledTableCell>
-                <StyledTableCell>{accepting_guest_artist ? "Yes" : "No"}</StyledTableCell>
+                <StyledTableCell>{showBoolean(accepting_guest_artist)}</StyledTableCell>
               </StyledTableRow>
 
               <StyledTableRow>
                 <StyledTableCell>Cosmetic Tattoos :</StyledTableCell>
-                <StyledTableCell>{cosmetic_tattoos ? "Yes" : "No"}</StyledTableCell>
+                <StyledTableCell>{showBoolean(cosmetic_tattoos)}</StyledTableCell>
               </StyledTableRow>
 
               <StyledTableRow>
                 <StyledTableCell>Vegan Ink:</StyledTableCell>
-                <StyledTableCell>{vegan_ink ? "Yes" : "No"}</StyledTableCell>
+                <StyledTableCell>{showBoolean(vegan_ink)}</StyledTableCell>
               </StyledTableRow>
 
               <StyledTableRow>
                 <StyledTableCell>Piercings :</StyledTableCell>
-                <StyledTableCell>{piercings ? "Yes" : "No"}</StyledTableCell>
+                <StyledTableCell>{showBoolean(piercings)}</StyledTableCell>
               </StyledTableRow>
 
               <StyledTableRow>
                 <StyledTableCell>Privacy Dividers :</StyledTableCell>
-                <StyledTableCell>{privacy_dividers ? "Yes" : "No"}</StyledTableCell>
+                <StyledTableCell>{showBoolean(privacy_dividers)}</StyledTableCell>
               </StyledTableRow>
 
               <StyledTableRow>
                 <StyledTableCell>LGBT_Friendly :</StyledTableCell>
-                <StyledTableCell>{lgbt_friendly ? "Yes" : "No"}</StyledTableCell>
+                <StyledTableCell>{showBoolean(lgbt_friendly)}</StyledTableCell>
               </StyledTableRow>
 
               <StyledTableRow>
                 <StyledTableCell>Wi-Fi :</StyledTableCell>
-                <StyledTableCell>{wifi ? "Yes" : "No"}</StyledTableCell>
+                <StyledTableCell>{showBoolean(wifi)}</StyledTableCell>
               </StyledTableRow>
 
               <StyledTableRow>
                 <StyledTableCell>Parking :</StyledTableCell>
-                <StyledTableCell>{parking ? "Yes" : "No"}</StyledTableCell>
+                <StyledTableCell>{showBoolean(parking)}</StyledTableCell>
               </StyledTableRow>
 
               <StyledTableRow>
                 <StyledTableCell>Wheelchair Access :</StyledTableCell>
-                <StyledTableCell>{wheelchair_access ? "Yes" : "No"}</StyledTableCell>
+                <StyledTableCell>{showBoolean(wheelchair_access)}</StyledTableCell>
               </StyledTableRow>
 
               <StyledTableRow>

@@ -10,6 +10,9 @@ import Alert from "@material-ui/lab/Alert";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Avatar from "@material-ui/core/Avatar";
 import Chip from "@material-ui/core/Chip";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CancelIcon from "@material-ui/icons/Cancel";
+import { green, red } from "@material-ui/core/colors";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -315,6 +318,13 @@ function BusinessSettings({ artistData }: { artistData: Admin.ArtistProfile }) {
     bio,
   } = artistData;
 
+  const showBoolean = (value: boolean) =>
+    value ? (
+      <CheckCircleIcon fontSize="small" style={{ color: green[500] }} />
+    ) : (
+      <CancelIcon fontSize="small" style={{ color: red[500] }} />
+    );
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -352,17 +362,17 @@ function BusinessSettings({ artistData }: { artistData: Admin.ArtistProfile }) {
 
               <StyledTableRow>
                 <StyledTableCell>Licensed :</StyledTableCell>
-                <StyledTableCell>{licensed ? "Yes" : "No"}</StyledTableCell>
+                <StyledTableCell>{showBoolean(licensed)}</StyledTableCell>
               </StyledTableRow>
 
               <StyledTableRow>
                 <StyledTableCell>Guest Artist :</StyledTableCell>
-                <StyledTableCell>{guest_artist ? "Yes" : "No"}</StyledTableCell>
+                <StyledTableCell>{showBoolean(guest_artist)}</StyledTableCell>
               </StyledTableRow>
 
               <StyledTableRow>
                 <StyledTableCell>Seeking Guest Spot :</StyledTableCell>
-                <StyledTableCell>{seeking_guest_spot ? "Yes" : "No"}</StyledTableCell>
+                <StyledTableCell>{showBoolean(seeking_guest_spot)}</StyledTableCell>
               </StyledTableRow>
 
               <StyledTableRow>
