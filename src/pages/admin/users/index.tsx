@@ -69,7 +69,7 @@ export default function Users() {
   return (
     <AdminBody>
       <Head>
-        <title>Admin - Users</title>
+        <title>TrueArtists: Admin/Users</title>
       </Head>
 
       <Grid container>

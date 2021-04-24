@@ -91,7 +91,7 @@ export default function Studio() {
   return (
     <AdminBody>
       <Head>
-        <title>Admin - {studioData?.name ?? "Null"}</title>
+        <title>TrueArtists: Admin/Studio - {studioData?.name ?? "Null"}</title>
       </Head>
 
       <Grid container>
@@ -160,12 +160,9 @@ export default function Studio() {
 
                 <Card variant="outlined" className={classes.divider}>
                   <CardContent>
-                    {
-                      //studioData?.services?
-                      ["Eeny", "Meeny", "Miney", "Moe"].map((style: string, index: number) => (
-                        <Chip label={style} size="small" key={index} className={classes.chips} />
-                      ))
-                    }
+                    {studioData?.services?.map((style: string, index: number) => (
+                      <Chip label={style} size="small" key={index} className={classes.chips} />
+                    ))}
                   </CardContent>
                 </Card>
 

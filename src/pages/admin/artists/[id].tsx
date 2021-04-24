@@ -90,7 +90,7 @@ export default function Artist() {
   return (
     <AdminBody>
       <Head>
-        <title>Admin - {artistData?.name ?? "Null"}</title>
+        <title>TrueArtists: Admin/Artist - {artistData?.name ?? "Null"}</title>
       </Head>
 
       <Grid container>

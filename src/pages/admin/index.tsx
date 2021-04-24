@@ -10,7 +10,7 @@ export default function Dashboard() {
   return (
     <AdminBody>
       <Head>
-        <title>Admin - Dashboard</title>
+        <title>TrueArtists: Admin/Dashboard</title>
       </Head>
 
       <Container maxWidth="lg">

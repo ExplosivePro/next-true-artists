@@ -26,7 +26,7 @@ import AdminBody from "src/components/Admin/AdminBody";
 import Loading from "src/components/Loading";
 import PrimaryButton from "src/components/PrimaryButton";
 import { TextInput, SelectInput, InfoAlert } from "src/components/Admin/FormInputs";
-import { user_roles, user_status } from "../constants";
+import { user_roles, user_status } from "./constants";
 
 import { useStyles } from "./styles";
 import { getUser, updateUser, resetUserPassword } from "./api";
@@ -92,7 +92,7 @@ export default function User() {
   return (
     <AdminBody>
       <Head>
-        <title>Admin - {userData?.full_name}</title>
+        <title>TrueArtists: Admin/User - {userData?.full_name}</title>
       </Head>
 
       <Grid container>

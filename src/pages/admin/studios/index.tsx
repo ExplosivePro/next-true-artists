@@ -72,7 +72,7 @@ export default function Studios() {
   return (
     <AdminBody>
       <Head>
-        <title>Admin - Studios</title>
+        <title>TrueArtists: Admin/Studios</title>
       </Head>
 
       <Grid container>
