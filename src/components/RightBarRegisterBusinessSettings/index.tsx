@@ -175,7 +175,7 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, curren
         price_per_hour: pricePerHour,
         currency_code: currency,
         accepted_payment_methods: paymentMethods.join(","),
-        accepting_guest_artist: checked.includes("appointment_only"),
+        accepting_guest_artist: checked.includes("accepting_guest_artist"),
         appointment_only: checked.includes("appointment_only"),
         piercings: checked.includes("piercings"),
         cosmetic_tattoos: checked.includes("cosmetic_tattoos"),

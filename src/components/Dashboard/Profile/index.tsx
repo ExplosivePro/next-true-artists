@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import React, { useMemo, useState } from "react";
 import * as yup from "yup";
 import clsx from "clsx";
+import { useRouter } from "next/router";
 
 // Material UI Components
 import Container from "@material-ui/core/Container";
@@ -30,11 +31,10 @@ import StudioProfile, { validationSchema as studioSchema } from "../../StudioPro
 import { useYupValidationResolver } from "../../../utils";
 
 // Contexts
-import { useApp, useAuth, Roles } from "../../../contexts";
-import { useRouter } from "next/router";
+import { Roles, useApp, useAuth } from "../../../contexts";
 
 // APIs
-import { editUser, editArtistProfile, updateArtistAvatar, editStudioProfile } from "../../../api";
+import { editArtistProfile, editStudioProfile, editUser, updateArtistAvatar, updateStudioAvatar } from "../../../api";
 
 // Styles
 import useStyles from "./styles";
@@ -44,6 +44,7 @@ import {
   baseInstagramUrl,
   baseTwitterUrl,
   defaultArtistBannerImage,
+  settingList,
 } from "../../../constants";
 
 // Get schema by role
@@ -65,12 +66,12 @@ const getSchemaByRole = (role: string): any => {
 };
 
 // Get avatar by role
-const getAvatarByRole = (role: string, profile: any): string => {
+const getAvatarByRole = (role: Roles, profile: any): string => {
   switch (role) {
-    case "artist": {
+    case Roles.ARTIST: {
       return profile.artist.avatar?.image_url;
     }
-    case "studio": {
+    case Roles.STUDIO: {
       return profile.studio.avatar?.image_url;
     }
     default: {
@@ -80,30 +81,45 @@ const getAvatarByRole = (role: string, profile: any): string => {
 };
 
 // Get initial value for setting list
-const getDefaultValue = (settings: any[], values?: any) => {
-  // Already have value
-  if (values) {
-    const checkList: any[] = [];
-    settings.map((item) => {
+const getDefaultValue = (user: any, role: Roles) => {
+  const checkList: any[] = [];
+  if (role === Roles.ARTIST) {
+    const values = user.artist;
+    artistSettingList.map((item) => {
       item.settings.map((setting: any) => {
-        if (values[setting.name]) {
+        if (values && values[setting.name]) {
           checkList.push(setting.name);
         }
       });
     });
+  }
 
-    return checkList;
-  } else {
-    const checkList: any[] = [];
-    settings.map((item) => {
+  if (role === Roles.STUDIO) {
+    const values = user.studio;
+    settingList.map((item) => {
       item.settings.map((setting: any) => {
-        if (setting.defaultValue) {
+        if (values && values[setting.name]) {
           checkList.push(setting.name);
         }
       });
     });
+  }
 
-    return checkList;
+  return checkList;
+};
+
+// Get attribute value by user role
+const getAttributeValueByRole = (role: Roles, profile: any, attribute: string, defaultValue: any) => {
+  switch (role) {
+    case Roles.ARTIST: {
+      return profile.artist[attribute];
+    }
+    case Roles.STUDIO: {
+      return profile.studio[attribute];
+    }
+    default: {
+      return defaultValue;
+    }
   }
 };
 
@@ -132,12 +148,23 @@ export default function UserProfile() {
   const [fileData, setFileData] = useState<File | null>(null);
   const [preview, setPreview] = useState<any>("");
 
+  // General detail
+  const [currency, setCurrency] = useState(getAttributeValueByRole(role as Roles, user, "currency_code", ""));
+  const [pricePerHour, setPricePerHour] = useState<number>(
+    getAttributeValueByRole(role as Roles, user, "price_per_hour", 0),
+  );
+
   // Artist detail
-  const [checked, setChecked] = useState<string[]>(getDefaultValue(artistSettingList, artist));
-  const [currency, setCurrency] = useState(artist?.currency_code || "");
-  const [pricePerHour, setPricePerHour] = useState<number>(artist?.price_per_hour || 0);
+  const [checked, setChecked] = useState<string[]>(getDefaultValue(user, role as Roles));
+
   const [minimumSpend, setMinimumSpend] = useState<number>(artist?.minimum_spend || 0);
   const [specialties, setSpecialties] = React.useState<string[]>(artist?.specialties || []);
+
+  // Studio detail
+  const [paymentMethods, setPaymentMethod] = useState(studio?.accepted_payment_methods?.split(",") || []);
+  const [minimumRate, setMinimumRate] = useState<number>(studio?.minimum_spend || 0);
+  const [services, setServices] = useState<string[]>(studio?.services?.split(",") || []);
+  const [language, setLanguage] = useState<string[]>(studio?.languages?.split(",") || []);
 
   // Switch setting tab
   const switchTab = (index: number) => {
@@ -227,7 +254,7 @@ export default function UserProfile() {
     }: any,
     editUserResponse: RestApi.Response,
   ) => {
-    const editArtistResponse = await editStudioProfile({
+    const editStudioResponse = await editStudioProfile({
       id: studio?.id as number,
       name,
       email,
@@ -241,6 +268,22 @@ export default function UserProfile() {
       facebook_url: `${baseFacebookUrl}${facebook}`,
       twitter_url: `${baseTwitterUrl}${twitter}`,
       street_address: streetAddress,
+      minimum_spend: minimumRate,
+      price_per_hour: pricePerHour,
+      currency_code: currency,
+      accepted_payment_methods: paymentMethods.join(","),
+      accepting_guest_artist: checked.includes("accepting_guest_artist"),
+      appointment_only: checked.includes("appointment_only"),
+      piercings: checked.includes("piercings"),
+      cosmetic_tattoos: checked.includes("cosmetic_tattoos"),
+      vegan_ink: checked.includes("vegan_ink"),
+      wifi: checked.includes("wifi"),
+      privacy_dividers: checked.includes("privacy_dividers"),
+      wheelchair_access: checked.includes("wheelchair_access"),
+      parking: checked.includes("parking"),
+      lgbt_friendly: checked.includes("lgbt_friendly"),
+      languages: language.join(","),
+      services: services.join(","),
     });
 
     let avatarUploadResponse: RestApi.Response = { error: false };
@@ -248,14 +291,14 @@ export default function UserProfile() {
     // Update avatar
     if (fileData) {
       // Call APIs to create studio profile
-      avatarUploadResponse = await updateArtistAvatar({
-        id: artist?.id as number,
+      avatarUploadResponse = await updateStudioAvatar({
+        id: studio?.id as number,
         file: fileData,
       });
     }
 
     // Show errors if there is any errors
-    if (editUserResponse.error || editArtistResponse.error || avatarUploadResponse?.error) {
+    if (editUserResponse.error || editStudioResponse.error || avatarUploadResponse?.error) {
       showErrorDialog(true, "Update profile fail");
     } else {
       showSuccessDialog(true, "Update profile successfully");
@@ -364,9 +407,60 @@ export default function UserProfile() {
     }
   };
 
+  // On studio price change
+  const onStudioPriceChange = (event: any, name: string) => {
+    switch (name) {
+      case "currency": {
+        setCurrency(event.target.value);
+        break;
+      }
+      case "paymentMethods": {
+        setPaymentMethod(event);
+        break;
+      }
+      case "pricePerHour": {
+        setPricePerHour(parseInt(event.target.value) || 0);
+        break;
+      }
+      case "minimumRate": {
+        setMinimumRate(parseInt(event.target.value) || 0);
+        break;
+      }
+    }
+  };
+
   // On multi selection change
   const onSelectionChange = (value: string[]) => {
     setSpecialties(value);
+  };
+
+  // Handle studio toggle setting buttons
+  const handleToggleSetting = (value: string) => () => {
+    console.log(value);
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setChecked(newChecked);
+  };
+
+  // On studio input change
+  const onInputChange = (event: string[], name: string) => {
+    switch (name) {
+      case "services": {
+        setServices(event);
+        break;
+      }
+      case "language": {
+        setLanguage(event);
+        break;
+      }
+    }
   };
 
   return (
@@ -510,7 +604,21 @@ export default function UserProfile() {
                     )}
 
                     {role === Roles.STUDIO && studio && (
-                      <StudioProfile control={control} errors={errors} currentData={studio} />
+                      <StudioProfile
+                        checked={checked}
+                        control={control}
+                        errors={errors}
+                        currentData={studio}
+                        paymentMethods={paymentMethods}
+                        minimumRate={minimumRate}
+                        language={language}
+                        services={services}
+                        pricePerHour={pricePerHour}
+                        handleToggleSetting={handleToggleSetting}
+                        onPriceChange={onStudioPriceChange}
+                        onInputChange={onInputChange}
+                        currency={currency}
+                      />
                     )}
 
                     <Grid container spacing={2} className={classes.buttonWrapper}>

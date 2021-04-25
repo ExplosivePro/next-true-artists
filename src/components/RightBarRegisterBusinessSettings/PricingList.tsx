@@ -1,6 +1,7 @@
 // External
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import clsx from "clsx";
 
 // Material UI Components
 import { Grid } from "@material-ui/core";
@@ -33,13 +34,22 @@ const useStyles = makeStyles({
   },
 });
 
-const PricingList = ({ currency, paymentMethods, pricePerHour, minimumRate, onPriceChange }: Props) => {
+const PricingList = ({
+  currency,
+  paymentMethods,
+  pricePerHour,
+  minimumRate,
+  onPriceChange,
+  title = null,
+  inputWrapperClass,
+}: Props) => {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <Typography className={classes.groupName}>Pricing</Typography>
-      <Grid container spacing={2} className={classes.inputWrapper}>
+      {!title && <Typography className={classes.groupName}>Pricing</Typography>}
+      {title}
+      <Grid container spacing={2} className={clsx(classes.inputWrapper, inputWrapperClass)}>
         <Grid item lg={12} md={12} xs={12}>
           <MultipleSelection
             name={"Payment Method"}
@@ -51,7 +61,7 @@ const PricingList = ({ currency, paymentMethods, pricePerHour, minimumRate, onPr
           />
         </Grid>
       </Grid>
-      <Grid container spacing={2} className={classes.inputWrapper}>
+      <Grid container spacing={2} className={clsx(classes.inputWrapper, inputWrapperClass)}>
         <Grid item lg={9} md={9} xs={12}>
           <TextField
             name="pricePerHour"
@@ -90,8 +100,7 @@ const PricingList = ({ currency, paymentMethods, pricePerHour, minimumRate, onPr
           </TextField>
         </Grid>
       </Grid>
-
-      <Grid container spacing={2} className={classes.inputWrapper}>
+      <Grid container spacing={2} className={clsx(classes.inputWrapper, inputWrapperClass)}>
         <Grid item lg={9} md={9} xs={12}>
           <TextField
             name="minimumRate"
@@ -135,6 +144,8 @@ const PricingList = ({ currency, paymentMethods, pricePerHour, minimumRate, onPr
 };
 
 interface Props {
+  title?: any;
+  inputWrapperClass?: string;
   currency: string;
   paymentMethods: string[];
   pricePerHour: number;

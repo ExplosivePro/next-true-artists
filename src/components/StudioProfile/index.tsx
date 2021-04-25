@@ -11,7 +11,10 @@ import MenuItem from "@material-ui/core/MenuItem";
 // Custom component
 import FormInput from "../FormInput";
 
-import { baseInstagramUrl, baseFacebookUrl, baseTwitterUrl, countryList } from "../../constants";
+import { baseInstagramUrl, baseFacebookUrl, baseTwitterUrl, countryList, settingList } from "../../constants";
+import InputFields from "../RightBarRegisterBusinessSettings/InputFields";
+import SettingList from "../RightBarRegisterBusinessSettings/SettingList";
+import PricingList from "../RightBarRegisterBusinessSettings/PricingList";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -27,6 +30,7 @@ const useStyles = makeStyles(() =>
       marginBottom: "10px",
     },
     titleWrapper: {
+      marginTop: "20px",
       marginBottom: "35px",
     },
     form: {
@@ -45,10 +49,27 @@ const useStyles = makeStyles(() =>
     sectionTitle: {
       marginTop: "15px",
     },
+    pricingWrapper: {
+      paddingLeft: 0,
+    },
   }),
 );
 
-export default function StudioProfile({ currentData, control, errors }: Props) {
+export default function StudioProfile({
+  currentData,
+  control,
+  errors,
+  handleToggleSetting,
+  onInputChange,
+  onPriceChange,
+  language,
+  services,
+  checked,
+  paymentMethods,
+  currency,
+  pricePerHour,
+  minimumRate,
+}: Props) {
   const {
     street_address: streetAddress,
     state,
@@ -269,6 +290,38 @@ export default function StudioProfile({ currentData, control, errors }: Props) {
               />
             </Grid>
           </Grid>
+
+          <Typography variant={"h6"} className={classes.sectionTitle}>
+            Business Settings
+          </Typography>
+
+          <InputFields language={language} services={services} onInputChange={onInputChange} hasTitle={false} />
+          {settingList.map((setting: any, index) => {
+            return (
+              <SettingList
+                key={index}
+                id={setting.groupName}
+                groupName={setting.groupName}
+                items={setting.settings}
+                checked={checked}
+                handleToggle={handleToggleSetting}
+              />
+            );
+          })}
+
+          <PricingList
+            title={
+              <Typography variant={"h6"} className={classes.sectionTitle}>
+                Pricing
+              </Typography>
+            }
+            inputWrapperClass={classes.pricingWrapper}
+            paymentMethods={paymentMethods}
+            currency={currency}
+            pricePerHour={pricePerHour}
+            minimumRate={minimumRate}
+            onPriceChange={onPriceChange}
+          />
         </>
       </div>
     </Grid>
@@ -293,4 +346,14 @@ interface Props {
   className?: any;
   control: any;
   errors: any;
+  language: string[];
+  services: string[];
+  checked: string[];
+  paymentMethods: string[];
+  currency: string;
+  pricePerHour: number;
+  minimumRate: number;
+  handleToggleSetting: any;
+  onInputChange: (event: string[], name: string) => void;
+  onPriceChange: (event: any, name: string) => void;
 }

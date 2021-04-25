@@ -28,13 +28,13 @@ const useStyles = makeStyles({
   },
 });
 
-const InputFields = ({ services, language, onInputChange }: Props) => {
+const InputFields = ({ services, language, onInputChange, hasTitle = true }: Props) => {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <Grid container spacing={2} className={classes.inputWrapper}>
-        <Typography className={classes.groupName}>Services</Typography>
+        {hasTitle && <Typography className={classes.groupName}>Services</Typography>}
         <Grid item lg={12} md={12} xs={12}>
           <MultipleSelection
             name={"Services"}
@@ -48,7 +48,7 @@ const InputFields = ({ services, language, onInputChange }: Props) => {
       </Grid>
 
       <Grid container spacing={2} className={classes.inputWrapper}>
-        <Typography className={classes.groupName}>Language</Typography>
+        {hasTitle && <Typography className={classes.groupName}>Language</Typography>}
         <Grid item lg={12} md={12} xs={12}>
           <MultipleSelection
             name={"Languages"}
@@ -68,6 +68,7 @@ interface Props {
   services: string[];
   language: string[];
   onInputChange: (value: string[], name: string) => void;
+  hasTitle?: boolean;
 }
 
 export default InputFields;

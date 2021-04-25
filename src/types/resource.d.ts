@@ -97,7 +97,7 @@ declare namespace Resource {
     price_per_hour?: number;
     languages?: string;
     services?: string;
-    minimum_spend?: string;
+    minimum_spend?: number;
     currency_code?: string;
     city: string;
     country: string;
