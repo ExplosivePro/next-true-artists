@@ -5,7 +5,6 @@ import clsx from "clsx";
 // Material UI Components
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { Grid, Typography } from "@material-ui/core";
-import InputAdornment from "@material-ui/core/InputAdornment";
 
 // Custom component
 import FormInput from "../FormInput";
@@ -14,7 +13,7 @@ import MultipleSelection from "./MutilpleSelection";
 import PricingList from "./PricingList";
 
 // Constants
-import { artistSettingList, specialtyList, baseInstagramUrl, baseFacebookUrl, baseTwitterUrl } from "../../constants";
+import { artistSettingList, specialtyList } from "../../constants";
 import colors from "../../palette";
 import * as yup from "yup";
 
@@ -80,10 +79,6 @@ export default function ArtistProfile({
     street_address: streetAddress,
     zip_code: zipCode,
     country,
-    facebook_url: facebook,
-    website,
-    twitter_url: twitter,
-    instagram_url: instagram,
   } = currentData;
 
   return (
@@ -214,81 +209,6 @@ export default function ArtistProfile({
             defaultValue={country || ""}
             errors={errors.country}
           />
-
-          <Typography variant={"h6"} className={classes.sectionTitle}>
-            Social Presence
-          </Typography>
-
-          <Grid container spacing={2}>
-            <Grid item lg={6} md={6} xs={6}>
-              <FormInput
-                name="instagram"
-                classes={{ root: classes.formInput }}
-                label={"Instagram"}
-                id="instagram"
-                placeholder={"Instagram"}
-                fullWidth
-                control={control}
-                variant={"outlined"}
-                defaultValue={instagram.replace("instagram.com/", "") || ""}
-                errors={errors.instagram}
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">{baseInstagramUrl}</InputAdornment>,
-                }}
-              />
-            </Grid>
-            <Grid item lg={6} md={6} xs={6}>
-              <FormInput
-                name="website"
-                classes={{ root: classes.formInput }}
-                label={"Website"}
-                id="website"
-                placeholder={"Website"}
-                fullWidth
-                control={control}
-                variant={"outlined"}
-                defaultValue={website || ""}
-                errors={errors.website}
-              />
-            </Grid>
-          </Grid>
-
-          <Grid container spacing={2}>
-            <Grid item lg={6} md={6} xs={6}>
-              <FormInput
-                name="facebook"
-                classes={{ root: classes.formInput }}
-                label={"Facebook"}
-                id="facebook"
-                placeholder={"Facebook"}
-                fullWidth
-                control={control}
-                variant={"outlined"}
-                defaultValue={facebook.replace("facebook.com/", "") || ""}
-                errors={errors.facebook}
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">{baseFacebookUrl}</InputAdornment>,
-                }}
-              />
-            </Grid>
-            <Grid item lg={6} md={6} xs={6}>
-              <FormInput
-                name="twitter"
-                classes={{ root: classes.formInput }}
-                label={"Twitter"}
-                id="twitter"
-                placeholder={"Twitter"}
-                fullWidth
-                control={control}
-                variant={"outlined"}
-                defaultValue={twitter.replace("twitter.com/", "") || ""}
-                errors={errors.twitter}
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">{baseTwitterUrl}</InputAdornment>,
-                }}
-              />
-            </Grid>
-          </Grid>
         </>
       </div>
     </Grid>

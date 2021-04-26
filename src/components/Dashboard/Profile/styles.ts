@@ -108,10 +108,14 @@ const useStyles = makeStyles((theme) =>
       },
     },
     coverWrapper: {
+      position: "relative",
       marginBottom: "30px",
       "& img": {
         width: "100%",
         borderRadius: "10px",
+      },
+      "& p": {
+        color: colors.white,
       },
     },
     barDescriptionTitleWrapper: {
@@ -120,6 +124,26 @@ const useStyles = makeStyles((theme) =>
     },
     divider: {
       width: "100%",
+    },
+    changeCoverButton: {
+      border: `solid 1px ${colors.white}`,
+      display: "flex",
+      padding: "5px",
+      borderRadius: "5px",
+      color: "white",
+      justifyContent: "center",
+      maxWidth: "200px",
+      position: "absolute",
+      top: "10px",
+      right: "10px",
+      cursor: "pointer",
+      alignItems: "center",
+      "& svg": {
+        marginRight: "10px",
+      },
+      "& p": {
+        fontSize: "14px",
+      },
     },
   }),
 );

@@ -26,6 +26,10 @@ import PrimaryButton from "../../../components/PrimaryButton";
 import FormInput from "../../../components/FormInput";
 import ArtistProfile, { validationSchema as artistSchema } from "../../../components/ArtistProfile";
 import StudioProfile, { validationSchema as studioSchema } from "../../StudioProfile";
+import ChangePassword, { titleHeader as changePasswordHeader } from "./ChangePassword";
+import SocialLinks, { titleHeader as socialLinksHeader } from "./SocialLinks";
+import TitleHeader from "./TitleHeader";
+import Cover from "./Cover";
 
 // Utils
 import { useYupValidationResolver } from "../../../utils";
@@ -38,14 +42,7 @@ import { editArtistProfile, editStudioProfile, editUser, updateArtistAvatar, upd
 
 // Styles
 import useStyles from "./styles";
-import {
-  artistSettingList,
-  baseFacebookUrl,
-  baseInstagramUrl,
-  baseTwitterUrl,
-  defaultArtistBannerImage,
-  settingList,
-} from "../../../constants";
+import { artistSettingList, settingList } from "../../../constants";
 
 // Get schema by role
 const getSchemaByRole = (role: string): any => {
@@ -183,10 +180,6 @@ export default function UserProfile() {
       zipCode,
       country,
       phoneNumber,
-      website,
-      facebook,
-      instagram,
-      twitter,
       specialties,
     }: any,
     editUserResponse: RestApi.Response,
@@ -206,10 +199,6 @@ export default function UserProfile() {
       zip_code: zipCode,
       country,
       phone_number: phoneNumber,
-      website,
-      facebook_url: `${baseFacebookUrl}${facebook}`,
-      instagram_url: `${baseInstagramUrl}${instagram}`,
-      twitter_url: `${baseTwitterUrl}${twitter}`,
       specialty: specialties ? specialties.join(",") : [],
     });
 
@@ -238,20 +227,7 @@ export default function UserProfile() {
 
   // Submit edit profile for studio role
   const submitEditStudioProfile = async (
-    {
-      name,
-      email,
-      streetAddress,
-      city,
-      country,
-      state,
-      zipCode,
-      phoneNumber,
-      instagram,
-      website,
-      facebook,
-      twitter,
-    }: any,
+    { name, email, streetAddress, city, country, state, zipCode, phoneNumber }: any,
     editUserResponse: RestApi.Response,
   ) => {
     const editStudioResponse = await editStudioProfile({
@@ -263,10 +239,6 @@ export default function UserProfile() {
       state,
       zip_code: zipCode,
       phone_number: phoneNumber,
-      instagram_ur: `${baseInstagramUrl}${instagram}`,
-      website,
-      facebook_url: `${baseFacebookUrl}${facebook}`,
-      twitter_url: `${baseTwitterUrl}${twitter}`,
       street_address: streetAddress,
       minimum_spend: minimumRate,
       price_per_hour: pricePerHour,
@@ -463,6 +435,46 @@ export default function UserProfile() {
     }
   };
 
+  // Get page header by active tab
+  const getTitleHeaderByTab = (tab: number) => {
+    switch (tab) {
+      case 0: {
+        // User Profile
+        return {
+          title: "Edit Profile",
+          subTitle: "Set Up Your Personal Information",
+        };
+      }
+      case 1: {
+        return changePasswordHeader;
+      }
+      case 2: {
+        return socialLinksHeader;
+      }
+      default: {
+        return {
+          title: "",
+          subTitle: "",
+        };
+      }
+    }
+  };
+
+  // Get role profile
+  const getProfileByRole = (role: Roles) => {
+    switch (role) {
+      case Roles.ARTIST: {
+        return user?.artist;
+      }
+      case Roles.STUDIO: {
+        return user?.studio;
+      }
+      default: {
+        return user;
+      }
+    }
+  };
+
   return (
     <>
       <Container className={classes.containerRoot}>
@@ -477,15 +489,21 @@ export default function UserProfile() {
                     horizontal: "right",
                   }}
                   badgeContent={
-                    <IconButton className={classes.uploadIconButton} onClick={handleClick}>
-                      <CameraAltOutlinedIcon />
-                    </IconButton>
+                    <>
+                      {activeTab === 0 ? (
+                        <IconButton className={classes.uploadIconButton} onClick={handleClick}>
+                          <CameraAltOutlinedIcon />
+                        </IconButton>
+                      ) : (
+                        <div></div>
+                      )}
+                    </>
                   }
                 >
                   <>
                     <Avatar
                       alt={full_name}
-                      src={preview || getAvatarByRole(role as string, user)}
+                      src={preview || getAvatarByRole(role as Roles, user)}
                       className={classes.avatar}
                     />
                     <input className={classes.fileInput} type={"file"} ref={hiddenFileInput} onChange={handleChange} />
@@ -536,121 +554,116 @@ export default function UserProfile() {
             </div>
           </Grid>
           <Grid item lg={7} md={7} sm={12} xs={12} className={classes.rightBar}>
-            <div className={classes.coverWrapper}>
-              <img src={defaultArtistBannerImage} alt={"cover"} />
-            </div>
+            <Cover />
             <Grid container item alignItems={"center"} className={classes.formContainer}>
-              <div className={classes.barDescriptionTitleWrapper}>
-                <Typography variant={"h6"} display={"block"}>
-                  Edit Profile
-                </Typography>
-                <Typography variant={"caption"} display={"block"}>
-                  Set Up Your Personal Information
-                </Typography>
-              </div>
-
+              <TitleHeader data={getTitleHeaderByTab(activeTab)} />
               <div className={classes.divider}>
                 <Divider />
               </div>
 
               <Grid container className={classes.root} alignItems={"center"} justify={"center"}>
                 <div className={classes.formWrapper}>
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <Typography variant={"h6"} className={classes.sectionTitle}>
-                      Basic Information
-                    </Typography>
+                  {activeTab === 0 && (
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                      <Typography variant={"h6"} className={classes.sectionTitle}>
+                        Basic Information
+                      </Typography>
 
-                    <FormInput
-                      name="fullName"
-                      classes={{ root: classes.formInput }}
-                      label={"Full name"}
-                      id="fullName"
-                      placeholder={"Full name"}
-                      fullWidth
-                      control={control}
-                      variant={"outlined"}
-                      defaultValue={full_name || ""}
-                      errors={errors.fullName}
-                    />
-
-                    <FormInput
-                      name="email"
-                      classes={{ root: classes.formInput }}
-                      label={"Email"}
-                      id="email"
-                      placeholder={"Email"}
-                      fullWidth
-                      control={control}
-                      variant={"outlined"}
-                      defaultValue={email || ""}
-                      errors={errors.email}
-                    />
-
-                    {role === Roles.ARTIST && artist && (
-                      <ArtistProfile
-                        currentData={artist}
-                        className={classes.artistProfile}
+                      <FormInput
+                        name="fullName"
+                        classes={{ root: classes.formInput }}
+                        label={"Full name"}
+                        id="fullName"
+                        placeholder={"Full name"}
+                        fullWidth
                         control={control}
-                        errors={errors}
-                        checked={checked}
-                        currency={currency}
-                        pricePerHour={pricePerHour}
-                        minimumSpend={minimumSpend}
-                        handleToggle={handleToggle}
-                        onPriceChange={onPriceChange}
-                        onSelectionChange={onSelectionChange}
-                        specialties={specialties}
+                        variant={"outlined"}
+                        defaultValue={full_name || ""}
+                        errors={errors.fullName}
                       />
-                    )}
 
-                    {role === Roles.STUDIO && studio && (
-                      <StudioProfile
-                        checked={checked}
+                      <FormInput
+                        name="email"
+                        classes={{ root: classes.formInput }}
+                        label={"Email"}
+                        id="email"
+                        placeholder={"Email"}
+                        fullWidth
                         control={control}
-                        errors={errors}
-                        currentData={studio}
-                        paymentMethods={paymentMethods}
-                        minimumRate={minimumRate}
-                        language={language}
-                        services={services}
-                        pricePerHour={pricePerHour}
-                        handleToggleSetting={handleToggleSetting}
-                        onPriceChange={onStudioPriceChange}
-                        onInputChange={onInputChange}
-                        currency={currency}
+                        variant={"outlined"}
+                        defaultValue={email || ""}
+                        errors={errors.email}
                       />
-                    )}
 
-                    <Grid container spacing={2} className={classes.buttonWrapper}>
-                      <Grid item lg={6} md={6} sm={12} xs={12}>
-                        <PrimaryButton
-                          type={"button"}
-                          variant="outlined"
-                          color="primary"
-                          size="large"
-                          primaryColor
-                          fullWidth
-                          onClick={() => {
-                            push("/dashboard");
-                          }}
-                        >
-                          Cancel
-                        </PrimaryButton>
+                      {role === Roles.ARTIST && artist && (
+                        <ArtistProfile
+                          currentData={artist}
+                          className={classes.artistProfile}
+                          control={control}
+                          errors={errors}
+                          checked={checked}
+                          currency={currency}
+                          pricePerHour={pricePerHour}
+                          minimumSpend={minimumSpend}
+                          handleToggle={handleToggle}
+                          onPriceChange={onPriceChange}
+                          onSelectionChange={onSelectionChange}
+                          specialties={specialties}
+                        />
+                      )}
+
+                      {role === Roles.STUDIO && studio && (
+                        <StudioProfile
+                          checked={checked}
+                          control={control}
+                          errors={errors}
+                          currentData={studio}
+                          paymentMethods={paymentMethods}
+                          minimumRate={minimumRate}
+                          language={language}
+                          services={services}
+                          pricePerHour={pricePerHour}
+                          handleToggleSetting={handleToggleSetting}
+                          onPriceChange={onStudioPriceChange}
+                          onInputChange={onInputChange}
+                          currency={currency}
+                        />
+                      )}
+
+                      <Grid container spacing={2} className={classes.buttonWrapper}>
+                        <Grid item lg={6} md={6} sm={12} xs={12}>
+                          <PrimaryButton
+                            type={"button"}
+                            variant="outlined"
+                            color="primary"
+                            size="large"
+                            primaryColor
+                            fullWidth
+                            onClick={() => {
+                              push("/dashboard");
+                            }}
+                          >
+                            Cancel
+                          </PrimaryButton>
+                        </Grid>
+                        <Grid item lg={6} md={6} sm={12} xs={12}>
+                          <PrimaryButton
+                            type={"submit"}
+                            variant="contained"
+                            color="primary"
+                            size="large"
+                            fullWidth
+                            primaryColor
+                          >
+                            Save
+                          </PrimaryButton>
+                        </Grid>
                       </Grid>
-                      <Grid item lg={6} md={6} sm={12} xs={12}>
-                        <PrimaryButton
-                          type={"submit"}
-                          variant="contained"
-                          color="primary"
-                          size="large"
-                          fullWidth
-                          primaryColor
-                        >
-                          Save
-                        </PrimaryButton>
-                      </Grid>
-                    </Grid>
-                  </form>
+                    </form>
+                  )}
+
+                  {activeTab === 1 && <ChangePassword />}
+                  {activeTab === 2 && <SocialLinks data={getProfileByRole(role as Roles)} />}
                 </div>
               </Grid>
             </Grid>
