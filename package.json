@@ -43,7 +43,7 @@
     "react-query": "^3.4.0",
     "react-router-dom": "^5.2.0",
     "react-slick": "^0.28.0",
-    "react-social-login": "https://github.com/hdminh247/react-social-login.git",
+    "react-social-login": "^3.4.13",
     "react-swipeable-views": "^0.13.9",
     "react-toastify": "^6.1.0",
     "recoil": "^0.0.13",

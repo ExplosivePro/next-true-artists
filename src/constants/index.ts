@@ -6,3 +6,4 @@ export * from "./registration";
 export * from "./sidebar";
 export * from "./dashboard";
 export * from "./country-list";
+export * from "./adminMenus";
