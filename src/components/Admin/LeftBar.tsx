@@ -1,6 +1,5 @@
 // External import
 import React, { useState } from "react";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { useRouter } from "next/router";
 import clsx from "clsx";
 
@@ -14,69 +13,15 @@ import SupervisorAccountOutlinedIcon from "@material-ui/icons/SupervisorAccountO
 import PeopleIcon from "@material-ui/icons/People";
 import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 
-import { menuAdminBar } from "../../constants";
-import color from "../../palette";
-
-// Styles
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: "100%",
-      maxWidth: 360,
-      backgroundColor: theme.palette.background.paper,
-    },
-    list: {
-      paddingRight: "10px",
-    },
-    listItem: {
-      borderTopRightRadius: "25px",
-      borderBottomRightRadius: "25px",
-      cursor: "pointer",
-    },
-    nested: {
-      paddingLeft: theme.spacing(8),
-      borderTopRightRadius: "25px",
-      borderBottomRightRadius: "25px",
-      "& .MuiListItemText-root": {
-        paddingLeft: "10px",
-      },
-    },
-    activeBar: {
-      backgroundColor: color.defaultColor,
-      borderTopRightRadius: "25px",
-      borderBottomRightRadius: "25px",
-      color: "white",
-      fontWeight: "bold",
-      "&:hover": {
-        backgroundColor: color.defaultColor,
-        borderTopRightRadius: "25px",
-        borderBottomRightRadius: "25px",
-      },
-      "& span": {
-        fontWeight: "bold",
-      },
-      "& svg": {
-        fill: color.white,
-      },
-    },
-    activeSubBar: {
-      "& .MuiListItemText-root": {
-        borderLeft: `solid 4px ${color.defaultColor}`,
-        color: color.defaultColor,
-      },
-    },
-    listItemRoot: {
-      minWidth: "35px",
-    },
-  }),
-);
+import { menuAdminBar } from "src/constants";
+import { useMenuStyles } from "./styles";
 
 interface NavigationType {
   mainBar: string;
 }
 
 export default function LeftBar() {
-  const classes = useStyles();
+  const classes = useMenuStyles();
   const router = useRouter();
 
   const [currentActiveBar, setCurrentActiveBar] = useState(router.pathname);
@@ -143,7 +88,7 @@ export default function LeftBar() {
           button
           key={"Users"}
           onClick={() => handleAdminMenuClick("users")}
-          className={clsx(classes.listItem, { [classes.activeBar]: currentActiveBar === menuAdminBar.USERS })}
+          className={clsx(classes.listItem, { [classes.activeBar]: currentActiveBar.indexOf(menuAdminBar.USERS) > -1 })}
         >
           <ListItemIcon classes={{ root: classes.listItemRoot }}>
             <SupervisorAccountOutlinedIcon />
@@ -155,7 +100,9 @@ export default function LeftBar() {
           button
           key={"Artists"}
           onClick={() => handleAdminMenuClick("artists")}
-          className={clsx(classes.listItem, { [classes.activeBar]: currentActiveBar === menuAdminBar.ARTISTS })}
+          className={clsx(classes.listItem, {
+            [classes.activeBar]: currentActiveBar.indexOf(menuAdminBar.ARTISTS) > -1,
+          })}
         >
           <ListItemIcon classes={{ root: classes.listItemRoot }}>
             <PeopleIcon />
@@ -167,7 +114,9 @@ export default function LeftBar() {
           button
           key={"Studios"}
           onClick={() => handleAdminMenuClick("studios")}
-          className={clsx(classes.listItem, { [classes.activeBar]: currentActiveBar === menuAdminBar.STUDIOS })}
+          className={clsx(classes.listItem, {
+            [classes.activeBar]: currentActiveBar.indexOf(menuAdminBar.STUDIOS) > -1,
+          })}
         >
           <ListItemIcon classes={{ root: classes.listItemRoot }}>
             <SupervisedUserCircleIcon />
