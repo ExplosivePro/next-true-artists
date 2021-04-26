@@ -86,7 +86,6 @@ export default function GoogleWithSearch({
         const bounds = new google.maps.LatLngBounds();
         places.forEach((place) => {
           if (!place.geometry) {
-            console.log("Returned place contains no geometry");
             return;
           }
           const icon = {

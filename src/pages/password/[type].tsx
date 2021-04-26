@@ -173,7 +173,7 @@ export default function ResetPassword() {
               color="primary"
               size="large"
               fullWidth
-              bluePastel
+              primaryColor
             >
               Reset Password
             </PrimaryButton>

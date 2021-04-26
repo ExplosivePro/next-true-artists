@@ -89,7 +89,11 @@ export default function Header({ userProfile, openSearch }: Props) {
       onClose={handleMobileMenuClose}
     >
       {userProfile && (
-        <MenuItem onClick={handleProfileMenuOpen}>
+        <MenuItem
+          onClick={() => {
+            router.push("/dashboard/profile");
+          }}
+        >
           <Avatar alt={userProfile.full_name || "Avatar"} src={userProfile.avatar?.image_url} />
           <Typography className={classes.mobileDisplayName}>{userProfile.full_name}</Typography>
         </MenuItem>
@@ -131,7 +135,7 @@ export default function Header({ userProfile, openSearch }: Props) {
           onClick={() => {
             goToPage("/login");
           }}
-          className={classes.linkTextMenu}
+          className={clsx(classes.linkTextMenu, classes.noHoverEffect)}
         >
           <Typography color={"error"}>
             <b>Logout</b>
@@ -179,7 +183,7 @@ export default function Header({ userProfile, openSearch }: Props) {
               variant="contained"
               color="primary"
               size="large"
-              bluePastel
+              primaryColor
               className={classes.operationButton}
               href={"/register"}
             >
@@ -192,7 +196,7 @@ export default function Header({ userProfile, openSearch }: Props) {
               variant="outlined"
               color="primary"
               size="large"
-              bluePastel
+              primaryColor
               className={classes.operationButton}
               href={"/login"}
             >

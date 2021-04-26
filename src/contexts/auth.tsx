@@ -19,6 +19,9 @@ import { useApp } from "./app";
 // Constants
 import { unauthRoutes } from "../constants";
 
+// Custom Component
+import Loading from "../components/Loading";
+
 // @ts-ignore
 const context = createContext<Context>({});
 
@@ -28,10 +31,11 @@ export enum AuthState {
   "authenticated",
 }
 
-enum Roles {
+export enum Roles {
   USERS = "users",
-  ARTISTS = "artist",
-  STUDIOS = "studios",
+  ARTIST = "artist",
+  STUDIO = "studio_manager",
+  REGULAR = "regular",
 }
 
 /*
@@ -71,7 +75,7 @@ export function AuthContext({ children }: Props) {
             router.push(previousPath);
           } else {
             // Go to home page
-            router.push("/artists");
+            router.push("/dashboard");
           }
         }
       } else {
@@ -87,7 +91,7 @@ export function AuthContext({ children }: Props) {
   }
 
   // Login by token
-  async function loginByToken(token: string) {
+  async function loginByToken(token: string, redirectAfterSuccess = true) {
     try {
       verifyUser(token)
         .then(({ data }) => {
@@ -97,8 +101,10 @@ export function AuthContext({ children }: Props) {
           setAuthHeader(token);
           setStatus(AuthState.authenticated);
 
-          // Navigate to artist page
-          router.replace("/artists");
+          // Navigate to dashboard page if redirect allowed
+          if (redirectAfterSuccess) {
+            router.replace("/dashboard");
+          }
         })
         .catch(() => {
           localStorage.removeItem(TOKEN_KEY);
@@ -134,7 +140,7 @@ export function AuthContext({ children }: Props) {
             router.push(previousPath);
           } else {
             // Go to home page
-            router.push("/artists");
+            router.push("/dashboard");
           }
         }
       } else {
@@ -196,7 +202,7 @@ export function AuthContext({ children }: Props) {
         user.current = data.user;
 
         // Navigate to register selection page
-        router.push("/artists");
+        router.push("/dashboard");
       } else {
         app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
       }
@@ -207,6 +213,21 @@ export function AuthContext({ children }: Props) {
       // Unknown issue or code issues
       return { error: true, data: null, errors: "Internal server. Please try again" };
     }
+  }
+
+  function updateUserData() {
+    verifyUser()
+      .then(({ data }) => {
+        user.current = data;
+      })
+      .catch(() => {
+        localStorage.removeItem(TOKEN_KEY);
+        clearAuthHeader();
+        setStatus(AuthState.unAuthenticated);
+
+        // Redirect to login page
+        router.replace("/login");
+      });
   }
 
   function logOut() {
@@ -221,6 +242,9 @@ export function AuthContext({ children }: Props) {
 
     // Update status
     setStatus(AuthState.unAuthenticated);
+
+    // Redirect to login page
+    router.replace("/login");
   }
 
   useEffect(() => {
@@ -281,10 +305,13 @@ export function AuthContext({ children }: Props) {
         loginByToken,
         socialLogin,
         logOut,
+        updateUserData,
         previousPath,
       }}
     >
-      {children}
+      {status === AuthState.pending ? <Loading fixed /> : null}
+      {status === AuthState.authenticated ? children : null}
+      {status === AuthState.unAuthenticated ? children : null}
     </context.Provider>
   );
 }
@@ -303,18 +330,21 @@ export type User = {
   full_name: string;
   avatar: Resource.Image;
   role: Roles;
+  artist?: Resource.ArtistDetail;
+  studio?: Resource.StudioDetail;
 };
 
 interface Context {
   user?: User;
   login: (email: string, password: string, preventRedirect: boolean) => Promise<RestApi.Response>;
-  loginByToken: (token: string) => void;
+  loginByToken: (token: string, redirectAfterSuccess: boolean) => void;
   socialLogin: (socialId: number, email: string, preventRedirect: boolean) => Promise<RestApi.Response>;
   register: (payload: Register.ApiPayload) => void;
   socialRegister: (payload: Register.ApiSocialPayload) => Promise<RestApi.Response>;
   logOut: () => void;
   status: AuthState;
   previousPath: string;
+  updateUserData: () => void;
 }
 
 const TOKEN_KEY = "AUTH_TOKEN";

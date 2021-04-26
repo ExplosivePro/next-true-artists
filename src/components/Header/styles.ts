@@ -39,6 +39,12 @@ const useStyles = makeStyles((theme) =>
         backgroundColor: colors.white,
       },
     },
+    noHoverEffect: {
+      "&:hover": {
+        borderBottom: `none`,
+        marginBottom: "15px",
+      },
+    },
     active: {
       borderBottom: `solid 4px ${colors.standardYellow}`,
     },

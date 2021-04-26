@@ -4,7 +4,6 @@ import clsx from "clsx";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import Hidden from "@material-ui/core/Hidden";
 import { List, ListItem, ListItemText } from "@material-ui/core";
 
 import FooterItem from "./FooterItem";
@@ -157,13 +156,6 @@ export default function Footer() {
   return (
     <Container className={clsx(classes.root, classes.relativeWrapper)} maxWidth={false}>
       <Grid container className={classes.footerItemWrapper}>
-        <Hidden smDown>
-          <Grid item lg={3} md={3} sm={false} xs={false} className={classes.relativeWrapper}>
-            <div className={classes.imageWrapper}>
-              <img className={classes.imageItem} src={"/images/left-bar-register-selection.svg"} alt={"icon"} />
-            </div>
-          </Grid>
-        </Hidden>
         <Grid item lg={2} md={2} sm={6} xs={6} className={classes.gridItem}>
           <FooterItem name={"Useful links"} data={footerItems.usefulLinks} />
         </Grid>

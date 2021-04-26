@@ -31,6 +31,24 @@ label{
   }
 }
 
+.MuiInputBase-input{
+  background-color: $white !important;
+}
+
+.MuiOutlinedInput-multiline{
+  background-color: $white !important;
+}
+
+.MuiInputBase-root{
+ &.MuiOutlinedInput-adornedStart{
+   background-color: $white !important;
+ }
+}
+
+.MuiSelect-selectMenu{
+  white-space: normal !important;
+}
+
 
 
 

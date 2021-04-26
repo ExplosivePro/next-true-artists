@@ -67,7 +67,7 @@ export default function ArtistItem({ data: { id, name, avatar, hero_banner } }: 
             variant="outlined"
             color="primary"
             size="small"
-            bluePastel
+            primaryColor
             className={classes.actionButton}
             href={`/artists/${id}`}
           >
@@ -79,7 +79,7 @@ export default function ArtistItem({ data: { id, name, avatar, hero_banner } }: 
         className={classes.cardHeader}
       />
       <Grid container justify={"center"} className={classes.actionButtonMobile}>
-        <PrimaryButton variant="outlined" color="primary" size="small" bluePastel href={`/artists/${id}`}>
+        <PrimaryButton variant="outlined" color="primary" size="small" primaryColor href={`/artists/${id}`}>
           View profile
         </PrimaryButton>
       </Grid>

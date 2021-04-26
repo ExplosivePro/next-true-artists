@@ -168,13 +168,85 @@ export const editArtistProfile = async (data: Register.ApiEditArtistPayload) => 
   const submitData = {};
 
   Object.keys(data).map((key) => {
-    if (data[key]) {
+    if (data[key] !== undefined) {
       submitData[key] = data[key];
     }
   });
 
   return await api
     .put(`/api/v1/artists/${data.id}`, submitData)
+    .then((response) => {
+      return { error: false, data: response.data, errors: "" };
+    })
+    .catch((e) => {
+      const errors = [];
+
+      if (e.response.data && typeof e.response.data === "string") {
+        errors.push(e.response.data);
+      }
+
+      if (e.response.data && typeof e.response.data === "object") {
+        Object.keys(e.response.data).map((name: any) => {
+          // String error format
+          if (e.response.data[name] && typeof e.response.data[name] === "string") {
+            errors.push(e.response.data[name]);
+          }
+
+          // Array error format
+          if (typeof e.response.data[name] === "object" && e.response.data[name].length > 0) {
+            e.response.data[name].map((item: { attribute: any; message: any }) => {
+              errors.push(`${item.attribute} ${item.message}`);
+            });
+          }
+        });
+      }
+
+      return { error: true, data: null, errors };
+    });
+};
+
+// Update artist avatar
+export const updateArtistAvatar = async (data: Register.ApiUpdateAvatarPayload) => {
+  const payload = new FormData();
+  payload.append("avatar", data.file);
+  return await api
+    .put(`/api/v1/artists/${data.id}`, payload)
+    .then((response) => {
+      return { error: false, data: response.data, errors: "" };
+    })
+    .catch((e) => {
+      const errors = [];
+
+      if (e.response.data && typeof e.response.data === "string") {
+        errors.push(e.response.data);
+      }
+
+      if (e.response.data && typeof e.response.data === "object") {
+        Object.keys(e.response.data).map((name: any) => {
+          // String error format
+          if (e.response.data[name] && typeof e.response.data[name] === "string") {
+            errors.push(e.response.data[name]);
+          }
+
+          // Array error format
+          if (typeof e.response.data[name] === "object" && e.response.data[name].length > 0) {
+            e.response.data[name].map((item: { attribute: any; message: any }) => {
+              errors.push(`${item.attribute} ${item.message}`);
+            });
+          }
+        });
+      }
+
+      return { error: true, data: null, errors };
+    });
+};
+
+// Update studio avatar
+export const updateStudioAvatar = async (data: Register.ApiUpdateAvatarPayload) => {
+  const payload = new FormData();
+  payload.append("avatar", data.file);
+  return await api
+    .put(`/api/v1/studios/${data.id}`, payload)
     .then((response) => {
       return { error: false, data: response.data, errors: "" };
     })

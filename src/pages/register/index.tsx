@@ -127,7 +127,7 @@ export default function Register() {
         email: yup.string().required("Email address field is required").email("* Wrong email format"),
         password: yup
           .string()
-          .required("Password field field is required")
+          .required("Password field is required")
           .matches(PasswordValidationRegex, "Password has to contain 6-10 characters, at least 1 letter and 1  number"),
       }),
     [],
@@ -325,7 +325,7 @@ export default function Register() {
               color="primary"
               size="large"
               fullWidth
-              bluePastel
+              primaryColor
             >
               Sign up
             </PrimaryButton>
@@ -342,7 +342,7 @@ export default function Register() {
               color="primary"
               size="large"
               className={classes.joinArtistButton}
-              bluePastel
+              primaryColor
               fullWidth
               href={"/register-selection"}
             >

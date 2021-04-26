@@ -16,7 +16,7 @@ import PrimaryButton from "./PrimaryButton";
 import colors from "../palette";
 
 // APIs
-import { editArtistProfile, editStudioProfile } from "../api";
+import { editArtistProfile } from "../api";
 
 // Context
 import { useApp } from "../contexts";
@@ -46,6 +46,7 @@ const useStyles = makeStyles({
   },
   buttonWrapper: {
     marginTop: "25px",
+    paddingBottom: "100px",
   },
   box: {
     backgroundColor: colors.white,
@@ -66,11 +67,11 @@ const useStyles = makeStyles({
   },
 });
 
-export default function RightBarRegisterWorkStyle({ data = [], currentUserId, role, onSkip, onNext }: Props) {
+export default function RightBarRegisterWorkStyle({ data = [], currentUserId, currentData, onSkip, onNext }: Props) {
   const classes = useStyles();
   const app = useApp();
 
-  const [optionValues, setOptionValues] = useState({});
+  const [optionValues, setOptionValues] = useState(currentData || {});
 
   // Get style id array from object array data
   const getSelectedIds = () => {
@@ -93,37 +94,18 @@ export default function RightBarRegisterWorkStyle({ data = [], currentUserId, ro
   const goNext = async () => {
     if (currentUserId) {
       // Edit artist profile
-      if (role === "artist") {
-        // Call APIs to submit register data
-        const response = await editArtistProfile({
-          id: currentUserId,
-          styles: getSelectedIds(),
-        });
+      // Call APIs to submit register data
+      const response = await editArtistProfile({
+        id: currentUserId,
+        styles: getSelectedIds(),
+      });
 
-        const { error, errors } = response;
-        // No error happens
-        if (!error) {
-          onNext && onNext();
-        } else {
-          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
-        }
-      }
-
-      // Edit studio profile
-      if (role === "studio") {
-        // Call APIs to submit register data
-        const response = await editStudioProfile({
-          id: currentUserId,
-          styles: getSelectedIds(),
-        });
-
-        const { error, errors } = response;
-        // No error happens
-        if (!error) {
-          onNext && onNext();
-        } else {
-          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
-        }
+      const { error, errors } = response;
+      // No error happens
+      if (!error) {
+        onNext && onNext(optionValues);
+      } else {
+        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
       }
     }
   };
@@ -132,10 +114,10 @@ export default function RightBarRegisterWorkStyle({ data = [], currentUserId, ro
     <Grid container className={classes.root} alignItems={"center"} justify={"center"}>
       <div className={classes.formWrapper}>
         <div className={classes.titleWrapper}>
-          <Typography variant={"h5"} className={classes.titleText}>
-            Style your work
+          <Typography variant={"h4"} className={classes.titleText}>
+            Your tattoo style of work
           </Typography>
-          <Typography variant={"subtitle2"}>Add your name and work email to get started with TrueArtists</Typography>
+          <Typography variant={"h6"}>Select tattoo styles you mostly like to work on.</Typography>
         </div>
 
         {data.map((workStyle, index) => (
@@ -150,9 +132,10 @@ export default function RightBarRegisterWorkStyle({ data = [], currentUserId, ro
                     classes={{ root: classes.checkBox }}
                     icon={<RadioButtonUncheckedIcon />}
                     checkedIcon={<CheckCircleIcon classes={{ root: classes.checkedIcon }} />}
+                    checked={optionValues[workStyle.id] || false}
+                    onChange={handleChange}
                   />
                 }
-                onChange={handleChange}
                 label={workStyle.name}
                 labelPlacement="start"
               />
@@ -167,15 +150,15 @@ export default function RightBarRegisterWorkStyle({ data = [], currentUserId, ro
               variant="outlined"
               color="primary"
               size="large"
-              bluePastel
+              primaryColor
               fullWidth
               onClick={onSkip}
             >
-              Skip
+              Previous Step
             </PrimaryButton>
           </Grid>
           <Grid item lg={6} md={6} sm={12} xs={12}>
-            <PrimaryButton variant="contained" color="primary" size="large" onClick={goNext} fullWidth bluePastel>
+            <PrimaryButton variant="contained" color="primary" size="large" onClick={goNext} fullWidth primaryColor>
               Next
             </PrimaryButton>
           </Grid>
@@ -185,10 +168,20 @@ export default function RightBarRegisterWorkStyle({ data = [], currentUserId, ro
   );
 }
 
+export const preloadRightBarRegisterWorkStyleData = (data: Resource.ArtistDetail) => {
+  const styleData = {};
+  data.styles?.map((style) => {
+    styleData[style.id] = true;
+  });
+
+  return styleData;
+};
+
 interface Props {
   data: Resource.WorkingStyle[];
   currentUserId: number | undefined;
+  currentData: any;
   role: string;
   onSkip?: () => void;
-  onNext?: () => void;
+  onNext?: (data: any) => void;
 }

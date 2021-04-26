@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
+import { useRouter } from "next/router";
 
 // Material UI Components
 import Container from "@material-ui/core/Container";
@@ -11,12 +12,26 @@ import Grid from "@material-ui/core/Grid";
 import LeftBarRegisterSelection from "../../components/LeftBarRegisterSelection";
 import RightBarRegisterAccountType from "../../components/RightBarRegisterAccountType";
 import RightBarRegisterPersonalDetail from "../../components/RightBarRegisterPersonalDetail";
-import RightBarRegisterAddress from "../../components/RightBarRegisterAddress";
-// import RightBarRegisterWorkingLocation from "../components/RightBarRegisterWorkingLocation";
-import RightBarRegisterWorkStyle from "../../components/RightBarRegisterWorkStyle";
+import RightBarArtistRegisterInformation, {
+  preloadRightBarArtistRegisterInformationData,
+} from "../../components/RightBarArtistRegisterInformation";
+import RightBarStudioRegisterInformation, {
+  preloadRightBarStudioRegisterInformationData,
+} from "../../components/RightBarStudioRegisterInformation";
+import RightBarRegisterWorkStyle, {
+  preloadRightBarRegisterWorkStyleData,
+} from "../../components/RightBarRegisterWorkStyle";
+import RightBarRegisterBusinessSettings, {
+  preloadRightBarRegisterBusinessSettingsData,
+} from "../../components/RightBarRegisterBusinessSettings";
+import RightBarRegisterAvatarUpload, {
+  preloadRightBarRegisterAvatarUploadData,
+} from "../../components/RightBarRegisterAvatarUpload";
+import RightBarRegisterTattooUpload from "../../components/RightBarRegisterTattooUpload";
 
+// Utils
 import { getWorkingStyleList } from "../../api";
-import { useAuth, useApp } from "../../contexts";
+import { AuthState, Roles, useApp, useAuth, User } from "../../contexts";
 
 import colors from "../../palette";
 
@@ -25,6 +40,9 @@ const useStyles = makeStyles((theme) =>
     container: {
       height: "100vh",
       padding: 0,
+      [theme.breakpoints.down("sm")]: {
+        height: "100%",
+      },
     },
     leftBarContainer: {
       [theme.breakpoints.down("sm")]: {
@@ -47,9 +65,11 @@ const useStyles = makeStyles((theme) =>
     rightContainer: {
       height: "100%",
       padding: "50px 65px",
+      overflow: "scroll",
       backgroundColor: colors.lightGrey,
       [theme.breakpoints.down("sm")]: {
         padding: "50px 22px",
+        overflow: "inherit",
       },
     },
     title: {
@@ -74,37 +94,95 @@ const useStyles = makeStyles((theme) =>
 
 export default function RegisterSelection({ workingStyles }: Props) {
   const classes = useStyles();
-  const auth = useAuth();
-  const { setRegistrationCallbackData, registrationCallback, userInfo } = useApp();
+  const { replace } = useRouter();
+  const { user, status } = useAuth();
+  const { setRegistrationCallbackData, userInfo } = useApp();
 
   const [step, setStep] = useState(0);
   const [currentUserId, setCurrentUserId] = useState<number>();
   const [currentUserRoleId, setCurrentUserRoleId] = useState<number>(); // This is can be artist id or studio id
   const [stepData, setStepData] = useState({});
-  const [token, setToken] = useState<string>(); // Keep token temporarily, at the end of this registration, will store this one to loggin
 
   // Step 1: Account type
   const [role, setRole] = useState<string>("artist");
 
-  useEffect(() => {
-    // User back from login page
-    if (registrationCallback) {
-      const token = localStorage.getItem("AUTH_TOKEN");
-      if (token && userInfo.registerType) {
-        setToken(token);
-        setRole(userInfo.registerType);
+  const getPreloadData = (step: number) => {
+    switch (step) {
+      case 2: {
+        if (user?.role === Roles.ARTIST) {
+          return preloadRightBarArtistRegisterInformationData(user?.artist as Resource.ArtistDetail);
+        }
 
-        const thisStepData = { 1: { firstName: userInfo.full_name, email: userInfo.email } };
+        if (user?.role === Roles.STUDIO) {
+          return preloadRightBarStudioRegisterInformationData(user?.studio as Resource.StudioDetail);
+        }
 
-        // Save current user id
-        setCurrentUserId(userInfo.id);
-
-        // Store step data to edit later
-        setStepData({ ...stepData, ...thisStepData });
-
-        // Next step
-        setStep(2);
+        return {};
       }
+      case 3: {
+        if (user?.role === Roles.ARTIST) {
+          return preloadRightBarRegisterWorkStyleData(user?.artist as Resource.ArtistDetail);
+        }
+
+        if (user?.role === Roles.STUDIO) {
+          return preloadRightBarRegisterBusinessSettingsData(user?.studio as Resource.StudioDetail);
+        }
+      }
+      default: {
+        return {};
+      }
+    }
+  };
+
+  useEffect(() => {
+    // User already logged in, skip step 1, bring user to the next step
+    if (status === AuthState.authenticated) {
+      switch (user?.role) {
+        case Roles.ARTIST: {
+          setRole("artist");
+          setCurrentUserRoleId(user?.artist?.id);
+          break;
+        }
+        case Roles.STUDIO: {
+          setRole("studio");
+          setCurrentUserRoleId(user?.studio?.id);
+          break;
+        }
+        case Roles.REGULAR: {
+          // Get saved state from local storage
+          const savedRole = localStorage.getItem("pendingRegistrationType");
+          if (savedRole) {
+            if (savedRole === Roles.ARTIST) {
+              setRole("artist");
+              setCurrentUserRoleId(user?.artist?.id);
+            } else {
+              setRole("studio");
+              setCurrentUserRoleId(user?.studio?.id);
+            }
+          }
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+
+      // Step data
+      const preloadStepData = {
+        1: { firstName: user?.full_name, email: user?.email },
+        2: getPreloadData(2),
+        3: getPreloadData(3),
+        4: preloadRightBarRegisterAvatarUploadData(user as User),
+      };
+
+      // Save current user id
+      setCurrentUserId(user?.id);
+
+      // Store step data to edit later
+      setStepData({ ...stepData, ...preloadStepData });
+
+      // Next step
+      setStep(2);
     }
 
     // Reset these value at destructure
@@ -127,7 +205,7 @@ export default function RegisterSelection({ workingStyles }: Props) {
           justify={"center"}
           className={clsx(classes.relativeContainer, classes.leftBarContainer)}
         >
-          <LeftBarRegisterSelection step={step} />
+          <LeftBarRegisterSelection step={step} role={role} />
         </Grid>
 
         <Grid item lg={9} md={9} sm={12} xs={12} className={clsx(classes.relativeContainer, classes.rightContainer)}>
@@ -144,11 +222,7 @@ export default function RegisterSelection({ workingStyles }: Props) {
               role={role}
               currentUserId={currentUserId}
               currentData={stepData[1] || {}}
-              onNext={(userId: number, data, token) => {
-                if (token) {
-                  setToken(token);
-                }
-
+              onNext={(userId: number, data) => {
                 const thisStepData = { 1: data };
 
                 // Save current user id
@@ -166,10 +240,11 @@ export default function RegisterSelection({ workingStyles }: Props) {
             />
           )}
 
-          {step === 2 && (
-            <RightBarRegisterAddress
+          {step === 2 && role === "artist" && (
+            <RightBarArtistRegisterInformation
               role={role}
               currentUserId={currentUserId}
+              currentUserRoleId={currentUserRoleId}
               currentData={stepData[2] || {}}
               onNext={(id: number, data) => {
                 const thisStepData = { 2: data };
@@ -187,40 +262,100 @@ export default function RegisterSelection({ workingStyles }: Props) {
               }}
             />
           )}
-          {/*{step === 2 && (*/}
-          {/*  <RightBarRegisterSetPassword*/}
-          {/*    onNext={() => {*/}
-          {/*      setStep(3);*/}
-          {/*    }}*/}
-          {/*    onPreviousStep={() => {*/}
-          {/*      setStep(1);*/}
-          {/*    }}*/}
-          {/*  />*/}
-          {/*)}*/}
-          {/*{step === 3 && (*/}
-          {/*  <RightBarRegisterWorkingLocation*/}
-          {/*    onNext={() => {*/}
-          {/*      setStep(4);*/}
-          {/*    }}*/}
-          {/*    onPreviousStep={() => {*/}
-          {/*      setStep(2);*/}
-          {/*    }}*/}
-          {/*  />*/}
-          {/*)}*/}
-          {step === 3 && (
+          {step === 2 && role === "studio" && (
+            <RightBarStudioRegisterInformation
+              role={role}
+              currentUserId={currentUserId}
+              currentUserRoleId={currentUserRoleId}
+              currentData={stepData[2] || {}}
+              onNext={(id: number, data) => {
+                const thisStepData = { 2: data };
+
+                // Save current user role id
+                setCurrentUserRoleId(id);
+
+                // Store step data to edit later
+                setStepData({ ...stepData, ...thisStepData });
+
+                setStep(3);
+              }}
+              onPreviousStep={() => {
+                setStep(1);
+              }}
+            />
+          )}
+
+          {role === "artist" && step === 3 && (
             <RightBarRegisterWorkStyle
               role={role}
+              currentData={stepData[3] || {}}
               data={workingStyles}
               currentUserId={currentUserRoleId}
-              onNext={() => {
-                if (token) {
-                  auth.loginByToken(token);
-                }
+              onNext={(data) => {
+                const thisStepData = { 3: data };
+
+                // Store step data to edit later
+                setStepData({ ...stepData, ...thisStepData });
+
+                // Next step
+                setStep(4);
               }}
               onSkip={() => {
-                if (token) {
-                  auth.loginByToken(token);
-                }
+                setStep(2);
+              }}
+            />
+          )}
+          {role === "studio" && step === 3 && (
+            <RightBarRegisterBusinessSettings
+              role={role}
+              currentData={stepData[3] || {}}
+              currentUserId={currentUserRoleId}
+              onNext={(data) => {
+                const thisStepData = { 3: data };
+
+                // Store step data to edit later
+                setStepData({ ...stepData, ...thisStepData });
+
+                // Next step
+                setStep(4);
+              }}
+              onPrevious={() => {
+                setStep(2);
+              }}
+            />
+          )}
+
+          {step === 4 && (
+            <RightBarRegisterAvatarUpload
+              role={role}
+              currentUserId={currentUserRoleId}
+              currentData={stepData[4] || {}}
+              onNext={(data) => {
+                const thisStepData = { 4: data };
+
+                // Store step data to edit later
+                setStepData({ ...stepData, ...thisStepData });
+
+                // Next step
+                setStep(5);
+              }}
+              onPreviousStep={() => {
+                setStep(3);
+              }}
+            />
+          )}
+
+          {step === 5 && (
+            <RightBarRegisterTattooUpload
+              role={role}
+              currentUserId={currentUserRoleId}
+              currentData={stepData[4] || {}}
+              onNext={() => {
+                localStorage.removeItem("pendingRegistrationType");
+                replace("/dashboard");
+              }}
+              onPreviousStep={() => {
+                setStep(4);
               }}
             />
           )}

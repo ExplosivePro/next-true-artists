@@ -20,6 +20,8 @@ declare namespace Resource {
     role: string;
     status: string;
     registerType?: string;
+    artist?: Resource.ArtistDetail;
+    studio?: Resource.StudioDetail;
   }
 
   interface Image {
@@ -45,6 +47,14 @@ declare namespace Resource {
     street_address?: string;
     city?: string;
     country?: string;
+    years_of_experience?: number;
+    website?: string;
+    facebook_url?: string;
+    instagram_url?: string;
+    twitter_url?: string;
+    zip_code?: string;
+    phone_number?: string;
+    specialty?: string;
     styles?: WorkingStyle[];
     tattoos: TattooDetail[];
     avatar?: Image;
@@ -52,6 +62,14 @@ declare namespace Resource {
     bio?: string;
     lat?: number;
     long?: number;
+    currency_code?: string;
+    price_per_hour?: number;
+    minimum_spend?: number;
+    specialties?: string[];
+    seeking_guest_spot?: boolean;
+    guest_artist?: boolean;
+    licensed?: boolean;
+    cpr_certified?: boolean;
   }
 
   interface ArtistListResponse {
@@ -67,6 +85,20 @@ declare namespace Resource {
   interface StudioDetail {
     id: number;
     name: string;
+    email?: string;
+    state?: string;
+    zip_code?: string;
+    phone_number?: string;
+    instagram_url?: string;
+    website_url?: string;
+    facebook_url?: string;
+    twitter_url?: string;
+    accepted_payment_methods?: string;
+    price_per_hour?: number;
+    languages?: string;
+    services?: string;
+    minimum_spend?: number;
+    currency_code?: string;
     city: string;
     country: string;
     rating: number;

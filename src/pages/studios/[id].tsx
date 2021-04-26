@@ -22,7 +22,6 @@ const useStyles = makeStyles(() =>
 export default function Studio({ currentStudio, reviews }: Props) {
   const classes = useStyles();
 
-  console.log(currentStudio);
   return (
     <BodyContent>
       <Head>

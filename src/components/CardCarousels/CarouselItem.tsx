@@ -150,7 +150,7 @@ export default function CardCarouselsItem({
             variant="contained"
             color="primary"
             size="large"
-            bluePastel
+            primaryColor
             onClick={viewProfile}
             className={classes.bookButton}
           >

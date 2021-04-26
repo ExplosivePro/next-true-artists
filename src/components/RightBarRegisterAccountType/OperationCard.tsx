@@ -29,7 +29,7 @@ const useStyles = makeStyles({
   },
   avatar: {
     backgroundColor: color.brightBlue,
-    border: `solid 1px ${color.bluePastel}`,
+    border: `solid 1px ${color.primaryColor}`,
     "&:hover": {
       backgroundColor: color.standardYellow,
     },

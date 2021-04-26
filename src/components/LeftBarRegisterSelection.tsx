@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function LeftBarRegisterSelection({ step }: { step: number }) {
+export default function LeftBarRegisterSelection({ step, role }: { step: number; role: string }) {
   const classes = useStyles();
 
   const StepItem = ({
@@ -120,21 +120,36 @@ export default function LeftBarRegisterSelection({ step }: { step: number }) {
             <StepItem name={"Account Type"} selected={step === 0} checked={step > 0} />
           </Grid>
           <Grid container item lg={12} md={12} sm={12} alignItems={"center"}>
-            <StepItem name={"Personal Details"} selected={step === 1} checked={step > 1} />
+            <StepItem name={"Account Details"} selected={step === 1} checked={step > 1} />
           </Grid>
           <Grid container item lg={12} md={12} sm={12} alignItems={"center"}>
-            <StepItem name={"Working Location"} selected={step === 2} checked={step > 2} />
+            <StepItem
+              name={role === "artist" ? "Artist Information" : "Studio Information"}
+              selected={step === 2}
+              checked={step > 2}
+            />
           </Grid>
           {/*<Grid container item lg={12} md={12} sm={12} alignItems={"center"}>*/}
           {/*  <StepItem name={"Working Location"} selected={step === 3} checked={step > 3} />*/}
           {/*</Grid>*/}
           <Grid container item lg={12} md={12} sm={12} alignItems={"center"}>
-            <StepItem name={"Your Style of Work"} selected={step === 4} checked={step > 4} />
+            <StepItem
+              name={role === "artist" ? "Your Style of Work" : "Business Settings"}
+              selected={step === 3}
+              checked={step > 3}
+            />
+          </Grid>
+          <Grid container item lg={12} md={12} sm={12} alignItems={"center"}>
+            <StepItem
+              name={role === "artist" ? "Upload Avatar" : "Upload Logo"}
+              selected={step === 4}
+              checked={step > 4}
+            />
+          </Grid>
+          <Grid container item lg={12} md={12} sm={12} alignItems={"center"}>
+            <StepItem name={"Work showcase"} selected={step === 5} checked={step > 5} />
           </Grid>
         </Grid>
-        <div className={classes.imageWrapper}>
-          <img className={classes.imageItem} src={"/images/left-bar-register-selection.svg"} alt={"icon"} />
-        </div>
       </Grid>
       <Grid container className={clsx(classes.mobileDisplay)} alignItems={"center"} justify={"center"}>
         <Link href={"/artists"}>
@@ -148,7 +163,8 @@ export default function LeftBarRegisterSelection({ step }: { step: number }) {
           <StepCircle active={step > 1} selected={step === 1} />
           <StepCircle active={step > 2} selected={step === 2} />
           <StepCircle active={step > 3} selected={step === 3} />
-          {/*<StepCircle active={step > 4} selected={step === 4} />*/}
+          <StepCircle active={step > 4} selected={step === 4} />
+          <StepCircle active={step > 5} selected={step === 5} />
         </div>
       </Grid>
     </>
