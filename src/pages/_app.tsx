@@ -8,7 +8,7 @@ import { QueryClientProvider, QueryClient, QueryCache, MutationCache } from "rea
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
-import { AuthContext, AppContext } from "../contexts";
+import { AuthContext, AppContext, DashboardContext } from "../contexts";
 
 import theme from "../theme";
 import "../scss/index.scss";
@@ -40,7 +40,9 @@ export default function MyApp(props: any) {
           <CssBaseline />
           <AppContext>
             <AuthContext>
-              <Component {...pageProps} />
+              <DashboardContext>
+                <Component {...pageProps} />
+              </DashboardContext>
             </AuthContext>
           </AppContext>
         </ThemeProvider>
