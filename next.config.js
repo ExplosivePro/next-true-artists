@@ -15,17 +15,17 @@ module.exports = {
       },
       {
         source: "/artists",
-        destination: "/not-found",
+        destination: `${process.env.PUBLIC_PAGE_BASE_URL}/artists`,
         permanent: true,
       },
       {
         source: "/studios",
-        destination: "/not-found",
+        destination: `${process.env.PUBLIC_PAGE_BASE_URL}/studios`,
         permanent: true,
       },
       {
         source: "/tattoos",
-        destination: "/not-found",
+        destination: `${process.env.PUBLIC_PAGE_BASE_URL}/artists`,
         permanent: true,
       },
     ];
