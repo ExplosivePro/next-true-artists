@@ -204,7 +204,7 @@ export default function Login() {
             </Typography>
             <Grid container spacing={1}>
               <Grid item lg={12} md={12} xs={12}>
-                {status !== AuthState.pending && (
+                {status === AuthState.unAuthenticated && (
                   <GoogleLoginButton
                     provider="google"
                     appId={googleAppId}

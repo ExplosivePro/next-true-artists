@@ -111,6 +111,16 @@ const useStyles = makeStyles((theme) =>
     inputWrapper: {
       marginBottom: "15px",
     },
+    alertWrapper: {
+      color: colors.red,
+      "& svg": {
+        marginRight: "5px",
+      },
+
+      "& h6": {
+        color: colors.red,
+      },
+    },
   }),
 );
 

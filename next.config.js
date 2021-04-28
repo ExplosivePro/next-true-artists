@@ -10,12 +10,22 @@ module.exports = {
     return [
       {
         source: "/",
-        destination: "/artists",
+        destination: "/login",
         permanent: true,
       },
       {
-        source: "/home",
-        destination: "/artists",
+        source: "/artists",
+        destination: `${process.env.PUBLIC_PAGE_BASE_URL}/artists`,
+        permanent: true,
+      },
+      {
+        source: "/studios",
+        destination: `${process.env.PUBLIC_PAGE_BASE_URL}/studios`,
+        permanent: true,
+      },
+      {
+        source: "/tattoos",
+        destination: `${process.env.PUBLIC_PAGE_BASE_URL}/artists`,
         permanent: true,
       },
     ];
