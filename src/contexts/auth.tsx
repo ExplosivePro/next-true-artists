@@ -17,7 +17,7 @@ import {
 import { useApp } from "./app";
 
 // Constants
-import { unauthRoutes } from "../constants";
+import { unauthRoutes, nonRememberRoutes } from "../constants";
 
 // Custom Component
 import Loading from "../components/Loading";
@@ -70,6 +70,7 @@ export function AuthContext({ children }: Props) {
         setStatus(AuthState.authenticated);
 
         if (!preventRedirect) {
+          console.log(previousPath);
           // If user went to specific before
           if (previousPath !== "") {
             router.push(previousPath);
@@ -248,8 +249,9 @@ export function AuthContext({ children }: Props) {
   }
 
   useEffect(() => {
-    // Only save auth router
-    if (unauthRoutes.indexOf(router.pathname) === -1) {
+    // Only save remember router
+    if (nonRememberRoutes.indexOf(router.pathname) === -1) {
+      console.log(router.pathname);
       // Store this url to get back later
       setPreviousPath(router.pathname);
     }
@@ -264,8 +266,11 @@ export function AuthContext({ children }: Props) {
 
       // Any route is not defined as unauth route will be redirected to register page
       if (unauthRoutes.indexOf(router.pathname) === -1) {
-        // Store this url to get back later
-        setPreviousPath(router.pathname);
+        // Only save remember router
+        if (nonRememberRoutes.indexOf(router.pathname) === -1) {
+          // Store this url to get back later
+          setPreviousPath(router.pathname);
+        }
 
         // Redirect to home page
         router.replace("/login");
@@ -278,7 +283,6 @@ export function AuthContext({ children }: Props) {
       .then(({ data }) => {
         user.current = data;
 
-        console.log(router.pathname);
         // These router does not redirect
         if (unauthRoutes.indexOf(router.pathname) === -1) {
           // Navigate to dashboard page

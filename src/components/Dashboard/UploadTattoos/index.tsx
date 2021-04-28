@@ -11,20 +11,65 @@ import Tattoos, { Image } from "../../../components/RightBarRegisterTattooUpload
 import { updateTattoos, uploadTattoos } from "../../../api";
 
 // Context
-import { useApp } from "../../../contexts";
+import { useApp, useAuth, Roles } from "../../../contexts";
 import { useRouter } from "next/router";
 
 // Styles
 import useStyles from "./styles";
 
+const getRoleId = (role: Roles, data: any) => {
+  switch (role) {
+    case Roles.ARTIST: {
+      return data.artist.id;
+    }
+    case Roles.STUDIO: {
+      return data.studio.id;
+    }
+    default: {
+      return {};
+    }
+  }
+};
+
 export default function UploadTattoos() {
   const app = useApp();
+  const { user, user: { role } = { role: Roles.REGULAR } } = useAuth();
   const { push } = useRouter();
 
   const classes = useStyles();
 
+  const [currentUserId] = useState(getRoleId(role, user));
   const [tattoos, setTattoos] = useState<Image[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const uploadImages = async (tattoos: Image[]) => {
+    const formData = new FormData();
+    const metaData: any[] = [];
+
+    // Add all images into formData
+    tattoos.map((tattoo) => {
+      formData.append("images[]", tattoo.file);
+      metaData.push({
+        placement: tattoo.placement,
+        workplace: tattoo.workplace,
+        color: tattoo.color,
+        caption: tattoo.caption,
+        featured: tattoo.featured,
+      });
+    });
+
+    formData.append("meta_data", JSON.stringify(metaData));
+
+    const response = await uploadTattoos(formData);
+
+    const { error, errors, data } = response;
+    // No error happens
+    if (!error) {
+      return data;
+    } else {
+      app.showErrorDialog(true, errors ? errors.toString() : "Upload fail");
+    }
+  };
 
   const handleUploadImage = async (data: any) => {
     const rs = await uploadImages(data);
