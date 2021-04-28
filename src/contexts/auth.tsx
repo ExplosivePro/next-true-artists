@@ -172,7 +172,7 @@ export function AuthContext({ children }: Props) {
         user.current = data.user;
 
         // Navigate to register selection page
-        router.push("/artists");
+        router.push("/dashboard");
       } else {
         app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
       }
@@ -268,7 +268,7 @@ export function AuthContext({ children }: Props) {
         setPreviousPath(router.pathname);
 
         // Redirect to home page
-        router.replace("/artists");
+        router.replace("/login");
       }
 
       return;
@@ -278,11 +278,14 @@ export function AuthContext({ children }: Props) {
       .then(({ data }) => {
         user.current = data;
 
-        setStatus(AuthState.authenticated);
+        console.log(router.pathname);
+        // These router does not redirect
+        if (unauthRoutes.indexOf(router.pathname) === -1) {
+          // Navigate to dashboard page
+          router.replace("/dashboard");
+        }
 
-        // Navigate to artist page
-        //TODO: This should be home page
-        // router.replace("/artists");
+        setStatus(AuthState.authenticated);
       })
       .catch(() => {
         localStorage.removeItem(TOKEN_KEY);

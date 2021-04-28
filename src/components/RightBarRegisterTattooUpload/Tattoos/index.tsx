@@ -10,6 +10,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import ErrorIcon from "@material-ui/icons/Error";
 
 // Custom Components
 import PrimaryButton from "../../PrimaryButton";
@@ -111,6 +112,15 @@ const Tattoos = ({ data, addImage, loading = false, onSetLoading, onUpdate, onCh
                 <ImageItem data={item} className={classes.alignCenter} />
               </Grid>
               <Grid item lg={7} md={7} sm={12} xs={12}>
+                {!item.saved && (
+                  <Grid container alignItems={"center"} className={classes.alertWrapper}>
+                    <ErrorIcon />
+                    <Typography display={"inline"} variant={"subtitle2"}>
+                      Your image information is not saved yet.
+                    </Typography>
+                  </Grid>
+                )}
+
                 <IconButton className={classes.deleteIcon}>
                   <DeleteIcon />
                 </IconButton>
@@ -217,12 +227,16 @@ const Tattoos = ({ data, addImage, loading = false, onSetLoading, onUpdate, onCh
                     size="large"
                     primaryColor
                     onClick={() => {
-                      onUpdate(item.id as number, {
-                        color: item.color,
-                        placement: item.placement,
-                        caption: item.caption,
-                        featured: item.featured,
-                      });
+                      onUpdate(
+                        item.id as number,
+                        {
+                          color: item.color,
+                          placement: item.placement,
+                          caption: item.caption,
+                          featured: item.featured,
+                        },
+                        index,
+                      );
                     }}
                   >
                     Save changes
@@ -246,6 +260,7 @@ export interface Image {
   color: string;
   caption: string;
   featured: boolean;
+  saved: boolean;
 }
 
 interface Props {
@@ -253,7 +268,7 @@ interface Props {
   addImage: (data: any) => void;
   loading: boolean;
   onSetLoading: (value: boolean) => void;
-  onUpdate: (id: number, payload: any) => void;
+  onUpdate: (id: number, payload: any, index: number) => void;
   onChange: (index: number, name: string, value: any) => void;
 }
 

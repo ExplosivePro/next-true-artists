@@ -10,12 +10,22 @@ module.exports = {
     return [
       {
         source: "/",
-        destination: "/artists",
+        destination: "/login",
         permanent: true,
       },
       {
-        source: "/home",
-        destination: "/artists",
+        source: "/artists",
+        destination: "/not-found",
+        permanent: true,
+      },
+      {
+        source: "/studios",
+        destination: "/not-found",
+        permanent: true,
+      },
+      {
+        source: "/tattoos",
+        destination: "/not-found",
         permanent: true,
       },
     ];

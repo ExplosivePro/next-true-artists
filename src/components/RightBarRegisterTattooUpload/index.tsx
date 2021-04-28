@@ -121,13 +121,21 @@ export default function RightBarRegisterTattooUpload({ role, currentUserId, onPr
   };
 
   // On tattoos update
-  const onUpdate = async (tattooId: number, payload: any) => {
+  const onUpdate = async (tattooId: number, payload: any, index: number) => {
     const response = await updateTattoos(currentUserId as number, tattooId, payload, role);
 
     const { error, errors, data } = response;
     // No error happens
     if (!error) {
       app.showSuccessDialog(true, "Update successfully");
+
+      // Mark this tattoo image info is already saved
+      const tattooDetail = tattoos[index];
+      tattooDetail["saved"] = true;
+
+      // Simply remove old object then add the new item
+      setTattoos([...tattoos.slice(0, index), tattooDetail, ...tattoos.slice(index + 1)]);
+
       return data;
     } else {
       app.showErrorDialog(true, errors ? errors.toString() : "Upload fail");
