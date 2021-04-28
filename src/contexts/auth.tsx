@@ -70,7 +70,6 @@ export function AuthContext({ children }: Props) {
         setStatus(AuthState.authenticated);
 
         if (!preventRedirect) {
-          console.log(previousPath);
           // If user went to specific before
           if (previousPath !== "") {
             router.push(previousPath);
@@ -251,7 +250,6 @@ export function AuthContext({ children }: Props) {
   useEffect(() => {
     // Only save remember router
     if (nonRememberRoutes.indexOf(router.pathname) === -1) {
-      console.log(router.pathname);
       // Store this url to get back later
       setPreviousPath(router.pathname);
     }

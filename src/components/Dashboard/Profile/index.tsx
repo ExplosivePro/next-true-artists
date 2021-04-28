@@ -408,7 +408,6 @@ export default function UserProfile() {
 
   // Handle studio toggle setting buttons
   const handleToggleSetting = (value: string) => () => {
-    console.log(value);
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
