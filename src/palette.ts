@@ -32,6 +32,9 @@ const colors = {
   chipYellow: "#f4c55b",
   standardViolet: "#7c44c3",
   defaultColor: "rgb(84, 105, 212)",
+  facebookColor: "#3c5897",
+  twitterColor: "#1fa2f1",
+  instagramColor: "#ff0601",
 };
 
 export default colors;

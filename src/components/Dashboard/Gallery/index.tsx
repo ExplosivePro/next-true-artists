@@ -29,6 +29,9 @@ const useStyles = makeStyles({
   loading: {
     margin: "20px 0",
   },
+  container: {
+    minHeight: "100vh",
+  },
 });
 
 const getRoleId = (role: Roles, data: any) => {
@@ -117,7 +120,7 @@ export default function ImgMediaCard() {
 
   return (
     <>
-      <Container>
+      <Container className={classes.container}>
         <Grid container alignItems={"center"} spacing={4}>
           {tattoos.length === 0 && (
             <Grid container justify={"center"}>

@@ -7,6 +7,8 @@ export const unauthRoutes = [
   "/dashboard/gallery",
   "/dashboard/upload-tattoos",
   "/dashboard/profile",
+  "/dashboard/my-studios",
+  "/dashboard/my-artists",
   "/password/[type]",
 ];
 
@@ -14,6 +16,13 @@ export const unauthRoutes = [
 export const nonRememberRoutes = ["/login", "/register", "/register-selection"];
 
 // Only these routes can access to dashboard side bar
-export const dashboardRoutes = ["/dashboard", "/dashboard/profile", "/dashboard/gallery", "/dashboard/upload-tattoos"];
+export const dashboardRoutes = [
+  "/dashboard",
+  "/dashboard/profile",
+  "/dashboard/gallery",
+  "/dashboard/my-studios",
+  "/dashboard/my-artists",
+  "/dashboard/upload-tattoos",
+];
 
 export const PasswordValidationRegex = /(?=.*[a-zA-Z])(?=.*[0-9]).{6,10}/;
