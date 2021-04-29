@@ -90,7 +90,7 @@ export default function UserList() {
     });
 
     if (!error) {
-      showSuccessDialog(true, "Invite artist successfully");
+      showSuccessDialog(true, "Invite sent successfully");
     }
 
     // Close modal
