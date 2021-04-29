@@ -31,4 +31,20 @@ export const dashboardRouteDetails = [
       path: "/dashboard",
     },
   },
+  {
+    path: "/dashboard/my-studios",
+    name: "My Studios",
+    backButton: {
+      enable: true,
+      path: "/dashboard",
+    },
+  },
+  {
+    path: "/dashboard/my-artists",
+    name: "Studio Artists",
+    backButton: {
+      enable: true,
+      path: "/dashboard",
+    },
+  },
 ];
