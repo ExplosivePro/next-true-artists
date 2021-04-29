@@ -98,8 +98,8 @@ export default function UserCard({ data }: Props) {
     window.open(`http://${url}`, "_blank");
   };
 
-  const openSlug = (slug: string) => {
-    window.open(`${publicPageBaseUrl}/${slug}`, "_blank");
+  const openSlug = (slug: string, resource: string) => {
+    window.open(`${publicPageBaseUrl}/${resource}/${slug}`, "_blank");
   };
 
   // Filter open
@@ -133,7 +133,7 @@ export default function UserCard({ data }: Props) {
           <ListItem
             button
             onClick={() => {
-              openSlug(data?.slug);
+              openSlug(data?.slug, "artists");
             }}
           >
             <ListItemIcon>
