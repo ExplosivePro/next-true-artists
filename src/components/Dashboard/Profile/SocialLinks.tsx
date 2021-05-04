@@ -16,7 +16,7 @@ import FormInput from "../../../components/FormInput";
 import { useYupValidationResolver } from "../../../utils";
 
 // Contexts
-import { Roles, useApp, useAuth } from "../../../contexts";
+import { Role, useApp, useAuth } from "../../../contexts";
 
 // APIs
 import { editArtistProfile, editStudioProfile } from "../../../api";
@@ -85,12 +85,12 @@ export default function SocialLinks({ data }: { data: any }) {
   const onSubmit = async (data: any) => {
     // Submit by role
     switch (role) {
-      case Roles.ARTIST: {
+      case Role.ARTIST: {
         submitEditArtistProfile(data);
         break;
       }
 
-      case Roles.STUDIO: {
+      case Role.STUDIO: {
         submitEditStudioProfile(data);
         break;
       }

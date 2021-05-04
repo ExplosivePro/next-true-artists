@@ -11,34 +11,20 @@ import Tattoos, { Image } from "../../../components/RightBarRegisterTattooUpload
 import { updateTattoos, uploadTattoos } from "../../../api";
 
 // Context
-import { useApp, useAuth, Roles } from "../../../contexts";
+import { useApp, useAuth, Role } from "../../../contexts";
 import { useRouter } from "next/router";
 
 // Styles
 import useStyles from "./styles";
 
-const getRoleId = (role: Roles, data: any) => {
-  switch (role) {
-    case Roles.ARTIST: {
-      return data.artist.id;
-    }
-    case Roles.STUDIO: {
-      return data.studio.id;
-    }
-    default: {
-      return {};
-    }
-  }
-};
-
 export default function UploadTattoos() {
   const app = useApp();
-  const { user, user: { role } = { role: Roles.REGULAR } } = useAuth();
+  const { user: { role } = { role: Role.REGULAR }, getRoleId } = useAuth();
   const { push } = useRouter();
 
   const classes = useStyles();
 
-  const [currentUserId] = useState(getRoleId(role, user));
+  const [currentUserId] = useState(getRoleId());
   const [tattoos, setTattoos] = useState<Image[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -67,7 +53,7 @@ export default function UploadTattoos() {
     if (!error) {
       return data;
     } else {
-      app.showErrorDialog(true, errors ? errors.toString() : "Upload fail");
+      app.showErrorDialog(true, errors ? errors.toString() : "Image upload failed. Try again");
     }
   };
 

@@ -1,12 +1,16 @@
+// External imports
 import Slider from "react-slick";
-import { Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 
+// Material UI Components
+import { Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import colors from "../../palette";
+
+// Utils
+import colors, { boxShadow } from "../../palette";
 
 const useStyles = makeStyles({
   root: {
@@ -31,7 +35,7 @@ const useStyles = makeStyles({
     fontWeight: "bold",
     textAlign: "center",
     padding: "10px",
-    boxShadow: "0 4px 4px 0 rgb(136 118 118 / 15%)",
+    boxShadow: boxShadow.primary,
     borderBottomLeftRadius: "5px",
     borderBottomRightRadius: "5px",
   },
@@ -42,7 +46,7 @@ const useStyles = makeStyles({
     padding: "15px",
     width: "50px",
     height: "50px",
-    boxShadow: "0 4px 4px 0 rgb(136 118 118 / 15%)",
+    boxShadow: boxShadow.primary,
     zIndex: 2,
     "&:hover": {
       color: "black",

@@ -7,8 +7,10 @@ import React from "react";
 // Material UI Import
 import { Typography } from "@material-ui/core";
 
-// Customer Import
+// Custom Components
 import CardCarouselsItem from "./CarouselItem";
+
+import { boxShadow } from "../../palette";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -22,7 +24,7 @@ const styles = (theme: Theme) =>
       margin: theme.spacing(2),
     },
     cardItem: {
-      boxShadow: `0 4px 4px 0 rgb(136 118 118 / 15%)`,
+      boxShadow: boxShadow.primary,
     },
   });
 
