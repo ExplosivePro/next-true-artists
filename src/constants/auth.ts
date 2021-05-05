@@ -9,6 +9,7 @@ export const unauthRoutes = [
   "/dashboard/profile",
   "/dashboard/my-studios",
   "/dashboard/my-artists",
+  "/dashboard/manage-clients",
   "/password/[type]",
 ];
 
@@ -23,6 +24,7 @@ export const dashboardRoutes = [
   "/dashboard/my-studios",
   "/dashboard/my-artists",
   "/dashboard/upload-tattoos",
+  "/dashboard/manage-clients",
 ];
 
 export const PasswordValidationRegex = /(?=.*[a-zA-Z])(?=.*[0-9]).{6,10}/;
