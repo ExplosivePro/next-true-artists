@@ -1,3 +1,10 @@
+export enum Role {
+  USERS = "users",
+  ARTIST = "artist",
+  STUDIO = "studio_manager",
+  REGULAR = "regular",
+}
+
 // any route in this list is considered as unauthenticated routes, outside this list, app will redirect user to register page if user has not logged in yet
 export const unauthRoutes = [
   "/_error",

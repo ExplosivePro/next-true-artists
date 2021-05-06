@@ -16,7 +16,7 @@ import PrimaryButton from "./PrimaryButton";
 import { updateArtistAvatar, updateStudioAvatar } from "../api";
 
 // Context
-import { Roles, useApp, User } from "../contexts";
+import { Role, useApp, User } from "../contexts";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -221,14 +221,14 @@ export default function RightBarRegisterAvatarUpload({
 
 export const preloadRightBarRegisterAvatarUploadData = ({ role, artist, studio }: User) => {
   switch (role) {
-    case Roles.ARTIST: {
+    case Role.ARTIST: {
       return {
         file: null,
         preview: artist?.avatar?.image_url,
       };
     }
 
-    case Roles.STUDIO: {
+    case Role.STUDIO: {
       return {
         file: null,
         preview: studio?.avatar?.image_url,

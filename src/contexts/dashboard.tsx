@@ -32,7 +32,7 @@ import PrimaryButton from "../components/PrimaryButton";
 import AppBarMenuItems from "../components/Header/AppBarMenuItems";
 
 // Contexts
-import { AuthState, useAuth, Roles } from "./auth";
+import { AuthState, useAuth, Role } from "./auth";
 
 // Constants
 import { dashboardRoutes, mainItems, helpItems, dashboardRouteDetails, drawerWidth } from "../constants";
@@ -271,7 +271,7 @@ export function DashboardContext({ children }: Props) {
           >
             <List>
               {mainItems.map((item, index) => {
-                if (item.acceptRoles.includes(user?.role as Roles)) {
+                if (item.acceptRoles.includes(user?.role as Role)) {
                   return (
                     <ListItem
                       button
@@ -291,7 +291,7 @@ export function DashboardContext({ children }: Props) {
             </List>
             <List className={classes.bottomList}>
               {helpItems.map((item, index) => {
-                if (item.acceptRoles.includes(user?.role as Roles)) {
+                if (item.acceptRoles.includes(user?.role as Role)) {
                   return (
                     <ListItem
                       button
@@ -327,7 +327,7 @@ export function DashboardContext({ children }: Props) {
                 <b>{name}</b>
               </Typography>
 
-              {user?.role !== Roles.REGULAR && (
+              {user?.role !== Role.REGULAR && (
                 <PrimaryButton
                   variant="contained"
                   startIcon={<AddIcon />}
@@ -347,7 +347,7 @@ export function DashboardContext({ children }: Props) {
                 aria-haspopup="true"
                 color="inherit"
                 onClick={handleProfileMenuOpen}
-                className={clsx({ [classes.leftAuto]: user?.role === Roles.REGULAR })}
+                className={clsx({ [classes.leftAuto]: user?.role === Role.REGULAR })}
                 classes={{ root: classes.profileButton }}
               >
                 <Avatar alt={user?.full_name || "Avatar"} src={user?.avatar?.image_url} />

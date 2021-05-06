@@ -31,7 +31,7 @@ import RightBarRegisterTattooUpload from "../../components/RightBarRegisterTatto
 
 // Utils
 import { getWorkingStyleList } from "../../api";
-import { AuthState, Roles, useApp, useAuth, User } from "../../contexts";
+import { AuthState, Role, useApp, useAuth, User } from "../../contexts";
 
 import colors from "../../palette";
 
@@ -109,22 +109,22 @@ export default function RegisterSelection({ workingStyles }: Props) {
   const getPreloadData = (step: number) => {
     switch (step) {
       case 2: {
-        if (user?.role === Roles.ARTIST) {
+        if (user?.role === Role.ARTIST) {
           return preloadRightBarArtistRegisterInformationData(user?.artist as Resource.ArtistDetail);
         }
 
-        if (user?.role === Roles.STUDIO) {
+        if (user?.role === Role.STUDIO) {
           return preloadRightBarStudioRegisterInformationData(user?.studio as Resource.StudioDetail);
         }
 
         return {};
       }
       case 3: {
-        if (user?.role === Roles.ARTIST) {
+        if (user?.role === Role.ARTIST) {
           return preloadRightBarRegisterWorkStyleData(user?.artist as Resource.ArtistDetail);
         }
 
-        if (user?.role === Roles.STUDIO) {
+        if (user?.role === Role.STUDIO) {
           return preloadRightBarRegisterBusinessSettingsData(user?.studio as Resource.StudioDetail);
         }
       }
@@ -138,21 +138,21 @@ export default function RegisterSelection({ workingStyles }: Props) {
     // User already logged in, skip step 1, bring user to the next step
     if (status === AuthState.authenticated) {
       switch (user?.role) {
-        case Roles.ARTIST: {
+        case Role.ARTIST: {
           setRole("artist");
           setCurrentUserRoleId(user?.artist?.id);
           break;
         }
-        case Roles.STUDIO: {
+        case Role.STUDIO: {
           setRole("studio");
           setCurrentUserRoleId(user?.studio?.id);
           break;
         }
-        case Roles.REGULAR: {
+        case Role.REGULAR: {
           // Get saved state from local storage
           const savedRole = localStorage.getItem("pendingRegistrationType");
           if (savedRole) {
-            if (savedRole === Roles.ARTIST) {
+            if (savedRole === Role.ARTIST) {
               setRole("artist");
               setCurrentUserRoleId(user?.artist?.id);
             } else {

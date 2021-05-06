@@ -1,5 +1,5 @@
 import { api } from "./axios";
-import { Roles } from "../contexts";
+import { Role } from "../contexts";
 
 export const uploadTattoos = async (data: any): Promise<RestApi.Response> => {
   try {
@@ -90,7 +90,7 @@ export const getTattooListByRole = async (
   try {
     let queryRole = "artists";
 
-    if (role === Roles.STUDIO) {
+    if (role === Role.STUDIO) {
       queryRole = "studios";
     }
 

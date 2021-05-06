@@ -15,7 +15,7 @@ import PrimaryButton from "../PrimaryButton";
 import Loading from "../Loading";
 import CardCarouselsItem from "./CarouselItem";
 
-import colors from "../../palette";
+import colors, { boxShadow } from "../../palette";
 
 import { getStudioList } from "../../api";
 
@@ -37,7 +37,7 @@ const styles = (theme: Theme) =>
       padding: "15px",
       width: "50px",
       height: "50px",
-      boxShadow: "0 4px 4px 0 rgb(136 118 118 / 15%)",
+      boxShadow: boxShadow.primary,
       zIndex: 2,
       cursor: "pointer",
       "&:hover": {
@@ -63,7 +63,7 @@ const styles = (theme: Theme) =>
       margin: theme.spacing(2),
     },
     cardItem: {
-      boxShadow: `0 4px 4px 0 rgb(136 118 118 / 15%)`,
+      boxShadow: boxShadow.primary,
     },
     loadingIcon: {
       marginTop: "100px",
