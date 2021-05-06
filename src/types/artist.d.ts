@@ -1,9 +1,4 @@
-declare namespace Studio {
-  interface InviteArtistPayload {
-    phone_number?: string;
-    email?: string;
-  }
-
+declare namespace Artist {
   interface CreateClientPayload {
     phone_number?: string;
     email?: string;

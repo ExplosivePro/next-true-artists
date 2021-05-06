@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) =>
       },
     },
     table: {
-      // minWidth: 700,
+      minWidth: 700,
     },
     drawer: {
       width: "30vw",
@@ -45,36 +45,10 @@ const useStyles = makeStyles((theme) =>
       justifyContent: "flex-end",
       alignItems: "center",
     },
-    modal: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    paper: {
-      backgroundColor: theme.palette.background.paper,
-      boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 4, 3),
-      "&:hover": {
-        outline: "none",
+    checkBoxCell: {
+      "& span": {
+        color: colors.white,
       },
-      position: "relative",
-    },
-    dialogAction: {
-      padding: "8px 16px 16px 8px",
-    },
-    modalCloseButton: {
-      position: "absolute",
-      right: "15px",
-      cursor: "pointer",
-    },
-    formInput: {
-      margin: "10px 0",
-    },
-    modalTitle: {
-      marginBottom: "15px",
-    },
-    submitModalButton: {
-      float: "right",
     },
   }),
 );

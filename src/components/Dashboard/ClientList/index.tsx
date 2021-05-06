@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 // Material import
 import Table from "@material-ui/core/Table";
@@ -17,7 +18,6 @@ import Grid from "@material-ui/core/Grid";
 import AddIcon from "@material-ui/icons/Add";
 import Switch from "@material-ui/core/Switch";
 import EditIcon from "@material-ui/icons/Edit";
-import Checkbox from "@material-ui/core/Checkbox";
 import FormControl from "@material-ui/core/FormControl";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -30,40 +30,42 @@ import StyledTableCell from "./TableCell";
 import StyledTableRow from "./TableRow";
 
 import useStyles from "./styles";
-import { useRouter } from "next/router";
 
-const data = [
-  {
-    id: 1,
-    name: "1",
-    email: "a@g.com",
-    active: true,
-  },
-  {
-    id: 2,
-    name: "2",
-    email: "b@g.com",
-    active: true,
-  },
-];
+// Utils
+import { getArtistClientList, updateArtistClient } from "../../../api";
+import { useAuth, Role } from "../../../contexts";
+import { Typography } from "@material-ui/core";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
+import CloseIcon from "@material-ui/icons/Close";
+import TextField from "@material-ui/core/TextField";
+import Modal from "@material-ui/core/Modal";
 
 export default function ClientList() {
   const classes = useStyles();
   const { push } = useRouter();
+  const { getRoleId, user } = useAuth();
 
+  const [clients, setClients] = useState<Client.Detail[]>([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [activeUserId, setActiveUserId] = useState<number>();
+  const [editUserId, setEditUserId] = useState<number>();
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const [comment, setComment] = React.useState("");
 
   const createNewUser = () => {
-    push(`dashboard/users/create`);
+    push(`/dashboard/manage-clients/create`);
   };
 
   // Activate a user
-  const activateAUser = (id: number | undefined, active: boolean) => {
+  const activateAUser = async (id: number | undefined, active: boolean) => {
     if (id) {
-      // TODO: Call API here
+      // Call APis
+      await updateArtistClient(getRoleId() as number, id, { inactive: !active });
 
-      console.log(active);
+      // Refresh the list
+      getClients();
+
       // Hide confirmation modal
       setShowConfirmModal(false);
     }
@@ -95,6 +97,46 @@ export default function ClientList() {
   function PaperComponent(props: PaperProps) {
     return <Paper {...props} />;
   }
+
+  const getClients = async () => {
+    if (user?.role === Role.ARTIST) {
+      const response = await getArtistClientList(getRoleId() as number);
+      setClients(response);
+    }
+
+    if (user?.role === Role.STUDIO) {
+      const response = await getArtistClientList(getRoleId() as number);
+      setClients(response);
+    }
+  };
+
+  // Open modal
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+
+  // Close modal
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  // Save comments
+  const saveComments = async () => {
+    if (editUserId) {
+      // Call APis
+      await updateArtistClient(getRoleId() as number, editUserId, { comments: comment });
+
+      // Refresh the list
+      getClients();
+
+      // Hide confirmation modal
+      setModalOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    getClients();
+  }, []);
 
   return (
     <Container maxWidth="lg" className={classes.container}>
@@ -128,58 +170,70 @@ export default function ClientList() {
           </PrimaryButton>
         </Grid>
 
-        <TableContainer component={Paper} classes={{ root: classes.tableContainer }}>
-          <Table className={classes.table} aria-label="customized table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell className={classes.checkBoxCell}>
-                  <Checkbox disabled />
-                </StyledTableCell>
-                <StyledTableCell>
-                  <b>Name</b>
-                </StyledTableCell>
-                <StyledTableCell>
-                  <b>Email</b>
-                </StyledTableCell>
-                <StyledTableCell>
-                  <b>Phone number</b>
-                </StyledTableCell>
-                <StyledTableCell>
-                  <b>Active</b>
-                </StyledTableCell>
-                <StyledTableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((item, index: number) => (
-                <StyledTableRow key={index}>
-                  <StyledTableCell component="th" scope="row">
-                    <Checkbox checked={false} color="primary" />
+        {clients.length === 0 && (
+          <Grid container justify={"center"}>
+            <Typography>No client yet.</Typography>
+          </Grid>
+        )}
+
+        {clients.length > 0 && (
+          <TableContainer component={Paper} classes={{ root: classes.tableContainer }}>
+            <Table className={classes.table} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>
+                    <b>Name</b>
                   </StyledTableCell>
-                  <StyledTableCell component="th" scope="row">
-                    {item.name}
+                  <StyledTableCell>
+                    <b>Email</b>
                   </StyledTableCell>
-                  <StyledTableCell>{item.email}</StyledTableCell>
+                  <StyledTableCell>
+                    <b>Phone number</b>
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    <b>Comments</b>
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    <b>Active</b>
+                  </StyledTableCell>
                   <StyledTableCell />
-                  <StyledTableCell>{`${item.active ? "Active" : "Deactive"}`}</StyledTableCell>
-                  <StyledTableCell className={classes.flexEndColumn}>
-                    <Switch
-                      checked={item.active}
-                      onChange={(e) => {
-                        toggleActive(e, item.id);
-                      }}
-                      name="checkedB"
-                      color="primary"
-                    />
-                    <IconButton>
-                      <EditIcon />
-                    </IconButton>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {clients.map((item, index: number) => (
+                  <StyledTableRow key={index}>
+                    <StyledTableCell component="th" scope="row">
+                      {item.name}
+                    </StyledTableCell>
+                    <StyledTableCell>{item.email}</StyledTableCell>
+                    <StyledTableCell>{item.phone_number}</StyledTableCell>
+                    <StyledTableCell>{item.comments}</StyledTableCell>
+                    <StyledTableCell>{`${!item.inactive ? "Active" : "Deactive"}`}</StyledTableCell>
+                    <StyledTableCell className={classes.flexEndColumn}>
+                      <Switch
+                        checked={!item.inactive}
+                        onChange={(e) => {
+                          toggleActive(e, item.id);
+                        }}
+                        name="checkedB"
+                        color="primary"
+                      />
+                      <IconButton
+                        onClick={() => {
+                          setEditUserId(item.id);
+                          setComment(item.comments);
+                          handleModalOpen();
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
       </div>
 
       <Dialog
@@ -194,7 +248,7 @@ export default function ClientList() {
         <DialogContent>
           <DialogContentText>Are you sure you want to deactivate this user ?</DialogContentText>
         </DialogContent>
-        <DialogActions>
+        <DialogActions className={classes.dialogAction}>
           <PrimaryButton variant={"outlined"} primaryColor onClick={handleClose}>
             Cancel
           </PrimaryButton>
@@ -209,6 +263,54 @@ export default function ClientList() {
           </PrimaryButton>
         </DialogActions>
       </Dialog>
+
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={modalOpen}
+        onClose={handleModalClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={modalOpen}>
+          <div className={classes.paper}>
+            <CloseIcon className={classes.modalCloseButton} onClick={handleModalClose} />
+
+            <Typography variant={"h5"} className={classes.modalTitle}>
+              Edit comments
+            </Typography>
+
+            <TextField
+              name="comment"
+              classes={{ root: classes.formInput }}
+              label={"Comment"}
+              placeholder={"Comment"}
+              fullWidth
+              value={comment}
+              multiline
+              rows={3}
+              variant={"outlined"}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setComment(e.target.value);
+              }}
+            />
+
+            <PrimaryButton
+              variant="contained"
+              size="large"
+              primaryColor
+              className={classes.submitModalButton}
+              onClick={saveComments}
+            >
+              Save changes
+            </PrimaryButton>
+          </div>
+        </Fade>
+      </Modal>
     </Container>
   );
 }
