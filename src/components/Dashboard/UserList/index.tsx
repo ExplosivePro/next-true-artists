@@ -24,6 +24,8 @@ import { Role, useApp, useAuth } from "../../../contexts";
 import useStyles from "./styles";
 
 import { getMyStudioList, getMyArtistList, inviteArtist } from "../../../api";
+import { useDebounce } from "../../../hooks";
+import Loading from "../../Loading";
 
 const getTitleByRole = (role: Role) => {
   switch (role) {
@@ -46,22 +48,30 @@ export default function UserList() {
 
   const [userList, setUserList] = useState([]);
 
-  // Invite artist fields
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [searchInput, setSearchInput] = useState(""); // Direct search input value before debounce
+  const debouncedSearchTerm = useDebounce(searchInput, 500);
 
   const title = getTitleByRole(user?.role as Role);
 
-  const getUserList = async (role: Role) => {
+  const getUserList = async (role: Role, searchString?: string) => {
     switch (role) {
       case Role.ARTIST: {
-        const data = await getMyStudioList(user?.artist?.id as number);
-        setUserList(data);
+        const { data, error } = await getMyStudioList(user?.artist?.id as number, 0, searchString);
+
+        if (!error) {
+          setUserList(data);
+        }
         break;
       }
       case Role.STUDIO: {
-        const data = await getMyArtistList(user?.studio?.id as number);
-        setUserList(data);
+        const { data, error } = await getMyArtistList(user?.studio?.id as number, 0, searchString);
+
+        if (!error) {
+          setUserList(data);
+        }
         break;
       }
       default: {
@@ -90,7 +100,7 @@ export default function UserList() {
     });
 
     if (!error) {
-      showSuccessDialog(true, "Invite artist successfully");
+      showSuccessDialog(true, "Invite sent successfully");
     }
 
     // Close modal
@@ -101,9 +111,28 @@ export default function UserList() {
     setEmail("");
   };
 
+  // Search
+  const search = async (keyword: string) => {
+    // Clear all current result first
+    setUserList([]);
+
+    // Show loading
+    setLoading(true);
+
+    getUserList(user?.role as Role, keyword);
+
+    // Hide loading
+    setLoading(false);
+  };
+
   useEffect(() => {
     getUserList(user?.role as Role);
   }, []);
+
+  // On search
+  useEffect(() => {
+    search(debouncedSearchTerm);
+  }, [debouncedSearchTerm]);
 
   return (
     <>
@@ -123,6 +152,10 @@ export default function UserList() {
               id="search"
               type={"text"}
               placeholder={"Search by Name"}
+              value={searchInput}
+              onChange={(e) => {
+                setSearchInput(e.target.value);
+              }}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton aria-label="toggle password visibility" edge="end">
@@ -139,22 +172,26 @@ export default function UserList() {
               variant="contained"
               className={classes.inviteButton}
               startIcon={<AddIcon />}
-              bluePastel
+              primaryColor
               onClick={handleModalOpen}
             >
               Invite Tattoo Artist
             </PrimaryButton>
           )}
         </Grid>
-        <Grid container spacing={4} className={classes.userCard}>
-          {userList.map((user, index) => {
-            return (
-              <Grid container item lg={3} md={3} sm={4} xs={12} key={index} justify={"center"}>
-                <UserCard data={user} />
-              </Grid>
-            );
-          })}
-        </Grid>
+        {!loading && (
+          <Grid container spacing={4} className={classes.userCard}>
+            {userList.map((user, index) => {
+              return (
+                <Grid container item lg={3} md={3} sm={4} xs={12} key={index} justify={"center"}>
+                  <UserCard data={user} />
+                </Grid>
+              );
+            })}
+          </Grid>
+        )}
+
+        {loading && <Loading />}
 
         <Modal
           aria-labelledby="transition-modal-title"
@@ -209,7 +246,7 @@ export default function UserList() {
                 className={classes.inviteModalButton}
                 onClick={submitInviteArtist}
               >
-                Invite
+                Send Invite
               </PrimaryButton>
             </div>
           </Fade>

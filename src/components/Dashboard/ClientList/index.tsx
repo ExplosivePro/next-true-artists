@@ -40,18 +40,23 @@ import Fade from "@material-ui/core/Fade";
 import CloseIcon from "@material-ui/icons/Close";
 import TextField from "@material-ui/core/TextField";
 import Modal from "@material-ui/core/Modal";
+import { useDebounce } from "../../../hooks";
+import Loading from "../../Loading";
 
 export default function ClientList() {
   const classes = useStyles();
   const { push } = useRouter();
   const { getRoleId, user } = useAuth();
 
+  const [loading, setLoading] = useState(true);
   const [clients, setClients] = useState<Client.Detail[]>([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [activeUserId, setActiveUserId] = useState<number>();
   const [editUserId, setEditUserId] = useState<number>();
   const [modalOpen, setModalOpen] = React.useState(false);
   const [comment, setComment] = React.useState("");
+  const [searchInput, setSearchInput] = useState(""); // Direct search input value before debounce
+  const debouncedSearchTerm = useDebounce(searchInput, 500);
 
   const createNewUser = () => {
     push(`/dashboard/manage-clients/create`);
@@ -98,14 +103,14 @@ export default function ClientList() {
     return <Paper {...props} />;
   }
 
-  const getClients = async () => {
+  const getClients = async (searchString?: string) => {
     if (user?.role === Role.ARTIST) {
-      const response = await getArtistClientList(getRoleId() as number);
+      const response = await getArtistClientList(getRoleId() as number, 0, searchString);
       setClients(response);
     }
 
     if (user?.role === Role.STUDIO) {
-      const response = await getArtistClientList(getRoleId() as number);
+      const response = await getArtistClientList(getRoleId() as number, 0, searchString);
       setClients(response);
     }
   };
@@ -134,6 +139,25 @@ export default function ClientList() {
     }
   };
 
+  // Search
+  const search = async (keyword: string) => {
+    // Clear all current result first
+    setClients([]);
+
+    // Show loading
+    setLoading(true);
+
+    getClients(keyword);
+
+    // Hide loading
+    setLoading(false);
+  };
+
+  // On search
+  useEffect(() => {
+    search(debouncedSearchTerm);
+  }, [debouncedSearchTerm]);
+
   useEffect(() => {
     getClients();
   }, []);
@@ -148,6 +172,10 @@ export default function ClientList() {
               id="search"
               type={"text"}
               placeholder={"Search by Name"}
+              value={searchInput}
+              onChange={(e) => {
+                setSearchInput(e.target.value);
+              }}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton aria-label="toggle password visibility" edge="end">
@@ -170,13 +198,13 @@ export default function ClientList() {
           </PrimaryButton>
         </Grid>
 
-        {clients.length === 0 && (
+        {clients.length === 0 && !loading && (
           <Grid container justify={"center"}>
             <Typography>No client yet.</Typography>
           </Grid>
         )}
 
-        {clients.length > 0 && (
+        {clients.length > 0 && !loading && (
           <TableContainer component={Paper} classes={{ root: classes.tableContainer }}>
             <Table className={classes.table} aria-label="customized table">
               <TableHead>
@@ -234,6 +262,8 @@ export default function ClientList() {
             </Table>
           </TableContainer>
         )}
+
+        {loading && <Loading />}
       </div>
 
       <Dialog
