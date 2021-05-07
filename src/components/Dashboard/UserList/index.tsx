@@ -19,18 +19,18 @@ import TextField from "@material-ui/core/TextField";
 import UserCard from "./Card";
 import PrimaryButton from "../../PrimaryButton";
 
-import { Roles, useApp, useAuth } from "../../../contexts";
+import { Role, useApp, useAuth } from "../../../contexts";
 
 import useStyles from "./styles";
 
 import { getMyStudioList, getMyArtistList, inviteArtist } from "../../../api";
 
-const getTitleByRole = (role: Roles) => {
+const getTitleByRole = (role: Role) => {
   switch (role) {
-    case Roles.ARTIST: {
+    case Role.ARTIST: {
       return "Studios";
     }
-    case Roles.STUDIO: {
+    case Role.STUDIO: {
       return "Studio Artists";
     }
     default: {
@@ -50,18 +50,24 @@ export default function UserList() {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
-  const title = getTitleByRole(user?.role as Roles);
+  const title = getTitleByRole(user?.role as Role);
 
-  const getUserList = async (role: Roles) => {
+  const getUserList = async (role: Role) => {
     switch (role) {
-      case Roles.ARTIST: {
-        const data = await getMyStudioList(user?.artist?.id as number);
-        setUserList(data);
+      case Role.ARTIST: {
+        const { data, error } = await getMyStudioList(user?.artist?.id as number);
+
+        if (!error) {
+          setUserList(data);
+        }
         break;
       }
-      case Roles.STUDIO: {
-        const data = await getMyArtistList(user?.studio?.id as number);
-        setUserList(data);
+      case Role.STUDIO: {
+        const { data, error } = await getMyArtistList(user?.studio?.id as number);
+
+        if (!error) {
+          setUserList(data);
+        }
         break;
       }
       default: {
@@ -102,7 +108,7 @@ export default function UserList() {
   };
 
   useEffect(() => {
-    getUserList(user?.role as Roles);
+    getUserList(user?.role as Role);
   }, []);
 
   return (
@@ -114,7 +120,7 @@ export default function UserList() {
           </Typography>
           <Typography className={classes.breaker}>|</Typography>
           <Typography className={classes.userNumber}>
-            {userList.length} {user?.role === Roles.ARTIST ? "Studios" : "Artists"}
+            {userList.length} {user?.role === Role.ARTIST ? "Studios" : "Artists"}
           </Typography>
 
           <FormControl className={classes.textField} variant="outlined">
@@ -134,12 +140,12 @@ export default function UserList() {
             />
           </FormControl>
 
-          {user?.role === Roles.STUDIO && (
+          {user?.role === Role.STUDIO && (
             <PrimaryButton
               variant="contained"
               className={classes.inviteButton}
               startIcon={<AddIcon />}
-              bluePastel
+              primaryColor
               onClick={handleModalOpen}
             >
               Invite Tattoo Artist
@@ -209,7 +215,7 @@ export default function UserList() {
                 className={classes.inviteModalButton}
                 onClick={submitInviteArtist}
               >
-                Invite
+                Send Invite
               </PrimaryButton>
             </div>
           </Fade>

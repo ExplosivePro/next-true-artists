@@ -27,17 +27,7 @@ export const getMyArtistList = async (id: number, page = 0, searchKey = "", filt
     const result = await api.get(query);
     return result.data;
   } catch (e) {
-    return {
-      tattoos: [],
-      meta: {
-        current_page: 1,
-        last_page: true,
-        limit_value: 60,
-        next_page: 1,
-        total_count: 0,
-        total_pages: 1,
-      },
-    };
+    return errorHandler(e);
   }
 };
 
