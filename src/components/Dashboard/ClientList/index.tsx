@@ -243,8 +243,7 @@ export default function ClientList() {
                         onChange={(e) => {
                           toggleActive(e, item.id);
                         }}
-                        name="checkedB"
-                        color="primary"
+                        name={item.id}
                       />
                       <IconButton
                         onClick={() => {
