@@ -243,7 +243,7 @@ export default function ClientList() {
                         onChange={(e) => {
                           toggleActive(e, item.id);
                         }}
-                        name={item.id}
+                        name={item.id.toString()}
                       />
                       <IconButton
                         onClick={() => {
