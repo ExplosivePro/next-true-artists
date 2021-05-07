@@ -4,6 +4,8 @@ import ContactSupportOutlinedIcon from "@material-ui/icons/ContactSupportOutline
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
 import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
+import GroupIcon from "@material-ui/icons/Group";
+import BusinessIcon from "@material-ui/icons/Business";
 
 import { Role } from "./auth";
 
@@ -30,6 +32,18 @@ export const mainItems = [
     name: "Studio Profile",
     icon: <PersonOutlineIcon />,
     url: "/dashboard/profile",
+    acceptRoles: [Role.STUDIO],
+  },
+  {
+    name: "My Studios",
+    icon: <BusinessIcon />,
+    url: "/dashboard/my-studios",
+    acceptRoles: [Role.ARTIST],
+  },
+  {
+    name: "My Artists",
+    icon: <GroupIcon />,
+    url: "/dashboard/my-artists",
     acceptRoles: [Role.STUDIO],
   },
   {

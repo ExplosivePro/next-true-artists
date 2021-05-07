@@ -2,6 +2,7 @@ module.exports = {
   publicRuntimeConfig: {
     GOOGLE_APP_ID: process.env.GOOGLE_APP_ID,
     INSTAGRAM_APP_ID: process.env.INSTAGRAM_APP_ID,
+    PUBLIC_PAGE_BASE_URL: process.env.PUBLIC_PAGE_BASE_URL,
   },
   compress: false,
   poweredByHeader: false,
