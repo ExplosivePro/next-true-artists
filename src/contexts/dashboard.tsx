@@ -285,7 +285,7 @@ export function DashboardContext({ children }: Props) {
                     </ListItem>
                   );
                 } else {
-                  return <></>;
+                  return <div key={index} />;
                 }
               })}
             </List>
@@ -305,7 +305,7 @@ export function DashboardContext({ children }: Props) {
                     </ListItem>
                   );
                 } else {
-                  return <></>;
+                  return <div key={index} />;
                 }
               })}
             </List>

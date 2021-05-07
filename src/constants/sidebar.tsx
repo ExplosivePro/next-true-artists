@@ -38,13 +38,13 @@ export const mainItems = [
     name: "My Studios",
     icon: <BusinessIcon />,
     url: "/dashboard/my-studios",
-    acceptRoles: [Roles.ARTIST],
+    acceptRoles: [Role.ARTIST],
   },
   {
     name: "My Artists",
     icon: <GroupIcon />,
     url: "/dashboard/my-artists",
-    acceptRoles: [Roles.STUDIO],
+    acceptRoles: [Role.STUDIO],
   },
   {
     name: "Profile",
