@@ -37,4 +37,8 @@ const colors = {
   instagramColor: "#ff0601",
 };
 
+export const boxShadow = {
+  primary: "0 4px 4px 0 rgb(136 118 118 / 15%)",
+};
+
 export default colors;

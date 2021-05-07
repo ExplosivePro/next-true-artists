@@ -25,7 +25,7 @@ export const dashboardRouteDetails = [
   },
   {
     path: "/dashboard/gallery",
-    name: "Gallery",
+    name: "Tattoo Gallery",
     backButton: {
       enable: true,
       path: "/dashboard",

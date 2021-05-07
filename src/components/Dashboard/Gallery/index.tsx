@@ -1,6 +1,8 @@
+// External import
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
+// Material UI Components
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
@@ -9,17 +11,21 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 
+// Custom UI Components
 import Loading from "../../Loading";
 import PrimaryButton from "../../PrimaryButton";
 
+// Utils
 import { getTattooListByRole } from "../../../api";
-import { Roles, useAuth } from "../../../contexts";
-
 import { capitalizeFirstLetter } from "../../../utils";
+import { boxShadow } from "../../../palette";
+
+// Contexts
+import { Role, useAuth } from "../../../contexts";
 
 const useStyles = makeStyles({
   root: {
-    boxShadow: `0 4px 4px 0 rgb(136 118 118 / 15%)`,
+    boxShadow: boxShadow.primary,
   },
   seeMoreButton: {
     width: "191px",
@@ -34,25 +40,11 @@ const useStyles = makeStyles({
   },
 });
 
-const getRoleId = (role: Roles, data: any) => {
-  switch (role) {
-    case Roles.ARTIST: {
-      return data.artist.id;
-    }
-    case Roles.STUDIO: {
-      return data.studio.id;
-    }
-    default: {
-      return {};
-    }
-  }
-};
-
-export default function ImgMediaCard() {
+export default function ImageMediaCard() {
   const classes = useStyles();
-  const { user, user: { role } = { role: Roles.REGULAR } } = useAuth();
+  const { user: { role } = { role: Role.REGULAR }, getRoleId } = useAuth();
 
-  const [currentUserId] = useState(getRoleId(role, user));
+  const [currentUserId] = useState(getRoleId());
   const [loading, setLoading] = useState(false);
   const [tattoos, setTattoos] = useState<Resource.TattooDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -62,7 +54,7 @@ export default function ImgMediaCard() {
     const {
       meta: { last_page },
       tattoos,
-    } = await getTattooListByRole(currentUserId, role, currentPage);
+    } = await getTattooListByRole(currentUserId as number, role, currentPage);
     setTattoos(tattoos);
     setLastPage(last_page);
   };
@@ -77,7 +69,7 @@ export default function ImgMediaCard() {
     const {
       tattoos: tattooList,
       meta: { last_page },
-    } = await getTattooListByRole(currentUserId, role, currentPage + 1);
+    } = await getTattooListByRole(currentUserId as number, role, currentPage + 1);
 
     setTattoos(tattoos.concat(tattooList));
     setLastPage(last_page);
@@ -124,7 +116,7 @@ export default function ImgMediaCard() {
         <Grid container alignItems={"center"} spacing={4}>
           {tattoos.length === 0 && (
             <Grid container justify={"center"}>
-              <Typography>No image</Typography>
+              <Typography>You do not have any tattoo images</Typography>
             </Grid>
           )}
           {tattoos.map((item, index) => {
@@ -134,10 +126,10 @@ export default function ImgMediaCard() {
                   <CardActionArea>
                     <CardMedia
                       component="img"
-                      alt="Contemplative Reptile"
+                      alt={item.image?.name}
                       height="250"
                       image={item.image?.image_url}
-                      title="Contemplative Reptile"
+                      title={item.image?.name}
                     />
                     <CardContent>
                       <Typography gutterBottom variant="subtitle2">

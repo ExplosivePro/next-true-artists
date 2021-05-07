@@ -7,30 +7,32 @@ import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import GroupIcon from "@material-ui/icons/Group";
 import BusinessIcon from "@material-ui/icons/Business";
 
-enum Roles {
-  ARTIST = "artist",
-  STUDIO = "studio_manager",
-  REGULAR = "regular",
-}
+import { Role } from "./auth";
 
 export const mainItems = [
   {
     name: "Dashboard",
     icon: <HomeOutlinedIcon />,
     url: "/dashboard",
-    acceptRoles: [Roles.ARTIST, Roles.STUDIO],
+    acceptRoles: [Role.ARTIST, Role.STUDIO],
   },
   {
     name: "Tattoo Gallery",
     icon: <PhotoLibraryIcon />,
     url: "/dashboard/gallery",
-    acceptRoles: [Roles.ARTIST, Roles.STUDIO],
+    acceptRoles: [Role.ARTIST, Role.STUDIO],
   },
   {
-    name: "Tattoo Profile",
+    name: "Artist Profile",
     icon: <PersonOutlineIcon />,
     url: "/dashboard/profile",
-    acceptRoles: [Roles.ARTIST, Roles.STUDIO],
+    acceptRoles: [Role.ARTIST],
+  },
+  {
+    name: "Studio Profile",
+    icon: <PersonOutlineIcon />,
+    url: "/dashboard/profile",
+    acceptRoles: [Role.STUDIO],
   },
   {
     name: "My Studios",
@@ -48,13 +50,13 @@ export const mainItems = [
     name: "Profile",
     icon: <PersonOutlineIcon />,
     url: "/dashboard/profile",
-    acceptRoles: [Roles.REGULAR],
+    acceptRoles: [Role.REGULAR],
   },
   {
     name: "Inbox",
     icon: <ChatOutlinedIcon />,
     url: "/inbox",
-    acceptRoles: [Roles.ARTIST, Roles.STUDIO],
+    acceptRoles: [Role.ARTIST, Role.STUDIO],
   },
 ];
 
@@ -63,13 +65,13 @@ export const helpItems = [
     name: "Help Center",
     icon: <ContactSupportOutlinedIcon />,
     url: "/help-center",
-    acceptRoles: [Roles.ARTIST, Roles.STUDIO, Roles.REGULAR],
+    acceptRoles: [Role.ARTIST, Role.STUDIO, Role.REGULAR],
   },
   {
     name: "Settings",
     icon: <SettingsOutlinedIcon />,
     url: "/settings",
-    acceptRoles: [Roles.ARTIST, Roles.STUDIO, Roles.REGULAR],
+    acceptRoles: [Role.ARTIST, Role.STUDIO, Role.REGULAR],
   },
 ];
 
