@@ -17,7 +17,7 @@ import {
 import { useApp } from "./app";
 
 // Constants
-import { unauthRoutes } from "../constants";
+import { unauthRoutes, nonRememberRoutes } from "../constants";
 
 // Custom Component
 import Loading from "../components/Loading";
@@ -31,12 +31,10 @@ export enum AuthState {
   "authenticated",
 }
 
-export enum Roles {
-  USERS = "users",
-  ARTIST = "artist",
-  STUDIO = "studio_manager",
-  REGULAR = "regular",
-}
+// Expose this role in this auth context
+export { Role } from "../constants";
+
+import { Role } from "../constants";
 
 /*
  Auth Flow: (TODO)
@@ -247,9 +245,25 @@ export function AuthContext({ children }: Props) {
     router.replace("/login");
   }
 
+  // Get current user's role Id
+  function getRoleId(): number | undefined {
+    const { role, artist, studio } = user.current as User;
+    switch (role) {
+      case Role.ARTIST: {
+        return artist?.id;
+      }
+      case Role.STUDIO: {
+        return studio?.id;
+      }
+      default: {
+        return undefined;
+      }
+    }
+  }
+
   useEffect(() => {
-    // Only save auth router
-    if (unauthRoutes.indexOf(router.pathname) === -1) {
+    // Only save remember router
+    if (nonRememberRoutes.indexOf(router.pathname) === -1) {
       // Store this url to get back later
       setPreviousPath(router.pathname);
     }
@@ -264,8 +278,11 @@ export function AuthContext({ children }: Props) {
 
       // Any route is not defined as unauth route will be redirected to register page
       if (unauthRoutes.indexOf(router.pathname) === -1) {
-        // Store this url to get back later
-        setPreviousPath(router.pathname);
+        // Only save remember router
+        if (nonRememberRoutes.indexOf(router.pathname) === -1) {
+          // Store this url to get back later
+          setPreviousPath(router.pathname);
+        }
 
         // Redirect to home page
         router.replace("/login");
@@ -278,7 +295,6 @@ export function AuthContext({ children }: Props) {
       .then(({ data }) => {
         user.current = data;
 
-        console.log(router.pathname);
         // These router does not redirect
         if (unauthRoutes.indexOf(router.pathname) === -1) {
           // Navigate to dashboard page
@@ -310,6 +326,7 @@ export function AuthContext({ children }: Props) {
         logOut,
         updateUserData,
         previousPath,
+        getRoleId,
       }}
     >
       {status === AuthState.pending ? <Loading fixed /> : null}
@@ -332,7 +349,7 @@ export type User = {
   id: number;
   full_name: string;
   avatar: Resource.Image;
-  role: Roles;
+  role: Role;
   artist?: Resource.ArtistDetail;
   studio?: Resource.StudioDetail;
 };
@@ -348,6 +365,7 @@ interface Context {
   status: AuthState;
   previousPath: string;
   updateUserData: () => void;
+  getRoleId: () => number | undefined;
 }
 
 const TOKEN_KEY = "AUTH_TOKEN";
