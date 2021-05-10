@@ -25,7 +25,6 @@ export const getMyArtistList = async (id: number, page = 0, searchKey = "", filt
     }
 
     const result = await api.get(query);
-
     return { error: false, data: result.data };
   } catch (e) {
     return errorHandler(e);
