@@ -20,12 +20,12 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TablePagination from "@material-ui/core/TablePagination";
 
 import AdminBody from "src/components/Admin/AdminBody";
+import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
 import CreateNew from "./create";
 
 import { getArticleList } from "./api";
 import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
-import PrimaryButton from "src/components/PrimaryButton";
 
 export default function Articles() {
   const classes = useStyles();
@@ -80,7 +80,7 @@ export default function Articles() {
       </Head>
 
       <Grid container>
-        <Grid item xs={12} sm={6} md={4} lg={4}>
+        <Grid item xs={12} sm={6} md={6} lg={6}>
           <Breadcrumbs>
             <Typography variant="h6">
               <Link href="/admin">Dashboard</Link>
@@ -93,10 +93,6 @@ export default function Articles() {
           <PrimaryButton bluePastel onClick={() => setIsOpenCreate(true)}>
             Create Article
           </PrimaryButton>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={2} lg={2}>
-          <Link href={`${router.pathname}/1`}>Edit Article Page</Link>
         </Grid>
 
         <Grid item xs={12} sm={6} md={4} lg={4}>
@@ -132,25 +128,36 @@ export default function Articles() {
             </React.Fragment>
           ) : articleListStatus === "error" ? (
             <Alert severity="error">{`Retrieving Articles - ${articleListError}`}</Alert>
-          ) : articleListData.length > 0 ? (
+          ) : articleListData.length === 0 ? (
             <React.Fragment>
               <TableContainer className={classes.tableContainer}>
                 <Table size="small" stickyHeader>
                   <colgroup>
                     <col width="auto" />
                     <col width="auto" />
-                    <col width="auto" />
+                    <col width="50%" />
+                    <col width="10%" />
                   </colgroup>
                   <TableHead>
                     <TableRow>
                       <StyledTableCell>Title</StyledTableCell>
                       <StyledTableCell>Page Title</StyledTableCell>
+                      <StyledTableCell>Introduction</StyledTableCell>
                       <StyledTableCell>Status</StyledTableCell>
                     </TableRow>
                   </TableHead>
 
                   <TableBody>
-                    {articleListData.map((article: Admin.Articles, index: number) => (
+                    <StyledTableRow>
+                      <StyledTableCell>
+                        <Link href={`${router.pathname}/1`}>Sample Article 1</Link>
+                      </StyledTableCell>
+                      <StyledTableCell>Article 1</StyledTableCell>
+                      <StyledTableCell>Sample page 1 Introduction...</StyledTableCell>
+                      <StyledTableCell>draft</StyledTableCell>
+                    </StyledTableRow>
+
+                    {/* {articleListData.map((article: Admin.Articles, index: number) => (
                       <StyledTableRow key={index}>
                         <StyledTableCell>
                           <Link href={`${router.pathname}/${article.id}`}>{article.title ?? "Null"}</Link>
@@ -158,7 +165,7 @@ export default function Articles() {
                         <StyledTableCell>{article.page_title}</StyledTableCell>
                         <StyledTableCell>{article.status}</StyledTableCell>
                       </StyledTableRow>
-                    ))}
+                    ))} */}
                   </TableBody>
                 </Table>
               </TableContainer>

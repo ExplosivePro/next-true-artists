@@ -32,7 +32,8 @@ export default function CreateNew({ isOpen }: any) {
   const getFormDefaultValues = () => ({
     title: "",
     introduction: "",
-    status: "",
+    page_title: "",
+    status: "draft", // default
     content: "",
     category_id: 1,
     meta_description: "meta:",
@@ -105,6 +106,7 @@ export default function CreateNew({ isOpen }: any) {
 
               <Grid item xs={12} md={6}>
                 <SelectInput
+                  disabled
                   name="status"
                   control={control}
                   label="Status *"
@@ -126,14 +128,27 @@ export default function CreateNew({ isOpen }: any) {
                   errors={!!errors.introduction}
                   errorMessage={errors.introduction?.message}
                 />
-                <Typography variant="caption">Provide a short description of the article.</Typography>
+                <Typography variant="caption">
+                  <i>Provide a short description of the article.</i>
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextInput
+                  name="page_title"
+                  register={register}
+                  required={true}
+                  label="Page Title *"
+                  errors={!!errors.page_title}
+                  errorMessage={errors.page_title?.message}
+                />
               </Grid>
 
               <Grid item xs={12}>
                 <JoditEditor
                   value={content}
+                  // onChange={(newContent) => setContent(newContent)}
                   onBlur={(newContent) => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
-                  onChange={(newContent) => console.log(newContent)}
                 />
               </Grid>
             </Grid>

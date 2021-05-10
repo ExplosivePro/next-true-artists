@@ -11,7 +11,7 @@ export const getArticle = async (articleId: string | undefined) => {
   return data;
 };
 
-export const editArticle = async (payload: any, articleId: number) => {
+export const editArticle = async (payload: any, articleId: string) => {
   const { data } = await api.patch(`/api/v1/admin/articles/${articleId}`, payload);
   return data;
 };

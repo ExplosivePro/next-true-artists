@@ -18,22 +18,17 @@ export const useStyles = makeStyles({
   paginationWrapper: {
     border: "solid thin lightGrey",
   },
-  avatar: {
-    textAlign: "center",
-    width: "120px",
-    height: "120px",
-    marginBottom: "10px",
-  },
-  editUserCard: {
-    width: "65%",
-  },
-  chips: {
-    margin: "2px",
-    padding: 0,
+  metaWrapper: {
+    borderLeft: "solid thin lightGrey",
   },
   titleText: {
     fontSize: "16px",
     fontWeight: 600,
+  },
+  articleText: {
+    marginLeft: "10px",
+    fontSize: "14px",
+    marginBottom: "10px",
   },
   closeButton: {
     float: "right",
