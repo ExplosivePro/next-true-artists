@@ -247,7 +247,7 @@ export function AuthContext({ children }: Props) {
 
   // Get current user's role Id
   function getRoleId(): number | undefined {
-    const { role, artist, studio } = user.current as User;
+    const { role = "", artist, studio } = user.current as User;
     switch (role) {
       case Role.ARTIST: {
         return artist?.id;

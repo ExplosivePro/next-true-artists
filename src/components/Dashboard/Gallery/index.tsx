@@ -24,7 +24,7 @@ export default function ImageMediaCard() {
   const { user: { role } = { role: Role.REGULAR }, getRoleId } = useAuth();
 
   const [currentUserId] = useState(getRoleId());
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [tattoos, setTattoos] = useState<Resource.TattooDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [lastPage, setLastPage] = useState<boolean>(false);
@@ -36,6 +36,7 @@ export default function ImageMediaCard() {
     } = await getTattooListByRole(currentUserId as number, role, currentPage);
     setTattoos(tattoos);
     setLastPage(last_page);
+    setLoading(false);
   };
 
   const loadMore = async () => {
@@ -64,7 +65,7 @@ export default function ImageMediaCard() {
     <>
       <Container className={classes.container}>
         <Grid container alignItems={"center"} spacing={4}>
-          {tattoos.length === 0 && (
+          {!loading && tattoos.length === 0 && (
             <Grid container justify={"center"}>
               <Typography>You do not have any tattoo images</Typography>
             </Grid>

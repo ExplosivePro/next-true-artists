@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme) =>
 export default function RegisterSelection({ workingStyles }: Props) {
   const classes = useStyles();
   const { replace } = useRouter();
-  const { user, status } = useAuth();
+  const { user, status, updateUserData } = useAuth();
   const { setRegistrationCallbackData, userInfo } = useApp();
 
   const [step, setStep] = useState(0);
@@ -351,7 +351,13 @@ export default function RegisterSelection({ workingStyles }: Props) {
               currentUserId={currentUserRoleId}
               currentData={stepData[4] || {}}
               onNext={() => {
+                // Get updated user data
+                updateUserData();
+
+                // Remove pending status saved in local storage
                 localStorage.removeItem("pendingRegistrationType");
+
+                // Go to dashboard
                 replace("/dashboard");
               }}
               onPreviousStep={() => {
