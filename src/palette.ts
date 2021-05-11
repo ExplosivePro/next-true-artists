@@ -31,6 +31,7 @@ const colors = {
   extremeDarkYellow: "#e0a00d",
   chipYellow: "#f4c55b",
   standardViolet: "#7c44c3",
+  standardBlue: "#4284f1",
   defaultColor: "rgb(84, 105, 212)",
   facebookColor: "#3c5897",
   twitterColor: "#1fa2f1",
