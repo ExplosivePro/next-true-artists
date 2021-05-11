@@ -8,7 +8,7 @@ import CardActions from "@material-ui/core/CardActions";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import Grid from "@material-ui/core/Grid";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import TwitterIcon from "@material-ui/icons/Twitter";
@@ -84,12 +84,12 @@ export default function UserCard({ data }: Props) {
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
-  // On filter button click
+  // On more button click
   const handleMoreClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  // On filter close
+  // On more close
   const handleMoreClose = () => {
     setAnchorEl(null);
   };
@@ -102,16 +102,16 @@ export default function UserCard({ data }: Props) {
     window.open(`${publicPageBaseUrl}/${resource}/${slug}`, "_blank");
   };
 
-  // Filter open
+  // More open
   const open = Boolean(anchorEl);
-  const id = open ? "filter-popover" : undefined;
+  const id = open ? "more-popover" : undefined;
 
   return (
     <Card className={classes.root}>
       <CardHeader
         action={
           <IconButton aria-label="settings" onClick={handleMoreClick}>
-            <MoreVertIcon />
+            <MoreHorizIcon />
           </IconButton>
         }
       />
