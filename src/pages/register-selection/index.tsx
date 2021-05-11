@@ -151,7 +151,11 @@ export default function RegisterSelection({ workingStyles }: Props) {
         case Role.REGULAR: {
           // Get saved state from local storage
           const savedRole = localStorage.getItem("pendingRegistrationType");
+
           if (savedRole) {
+            // Next step
+            setStep(2);
+
             if (savedRole === Role.ARTIST) {
               setRole("artist");
               setCurrentUserRoleId(user?.artist?.id);
@@ -159,6 +163,9 @@ export default function RegisterSelection({ workingStyles }: Props) {
               setRole("studio");
               setCurrentUserRoleId(user?.studio?.id);
             }
+          } else {
+            // No role saved, back to step 1 to choose
+            setStep(0);
           }
           break;
         }
@@ -180,9 +187,6 @@ export default function RegisterSelection({ workingStyles }: Props) {
 
       // Store step data to edit later
       setStepData({ ...stepData, ...preloadStepData });
-
-      // Next step
-      setStep(2);
     }
 
     // Reset these value at destructure
@@ -213,7 +217,13 @@ export default function RegisterSelection({ workingStyles }: Props) {
             <RightBarRegisterAccountType
               onNext={(role) => {
                 setRole(role);
-                setStep(1);
+
+                // Already have an account, go straight to step 2
+                if (stepData[1]) {
+                  setStep(2);
+                } else {
+                  setStep(1);
+                }
               }}
             />
           )}
