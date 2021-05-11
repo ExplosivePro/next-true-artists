@@ -1,12 +1,7 @@
 // External import
 import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 
 // Material UI Components
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
@@ -14,38 +9,22 @@ import Grid from "@material-ui/core/Grid";
 // Custom UI Components
 import Loading from "../../Loading";
 import PrimaryButton from "../../PrimaryButton";
+import ImageCard from "./ImageCard";
 
 // Utils
 import { getTattooListByRole } from "../../../api";
-import { capitalizeFirstLetter } from "../../../utils";
-import { boxShadow } from "../../../palette";
 
 // Contexts
 import { Role, useAuth } from "../../../contexts";
 
-const useStyles = makeStyles({
-  root: {
-    boxShadow: boxShadow.primary,
-  },
-  seeMoreButton: {
-    width: "191px",
-    marginTop: "20px",
-    marginBottom: "100px",
-  },
-  loading: {
-    margin: "20px 0",
-  },
-  container: {
-    minHeight: "100vh",
-  },
-});
+import useStyles from "./styles";
 
 export default function ImageMediaCard() {
   const classes = useStyles();
   const { user: { role } = { role: Role.REGULAR }, getRoleId } = useAuth();
 
   const [currentUserId] = useState(getRoleId());
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [tattoos, setTattoos] = useState<Resource.TattooDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [lastPage, setLastPage] = useState<boolean>(false);
@@ -57,6 +36,7 @@ export default function ImageMediaCard() {
     } = await getTattooListByRole(currentUserId as number, role, currentPage);
     setTattoos(tattoos);
     setLastPage(last_page);
+    setLoading(false);
   };
 
   const loadMore = async () => {
@@ -81,40 +61,11 @@ export default function ImageMediaCard() {
     getTattooList();
   }, []);
 
-  const getTattooName = (data: any) => {
-    if (data.artist) {
-      return data.artist.name;
-    }
-
-    if (data.studio) {
-      return data.studio.name;
-    }
-
-    return "";
-  };
-
-  const getImageInfo = (data: any) => {
-    const info = [];
-    if (data.size) {
-      info.push(capitalizeFirstLetter(data.size));
-    }
-
-    if (data.placement) {
-      info.push(capitalizeFirstLetter(data.placement));
-    }
-
-    if (data.color) {
-      info.push(capitalizeFirstLetter(data.color));
-    }
-
-    return info.join(" | ");
-  };
-
   return (
     <>
       <Container className={classes.container}>
         <Grid container alignItems={"center"} spacing={4}>
-          {tattoos.length === 0 && (
+          {!loading && tattoos.length === 0 && (
             <Grid container justify={"center"}>
               <Typography>You do not have any tattoo images</Typography>
             </Grid>
@@ -122,25 +73,7 @@ export default function ImageMediaCard() {
           {tattoos.map((item, index) => {
             return (
               <Grid container item lg={4} md={4} sm={6} xs={12} key={index} justify={"center"}>
-                <Card className={classes.root} key={index}>
-                  <CardActionArea>
-                    <CardMedia
-                      component="img"
-                      alt={item.image?.name}
-                      height="250"
-                      image={item.image?.image_url}
-                      title={item.image?.name}
-                    />
-                    <CardContent>
-                      <Typography gutterBottom variant="subtitle2">
-                        <b>{getTattooName(item)}</b>
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary" component="span">
-                        {getImageInfo(item)}
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
+                <ImageCard item={item} getTattooList={getTattooList} />
               </Grid>
             );
           })}

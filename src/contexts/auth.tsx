@@ -247,17 +247,21 @@ export function AuthContext({ children }: Props) {
 
   // Get current user's role Id
   function getRoleId(): number | undefined {
-    const { role, artist, studio } = user.current as User;
-    switch (role) {
-      case Role.ARTIST: {
-        return artist?.id;
+    if (user.current) {
+      const { role, artist, studio } = user.current as User;
+      switch (role) {
+        case Role.ARTIST: {
+          return artist?.id;
+        }
+        case Role.STUDIO: {
+          return studio?.id;
+        }
+        default: {
+          return undefined;
+        }
       }
-      case Role.STUDIO: {
-        return studio?.id;
-      }
-      default: {
-        return undefined;
-      }
+    } else {
+      return undefined;
     }
   }
 

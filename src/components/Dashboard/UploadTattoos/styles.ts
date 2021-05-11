@@ -5,10 +5,13 @@ import colors from "../../../palette";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      height: "calc(100vh - 75px)",
+      height: "inherit",
       position: "relative",
       backgroundColor: colors.white,
       padding: "30px",
+    },
+    rootWithoutContent: {
+      height: "calc(100vh - 75px)",
     },
     titleText: {
       fontWeight: 600,
@@ -33,11 +36,9 @@ const useStyles = makeStyles((theme) =>
       width: 0,
     },
     buttonWrapper: {
-      position: "absolute",
-      bottom: "40px",
-      left: "50%",
-      transform: "translate(-50%)",
-      width: "70%",
+      padding: "50px 0",
+      width: "100%",
+      margin: 0,
     },
   }),
 );

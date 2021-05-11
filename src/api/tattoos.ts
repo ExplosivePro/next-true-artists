@@ -1,5 +1,6 @@
 import { api } from "./axios";
 import { Role } from "../contexts";
+import { errorHandler } from "../utils";
 
 export const uploadTattoos = async (data: any): Promise<RestApi.Response> => {
   try {
@@ -127,5 +128,22 @@ export const getTattooListByRole = async (
         total_pages: 1,
       },
     };
+  }
+};
+
+export const deleteTattooByRole = async (roleId: number, role: string, tattooId: number) => {
+  try {
+    let queryRole = "artists";
+
+    if (role === Role.STUDIO) {
+      queryRole = "studios";
+    }
+
+    const query = `/api/v1/${queryRole}/${roleId}/tattoos/${tattooId}`;
+
+    const result = await api.delete(query);
+    return result.data;
+  } catch (e) {
+    return errorHandler(e);
   }
 };

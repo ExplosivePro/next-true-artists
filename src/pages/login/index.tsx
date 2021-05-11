@@ -103,6 +103,14 @@ const useStyles = makeStyles(() =>
         textDecoration: "none",
       },
     },
+    registerText: {
+      fontWeight: 500,
+      marginLeft: "5px",
+      "& a": {
+        textDecoration: "none",
+        color: colors.standardBlue,
+      },
+    },
     image: {
       width: "70%",
       height: "auto",
@@ -266,6 +274,13 @@ export default function Login() {
             >
               Login
             </PrimaryButton>
+
+            <Grid container item justify={"center"} className={classes.alreadyMemberWrapper}>
+              <Typography className={classes.boldText}>Dont have an account?</Typography>
+              <Typography className={classes.registerText}>
+                <Link href={"/register"}>Sign up now</Link>
+              </Typography>
+            </Grid>
 
             <Grid container item justify={"center"} className={classes.alreadyMemberWrapper}>
               <Typography className={classes.boldText}>Forgot password?</Typography>
