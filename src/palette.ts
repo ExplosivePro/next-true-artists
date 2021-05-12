@@ -36,6 +36,9 @@ const colors = {
   facebookColor: "#3c5897",
   twitterColor: "#1fa2f1",
   instagramColor: "#ff0601",
+  standardBannerGreen: "#e3fcef",
+  standardBannerYellow: "#fefae6",
+  standardBannerRed: "#ffebe6",
 };
 
 export const boxShadow = {

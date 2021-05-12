@@ -265,6 +265,75 @@ export function AuthContext({ children }: Props) {
     }
   }
 
+  // Get current user's role detail
+  function getRoleDetail() {
+    if (user.current) {
+      const { role, artist, studio } = user.current as User;
+      switch (role) {
+        case Role.ARTIST: {
+          return artist as Resource.ArtistDetail;
+        }
+        case Role.STUDIO: {
+          return studio as Resource.StudioDetail;
+        }
+        default: {
+          return undefined;
+        }
+      }
+    } else {
+      return undefined;
+    }
+  }
+
+  // Check if artist or studio complete there profile or not
+  function isCompleteRoleProfile(): boolean {
+    if (user.current) {
+      const { role, artist, studio } = user.current as User;
+      switch (role) {
+        case Role.ARTIST: {
+          return (artist &&
+            artist &&
+            artist.has_avatar &&
+            artist.has_social_profiles &&
+            artist.has_styles &&
+            artist.has_tattoo_gallery) as boolean;
+        }
+        case Role.STUDIO: {
+          return (studio &&
+            studio.has_avatar &&
+            studio.has_social_profiles &&
+            studio.has_styles &&
+            studio.has_tattoo_gallery) as boolean;
+        }
+        default: {
+          return false;
+        }
+      }
+    } else {
+      return false;
+    }
+  }
+
+  // Check if artist or studio has specific attributed
+  function hasAttribute(name: string): boolean {
+    if (user.current) {
+      const { role, artist, studio } = user.current as User;
+      switch (role) {
+        case Role.ARTIST: {
+          return (artist && artist[name]) as boolean;
+        }
+        case Role.STUDIO: {
+          return (studio && studio[name]) as boolean;
+        }
+        default: {
+          return false;
+        }
+      }
+    } else {
+      return false;
+    }
+  }
+
   useEffect(() => {
     // Only save remember router
     if (nonRememberRoutes.indexOf(router.pathname) === -1) {
@@ -331,6 +400,9 @@ export function AuthContext({ children }: Props) {
         updateUserData,
         previousPath,
         getRoleId,
+        getRoleDetail,
+        isCompleteRoleProfile,
+        hasAttribute,
       }}
     >
       {status === AuthState.pending ? <Loading fixed /> : null}
@@ -370,6 +442,9 @@ interface Context {
   previousPath: string;
   updateUserData: () => void;
   getRoleId: () => number | undefined;
+  getRoleDetail: () => any;
+  isCompleteRoleProfile: () => boolean;
+  hasAttribute: (name: string) => boolean;
 }
 
 const TOKEN_KEY = "AUTH_TOKEN";
