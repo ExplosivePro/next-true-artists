@@ -264,8 +264,8 @@ export default function create() {
                         <Typography className={classes.titleText}>Article image</Typography>
                         <CardMedia
                           className={classes.imageCardMedia}
-                          image={articleData?.image?.image_url}
-                          title={articleData?.image?.name ?? "image.."}
+                          image={articleData?.image?.image_url ?? "/images/camera.png"}
+                          title={articleData?.image?.name}
                         />
                       </CardContent>
                     </Card>

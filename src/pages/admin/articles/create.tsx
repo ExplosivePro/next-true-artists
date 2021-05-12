@@ -46,13 +46,13 @@ export default function CreateNew({ isOpen }: any) {
     page_title: "",
     content: "",
     meta_description: "meta:",
-    //image: "",
+    image: File,
   });
 
   const {
     register,
     handleSubmit,
-    //setValue,
+    setValue,
     errors,
     formState: { isSubmitting },
   } = useForm({
@@ -60,7 +60,7 @@ export default function CreateNew({ isOpen }: any) {
     shouldUnregister: false,
   });
 
-  const onSubmit = async (formValues: Admin.Articles) => {
+  const onSubmit = async (formValues: any) => {
     const payload = { ...formValues, content };
     try {
       const response = await createArticle(payload);
@@ -68,8 +68,8 @@ export default function CreateNew({ isOpen }: any) {
       else {
         setInfoAlert({ severity: "success", message: "Article created successfully" });
         setTimeout(() => {
-          router.push(`/admin/articles/${response.id}`);
           handleCancel();
+          router.push(`/admin/articles/${response.id}`);
         }, 2500);
       }
     } catch (error) {
@@ -86,17 +86,15 @@ export default function CreateNew({ isOpen }: any) {
   };
 
   // File input change
-  const handleChange = (event: any) => {
-    const fileUploaded = event.target.files[0];
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      const fileUploaded = event.target.files[0];
+      setValue("image", fileUploaded);
 
-    const reader = new FileReader();
-    //reader.readAsBinaryString(fileUploaded);
-    reader.readAsDataURL(fileUploaded);
-
-    reader.onloadend = function () {
-      setPreview(reader.result);
-      //setValue("image", reader.result);
-    };
+      const reader = new FileReader();
+      reader.readAsDataURL(fileUploaded);
+      reader.onloadend = () => setPreview(reader.result);
+    }
   };
 
   const handleCancel = () => {
@@ -142,7 +140,7 @@ export default function CreateNew({ isOpen }: any) {
                     }
                   >
                     <input className={classes.fileInput} type={"file"} ref={hiddenFileInput} onChange={handleChange} />
-                    <Avatar className={classes.avatar} src={preview || "/broken-image.jpg"} onClick={handleClick} />
+                    <Avatar className={classes.avatar} alt="/images/camera.png" src={preview} onClick={handleClick} />
                   </Badge>
                 </Grid>
                 <Grid container item justify={"center"}>
