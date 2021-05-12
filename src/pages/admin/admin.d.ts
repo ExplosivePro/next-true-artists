@@ -109,7 +109,8 @@ declare namespace Admin {
     content: string;
     status: string;
     image: ImageAsset;
-    category_id: string;
+    user: { full_name: string };
+    category: { name: string };
     tag_list: string[];
   }
 }

@@ -26,6 +26,10 @@ export default class MyDocument extends Document {
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOdFwaPhwsa_1j5--QpunB-6OcNQ8xC98&v=3.exp&libraries=geometry,drawing,places"
             defer
           ></script>
+
+          {/* Jodit Editor */}
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jodit/3.4.25/jodit.min.css" />
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/jodit/3.4.25/jodit.min.js"></script>
         </Head>
         <body>
           <Main />

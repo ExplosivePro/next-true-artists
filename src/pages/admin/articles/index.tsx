@@ -128,44 +128,39 @@ export default function Articles() {
             </React.Fragment>
           ) : articleListStatus === "error" ? (
             <Alert severity="error">{`Retrieving Articles - ${articleListError}`}</Alert>
-          ) : articleListData.length === 0 ? (
+          ) : articleListData.length > 0 ? (
             <React.Fragment>
               <TableContainer className={classes.tableContainer}>
                 <Table size="small" stickyHeader>
                   <colgroup>
                     <col width="auto" />
                     <col width="auto" />
-                    <col width="50%" />
+                    <col width="auto" />
+                    <col width="auto" />
                     <col width="10%" />
                   </colgroup>
                   <TableHead>
                     <TableRow>
                       <StyledTableCell>Title</StyledTableCell>
                       <StyledTableCell>Page Title</StyledTableCell>
-                      <StyledTableCell>Introduction</StyledTableCell>
+                      <StyledTableCell>Author</StyledTableCell>
+                      <StyledTableCell>Category</StyledTableCell>
                       <StyledTableCell>Status</StyledTableCell>
                     </TableRow>
                   </TableHead>
 
                   <TableBody>
-                    <StyledTableRow>
-                      <StyledTableCell>
-                        <Link href={`${router.pathname}/1`}>Sample Article 1</Link>
-                      </StyledTableCell>
-                      <StyledTableCell>Article 1</StyledTableCell>
-                      <StyledTableCell>Sample page 1 Introduction...</StyledTableCell>
-                      <StyledTableCell>draft</StyledTableCell>
-                    </StyledTableRow>
-
-                    {/* {articleListData.map((article: Admin.Articles, index: number) => (
+                    {articleListData.map((article: Admin.Articles, index: number) => (
                       <StyledTableRow key={index}>
                         <StyledTableCell>
-                          <Link href={`${router.pathname}/${article.id}`}>{article.title ?? "Null"}</Link>
+                          <Link href={`${router.pathname}/${article.id}`}>{article.title}</Link>
                         </StyledTableCell>
                         <StyledTableCell>{article.page_title}</StyledTableCell>
+                        <StyledTableCell>{article.user.full_name}</StyledTableCell>
+                        <StyledTableCell>{article.category.name}</StyledTableCell>
                         <StyledTableCell>{article.status}</StyledTableCell>
                       </StyledTableRow>
-                    ))} */}
+                    ))}
                   </TableBody>
                 </Table>
               </TableContainer>

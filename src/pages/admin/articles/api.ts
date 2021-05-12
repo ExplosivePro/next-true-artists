@@ -21,7 +21,7 @@ export const updateArticle = async (payload: any, articleId: number) => {
   return data;
 };
 
-export const deleteArticle = async (articleId: number) => {
+export const deleteArticle = async (articleId: string) => {
   const { data } = await api.delete(`/api/v1/admin/articles/${articleId}`);
   return data;
 };

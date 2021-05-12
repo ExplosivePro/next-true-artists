@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
+
+import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 const importJodit = () => import("jodit-react");
 const JoditEditor = dynamic(importJodit, {
   ssr: false,
@@ -10,40 +12,48 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+
+import Avatar from "@material-ui/core/Avatar";
+import Badge from "@material-ui/core/Badge";
+import EditIcon from "@material-ui/icons/Edit";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
 import PrimaryButton from "src/components/PrimaryButton";
-import { TextInput, SelectInput, InfoAlert } from "src/components/Admin/FormInputs";
+import { TextInput, InfoAlert } from "src/components/Admin/FormInputs";
 
 import { createArticle } from "./api";
 import { useStyles } from "./styles";
 
 export default function CreateNew({ isOpen }: any) {
   const classes = useStyles();
+  const router = useRouter();
 
   // Create an Alert for info feedback
   const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
 
-  const [content, setContent] = useState("Content here...");
+  // Create a reference to the hidden file input element
+  const hiddenFileInput = React.useRef(null);
+
+  const [content, setContent] = useState("");
+  const [preview, setPreview] = useState<any>("");
 
   const getFormDefaultValues = () => ({
     title: "",
     introduction: "",
     page_title: "",
-    status: "draft", // default
     content: "",
-    category_id: 1,
     meta_description: "meta:",
+    //image: "",
   });
 
   const {
     register,
     handleSubmit,
+    //setValue,
     errors,
-    control,
     formState: { isSubmitting },
   } = useForm({
     defaultValues: getFormDefaultValues(),
@@ -52,14 +62,16 @@ export default function CreateNew({ isOpen }: any) {
 
   const onSubmit = async (formValues: Admin.Articles) => {
     const payload = { ...formValues, content };
-    console.log(payload);
-
     try {
       const response = await createArticle(payload);
-      console.log(response);
-
       if (!response) setInfoAlert({ severity: "error", message: "Error creating article !" });
-      else setInfoAlert({ severity: "success", message: "Article created successfully" });
+      else {
+        setInfoAlert({ severity: "success", message: "Article created successfully" });
+        setTimeout(() => {
+          router.push(`/admin/articles/${response.id}`);
+          handleCancel();
+        }, 2500);
+      }
     } catch (error) {
       setInfoAlert({ severity: "error", message: `Error creating article! - ${error}` });
     }
@@ -68,16 +80,27 @@ export default function CreateNew({ isOpen }: any) {
     }, 4500);
   };
 
-  const handleCancel = () => {
-    console.log("Editor closed");
-    isOpen(false);
+  const handleClick = () => {
+    // @ts-ignore
+    hiddenFileInput?.current?.click();
   };
 
-  const handleAlert = () => {
-    setInfoAlert({ severity: "info", message: "Sample alert message" });
-    setTimeout(() => {
-      setInfoAlert({ severity: "info", message: "" });
-    }, 3000);
+  // File input change
+  const handleChange = (event: any) => {
+    const fileUploaded = event.target.files[0];
+
+    const reader = new FileReader();
+    //reader.readAsBinaryString(fileUploaded);
+    reader.readAsDataURL(fileUploaded);
+
+    reader.onloadend = function () {
+      setPreview(reader.result);
+      //setValue("image", reader.result);
+    };
+  };
+
+  const handleCancel = () => {
+    isOpen(false);
   };
 
   return (
@@ -92,7 +115,7 @@ export default function CreateNew({ isOpen }: any) {
           </DialogTitle>
 
           <DialogContent>
-            <Grid container direction="column" spacing={2}>
+            <Grid container spacing={2}>
               <Grid item xs={12} md={6}>
                 <TextInput
                   name="title"
@@ -105,18 +128,26 @@ export default function CreateNew({ isOpen }: any) {
               </Grid>
 
               <Grid item xs={12} md={6}>
-                <SelectInput
-                  disabled
-                  name="status"
-                  control={control}
-                  label="Status *"
-                  errors={!!errors.status}
-                  errorMessage={errors.status?.message}
-                  dropDownList={[
-                    { id: "draft", name: "Draft" },
-                    { id: "published", name: "Published" },
-                  ]}
-                />
+                <Grid container item justify={"center"}>
+                  <Badge
+                    overlap="circle"
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                    badgeContent={
+                      <IconButton onClick={handleClick}>
+                        <EditIcon />
+                      </IconButton>
+                    }
+                  >
+                    <input className={classes.fileInput} type={"file"} ref={hiddenFileInput} onChange={handleChange} />
+                    <Avatar className={classes.avatar} src={preview || "/broken-image.jpg"} onClick={handleClick} />
+                  </Badge>
+                </Grid>
+                <Grid container item justify={"center"}>
+                  <Typography variant="caption">Add article image</Typography>
+                </Grid>
               </Grid>
 
               <Grid item xs={12}>
@@ -144,11 +175,12 @@ export default function CreateNew({ isOpen }: any) {
                 />
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid container item xs={12}>
                 <JoditEditor
                   value={content}
                   // onChange={(newContent) => setContent(newContent)}
-                  onBlur={(newContent) => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
+                  // preferred to use only this option to update the content for performance reasons
+                  onBlur={(newContent) => setContent(newContent)}
                 />
               </Grid>
             </Grid>
@@ -157,7 +189,7 @@ export default function CreateNew({ isOpen }: any) {
           {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
 
           <DialogActions>
-            <PrimaryButton variant="outlined" size="small" bluePastel onClick={handleAlert}>
+            <PrimaryButton variant="outlined" size="small" bluePastel onClick={handleCancel}>
               Cancel
             </PrimaryButton>
             <PrimaryButton size="small" bluePastel disabled={isSubmitting} type="submit">

@@ -26,9 +26,12 @@ export const useStyles = makeStyles({
     fontWeight: 600,
   },
   articleText: {
-    marginLeft: "10px",
-    fontSize: "14px",
-    marginBottom: "10px",
+    padding: "0px 0px 10px 10px",
+    "&:hover": {
+      backgroundColor: colors.normalGrey,
+      border: "solid thin lightGrey",
+      borderRadius: "5px",
+    },
   },
   closeButton: {
     float: "right",
@@ -36,6 +39,46 @@ export const useStyles = makeStyles({
     backgroundColor: colors.normalGrey,
     top: 0,
     right: 0,
+  },
+  statusChip: {
+    marginTop: "5px",
+    paddingLeft: "40px",
+  },
+  articleEditWrapper: {
+    marginTop: "10px",
+    border: "none",
+  },
+  articleContent: {
+    "&:hover": {
+      border: "solid thin lightGrey",
+      borderRadius: "5px",
+    },
+  },
+  cardItem: {
+    border: "none",
+    margin: 0,
+    padding: 0,
+  },
+  imageCard: {
+    margin: 0,
+    padding: 0,
+  },
+  imageCardMedia: {
+    height: 0,
+    paddingTop: "56.25%", // 16:9
+  },
+  tagsChips: {
+    margin: "2px",
+    padding: 0,
+  },
+  avatar: {
+    width: "75px",
+    height: "75px",
+    cursor: "pointer",
+  },
+  fileInput: {
+    visibility: "hidden",
+    width: 0,
   },
 });
 
