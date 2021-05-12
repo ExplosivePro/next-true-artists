@@ -27,7 +27,7 @@ import { TextInput, InfoAlert } from "src/components/Admin/FormInputs";
 import { createArticle } from "./api";
 import { useStyles } from "./styles";
 
-export default function CreateNew({ isOpen }: any) {
+export default function CreateNew({ isOpen, setArticleId, refetch }: any) {
   const classes = useStyles();
   const router = useRouter();
 
@@ -68,9 +68,12 @@ export default function CreateNew({ isOpen }: any) {
       else {
         setInfoAlert({ severity: "success", message: "Article created successfully" });
         setTimeout(() => {
-          handleCancel();
           router.push(`/admin/articles/${response.id}`);
+          setArticleId(response.id);
+          refetch();
+          handleCancel();
         }, 2500);
+        return;
       }
     } catch (error) {
       setInfoAlert({ severity: "error", message: `Error creating article! - ${error}` });

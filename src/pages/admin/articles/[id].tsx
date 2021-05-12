@@ -22,6 +22,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
+import EditIcon from "@material-ui/icons/Edit";
 
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -56,6 +57,11 @@ export default function create() {
     router.query.id ? setArticleId(router.query.id?.toString()) : null;
   }, [router.query.id]);
 
+  // Create a reference to the hidden file input element
+  const hiddenFileInput = React.useRef(null);
+  const [preview, setPreview] = useState<any>("");
+  const [uploadedImage, setUploadedImage] = useState<File | string>("");
+
   // Create an Alert for info feedback
   const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
 
@@ -65,7 +71,7 @@ export default function create() {
   const [content, setContent] = useState("Content here...");
   const config: any = { readonly: false, toolbar: false, statusbar: false };
 
-  const onSubmit = async (field: string, value: string) => {
+  const onSubmit = async (field: string, value: string | File) => {
     const payload = { [field]: value };
     try {
       const response = await editArticle(payload, articleId);
@@ -73,6 +79,10 @@ export default function create() {
       else {
         setInfoAlert({ severity: "success", message: "Article updated successfully" });
         refetchArticleData();
+        if (field === "image") {
+          setPreview("");
+          setUploadedImage("");
+        }
       }
     } catch (error) {
       setInfoAlert({ severity: "error", message: `Error updating article! - ${error}` });
@@ -120,6 +130,27 @@ export default function create() {
         {value}
       </Typography>
     );
+
+  const handleImageChangeClick = () => {
+    // @ts-ignore
+    hiddenFileInput?.current?.click();
+  };
+
+  // image change
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      const fileUploaded = event.target.files[0];
+      setUploadedImage(fileUploaded);
+
+      const reader = new FileReader();
+      reader.readAsDataURL(fileUploaded);
+      reader.onloadend = () => setPreview(reader.result);
+    }
+  };
+
+  const handleImageUpdate = () => {
+    onSubmit("image", uploadedImage);
+  };
 
   const handleContentUpdate = () => {
     setTimeout(() => {
@@ -264,9 +295,42 @@ export default function create() {
                         <Typography className={classes.titleText}>Article image</Typography>
                         <CardMedia
                           className={classes.imageCardMedia}
-                          image={articleData?.image?.image_url ?? "/images/camera.png"}
+                          image={preview ? preview : articleData?.image?.image_url ?? "/images/camera.png"}
                           title={articleData?.image?.name}
                         />
+
+                        <input
+                          className={classes.fileInput}
+                          type={"file"}
+                          ref={hiddenFileInput}
+                          onChange={handleImageChange}
+                        />
+
+                        {preview ? (
+                          <Grid container spacing={2}>
+                            <Grid item>
+                              <PrimaryButton size="small" bluePastel onClick={handleImageUpdate}>
+                                Save image
+                              </PrimaryButton>
+                            </Grid>
+
+                            <Grid item>
+                              <PrimaryButton
+                                variant="outlined"
+                                size="small"
+                                bluePastel
+                                onClick={() => {
+                                  setPreview("");
+                                  setUploadedImage("");
+                                }}
+                              >
+                                Cancel
+                              </PrimaryButton>
+                            </Grid>
+                          </Grid>
+                        ) : (
+                          <Chip icon={<EditIcon />} label="Change" size="small" onClick={handleImageChangeClick} />
+                        )}
                       </CardContent>
                     </Card>
                   </Grid>
@@ -359,7 +423,9 @@ export default function create() {
             <Alert severity="info">Article record not found...</Alert>
           )}
         </Grid>
-        {isOpenCreate ? <CreateNew isOpen={setIsOpenCreate} /> : null}
+        {isOpenCreate ? (
+          <CreateNew isOpen={setIsOpenCreate} setArticleId={setArticleId} refetch={refetchArticleData} />
+        ) : null}
       </Grid>
     </AdminBody>
   );

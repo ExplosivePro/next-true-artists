@@ -48,6 +48,8 @@ export default function Articles() {
 
   const [isOpenCreate, setIsOpenCreate] = useState(false);
 
+  const [placeholder, setPlaceholder] = useState("");
+
   // Force refetch after search update
   useEffect(() => {
     router.replace({
@@ -177,10 +179,12 @@ export default function Articles() {
               />
             </React.Fragment>
           ) : (
-            <Alert severity="info">No articles records found...</Alert>
+            <Alert severity="info">No articles records found...{placeholder}</Alert>
           )}
         </Grid>
-        {isOpenCreate ? <CreateNew isOpen={setIsOpenCreate} /> : null}
+        {isOpenCreate ? (
+          <CreateNew isOpen={setIsOpenCreate} setArticleId={setPlaceholder} refetch={articleListRefetch} />
+        ) : null}
       </Grid>
     </AdminBody>
   );

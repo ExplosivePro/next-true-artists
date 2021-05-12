@@ -65,7 +65,7 @@ export const useStyles = makeStyles({
   },
   imageCardMedia: {
     height: 0,
-    paddingTop: "100%",
+    paddingTop: "56.25%", // 16:9
   },
   tagsChips: {
     margin: "2px",
