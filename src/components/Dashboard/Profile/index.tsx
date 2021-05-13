@@ -1,6 +1,6 @@
 // External import
 import { useForm } from "react-hook-form";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import * as yup from "yup";
 import clsx from "clsx";
 import { useRouter } from "next/router";
@@ -38,7 +38,14 @@ import { useYupValidationResolver } from "../../../utils";
 import { Role, useApp, useAuth } from "../../../contexts";
 
 // APIs
-import { editArtistProfile, editStudioProfile, editUser, updateArtistAvatar, updateStudioAvatar } from "../../../api";
+import {
+  editArtistProfile,
+  editStudioProfile,
+  editUser,
+  getWorkingStyleList,
+  updateArtistAvatar,
+  updateStudioAvatar,
+} from "../../../api";
 
 // Styles
 import useStyles from "./styles";
@@ -144,6 +151,7 @@ export default function UserProfile() {
   const hiddenFileInput = React.useRef(null);
   const [fileData, setFileData] = useState<File | null>(null);
   const [preview, setPreview] = useState<any>("");
+  const [workingStyles, setWorkingStyles] = useState([]);
 
   // General detail
   const [currency, setCurrency] = useState(getAttributeValueByRole(role as Role, user, "currency_code", ""));
@@ -474,6 +482,14 @@ export default function UserProfile() {
     }
   };
 
+  const getWorkingStyles = async () => {
+    setWorkingStyles(await getWorkingStyleList());
+  };
+
+  useEffect(() => {
+    getWorkingStyles();
+  }, []);
+
   return (
     <>
       <Container className={classes.containerRoot}>
@@ -610,6 +626,7 @@ export default function UserProfile() {
                           onPriceChange={onPriceChange}
                           onSelectionChange={onSelectionChange}
                           specialties={specialties}
+                          workingStyles={workingStyles}
                         />
                       )}
 

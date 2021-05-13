@@ -89,7 +89,9 @@ export default function HeaderBanner({ status, requireActivation = false }: Prop
 
   // Open modal
   const handleModalOpen = () => {
-    setModalOpen(true);
+    if (requireActivation) {
+      setModalOpen(true);
+    }
   };
 
   // Close modal

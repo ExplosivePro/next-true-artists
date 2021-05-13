@@ -1,6 +1,7 @@
 // External
 import React from "react";
 import clsx from "clsx";
+import * as yup from "yup";
 
 // Material UI Components
 import { makeStyles, createStyles } from "@material-ui/core/styles";
@@ -15,7 +16,6 @@ import PricingList from "./PricingList";
 // Constants
 import { artistSettingList, specialtyList } from "../../constants";
 import colors from "../../palette";
-import * as yup from "yup";
 
 // Styles
 const useStyles = makeStyles(() =>
@@ -240,4 +240,5 @@ interface Props {
   className?: any;
   control: any;
   errors: any;
+  workingStyles: Resource.WorkingStyle[];
 }

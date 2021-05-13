@@ -29,3 +29,15 @@ export const getMyStudioList = async (id: number, page = 0, searchKey = "", filt
     return errorHandler(e);
   }
 };
+
+// Submit for review
+export const submitArtistProfileForReview = async (id: number) => {
+  return await api
+    .put(`/api/v1/artists/${id}/submit_for_review`)
+    .then((response) => {
+      return { error: false, data: response.data, errors: "" };
+    })
+    .catch((e) => {
+      return errorHandler(e);
+    });
+};

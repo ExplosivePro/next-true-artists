@@ -214,9 +214,10 @@ export function AuthContext({ children }: Props) {
   }
 
   function updateUserData() {
-    verifyUser()
+    return verifyUser()
       .then(({ data }) => {
         user.current = data;
+        return data;
       })
       .catch(() => {
         localStorage.removeItem(TOKEN_KEY);
@@ -225,10 +226,15 @@ export function AuthContext({ children }: Props) {
 
         // Redirect to login page
         router.replace("/login");
+
+        return;
       });
   }
 
   function logOut() {
+    // Update status
+    setStatus(AuthState.pending);
+
     // Remove token from header
     setAuthHeader("");
 
@@ -299,11 +305,7 @@ export function AuthContext({ children }: Props) {
             artist.has_tattoo_gallery) as boolean;
         }
         case Role.STUDIO: {
-          return (studio &&
-            studio.has_avatar &&
-            studio.has_social_profiles &&
-            studio.has_styles &&
-            studio.has_tattoo_gallery) as boolean;
+          return (studio && studio.has_avatar && studio.has_social_profiles && studio.has_tattoo_gallery) as boolean;
         }
         default: {
           return false;

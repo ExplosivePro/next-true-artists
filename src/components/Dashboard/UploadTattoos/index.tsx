@@ -20,7 +20,7 @@ import useStyles from "./styles";
 
 export default function UploadTattoos() {
   const app = useApp();
-  const { user: { role } = { role: Role.REGULAR }, getRoleId } = useAuth();
+  const { user: { role } = { role: Role.REGULAR }, getRoleId, updateUserData } = useAuth();
   const { push } = useRouter();
 
   const classes = useStyles();
@@ -52,6 +52,9 @@ export default function UploadTattoos() {
     const { error, errors, data } = response;
     // No error happens
     if (!error) {
+      // Get updated user data
+      updateUserData();
+
       return data;
     } else {
       app.showErrorDialog(true, errors ? errors.toString() : "Image upload failed. Try again");

@@ -31,10 +31,22 @@ export const getMyArtistList = async (id: number, page = 0, searchKey = "", filt
   }
 };
 
-// Edit normal user
+// Invite an artist to studio
 export const inviteArtist = async (data: Studio.InviteArtistPayload) => {
   return await api
     .post(`/api/v1/studio-invites/invite-artist`, data)
+    .then((response) => {
+      return { error: false, data: response.data, errors: "" };
+    })
+    .catch((e) => {
+      return errorHandler(e);
+    });
+};
+
+// Submit for review
+export const submitStudioProfileForReview = async (id: number) => {
+  return await api
+    .put(`/api/v1/studios/${id}/submit_for_review`)
     .then((response) => {
       return { error: false, data: response.data, errors: "" };
     })

@@ -42,9 +42,9 @@ export default function SocialLinks({ data }: { data: any }) {
     const editArtistResponse = await editArtistProfile({
       id: artist?.id as number,
       website,
-      facebook_url: `${baseFacebookUrl}${facebook}`,
-      instagram_url: `${baseInstagramUrl}${instagram}`,
-      twitter_url: `${baseTwitterUrl}${twitter}`,
+      facebook_url: facebook ? `${baseFacebookUrl}${facebook}` : "",
+      instagram_url: instagram ? `${baseInstagramUrl}${instagram}` : "",
+      twitter_url: twitter ? `${baseTwitterUrl}${twitter}` : "",
     });
 
     // Show errors if there is any errors
@@ -63,10 +63,10 @@ export default function SocialLinks({ data }: { data: any }) {
   const submitEditStudioProfile = async ({ instagram, website, facebook, twitter }: any) => {
     const editStudioResponse = await editStudioProfile({
       id: studio?.id as number,
-      instagram_ur: `${baseInstagramUrl}${instagram}`,
       website,
-      facebook_url: `${baseFacebookUrl}${facebook}`,
-      twitter_url: `${baseTwitterUrl}${twitter}`,
+      facebook_url: facebook ? `${baseFacebookUrl}${facebook}` : "",
+      instagram_url: instagram ? `${baseInstagramUrl}${instagram}` : "",
+      twitter_url: twitter ? `${baseTwitterUrl}${twitter}` : "",
     });
 
     // Show errors if there is any errors

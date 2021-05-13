@@ -126,10 +126,10 @@ export default function RightBarStudioRegisterInformation({
           state,
           zip_code: zipCode,
           phone_number: phoneNumber,
-          instagram_ur: `${baseInstagramUrl}${instagram}`,
           website,
-          facebook_url: `${baseFacebookUrl}${facebook}`,
-          twitter_url: `${baseTwitterUrl}${twitter}`,
+          facebook_url: facebook ? `${baseFacebookUrl}${facebook}` : "",
+          instagram_url: instagram ? `${baseInstagramUrl}${instagram}` : "",
+          twitter_url: twitter ? `${baseTwitterUrl}${twitter}` : "",
           street_address: streetAddress,
         });
 
@@ -165,10 +165,10 @@ export default function RightBarStudioRegisterInformation({
           state,
           zip_code: zipCode,
           phone_number: phoneNumber,
-          instagram_ur: `${baseInstagramUrl}${instagram}`,
           website,
-          facebook_url: `${baseFacebookUrl}${facebook}`,
-          twitter_url: `${baseTwitterUrl}${twitter}`,
+          facebook_url: facebook ? `${baseFacebookUrl}${facebook}` : "",
+          instagram_url: instagram ? `${baseInstagramUrl}${instagram}` : "",
+          twitter_url: twitter ? `${baseTwitterUrl}${twitter}` : "",
           street_address: streetAddress, // Put this down temporarily due to missing APIs
         });
 

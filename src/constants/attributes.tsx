@@ -27,7 +27,7 @@ export const attributes = [
     subTitle: "Add your styles",
     icon: <CategoryIcon />,
     url: "/dashboard/profile",
-    acceptRoles: [Role.ARTIST, Role.STUDIO],
+    acceptRoles: [Role.ARTIST],
     mappingKey: "has_styles",
   },
   {
