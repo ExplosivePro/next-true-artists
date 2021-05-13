@@ -94,6 +94,8 @@ export default function PrimarySearchAppBar() {
     </Menu>
   );
 
+  console.log(loggedUser);
+
   return (
     <div>
       <AppBar position="fixed" className={classes.appBar}>
@@ -113,7 +115,7 @@ export default function PrimarySearchAppBar() {
               color="inherit"
               classes={{ root: classes.profileButton }}
             >
-              <Avatar alt={loggedUser?.full_name || "Avatar"} src={loggedUser?.avatar?.image_url} />
+              <Avatar alt={loggedUser?.full_name || "Avatar"} src="/images/icons/admin.jpg" />
               <Typography className={classes.accountName}>{loggedUser?.full_name}</Typography>
               <ArrowDropDownIcon />
             </IconButton>
