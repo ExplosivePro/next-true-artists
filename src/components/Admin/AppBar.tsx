@@ -94,8 +94,6 @@ export default function PrimarySearchAppBar() {
     </Menu>
   );
 
-  console.log(loggedUser);
-
   return (
     <div>
       <AppBar position="fixed" className={classes.appBar}>
