@@ -39,20 +39,17 @@ export default function CreateNew({ isOpen, setArticleId, refetch }: any) {
 
   const [content, setContent] = useState("");
   const [preview, setPreview] = useState<any>("");
+  const [image, setImage] = useState<File | string>("");
 
   const getFormDefaultValues = () => ({
     title: "",
     introduction: "",
     page_title: "",
-    content: "",
-    meta_description: "meta:",
-    image: File,
   });
 
   const {
     register,
     handleSubmit,
-    setValue,
     errors,
     formState: { isSubmitting },
   } = useForm({
@@ -61,9 +58,14 @@ export default function CreateNew({ isOpen, setArticleId, refetch }: any) {
   });
 
   const onSubmit = async (formValues: any) => {
-    const payload = { ...formValues, content };
+    const meta_description = JSON.stringify(formValues);
+    const payload: { [T: string]: any } = { ...formValues, content, image, meta_description };
+
+    const formData = new FormData();
+    Object.entries(payload).map(([key, value]) => formData.append(key, value));
+
     try {
-      const response = await createArticle(payload);
+      const response = await createArticle(formData);
       if (!response) setInfoAlert({ severity: "error", message: "Error creating article !" });
       else {
         setInfoAlert({ severity: "success", message: "Article created successfully" });
@@ -92,7 +94,7 @@ export default function CreateNew({ isOpen, setArticleId, refetch }: any) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const fileUploaded = event.target.files[0];
-      setValue("image", fileUploaded);
+      setImage(fileUploaded);
 
       const reader = new FileReader();
       reader.readAsDataURL(fileUploaded);

@@ -71,10 +71,36 @@ export default function create() {
   const [content, setContent] = useState("Content here...");
   const config: any = { readonly: false, toolbar: false, statusbar: false };
 
-  const onSubmit = async (field: string, value: string | File) => {
-    const payload = { [field]: value };
+  function isJSON(str: string) {
     try {
-      const response = await editArticle(payload, articleId);
+      return !!str && JSON.parse(str);
+    } catch (e) {
+      return false;
+    }
+  }
+
+  const onSubmit = async (field: string, value: string | File) => {
+    const getMetadata = () => {
+      if (["title", "page_title", "introduction"].includes(field)) {
+        const meta = isJSON(articleData?.meta_description);
+        if (meta) {
+          meta[field] = value;
+          return JSON.stringify(meta);
+        } else {
+          return JSON.stringify({ [field]: value });
+        }
+      } else return null;
+    };
+
+    const payload: { [T: string]: any } = getMetadata()
+      ? { [field]: value, meta_description: getMetadata() }
+      : { [field]: value };
+
+    const formData = new FormData();
+    Object.entries(payload).map(([key, value]) => formData.append(key, value));
+
+    try {
+      const response = await editArticle(formData, articleId);
       if (!response) setInfoAlert({ severity: "error", message: "Error updating article !" });
       else {
         setInfoAlert({ severity: "success", message: "Article updated successfully" });
@@ -121,7 +147,7 @@ export default function create() {
         multiline
         size="small"
         onBlur={(e) => {
-          onSubmit(field, e.target.value);
+          if (value != e.target.value) onSubmit(field, e.target.value);
           setEditableItem("");
         }}
       />
