@@ -3,10 +3,12 @@ import { useForm } from "react-hook-form";
 
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
+
 const importJodit = () => import("jodit-react");
 const JoditEditor = dynamic(importJodit, {
   ssr: false,
 });
+import "jodit/build/jodit.min.css";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";

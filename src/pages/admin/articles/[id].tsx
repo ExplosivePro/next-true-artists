@@ -10,6 +10,7 @@ const importJodit = () => import("jodit-react");
 const JoditEditor = dynamic(importJodit, {
   ssr: false,
 });
+import "jodit/build/jodit.min.css";
 
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";

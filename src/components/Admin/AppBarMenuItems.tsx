@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { useRouter } from "next/router";
 
 import Divider from "@material-ui/core/Divider";
@@ -12,18 +12,16 @@ import { useAuth } from "../../contexts";
 
 import { StyledMenuItem } from "./styles";
 
-declare interface BarItems {
-  handleMenuClose(): void;
-}
-
-export default function AppBarMenuItems({ handleMenuClose }: BarItems) {
+// eslint-disable-next-line react/display-name
+const AppBarMenuItems = forwardRef((props: any, ref) => {
+  const { handleMenuClose, ...rest } = props;
   const router = useRouter();
   const { logOut } = useAuth();
   const loggedUser = useAuth().user;
 
   return (
     <div>
-      <StyledMenuItem onClick={handleMenuClose}>
+      <StyledMenuItem ref={ref} {...rest} onClick={handleMenuClose}>
         <ListItemIcon>
           <Avatar alt={loggedUser?.full_name || "Avatar"} src={loggedUser?.avatar?.image_url} />
         </ListItemIcon>
@@ -32,14 +30,14 @@ export default function AppBarMenuItems({ handleMenuClose }: BarItems) {
 
       <Divider />
       {loggedUser ? (
-        <StyledMenuItem onClick={logOut}>
+        <StyledMenuItem ref={ref} {...rest} onClick={logOut}>
           <ListItemIcon>
             <ExitToAppIcon />
           </ListItemIcon>
           <ListItemText color={"error"} primary="Log out" />
         </StyledMenuItem>
       ) : (
-        <StyledMenuItem onClick={() => router.push("/login")}>
+        <StyledMenuItem ref={ref} {...rest} onClick={() => router.push("/login")}>
           <ListItemIcon>
             <VpnKeyIcon />
           </ListItemIcon>
@@ -48,4 +46,6 @@ export default function AppBarMenuItems({ handleMenuClose }: BarItems) {
       )}
     </div>
   );
-}
+});
+
+export default AppBarMenuItems;
