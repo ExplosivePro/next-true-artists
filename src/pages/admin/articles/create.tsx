@@ -181,12 +181,7 @@ export default function CreateNew({ isOpen, setArticleId, refetch }: any) {
               </Grid>
 
               <Grid container item xs={12}>
-                <JoditEditor
-                  value={content}
-                  // onChange={(newContent) => setContent(newContent)}
-                  // preferred to use only this option to update the content for performance reasons
-                  onBlur={(newContent) => setContent(newContent)}
-                />
+                <JoditEditor value={content} onBlur={(newContent) => setContent(newContent)} />
               </Grid>
             </Grid>
           </DialogContent>

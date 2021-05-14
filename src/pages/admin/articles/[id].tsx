@@ -38,7 +38,7 @@ import CreateNew from "./create";
 import { getArticle, editArticle, deleteArticle } from "./api";
 import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
 
-export default function create() {
+export default function EditArticles() {
   const classes = useStyles();
   const router = useRouter();
 
@@ -120,7 +120,7 @@ export default function create() {
   };
 
   const onDelete = async () => {
-    if (!confirm("Deleting Article \n\n" + articleData?.title + "?")) return;
+    if (!confirm(`Deleting Article... \n\n  ${articleData?.title} ?`)) return;
     try {
       const response = await deleteArticle(articleId);
       if (response) setInfoAlert({ severity: "error", message: "Error deleting article !" });
@@ -273,8 +273,6 @@ export default function create() {
                             <Grid container item xs={12}>
                               <JoditEditor
                                 value={articleData?.content}
-                                // onChange={(newContent) => setContent(newContent)}
-                                // preferred to use only this option to update the content for performance reasons
                                 onBlur={(newContent) => setContent(newContent)}
                               />
                             </Grid>
