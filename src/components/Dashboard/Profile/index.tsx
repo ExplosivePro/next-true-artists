@@ -127,6 +127,31 @@ const getAttributeValueByRole = (role: Role, profile: any, attribute: string, de
   }
 };
 
+const getWorkStyleData = (role: Role, profile: any) => {
+  const styleData = {};
+
+  switch (role) {
+    case Role.ARTIST: {
+      profile.artist.styles?.map((style: Resource.WorkingStyle) => {
+        styleData[style.id] = true;
+      });
+      break;
+    }
+    case Role.STUDIO: {
+      const styleData = {};
+      profile.studio.styles?.map((style: Resource.WorkingStyle) => {
+        styleData[style.id] = true;
+      });
+      break;
+    }
+    default: {
+      return {};
+    }
+  }
+
+  return styleData;
+};
+
 export default function UserProfile() {
   const classes = useStyles();
   const { showErrorDialog, showSuccessDialog } = useApp();
@@ -164,6 +189,7 @@ export default function UserProfile() {
 
   const [minimumSpend, setMinimumSpend] = useState<number>(artist?.minimum_spend || 0);
   const [specialties, setSpecialties] = React.useState<string[]>(artist?.specialties || []);
+  const [artistStyles, setArtistStyles] = useState(getWorkStyleData(role as Role, user));
 
   // Studio detail
   const [paymentMethods, setPaymentMethod] = useState(studio?.accepted_payment_methods?.split(",") || []);
@@ -174,6 +200,19 @@ export default function UserProfile() {
   // Switch setting tab
   const switchTab = (index: number) => {
     setActiveTab(index);
+  };
+
+  // Get style id array from object array data
+  const getSelectedIds = (optionValues: any) => {
+    const results: number[] = [];
+    Object.keys(optionValues).map((key) => {
+      // Checked value
+      if (optionValues[key]) {
+        results.push(parseInt(key));
+      }
+    });
+
+    return results;
   };
 
   // Submit edit profile for artist role
@@ -208,6 +247,7 @@ export default function UserProfile() {
       country,
       phone_number: phoneNumber,
       specialty: specialties ? specialties.join(",") : [],
+      styles: getSelectedIds(artistStyles),
     });
 
     let avatarUploadResponse: RestApi.Response = { error: false };
@@ -482,6 +522,11 @@ export default function UserProfile() {
     }
   };
 
+  // On artist style change
+  const onArtistStyleChange = (e: any) => {
+    setArtistStyles({ ...artistStyles, [e.target.name]: e.target.checked });
+  };
+
   const getWorkingStyles = async () => {
     setWorkingStyles(await getWorkingStyleList());
   };
@@ -622,9 +667,11 @@ export default function UserProfile() {
                           currency={currency}
                           pricePerHour={pricePerHour}
                           minimumSpend={minimumSpend}
+                          styleValues={artistStyles}
                           handleToggle={handleToggle}
                           onPriceChange={onPriceChange}
                           onSelectionChange={onSelectionChange}
+                          onStyleChange={onArtistStyleChange}
                           specialties={specialties}
                           workingStyles={workingStyles}
                         />

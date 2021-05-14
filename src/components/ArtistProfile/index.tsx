@@ -4,8 +4,13 @@ import clsx from "clsx";
 import * as yup from "yup";
 
 // Material UI Components
-import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { Grid, Typography } from "@material-ui/core";
+import Box from "@material-ui/core/Box";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 // Custom component
 import FormInput from "../FormInput";
@@ -15,46 +20,9 @@ import PricingList from "./PricingList";
 
 // Constants
 import { artistSettingList, specialtyList } from "../../constants";
-import colors from "../../palette";
 
 // Styles
-const useStyles = makeStyles(() =>
-  createStyles({
-    root: {
-      height: "100%",
-      position: "relative",
-    },
-    groupInput: {
-      marginBottom: "4px",
-    },
-    titleText: {
-      fontWeight: 600,
-      marginBottom: "10px",
-    },
-    titleWrapper: {
-      marginBottom: "35px",
-    },
-    formInput: {
-      margin: "12px 0",
-    },
-    formWrapper: {
-      width: "100%",
-      height: "100%",
-    },
-    buttonWrapper: {
-      marginTop: "25px",
-    },
-    sectionTitle: {
-      marginTop: "15px",
-      fontWeight: "bold",
-    },
-    sectionSubTitle: {
-      marginTop: "15px",
-      color: colors.black,
-      fontWeight: 500,
-    },
-  }),
-);
+import useStyles from "./styles";
 
 export default function ArtistProfile({
   control,
@@ -69,6 +37,9 @@ export default function ArtistProfile({
   pricePerHour,
   minimumSpend,
   specialties,
+  styleValues,
+  workingStyles,
+  onStyleChange,
 }: Props) {
   const classes = useStyles();
 
@@ -146,6 +117,35 @@ export default function ArtistProfile({
               />
             );
           })}
+
+          <Typography variant={"h6"} className={classes.sectionTitle}>
+            Work Styles
+          </Typography>
+
+          <div className={classes.workStyleWrapper}>
+            {workingStyles.map((workStyle, index) => (
+              <Box className={classes.box} key={index}>
+                <FormGroup row>
+                  <FormControlLabel
+                    value={workStyle.id}
+                    classes={{ root: classes.formControlLabel }}
+                    control={
+                      <Checkbox
+                        name={workStyle.id.toString()}
+                        classes={{ root: classes.checkBox }}
+                        icon={<RadioButtonUncheckedIcon />}
+                        checkedIcon={<CheckCircleIcon classes={{ root: classes.checkedIcon }} />}
+                        checked={styleValues[workStyle.id] || false}
+                        onChange={onStyleChange}
+                      />
+                    }
+                    label={workStyle.name}
+                    labelPlacement="start"
+                  />
+                </FormGroup>
+              </Box>
+            ))}
+          </div>
 
           <PricingList
             currency={currency}
@@ -241,4 +241,6 @@ interface Props {
   control: any;
   errors: any;
   workingStyles: Resource.WorkingStyle[];
+  onStyleChange: (e: any) => void;
+  styleValues: any;
 }
