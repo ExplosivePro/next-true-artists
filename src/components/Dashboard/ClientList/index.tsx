@@ -23,6 +23,7 @@ import OutlinedInput from "@material-ui/core/OutlinedInput";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
+import ChatIcon from "@material-ui/icons/Chat";
 
 // Custom Components
 import PrimaryButton from "../../PrimaryButton";
@@ -219,9 +220,6 @@ export default function ClientList() {
                     <b>Phone number</b>
                   </StyledTableCell>
                   <StyledTableCell>
-                    <b>Comments</b>
-                  </StyledTableCell>
-                  <StyledTableCell>
                     <b>Active</b>
                   </StyledTableCell>
                   <StyledTableCell />
@@ -235,8 +233,7 @@ export default function ClientList() {
                     </StyledTableCell>
                     <StyledTableCell>{item.email}</StyledTableCell>
                     <StyledTableCell>{item.phone_number}</StyledTableCell>
-                    <StyledTableCell>{item.comments}</StyledTableCell>
-                    <StyledTableCell>{`${!item.inactive ? "Active" : "Deactive"}`}</StyledTableCell>
+                    <StyledTableCell>{`${!item.inactive ? "Active" : "Deactivate"}`}</StyledTableCell>
                     <StyledTableCell className={classes.flexEndColumn}>
                       <Switch
                         checked={!item.inactive}
@@ -250,6 +247,13 @@ export default function ClientList() {
                           setEditUserId(item.id);
                           setComment(item.comments);
                           handleModalOpen();
+                        }}
+                      >
+                        <ChatIcon />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => {
+                          push(`/dashboard/manage-clients/${item.id}`);
                         }}
                       >
                         <EditIcon />

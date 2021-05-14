@@ -539,17 +539,19 @@ export default function UserProfile() {
                 </ListItemIcon>
                 <ListItemText primary={<Typography>Change Password</Typography>} />
               </MenuItem>
-              <MenuItem
-                className={clsx({ [classes.menuActive]: activeTab === 2 })}
-                onClick={() => {
-                  switchTab(2);
-                }}
-              >
-                <ListItemIcon>
-                  <GroupOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText primary={<Typography>Social Profile</Typography>} />
-              </MenuItem>
+              {role !== Role.REGULAR && (
+                <MenuItem
+                  className={clsx({ [classes.menuActive]: activeTab === 2 })}
+                  onClick={() => {
+                    switchTab(2);
+                  }}
+                >
+                  <ListItemIcon>
+                    <GroupOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={<Typography>Social Profile</Typography>} />
+                </MenuItem>
+              )}
             </div>
           </Grid>
           <Grid item lg={7} md={7} sm={12} xs={12} className={classes.rightBar}>

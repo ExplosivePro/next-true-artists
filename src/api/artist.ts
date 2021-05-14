@@ -24,7 +24,7 @@ export const getMyStudioList = async (id: number, page = 0, searchKey = "", filt
     }
 
     const result = await api.get(query);
-    return result.data;
+    return { error: false, data: result.data };
   } catch (e) {
     return errorHandler(e);
   }
@@ -74,6 +74,18 @@ export const getArtistClientList = async (id: number, page = 0, searchKey = "", 
 export const createArtistClient = async (id: number, data: Artist.CreateClientPayload) => {
   return await api
     .post(`/api/v1/artists/${id}/clients`, data)
+    .then((response) => {
+      return { error: false, data: response.data, errors: "" };
+    })
+    .catch((e) => {
+      return errorHandler(e);
+    });
+};
+
+// Get client detail
+export const getArtistClientDetail = async (id: number, clientId: number) => {
+  return await api
+    .get(`/api/v1/artists/${id}/clients/${clientId}`)
     .then((response) => {
       return { error: false, data: response.data, errors: "" };
     })

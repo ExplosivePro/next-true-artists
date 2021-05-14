@@ -1,6 +1,4 @@
 import HomeOutlinedIcon from "@material-ui/icons/HomeOutlined";
-import ChatOutlinedIcon from "@material-ui/icons/ChatOutlined";
-import ContactSupportOutlinedIcon from "@material-ui/icons/ContactSupportOutlined";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
 import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
@@ -59,26 +57,14 @@ export const mainItems = [
     url: "/dashboard/manage-clients",
     acceptRoles: [Role.ARTIST, Role.STUDIO],
   },
-  {
-    name: "Inbox",
-    icon: <ChatOutlinedIcon />,
-    url: "/inbox",
-    acceptRoles: [Role.ARTIST, Role.STUDIO],
-  },
 ];
 
 export const helpItems = [
   {
-    name: "Help Center",
-    icon: <ContactSupportOutlinedIcon />,
-    url: "/help-center",
-    acceptRoles: [Role.ARTIST, Role.STUDIO, Role.REGULAR],
-  },
-  {
     name: "Settings",
     icon: <SettingsOutlinedIcon />,
-    url: "/settings",
-    acceptRoles: [Role.ARTIST, Role.STUDIO, Role.REGULAR],
+    url: "/dashboard/profile",
+    acceptRoles: [Role.ARTIST, Role.STUDIO],
   },
 ];
 
