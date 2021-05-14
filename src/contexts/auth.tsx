@@ -17,7 +17,7 @@ import {
 import { useApp } from "./app";
 
 // Constants
-import { unauthRoutes, nonRememberRoutes, adminRoutes } from "../constants";
+import { unauthRoutes, nonRememberRoutes, adminRoute } from "../constants";
 
 // Custom Component
 import Loading from "../components/Loading";
@@ -300,7 +300,7 @@ export function AuthContext({ children }: Props) {
         user.current = data;
 
         // Redirect to dashboard if not unauthRoute or adminRoute
-        if (unauthRoutes.indexOf(router.pathname) === -1 && adminRoutes.indexOf(router.pathname) === -1) {
+        if (unauthRoutes.indexOf(router.pathname) === -1 && router.pathname.substring(0, 6) !== adminRoute) {
           // Navigate to dashboard page
           router.replace("/dashboard");
         }

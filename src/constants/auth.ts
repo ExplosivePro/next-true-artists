@@ -33,14 +33,7 @@ export const dashboardRoutes = [
   "/dashboard/upload-tattoos",
 ];
 
-// Routes to Admin component
-export const adminRoutes = [
-  "/admin",
-  "/admin/users",
-  "/admin/artists",
-  "/admin/studios",
-  "/admin/articles",
-  "/admin/landing-pages",
-];
+// Route to Admin component
+export const adminRoute = "/admin";
 
 export const PasswordValidationRegex = /(?=.*[a-zA-Z])(?=.*[0-9]).{6,10}/;
