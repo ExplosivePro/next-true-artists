@@ -35,7 +35,7 @@ import Cover from "./Cover";
 import { useYupValidationResolver } from "../../../utils";
 
 // Contexts
-import { Roles, useApp, useAuth } from "../../../contexts";
+import { Role, useApp, useAuth } from "../../../contexts";
 
 // APIs
 import { editArtistProfile, editStudioProfile, editUser, updateArtistAvatar, updateStudioAvatar } from "../../../api";
@@ -47,10 +47,10 @@ import { artistSettingList, settingList } from "../../../constants";
 // Get schema by role
 const getSchemaByRole = (role: string): any => {
   switch (role) {
-    case Roles.ARTIST: {
+    case Role.ARTIST: {
       return artistSchema;
     }
-    case Roles.STUDIO: {
+    case Role.STUDIO: {
       return studioSchema;
     }
     default: {
@@ -63,12 +63,12 @@ const getSchemaByRole = (role: string): any => {
 };
 
 // Get avatar by role
-const getAvatarByRole = (role: Roles, profile: any): string => {
+const getAvatarByRole = (role: Role, profile: any): string => {
   switch (role) {
-    case Roles.ARTIST: {
+    case Role.ARTIST: {
       return profile.artist.avatar?.image_url;
     }
-    case Roles.STUDIO: {
+    case Role.STUDIO: {
       return profile.studio.avatar?.image_url;
     }
     default: {
@@ -78,9 +78,9 @@ const getAvatarByRole = (role: Roles, profile: any): string => {
 };
 
 // Get initial value for setting list
-const getDefaultValue = (user: any, role: Roles) => {
+const getDefaultValue = (user: any, role: Role) => {
   const checkList: any[] = [];
-  if (role === Roles.ARTIST) {
+  if (role === Role.ARTIST) {
     const values = user.artist;
     artistSettingList.map((item) => {
       item.settings.map((setting: any) => {
@@ -91,7 +91,7 @@ const getDefaultValue = (user: any, role: Roles) => {
     });
   }
 
-  if (role === Roles.STUDIO) {
+  if (role === Role.STUDIO) {
     const values = user.studio;
     settingList.map((item) => {
       item.settings.map((setting: any) => {
@@ -106,12 +106,12 @@ const getDefaultValue = (user: any, role: Roles) => {
 };
 
 // Get attribute value by user role
-const getAttributeValueByRole = (role: Roles, profile: any, attribute: string, defaultValue: any) => {
+const getAttributeValueByRole = (role: Role, profile: any, attribute: string, defaultValue: any) => {
   switch (role) {
-    case Roles.ARTIST: {
+    case Role.ARTIST: {
       return profile.artist[attribute];
     }
-    case Roles.STUDIO: {
+    case Role.STUDIO: {
       return profile.studio[attribute];
     }
     default: {
@@ -146,13 +146,13 @@ export default function UserProfile() {
   const [preview, setPreview] = useState<any>("");
 
   // General detail
-  const [currency, setCurrency] = useState(getAttributeValueByRole(role as Roles, user, "currency_code", ""));
+  const [currency, setCurrency] = useState(getAttributeValueByRole(role as Role, user, "currency_code", ""));
   const [pricePerHour, setPricePerHour] = useState<number>(
-    getAttributeValueByRole(role as Roles, user, "price_per_hour", 0),
+    getAttributeValueByRole(role as Role, user, "price_per_hour", 0),
   );
 
   // Artist detail
-  const [checked, setChecked] = useState<string[]>(getDefaultValue(user, role as Roles));
+  const [checked, setChecked] = useState<string[]>(getDefaultValue(user, role as Role));
 
   const [minimumSpend, setMinimumSpend] = useState<number>(artist?.minimum_spend || 0);
   const [specialties, setSpecialties] = React.useState<string[]>(artist?.specialties || []);
@@ -306,17 +306,17 @@ export default function UserProfile() {
 
     // Submit by role
     switch (role) {
-      case Roles.ARTIST: {
+      case Role.ARTIST: {
         submitEditArtistProfile(data, editUserResponse);
         break;
       }
 
-      case Roles.STUDIO: {
+      case Role.STUDIO: {
         submitEditStudioProfile(data, editUserResponse);
         break;
       }
 
-      case Roles.REGULAR: {
+      case Role.REGULAR: {
         submitEditRegularProfile(editUserResponse);
         break;
       }
@@ -408,7 +408,6 @@ export default function UserProfile() {
 
   // Handle studio toggle setting buttons
   const handleToggleSetting = (value: string) => () => {
-    console.log(value);
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
@@ -461,12 +460,12 @@ export default function UserProfile() {
   };
 
   // Get role profile
-  const getProfileByRole = (role: Roles) => {
+  const getProfileByRole = (role: Role) => {
     switch (role) {
-      case Roles.ARTIST: {
+      case Role.ARTIST: {
         return user?.artist;
       }
-      case Roles.STUDIO: {
+      case Role.STUDIO: {
         return user?.studio;
       }
       default: {
@@ -503,7 +502,7 @@ export default function UserProfile() {
                   <>
                     <Avatar
                       alt={full_name}
-                      src={preview || getAvatarByRole(role as Roles, user)}
+                      src={preview || getAvatarByRole(role as Role, user)}
                       className={classes.avatar}
                     />
                     <input className={classes.fileInput} type={"file"} ref={hiddenFileInput} onChange={handleChange} />
@@ -540,17 +539,19 @@ export default function UserProfile() {
                 </ListItemIcon>
                 <ListItemText primary={<Typography>Change Password</Typography>} />
               </MenuItem>
-              <MenuItem
-                className={clsx({ [classes.menuActive]: activeTab === 2 })}
-                onClick={() => {
-                  switchTab(2);
-                }}
-              >
-                <ListItemIcon>
-                  <GroupOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText primary={<Typography>Social Profile</Typography>} />
-              </MenuItem>
+              {role !== Role.REGULAR && (
+                <MenuItem
+                  className={clsx({ [classes.menuActive]: activeTab === 2 })}
+                  onClick={() => {
+                    switchTab(2);
+                  }}
+                >
+                  <ListItemIcon>
+                    <GroupOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={<Typography>Social Profile</Typography>} />
+                </MenuItem>
+              )}
             </div>
           </Grid>
           <Grid item lg={7} md={7} sm={12} xs={12} className={classes.rightBar}>
@@ -595,7 +596,7 @@ export default function UserProfile() {
                         errors={errors.email}
                       />
 
-                      {role === Roles.ARTIST && artist && (
+                      {role === Role.ARTIST && artist && (
                         <ArtistProfile
                           currentData={artist}
                           className={classes.artistProfile}
@@ -612,7 +613,7 @@ export default function UserProfile() {
                         />
                       )}
 
-                      {role === Roles.STUDIO && studio && (
+                      {role === Role.STUDIO && studio && (
                         <StudioProfile
                           checked={checked}
                           control={control}
@@ -663,7 +664,7 @@ export default function UserProfile() {
                   )}
 
                   {activeTab === 1 && <ChangePassword />}
-                  {activeTab === 2 && <SocialLinks data={getProfileByRole(role as Roles)} />}
+                  {activeTab === 2 && <SocialLinks data={getProfileByRole(role as Role)} />}
                 </div>
               </Grid>
             </Grid>

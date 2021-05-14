@@ -2,6 +2,7 @@ module.exports = {
   publicRuntimeConfig: {
     GOOGLE_APP_ID: process.env.GOOGLE_APP_ID,
     INSTAGRAM_APP_ID: process.env.INSTAGRAM_APP_ID,
+    PUBLIC_PAGE_BASE_URL: process.env.PUBLIC_PAGE_BASE_URL,
   },
   compress: false,
   poweredByHeader: false,
@@ -10,12 +11,22 @@ module.exports = {
     return [
       {
         source: "/",
-        destination: "/artists",
+        destination: "/login",
         permanent: true,
       },
       {
-        source: "/home",
-        destination: "/artists",
+        source: "/artists",
+        destination: `${process.env.PUBLIC_PAGE_BASE_URL}/artists`,
+        permanent: true,
+      },
+      {
+        source: "/studios",
+        destination: `${process.env.PUBLIC_PAGE_BASE_URL}/studios`,
+        permanent: true,
+      },
+      {
+        source: "/tattoos",
+        destination: `${process.env.PUBLIC_PAGE_BASE_URL}/artists`,
         permanent: true,
       },
     ];

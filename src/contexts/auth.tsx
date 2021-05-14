@@ -17,7 +17,7 @@ import {
 import { useApp } from "./app";
 
 // Constants
-import { unauthRoutes } from "../constants";
+import { unauthRoutes, nonRememberRoutes, adminRoutes } from "../constants";
 
 // Custom Component
 import Loading from "../components/Loading";
@@ -31,12 +31,10 @@ export enum AuthState {
   "authenticated",
 }
 
-export enum Roles {
-  USERS = "users",
-  ARTIST = "artist",
-  STUDIO = "studio_manager",
-  REGULAR = "regular",
-}
+// Expose this role in this auth context
+export { Role } from "../constants";
+
+import { Role } from "../constants";
 
 /*
  Auth Flow: (TODO)
@@ -172,7 +170,7 @@ export function AuthContext({ children }: Props) {
         user.current = data.user;
 
         // Navigate to register selection page
-        router.push("/artists");
+        router.push("/dashboard");
       } else {
         app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
       }
@@ -247,9 +245,29 @@ export function AuthContext({ children }: Props) {
     router.replace("/login");
   }
 
+  // Get current user's role Id
+  function getRoleId(): number | undefined {
+    if (user.current) {
+      const { role, artist, studio } = user.current as User;
+      switch (role) {
+        case Role.ARTIST: {
+          return artist?.id;
+        }
+        case Role.STUDIO: {
+          return studio?.id;
+        }
+        default: {
+          return undefined;
+        }
+      }
+    } else {
+      return undefined;
+    }
+  }
+
   useEffect(() => {
-    // Only save auth router
-    if (unauthRoutes.indexOf(router.pathname) === -1) {
+    // Only save remember router
+    if (nonRememberRoutes.indexOf(router.pathname) === -1) {
       // Store this url to get back later
       setPreviousPath(router.pathname);
     }
@@ -264,11 +282,14 @@ export function AuthContext({ children }: Props) {
 
       // Any route is not defined as unauth route will be redirected to register page
       if (unauthRoutes.indexOf(router.pathname) === -1) {
-        // Store this url to get back later
-        setPreviousPath(router.pathname);
+        // Only save remember router
+        if (nonRememberRoutes.indexOf(router.pathname) === -1) {
+          // Store this url to get back later
+          setPreviousPath(router.pathname);
+        }
 
         // Redirect to home page
-        router.replace("/artists");
+        router.replace("/login");
       }
 
       return;
@@ -278,11 +299,13 @@ export function AuthContext({ children }: Props) {
       .then(({ data }) => {
         user.current = data;
 
-        setStatus(AuthState.authenticated);
+        // Redirect to dashboard if not unauthRoute or adminRoute
+        if (unauthRoutes.indexOf(router.pathname) === -1 && adminRoutes.indexOf(router.pathname) === -1) {
+          // Navigate to dashboard page
+          router.replace("/dashboard");
+        }
 
-        // Navigate to artist page
-        //TODO: This should be home page
-        // router.replace("/artists");
+        setStatus(AuthState.authenticated);
       })
       .catch(() => {
         localStorage.removeItem(TOKEN_KEY);
@@ -307,6 +330,7 @@ export function AuthContext({ children }: Props) {
         logOut,
         updateUserData,
         previousPath,
+        getRoleId,
       }}
     >
       {status === AuthState.pending ? <Loading fixed /> : null}
@@ -329,7 +353,7 @@ export type User = {
   id: number;
   full_name: string;
   avatar: Resource.Image;
-  role: Roles;
+  role: Role;
   artist?: Resource.ArtistDetail;
   studio?: Resource.StudioDetail;
 };
@@ -345,6 +369,7 @@ interface Context {
   status: AuthState;
   previousPath: string;
   updateUserData: () => void;
+  getRoleId: () => number | undefined;
 }
 
 const TOKEN_KEY = "AUTH_TOKEN";

@@ -13,12 +13,13 @@ import Grid from "@material-ui/core/Grid";
 import PrimaryButton from "../PrimaryButton";
 
 import { defaultStudioTattoo } from "../../constants";
+import { boxShadow } from "../../palette";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       maxWidth: 345,
-      boxShadow: `0 4px 4px 0 rgb(136 118 118 / 15%)`,
+      boxShadow: boxShadow.primary,
     },
     media: {
       height: 0,

@@ -1,5 +1,6 @@
 // External
 import React, { useState } from "react";
+import clsx from "clsx";
 
 // Material UI Components
 import { Grid, Typography } from "@material-ui/core";
@@ -11,7 +12,7 @@ import Tattoos, { Image } from "../../../components/RightBarRegisterTattooUpload
 import { updateTattoos, uploadTattoos } from "../../../api";
 
 // Context
-import { useApp } from "../../../contexts";
+import { useApp, useAuth, Role } from "../../../contexts";
 import { useRouter } from "next/router";
 
 // Styles
@@ -19,12 +20,43 @@ import useStyles from "./styles";
 
 export default function UploadTattoos() {
   const app = useApp();
+  const { user: { role } = { role: Role.REGULAR }, getRoleId } = useAuth();
   const { push } = useRouter();
 
   const classes = useStyles();
 
+  const [currentUserId] = useState(getRoleId());
   const [tattoos, setTattoos] = useState<Image[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const uploadImages = async (tattoos: Image[]) => {
+    const formData = new FormData();
+    const metaData: any[] = [];
+
+    // Add all images into formData
+    tattoos.map((tattoo) => {
+      formData.append("images[]", tattoo.file);
+      metaData.push({
+        placement: tattoo.placement,
+        workplace: tattoo.workplace,
+        color: tattoo.color,
+        caption: tattoo.caption,
+        featured: tattoo.featured,
+      });
+    });
+
+    formData.append("meta_data", JSON.stringify(metaData));
+
+    const response = await uploadTattoos(formData);
+
+    const { error, errors, data } = response;
+    // No error happens
+    if (!error) {
+      return data;
+    } else {
+      app.showErrorDialog(true, errors ? errors.toString() : "Image upload failed. Try again");
+    }
+  };
 
   const handleUploadImage = async (data: any) => {
     const rs = await uploadImages(data);
@@ -53,50 +85,34 @@ export default function UploadTattoos() {
   };
 
   // On tattoos update
-  const onUpdate = async (tattooId: number, payload: any) => {
+  const onUpdate = async (tattooId: number, payload: any, index: number) => {
     const response = await updateTattoos(currentUserId as number, tattooId, payload, role);
 
     const { error, errors, data } = response;
     // No error happens
     if (!error) {
       app.showSuccessDialog(true, "Update successfully");
+
+      // Mark this tattoo image info is already saved
+      const tattooDetail = tattoos[index];
+      tattooDetail["saved"] = true;
+
+      // Simply remove old object then add the new item
+      setTattoos([...tattoos.slice(0, index), tattooDetail, ...tattoos.slice(index + 1)]);
+
       return data;
     } else {
       app.showErrorDialog(true, errors ? errors.toString() : "Upload fail");
     }
   };
 
-  const goNext = async () => {
-    const formData = new FormData();
-    const metaData: any[] = [];
-
-    // Add all images into formData
-    tattoos.map((tattoo) => {
-      formData.append("images[]", tattoo.file);
-      metaData.push({
-        placement: tattoo.placement,
-        workplace: tattoo.workplace,
-      });
-    });
-
-    formData.append("meta_data", JSON.stringify(metaData));
-
-    const response = await uploadTattoos(formData);
-
-    const { error, errors } = response;
-    // No error happens
-    if (!error) {
-      app.showSuccessDialog(true, "Upload tattoos successfully");
-
-      // Back to dashboard
-      push("/dashboard");
-    } else {
-      app.showErrorDialog(true, errors ? errors.toString() : "Upload tattoos fail");
-    }
-  };
-
   return (
-    <Grid container className={classes.root} alignItems={"center"} justify={"center"}>
+    <Grid
+      container
+      className={clsx(classes.root, { [classes.rootWithoutContent]: tattoos.length === 0 })}
+      alignItems={"center"}
+      justify={"center"}
+    >
       <div className={classes.formWrapper}>
         <div className={classes.titleWrapper}>
           <Typography variant={"h5"} className={classes.titleText}>
@@ -131,12 +147,14 @@ export default function UploadTattoos() {
                 push("/dashboard");
               }}
             >
-              Cancel
+              Back
             </PrimaryButton>
           </Grid>
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <PrimaryButton
-              onClick={goNext}
+              onClick={() => {
+                push("/dashboard/gallery");
+              }}
               type={"button"}
               variant="contained"
               fullWidth
@@ -144,7 +162,7 @@ export default function UploadTattoos() {
               size="large"
               primaryColor
             >
-              Next
+              Done
             </PrimaryButton>
           </Grid>
         </Grid>

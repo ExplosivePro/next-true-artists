@@ -31,7 +31,7 @@ import RightBarRegisterTattooUpload from "../../components/RightBarRegisterTatto
 
 // Utils
 import { getWorkingStyleList } from "../../api";
-import { AuthState, Roles, useApp, useAuth, User } from "../../contexts";
+import { AuthState, Role, useApp, useAuth, User } from "../../contexts";
 
 import colors from "../../palette";
 
@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme) =>
 export default function RegisterSelection({ workingStyles }: Props) {
   const classes = useStyles();
   const { replace } = useRouter();
-  const { user, status } = useAuth();
+  const { user, status, updateUserData } = useAuth();
   const { setRegistrationCallbackData, userInfo } = useApp();
 
   const [step, setStep] = useState(0);
@@ -109,22 +109,22 @@ export default function RegisterSelection({ workingStyles }: Props) {
   const getPreloadData = (step: number) => {
     switch (step) {
       case 2: {
-        if (user?.role === Roles.ARTIST) {
+        if (user?.role === Role.ARTIST) {
           return preloadRightBarArtistRegisterInformationData(user?.artist as Resource.ArtistDetail);
         }
 
-        if (user?.role === Roles.STUDIO) {
+        if (user?.role === Role.STUDIO) {
           return preloadRightBarStudioRegisterInformationData(user?.studio as Resource.StudioDetail);
         }
 
         return {};
       }
       case 3: {
-        if (user?.role === Roles.ARTIST) {
+        if (user?.role === Role.ARTIST) {
           return preloadRightBarRegisterWorkStyleData(user?.artist as Resource.ArtistDetail);
         }
 
-        if (user?.role === Roles.STUDIO) {
+        if (user?.role === Role.STUDIO) {
           return preloadRightBarRegisterBusinessSettingsData(user?.studio as Resource.StudioDetail);
         }
       }
@@ -138,27 +138,34 @@ export default function RegisterSelection({ workingStyles }: Props) {
     // User already logged in, skip step 1, bring user to the next step
     if (status === AuthState.authenticated) {
       switch (user?.role) {
-        case Roles.ARTIST: {
+        case Role.ARTIST: {
           setRole("artist");
           setCurrentUserRoleId(user?.artist?.id);
           break;
         }
-        case Roles.STUDIO: {
+        case Role.STUDIO: {
           setRole("studio");
           setCurrentUserRoleId(user?.studio?.id);
           break;
         }
-        case Roles.REGULAR: {
+        case Role.REGULAR: {
           // Get saved state from local storage
           const savedRole = localStorage.getItem("pendingRegistrationType");
+
           if (savedRole) {
-            if (savedRole === Roles.ARTIST) {
+            // Next step
+            setStep(2);
+
+            if (savedRole === Role.ARTIST) {
               setRole("artist");
               setCurrentUserRoleId(user?.artist?.id);
             } else {
               setRole("studio");
               setCurrentUserRoleId(user?.studio?.id);
             }
+          } else {
+            // No role saved, back to step 1 to choose
+            setStep(0);
           }
           break;
         }
@@ -180,9 +187,6 @@ export default function RegisterSelection({ workingStyles }: Props) {
 
       // Store step data to edit later
       setStepData({ ...stepData, ...preloadStepData });
-
-      // Next step
-      setStep(2);
     }
 
     // Reset these value at destructure
@@ -213,7 +217,13 @@ export default function RegisterSelection({ workingStyles }: Props) {
             <RightBarRegisterAccountType
               onNext={(role) => {
                 setRole(role);
-                setStep(1);
+
+                // Already have an account, go straight to step 2
+                if (stepData[1]) {
+                  setStep(2);
+                } else {
+                  setStep(1);
+                }
               }}
             />
           )}
@@ -351,7 +361,13 @@ export default function RegisterSelection({ workingStyles }: Props) {
               currentUserId={currentUserRoleId}
               currentData={stepData[4] || {}}
               onNext={() => {
+                // Get updated user data
+                updateUserData();
+
+                // Remove pending status saved in local storage
                 localStorage.removeItem("pendingRegistrationType");
+
+                // Go to dashboard
                 replace("/dashboard");
               }}
               onPreviousStep={() => {

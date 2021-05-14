@@ -32,7 +32,7 @@ import PrimaryButton from "../components/PrimaryButton";
 import AppBarMenuItems from "../components/Header/AppBarMenuItems";
 
 // Contexts
-import { AuthState, useAuth } from "./auth";
+import { AuthState, useAuth, Role } from "./auth";
 
 // Constants
 import { dashboardRoutes, mainItems, helpItems, dashboardRouteDetails, drawerWidth } from "../constants";
@@ -163,6 +163,9 @@ const useStyles = makeStyles((theme: Theme) =>
       position: "absolute",
       right: "15px",
     },
+    leftAuto: {
+      marginLeft: "auto",
+    },
   }),
 );
 
@@ -267,32 +270,44 @@ export function DashboardContext({ children }: Props) {
             }}
           >
             <List>
-              {mainItems.map((item, index) => (
-                <ListItem
-                  button
-                  key={index}
-                  onClick={() => {
-                    push(item.url);
-                  }}
-                >
-                  <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.name} />
-                </ListItem>
-              ))}
+              {mainItems.map((item, index) => {
+                if (item.acceptRoles.includes(user?.role as Role)) {
+                  return (
+                    <ListItem
+                      button
+                      key={index}
+                      onClick={() => {
+                        push(item.url);
+                      }}
+                    >
+                      <ListItemIcon>{item.icon}</ListItemIcon>
+                      <ListItemText primary={item.name} />
+                    </ListItem>
+                  );
+                } else {
+                  return <div key={index} />;
+                }
+              })}
             </List>
             <List className={classes.bottomList}>
-              {helpItems.map((item, index) => (
-                <ListItem
-                  button
-                  key={index}
-                  onClick={() => {
-                    push(item.url);
-                  }}
-                >
-                  <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.name} />
-                </ListItem>
-              ))}
+              {helpItems.map((item, index) => {
+                if (item.acceptRoles.includes(user?.role as Role)) {
+                  return (
+                    <ListItem
+                      button
+                      key={index}
+                      onClick={() => {
+                        push(item.url);
+                      }}
+                    >
+                      <ListItemIcon>{item.icon}</ListItemIcon>
+                      <ListItemText primary={item.name} />
+                    </ListItem>
+                  );
+                } else {
+                  return <div key={index} />;
+                }
+              })}
             </List>
           </Drawer>
           <main className={classes.content}>
@@ -312,16 +327,18 @@ export function DashboardContext({ children }: Props) {
                 <b>{name}</b>
               </Typography>
 
-              <PrimaryButton
-                variant="contained"
-                startIcon={<AddIcon />}
-                className={classes.button}
-                onClick={() => {
-                  push("/dashboard/upload-tattoos");
-                }}
-              >
-                Upload
-              </PrimaryButton>
+              {user?.role !== Role.REGULAR && (
+                <PrimaryButton
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  className={classes.button}
+                  onClick={() => {
+                    push("/dashboard/upload-tattoos");
+                  }}
+                >
+                  Upload
+                </PrimaryButton>
+              )}
 
               <IconButton
                 edge="end"
@@ -330,6 +347,7 @@ export function DashboardContext({ children }: Props) {
                 aria-haspopup="true"
                 color="inherit"
                 onClick={handleProfileMenuOpen}
+                className={clsx({ [classes.leftAuto]: user?.role === Role.REGULAR })}
                 classes={{ root: classes.profileButton }}
               >
                 <Avatar alt={user?.full_name || "Avatar"} src={user?.avatar?.image_url} />

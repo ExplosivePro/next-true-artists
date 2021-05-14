@@ -31,7 +31,15 @@ const colors = {
   extremeDarkYellow: "#e0a00d",
   chipYellow: "#f4c55b",
   standardViolet: "#7c44c3",
+  standardBlue: "#4284f1",
   defaultColor: "rgb(84, 105, 212)",
+  facebookColor: "#3c5897",
+  twitterColor: "#1fa2f1",
+  instagramColor: "#ff0601",
+};
+
+export const boxShadow = {
+  primary: "0 4px 4px 0 rgb(136 118 118 / 15%)",
 };
 
 export default colors;
