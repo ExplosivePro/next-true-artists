@@ -77,7 +77,7 @@ export function AuthContext({ children }: Props) {
           }
         }
       } else {
-        app.showErrorDialog(true, errors ? errors.toString() : "Login fail");
+        app.showErrorDialog(true, errors ? errors.toString() : "Enter a valid email/password.");
       }
 
       return response;
@@ -142,7 +142,7 @@ export function AuthContext({ children }: Props) {
           }
         }
       } else {
-        app.showErrorDialog(true, errors ? errors.toString() : "Login fail");
+        app.showErrorDialog(true, errors ? errors.toString() : "Enter a valid email/password");
       }
 
       return response;
