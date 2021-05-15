@@ -45,7 +45,7 @@ declare namespace Register {
     twitter_url?: string;
     street_address?: string;
     zip_code?: string;
-    city: string;
+    city?: string;
     country?: string;
     styles?: number[];
     phone_number?: string;

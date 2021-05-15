@@ -166,6 +166,9 @@ const useStyles = makeStyles((theme: Theme) =>
     leftAuto: {
       marginLeft: "auto",
     },
+    activeListItem: {
+      backgroundColor: colors.standardGreySubFooter,
+    },
   }),
 );
 
@@ -232,6 +235,16 @@ export function DashboardContext({ children }: Props) {
     setAnchorEl(event.currentTarget);
   };
 
+  // Check if current location path match with item url or not
+  const isActive = (url: string) => {
+    // For dashboard url, need to be exactly matched
+    if (url === "/dashboard") {
+      return window.location.pathname === "/dashboard";
+    } else {
+      return window.location.pathname.includes(url);
+    }
+  };
+
   // Drop down menu components
   const menuId = "dashboard-account-menu";
   const renderMenu = user && (
@@ -276,6 +289,7 @@ export function DashboardContext({ children }: Props) {
                     <ListItem
                       button
                       key={index}
+                      className={clsx({ [classes.activeListItem]: isActive(item.url) })}
                       onClick={() => {
                         push(item.url);
                       }}

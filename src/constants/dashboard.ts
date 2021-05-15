@@ -47,4 +47,12 @@ export const dashboardRouteDetails = [
       path: "/dashboard",
     },
   },
+  {
+    path: "/dashboard/manage-clients",
+    name: "Clients",
+    backButton: {
+      enable: true,
+      path: "/dashboard",
+    },
+  },
 ];
