@@ -94,7 +94,7 @@ export default function UploadTattoos() {
     const { error, errors, data } = response;
     // No error happens
     if (!error) {
-      app.showSuccessDialog(true, "Update successfully");
+      app.showSuccessDialog(true, "Updated successfully");
 
       // Mark this tattoo image info is already saved
       const tattooDetail = tattoos[index];
