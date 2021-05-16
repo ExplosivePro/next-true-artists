@@ -45,8 +45,76 @@ export const inviteArtist = async (data: Studio.InviteArtistPayload) => {
 
 // Submit for review
 export const submitStudioProfileForReview = async (id: number) => {
+  return await api.put(`/api/v1/studios/${id}/submit_for_review`);
+};
+
+// Get client list
+export const getStudioClientList = async (id: number, page = 0, searchKey = "", filters?: any) => {
+  try {
+    let query = `/api/v1/studios/${id}/clients?page=${page}`;
+
+    // IF search is defined
+    if (searchKey) {
+      query += `&query=${searchKey}`;
+    }
+
+    // IF filter is defined, and this is under object format
+    if (filters && typeof filters === "object") {
+      Object.keys(filters).map((filterKey) => {
+        query += `&${filterKey}=${filters[filterKey].map((filter: any) => filter.name).join(",")}`;
+      });
+    }
+
+    // IF filter is defined, and this is under string format
+    if (filters && typeof filters === "string") {
+      query += `&${filters}`;
+    }
+
+    const result = await api.get(query);
+    return result.data;
+  } catch (e) {
+    return {
+      tattoos: [],
+      meta: {
+        current_page: 1,
+        last_page: true,
+        limit_value: 60,
+        next_page: 1,
+        total_count: 0,
+        total_pages: 1,
+      },
+    };
+  }
+};
+
+// Get client detail
+export const getStudioClientDetail = async (id: number, clientId: number) => {
   return await api
-    .put(`/api/v1/studios/${id}/submit_for_review`)
+    .get(`/api/v1/studios/${id}/clients/${clientId}`)
+    .then((response) => {
+      return { error: false, data: response.data, errors: "" };
+    })
+    .catch((e) => {
+      return errorHandler(e);
+    });
+};
+
+// Create client
+export const createStudioClient = async (id: number, data: Studio.CreateClientPayload) => {
+  return await api
+    .post(`/api/v1/studios/${id}/clients`, data)
+    .then((response) => {
+      return { error: false, data: response.data, errors: "" };
+    })
+    .catch((e) => {
+      return errorHandler(e);
+    });
+};
+
+// Update client
+export const updateStudioClient = async (artistId: number, clientId: number, data: Studio.EditClientPayload) => {
+  return await api
+    .put(`/api/v1/studios/${artistId}/clients/${clientId}`, data)
     .then((response) => {
       return { error: false, data: response.data, errors: "" };
     })

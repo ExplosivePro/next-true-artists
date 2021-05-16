@@ -3,6 +3,7 @@ export enum Role {
   ARTIST = "artist",
   STUDIO = "studio_manager",
   REGULAR = "regular",
+  ADMIN = "admin",
 }
 
 // any route in this list is considered as unauthenticated routes, outside this list, app will redirect user to register page if user has not logged in yet
@@ -16,6 +17,9 @@ export const unauthRoutes = [
   "/dashboard/profile",
   "/dashboard/my-studios",
   "/dashboard/my-artists",
+  "/dashboard/manage-clients",
+  "/dashboard/manage-clients/create",
+  "/dashboard/manage-clients/[id]",
   "/password/[type]",
 ];
 
@@ -30,6 +34,12 @@ export const dashboardRoutes = [
   "/dashboard/my-studios",
   "/dashboard/my-artists",
   "/dashboard/upload-tattoos",
+  "/dashboard/manage-clients",
+  "/dashboard/manage-clients/create",
+  "/dashboard/manage-clients/[id]",
 ];
+
+// Route to Admin component
+export const adminRoute = "/admin";
 
 export const PasswordValidationRegex = /(?=.*[a-zA-Z])(?=.*[0-9]).{6,10}/;

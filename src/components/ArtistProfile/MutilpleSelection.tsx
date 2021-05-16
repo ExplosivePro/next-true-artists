@@ -1,5 +1,6 @@
 // External
 import React from "react";
+import clsx from "clsx";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 
 // Material UI Components
@@ -29,9 +30,13 @@ const MenuProps = {
       width: 250,
     },
   },
+  // These fields will fix jumping issues on multi selection list
+  // Ref: https://stackoverflow.com/questions/59785482/multiselect-box-popover-keeps-jumping-when-scroll-or-select-items
+  variant: undefined,
+  getContentAnchorEl: null,
 };
 
-export default function MultipleSelection({ name, optionList, onChange, value }: Props) {
+export default function MultipleSelection({ name, optionList, onChange, value, className }: Props) {
   const classes = useStyles();
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -40,7 +45,7 @@ export default function MultipleSelection({ name, optionList, onChange, value }:
   };
 
   return (
-    <FormControl variant={"outlined"} className={classes.formControl}>
+    <FormControl variant={"outlined"} className={clsx(classes.formControl, className)}>
       <InputLabel id={name}>{name}</InputLabel>
       <Select
         labelId={name}
@@ -64,6 +69,7 @@ export default function MultipleSelection({ name, optionList, onChange, value }:
 }
 
 interface Props {
+  className?: string;
   name: string;
   optionList: string[];
   onChange: (event: any) => void;
