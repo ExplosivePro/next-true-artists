@@ -22,9 +22,9 @@ import TablePagination from "@material-ui/core/TablePagination";
 import AdminBody from "src/components/Admin/AdminBody";
 import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
-import CreateNew from "./create";
+import { InfoAlert } from "src/components/Admin/FormInputs";
 
-import { getArticleList } from "./api";
+import { getArticleList, deleteArticle } from "./api";
 import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
 
 export default function Articles() {
@@ -39,16 +39,15 @@ export default function Articles() {
     refetch: articleListRefetch,
   } = useQuery("articleList", async () => await getArticleList(location.search));
 
+  // Create an Alert for info feedback
+  const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
+
   const [pageOptions, setPageOptions] = useState({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(meta.limit_value);
 
   const [searchInputValue, setSearchInputValue] = useState("");
   const [searchValue, setSearchValue] = useState("");
-
-  const [isOpenCreate, setIsOpenCreate] = useState(false);
-
-  const [placeholder, setPlaceholder] = useState("");
 
   // Force refetch after search update
   useEffect(() => {
@@ -75,6 +74,25 @@ export default function Articles() {
     [],
   );
 
+  const onDelete = async (title: string, articleId: string) => {
+    if (!confirm(`Deleting Article... \n\n  ${title} ?`)) return;
+    try {
+      const response = await deleteArticle(articleId);
+      if (response) setInfoAlert({ severity: "error", message: "Error deleting article !" });
+      else {
+        setInfoAlert({ severity: "success", message: "Article deleted successfully" });
+        setTimeout(() => {
+          router.push(`/admin/articles`);
+        }, 2500);
+      }
+    } catch (error) {
+      setInfoAlert({ severity: "error", message: `Error deleting article! - ${error}` });
+    }
+    setTimeout(() => {
+      setInfoAlert({ severity: "info", message: "" });
+    }, 4500);
+  };
+
   return (
     <AdminBody>
       <Head>
@@ -83,16 +101,20 @@ export default function Articles() {
 
       <Grid container>
         <Grid item xs={12} sm={6} md={6} lg={6}>
-          <Breadcrumbs>
-            <Typography variant="h6">
-              <Link href="/admin">Dashboard</Link>
-            </Typography>
-            <Typography variant="h6">Articles</Typography>
-          </Breadcrumbs>
+          {infoAlert.message ? (
+            <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} />
+          ) : (
+            <Breadcrumbs>
+              <Typography variant="h6">
+                <Link href="/admin">Dashboard</Link>
+              </Typography>
+              <Typography variant="h6">Articles</Typography>
+            </Breadcrumbs>
+          )}
         </Grid>
 
         <Grid item xs={12} sm={6} md={2} lg={2}>
-          <PrimaryButton bluePastel onClick={() => setIsOpenCreate(true)}>
+          <PrimaryButton bluePastel onClick={() => router.push(`${router.pathname}/create`)}>
             Create Article
           </PrimaryButton>
         </Grid>
@@ -138,7 +160,7 @@ export default function Articles() {
                     <col width="auto" />
                     <col width="auto" />
                     <col width="auto" />
-                    <col width="auto" />
+                    <col width="10%" />
                     <col width="10%" />
                   </colgroup>
                   <TableHead>
@@ -146,8 +168,8 @@ export default function Articles() {
                       <StyledTableCell>Title</StyledTableCell>
                       <StyledTableCell>Page Title</StyledTableCell>
                       <StyledTableCell>Author</StyledTableCell>
-                      <StyledTableCell>Category</StyledTableCell>
                       <StyledTableCell>Status</StyledTableCell>
+                      <StyledTableCell>Actions</StyledTableCell>
                     </TableRow>
                   </TableHead>
 
@@ -159,8 +181,16 @@ export default function Articles() {
                         </StyledTableCell>
                         <StyledTableCell>{article.page_title}</StyledTableCell>
                         <StyledTableCell>{article.user.full_name}</StyledTableCell>
-                        <StyledTableCell>{article.category.name}</StyledTableCell>
                         <StyledTableCell>{article.status}</StyledTableCell>
+                        <StyledTableCell>
+                          <PrimaryButton
+                            variant="outlined"
+                            size="small"
+                            onClick={() => onDelete(article.title, article.id.toString())}
+                          >
+                            Delete
+                          </PrimaryButton>
+                        </StyledTableCell>
                       </StyledTableRow>
                     ))}
                   </TableBody>
@@ -179,12 +209,9 @@ export default function Articles() {
               />
             </React.Fragment>
           ) : (
-            <Alert severity="info">No articles records found...{placeholder}</Alert>
+            <Alert severity="info">No articles records found...</Alert>
           )}
         </Grid>
-        {isOpenCreate ? (
-          <CreateNew isOpen={setIsOpenCreate} setArticleId={setPlaceholder} refetch={articleListRefetch} />
-        ) : null}
       </Grid>
     </AdminBody>
   );

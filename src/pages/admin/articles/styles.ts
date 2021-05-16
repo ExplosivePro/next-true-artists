@@ -27,11 +27,6 @@ export const useStyles = makeStyles({
   },
   articleText: {
     padding: "0px 0px 10px 10px",
-    "&:hover": {
-      backgroundColor: colors.normalGrey,
-      border: "solid thin lightGrey",
-      borderRadius: "5px",
-    },
   },
   closeButton: {
     float: "right",
@@ -43,16 +38,6 @@ export const useStyles = makeStyles({
   statusChip: {
     marginTop: "5px",
     paddingLeft: "40px",
-  },
-  articleEditWrapper: {
-    marginTop: "10px",
-    border: "none",
-  },
-  articleContent: {
-    "&:hover": {
-      border: "solid thin lightGrey",
-      borderRadius: "5px",
-    },
   },
   cardItem: {
     border: "none",
@@ -72,8 +57,8 @@ export const useStyles = makeStyles({
     padding: 0,
   },
   avatar: {
-    width: "75px",
-    height: "75px",
+    width: "300px",
+    height: "220px",
     cursor: "pointer",
   },
   fileInput: {

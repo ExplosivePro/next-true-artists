@@ -16,14 +16,11 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Alert from "@material-ui/lab/Alert";
-import TextField from "@material-ui/core/TextField";
 import Chip from "@material-ui/core/Chip";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
-import EditIcon from "@material-ui/icons/Edit";
 
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -34,8 +31,7 @@ import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
 import { InfoAlert } from "src/components/Admin/FormInputs";
 
-import CreateNew from "./create";
-import { getArticle, editArticle, deleteArticle } from "./api";
+import { getArticle } from "./api";
 import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
 
 export default function EditArticles() {
@@ -45,146 +41,22 @@ export default function EditArticles() {
   const [articleId, setArticleId] = useState("");
 
   // Fetch Article data using param
-  const {
-    status: articleDataStatus,
-    data: articleData,
-    error: articleDataError,
-    refetch: refetchArticleData,
-  } = useQuery("articleData", async () => await getArticle(articleId), {
-    enabled: articleId ? true : false,
-  });
+  const { status: articleDataStatus, data: articleData, error: articleDataError } = useQuery(
+    "articleData",
+    async () => await getArticle(articleId),
+    {
+      enabled: articleId ? true : false,
+    },
+  );
 
   useEffect(() => {
     router.query.id ? setArticleId(router.query.id?.toString()) : null;
   }, [router.query.id]);
 
-  // Create a reference to the hidden file input element
-  const hiddenFileInput = React.useRef(null);
-  const [preview, setPreview] = useState<any>("");
-  const [uploadedImage, setUploadedImage] = useState<File | string>("");
-
   // Create an Alert for info feedback
   const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
 
-  const [isOpenCreate, setIsOpenCreate] = useState(false);
-  const [editableItem, setEditableItem] = useState("");
-
-  const [content, setContent] = useState("Content here...");
-  const config: any = { readonly: false, toolbar: false, statusbar: false };
-
-  function isJSON(str: string) {
-    try {
-      return !!str && JSON.parse(str);
-    } catch (e) {
-      return false;
-    }
-  }
-
-  const onSubmit = async (field: string, value: string | File) => {
-    const getMetadata = () => {
-      if (["title", "page_title", "introduction"].includes(field)) {
-        const meta = isJSON(articleData?.meta_description);
-        if (meta) {
-          meta[field] = value;
-          return JSON.stringify(meta);
-        } else {
-          return JSON.stringify({ [field]: value });
-        }
-      } else return null;
-    };
-
-    const payload: { [T: string]: any } = getMetadata()
-      ? { [field]: value, meta_description: getMetadata() }
-      : { [field]: value };
-
-    const formData = new FormData();
-    Object.entries(payload).map(([key, value]) => formData.append(key, value));
-
-    try {
-      const response = await editArticle(formData, articleId);
-      if (!response) setInfoAlert({ severity: "error", message: "Error updating article !" });
-      else {
-        setInfoAlert({ severity: "success", message: "Article updated successfully" });
-        refetchArticleData();
-        if (field === "image") {
-          setPreview("");
-          setUploadedImage("");
-        }
-      }
-    } catch (error) {
-      setInfoAlert({ severity: "error", message: `Error updating article! - ${error}` });
-    }
-    setTimeout(() => {
-      setInfoAlert({ severity: "info", message: "" });
-    }, 4500);
-  };
-
-  const onDelete = async () => {
-    if (!confirm(`Deleting Article... \n\n  ${articleData?.title} ?`)) return;
-    try {
-      const response = await deleteArticle(articleId);
-      if (response) setInfoAlert({ severity: "error", message: "Error deleting article !" });
-      else {
-        setInfoAlert({ severity: "success", message: "Article deleted successfully" });
-        setTimeout(() => {
-          router.push(`/admin/articles`);
-        }, 2500);
-      }
-    } catch (error) {
-      setInfoAlert({ severity: "error", message: `Error deleting article! - ${error}` });
-    }
-    setTimeout(() => {
-      setInfoAlert({ severity: "info", message: "" });
-    }, 4500);
-  };
-
-  const EditField = ({ field, value, variant }: any) =>
-    field === editableItem ? (
-      <TextField
-        defaultValue={value}
-        variant="outlined"
-        fullWidth
-        autoFocus
-        multiline
-        size="small"
-        onBlur={(e) => {
-          if (value != e.target.value) onSubmit(field, e.target.value);
-          setEditableItem("");
-        }}
-      />
-    ) : (
-      <Typography variant={variant} className={classes.articleText} gutterBottom onClick={() => setEditableItem(field)}>
-        {value}
-      </Typography>
-    );
-
-  const handleImageChangeClick = () => {
-    // @ts-ignore
-    hiddenFileInput?.current?.click();
-  };
-
-  // image change
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      const fileUploaded = event.target.files[0];
-      setUploadedImage(fileUploaded);
-
-      const reader = new FileReader();
-      reader.readAsDataURL(fileUploaded);
-      reader.onloadend = () => setPreview(reader.result);
-    }
-  };
-
-  const handleImageUpdate = () => {
-    onSubmit("image", uploadedImage);
-  };
-
-  const handleContentUpdate = () => {
-    setTimeout(() => {
-      onSubmit("content", content);
-    }, 500);
-    setEditableItem("");
-  };
+  const config: any = { readonly: true, toolbar: false, statusbar: false };
 
   return (
     <AdminBody>
@@ -206,8 +78,8 @@ export default function EditArticles() {
         </Grid>
 
         <Grid item xs={12} sm={6} md={2} lg={2}>
-          <PrimaryButton bluePastel onClick={() => setIsOpenCreate(true)}>
-            Create Article
+          <PrimaryButton bluePastel onClick={() => router.push(`/admin/articles/edit/${articleData?.id}`)}>
+            Edit Article
           </PrimaryButton>
         </Grid>
 
@@ -223,91 +95,31 @@ export default function EditArticles() {
             <Grid container spacing={2}>
               <Grid item xs={8}>
                 <Grid container spacing={2}>
-                  <Grid item>
-                    <Card variant="outlined">
-                      <CardHeader
-                        style={{ textTransform: "capitalize" }}
-                        title={articleData?.status}
-                        action={
-                          <Grid container spacing={2} className={classes.statusChip}>
-                            <Grid item>
-                              <PrimaryButton
-                                size="small"
-                                bluePastel
-                                onClick={() =>
-                                  onSubmit("status", articleData?.status === "draft" ? "publish" : "draft")
-                                }
-                              >
-                                {articleData?.status === "draft" ? "Publish" : "Set as Draft"}
-                              </PrimaryButton>
-                            </Grid>
-
-                            <Grid item>
-                              <PrimaryButton size="small" yellow onClick={() => onSubmit("status", "flagged")}>
-                                Flag
-                              </PrimaryButton>
-                            </Grid>
-                          </Grid>
-                        }
-                      />
-                    </Card>
-                  </Grid>
-
                   <Grid item xs={12} md={6}>
                     {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
                   </Grid>
 
                   <Grid item xs={12}>
-                    <Card className={classes.articleEditWrapper} variant="outlined">
-                      <CardContent>
-                        <Typography className={classes.titleText}>Title</Typography>
-                        <EditField field="title" value={articleData?.title} variant="h6" />
-                        <Typography className={classes.titleText}>Page Title</Typography>
-                        <EditField field="page_title" value={articleData?.page_title} variant="body1" />
-                        <Typography className={classes.titleText}>Introduction</Typography>
-                        <EditField field="introduction" value={articleData?.introduction} variant="body1" />
+                    <Typography className={classes.titleText}>Title</Typography>
+                    <Typography variant="h6" className={classes.articleText} gutterBottom>
+                      {articleData?.title}
+                    </Typography>
 
-                        <Typography className={classes.titleText}>Content</Typography>
-                        {editableItem === "content" ? (
-                          <React.Fragment>
-                            <Grid container item xs={12}>
-                              <JoditEditor
-                                value={articleData?.content}
-                                onBlur={(newContent) => setContent(newContent)}
-                              />
-                            </Grid>
+                    <Typography className={classes.titleText}>Page Title</Typography>
+                    <Typography variant="body1" className={classes.articleText} gutterBottom>
+                      {articleData?.page_title}
+                    </Typography>
 
-                            <Grid container className={classes.buttonWrapper} spacing={2}>
-                              <Grid item>
-                                <PrimaryButton size="small" bluePastel onClick={handleContentUpdate}>
-                                  Save Changes
-                                </PrimaryButton>
-                              </Grid>
+                    <Typography className={classes.titleText}>Introduction</Typography>
+                    <Typography variant="body1" className={classes.articleText} gutterBottom>
+                      {articleData?.introduction}
+                    </Typography>
 
-                              <Grid item>
-                                <PrimaryButton
-                                  variant="outlined"
-                                  size="small"
-                                  bluePastel
-                                  onClick={() => setEditableItem("")}
-                                >
-                                  Cancel
-                                </PrimaryButton>
-                              </Grid>
-                            </Grid>
-                          </React.Fragment>
-                        ) : (
-                          <Grid
-                            container
-                            item
-                            className={classes.articleContent}
-                            onClick={() => setEditableItem("content")}
-                          >
-                            <JoditEditor value={articleData?.content} config={config} />
-                          </Grid>
-                        )}
-                      </CardContent>
-                    </Card>
+                    <Typography className={classes.titleText}>Content</Typography>
+
+                    <Grid container item>
+                      <JoditEditor value={articleData?.content} config={config} />
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
@@ -320,42 +132,9 @@ export default function EditArticles() {
                         <Typography className={classes.titleText}>Article image</Typography>
                         <CardMedia
                           className={classes.imageCardMedia}
-                          image={preview ? preview : articleData?.image?.image_url ?? "/images/camera.png"}
+                          image={articleData?.image?.image_url ?? "/images/camera.png"}
                           title={articleData?.image?.name}
                         />
-
-                        <input
-                          className={classes.fileInput}
-                          type={"file"}
-                          ref={hiddenFileInput}
-                          onChange={handleImageChange}
-                        />
-
-                        {preview ? (
-                          <Grid container spacing={2}>
-                            <Grid item>
-                              <PrimaryButton size="small" bluePastel onClick={handleImageUpdate}>
-                                Save image
-                              </PrimaryButton>
-                            </Grid>
-
-                            <Grid item>
-                              <PrimaryButton
-                                variant="outlined"
-                                size="small"
-                                bluePastel
-                                onClick={() => {
-                                  setPreview("");
-                                  setUploadedImage("");
-                                }}
-                              >
-                                Cancel
-                              </PrimaryButton>
-                            </Grid>
-                          </Grid>
-                        ) : (
-                          <Chip icon={<EditIcon />} label="Change" size="small" onClick={handleImageChangeClick} />
-                        )}
                       </CardContent>
                     </Card>
                   </Grid>
@@ -427,20 +206,6 @@ export default function EditArticles() {
                       </CardContent>
                     </Card>
                   </Grid>
-
-                  <Grid item xs={12}>
-                    <Card variant="outlined">
-                      <CardContent>
-                        <Grid container justify="center">
-                          <Grid item xs={8}>
-                            <PrimaryButton fullWidth yellow onClick={onDelete}>
-                              Delete Article
-                            </PrimaryButton>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                    </Card>
-                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
@@ -448,9 +213,6 @@ export default function EditArticles() {
             <Alert severity="info">Article record not found...</Alert>
           )}
         </Grid>
-        {isOpenCreate ? (
-          <CreateNew isOpen={setIsOpenCreate} setArticleId={setArticleId} refetch={refetchArticleData} />
-        ) : null}
       </Grid>
     </AdminBody>
   );
