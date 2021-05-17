@@ -97,7 +97,7 @@ export default function RightBarStudioRegisterInformation({
 
   const classes = useStyles();
   const resolver = useYupValidationResolver(validationSchema);
-  const { control, handleSubmit, errors, setValue } = useForm({ resolver });
+  const { control, handleSubmit, errors } = useForm({ resolver });
 
   const onSubmit = async ({
     name,
@@ -251,8 +251,6 @@ export default function RightBarStudioRegisterInformation({
                 variant={"outlined"}
                 defaultValue={city || ""}
                 errors={errors.city}
-                googleAutoComplete
-                setValueFn={setValue}
               />
             </Grid>
             <Grid item lg={6} md={6} xs={6}>

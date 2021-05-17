@@ -135,7 +135,7 @@ export default function UserProfile() {
   const validationSchema = useMemo(() => getSchemaByRole(role as string), []);
 
   const resolver = useYupValidationResolver(validationSchema);
-  const { control, handleSubmit, errors, setValue } = useForm({ resolver });
+  const { control, handleSubmit, errors } = useForm({ resolver });
 
   // Tab management
   const [activeTab, setActiveTab] = useState(0);
@@ -628,7 +628,6 @@ export default function UserProfile() {
                           onPriceChange={onStudioPriceChange}
                           onInputChange={onInputChange}
                           currency={currency}
-                          setValue={setValue}
                         />
                       )}
 

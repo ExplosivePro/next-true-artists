@@ -23,7 +23,7 @@ export default class MyDocument extends Document {
             href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
           />
           <script
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGcQhKy2TvDASSmIqFl6xxF4NYpEtZUkg&v=3.exp&libraries=geometry,drawing,places"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOdFwaPhwsa_1j5--QpunB-6OcNQ8xC98&v=3.exp&libraries=geometry,drawing,places"
             defer
           ></script>
         </Head>

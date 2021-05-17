@@ -136,7 +136,7 @@ export default function RightBarArtistRegisterInformation({
 
   const classes = useStyles();
   const resolver = useYupValidationResolver(validationSchema);
-  const { control, handleSubmit, errors, setValue } = useForm({ resolver });
+  const { control, handleSubmit, errors } = useForm({ resolver });
   const [checked, setChecked] = useState<string[]>(getDefaultValue(artistSettingList, currentData.checked));
   const [currency, setCurrency] = useState(currentData.currency || "");
   const [pricePerHour, setPricePerHour] = useState<number>(currentData.pricePerHour || 0);
@@ -447,8 +447,6 @@ export default function RightBarArtistRegisterInformation({
             variant={"outlined"}
             defaultValue={city || ""}
             errors={errors.city}
-            googleAutoComplete
-            setValueFn={setValue}
           />
 
           <FormInput
