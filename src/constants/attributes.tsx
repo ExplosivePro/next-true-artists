@@ -7,7 +7,7 @@ import { Role } from "./auth";
 
 export const attributes = [
   {
-    title: "Add a Profile Image",
+    title: "Add your profile image",
     subTitle: "Add a profile image",
     icon: <StorefrontIcon />,
     url: "/dashboard/profile",
@@ -15,24 +15,24 @@ export const attributes = [
     mappingKey: "has_avatar",
   },
   {
-    title: "Add Your Social Link",
-    subTitle: "Add FB, IG, or website",
+    title: "Add your social media profiles",
+    subTitle: "Add FB, IG, or your website",
     icon: <LinkIcon />,
     url: "/dashboard/profile",
     acceptRoles: [Role.ARTIST, Role.STUDIO],
     mappingKey: "has_social_profiles",
   },
   {
-    title: "Add Your Styles",
-    subTitle: "Add your styles",
+    title: "Add tattoo styles",
+    subTitle: "Add styles you specialize in",
     icon: <CategoryIcon />,
     url: "/dashboard/profile",
     acceptRoles: [Role.ARTIST],
     mappingKey: "has_styles",
   },
   {
-    title: "Add Tattoo Gallery",
-    subTitle: "Add your tattoos to gallery",
+    title: "Upload atleast 5 tattoo images",
+    subTitle: "Upload samples of your work",
     icon: <PhotoAlbumIcon />,
     url: "/dashboard/upload-tattoos",
     acceptRoles: [Role.ARTIST, Role.STUDIO],
