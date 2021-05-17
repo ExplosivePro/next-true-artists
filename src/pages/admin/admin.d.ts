@@ -99,4 +99,18 @@ declare namespace Admin {
     wifi: boolean;
     zip_code: string;
   }
+
+  declare interface Articles {
+    id: number;
+    title: string;
+    page_title: string;
+    meta_description: string;
+    introduction: string;
+    content: string;
+    status: string;
+    image: ImageAsset;
+    user: { full_name: string };
+    category: { name: string };
+    tag_list: string[];
+  }
 }

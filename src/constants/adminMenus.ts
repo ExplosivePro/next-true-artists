@@ -4,4 +4,5 @@ export const menuAdminBar = {
   USERS: "/admin/users",
   ARTISTS: "/admin/artists",
   STUDIOS: "/admin/studios",
+  ARTICLES: "/admin/articles",
 };
