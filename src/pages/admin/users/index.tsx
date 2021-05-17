@@ -138,7 +138,7 @@ export default function Users() {
                     <StyledTableRow key={index}>
                       <StyledTableCell>
                         <Link href={`${router.pathname}/${user.id}`}>
-                          <a className={classes.listLink}>{user.full_name}</a>
+                          <a className={classes.listLink}>{user.full_name ?? "null"}</a>
                         </Link>
                       </StyledTableCell>
                       <StyledTableCell>{user.email}</StyledTableCell>

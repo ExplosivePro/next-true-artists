@@ -141,7 +141,9 @@ export default function Studios() {
                     {studioListData.map((studio: Admin.StudioProfile, index: number) => (
                       <StyledTableRow key={index}>
                         <StyledTableCell>
-                          <Link href={`${router.pathname}/${studio.id}`}>{studio.name ?? "Null"}</Link>
+                          <Link href={`${router.pathname}/${studio.id}`}>
+                            <a className={classes.listLink}>{studio.name ?? "Null"}</a>
+                          </Link>
                         </StyledTableCell>
                         <StyledTableCell>{studio.phone_number}</StyledTableCell>
                         <StyledTableCell>{studio.city}</StyledTableCell>

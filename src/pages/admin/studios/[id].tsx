@@ -146,10 +146,15 @@ export default function Studio() {
                     </Grid>
 
                     <Grid container item justify="space-evenly">
-                      <PrimaryButton size="small" bluePastel onClick={() => updateStatus("approve")}>
+                      <PrimaryButton size="small" primaryColor onClick={() => updateStatus("approve")}>
                         Approve
                       </PrimaryButton>
-                      <PrimaryButton size="small" yellow onClick={() => updateStatus("reject")}>
+                      <PrimaryButton
+                        size="small"
+                        variant="outlined"
+                        primaryColor
+                        onClick={() => updateStatus("reject")}
+                      >
                         Reject
                       </PrimaryButton>
                     </Grid>
@@ -176,28 +181,36 @@ export default function Studio() {
                       {studioData?.facebook_url ? (
                         <ListItem>
                           <FacebookIcon />
-                          <Link href={studioData?.facebook_url}>Facebook</Link>
+                          <Link href={studioData?.facebook_url}>
+                            <a className={classes.listLink}>Facebook</a>
+                          </Link>
                         </ListItem>
                       ) : null}
 
                       {studioData?.instagram_url ? (
                         <ListItem>
                           <InstagramIcon />
-                          <Link href={studioData?.instagram_url}>Instagram</Link>
+                          <Link href={studioData?.instagram_url}>
+                            <a className={classes.listLink}>Instagram</a>
+                          </Link>
                         </ListItem>
                       ) : null}
 
                       {studioData?.twitter_url ? (
                         <ListItem>
                           <TwitterIcon />
-                          <Link href={studioData?.twitter_url}>Twitter</Link>
+                          <Link href={studioData?.twitter_url}>
+                            <a className={classes.listLink}>Twitter</a>
+                          </Link>
                         </ListItem>
                       ) : null}
 
                       {studioData?.website_url ? (
                         <ListItem>
                           <LanguageIcon />
-                          <Link href={studioData?.website_url}>Website</Link>
+                          <Link href={studioData?.website_url}>
+                            <a className={classes.listLink}>Website</a>
+                          </Link>
                         </ListItem>
                       ) : null}
                     </List>
@@ -219,7 +232,9 @@ export default function Studio() {
                           <StyledTableRow>
                             <StyledTableCell colSpan={2}>
                               <b>Email </b>
-                              <Link href={`mailto:${studioData?.email}`}>{studioData?.email}</Link>
+                              <Link href={`mailto:${studioData?.email}`}>
+                                <a className={classes.listLink}>{studioData?.email}</a>
+                              </Link>
                             </StyledTableCell>
                           </StyledTableRow>
 
@@ -449,7 +464,7 @@ function TattooImage({ tattoo }: { tattoo: Admin.Tattoo }) {
 
   const updateStatus = async () => {
     try {
-      const response = await flagTattoo(tattoo?.image.id);
+      const response = await flagTattoo(tattoo?.image?.id);
 
       if (response) setInfoAlert({ severity: "error", message: "Error updating image !" });
       else {
@@ -468,18 +483,22 @@ function TattooImage({ tattoo }: { tattoo: Admin.Tattoo }) {
       <Grid item xs={12} sm={6} md={4}>
         <Card variant="outlined">
           <CardContent>
-            <CardMedia className={classes.media} image={tattoo.image.image_url} title={tattoo.color} />
-            <CardHeader subheader={tattoo.image.name} className={classes.cardHeader} />
+            <CardMedia
+              className={classes.media}
+              image={tattoo?.image?.image_url ?? "/images/camera.png"}
+              title={tattoo?.color}
+            />
+            <CardHeader subheader={tattoo?.image?.name} className={classes.cardHeader} />
           </CardContent>
         </Card>
 
         <Grid container item xs={12} justify="space-evenly" className={classes.buttonWrapper}>
           <Typography variant="body2">
             <b>Status : </b>
-            {tattoo.image.status}
+            {tattoo?.image?.status}
           </Typography>
 
-          <PrimaryButton size="small" yellow onClick={updateStatus}>
+          <PrimaryButton size="small" primaryColor onClick={updateStatus}>
             Flag image
           </PrimaryButton>
         </Grid>
@@ -499,14 +518,14 @@ function TattooImage({ tattoo }: { tattoo: Admin.Tattoo }) {
                     <StyledTableCell>
                       <b>Color :</b>
                     </StyledTableCell>
-                    <StyledTableCell>{tattoo.color}</StyledTableCell>
+                    <StyledTableCell>{tattoo?.color}</StyledTableCell>
                   </StyledTableRow>
 
                   <StyledTableRow>
                     <StyledTableCell>
                       <b>Size :</b>
                     </StyledTableCell>
-                    <StyledTableCell>{tattoo.size}</StyledTableCell>
+                    <StyledTableCell>{tattoo?.size}</StyledTableCell>
                   </StyledTableRow>
                 </TableBody>
               </Table>
@@ -525,14 +544,14 @@ function TattooImage({ tattoo }: { tattoo: Admin.Tattoo }) {
                     <StyledTableCell>
                       <b>Placement :</b>
                     </StyledTableCell>
-                    <StyledTableCell>{tattoo.placement}</StyledTableCell>
+                    <StyledTableCell>{tattoo?.placement}</StyledTableCell>
                   </StyledTableRow>
 
                   <StyledTableRow>
                     <StyledTableCell>
                       <b>Featured :</b>
                     </StyledTableCell>
-                    <StyledTableCell>{tattoo.featured ? "Yes" : "No"}</StyledTableCell>
+                    <StyledTableCell>{tattoo?.featured ? "Yes" : "No"}</StyledTableCell>
                   </StyledTableRow>
                 </TableBody>
               </Table>
@@ -546,28 +565,28 @@ function TattooImage({ tattoo }: { tattoo: Admin.Tattoo }) {
                   <StyledTableRow>
                     <StyledTableCell>
                       <b>Caption :</b>
-                      {tattoo.caption}
+                      {tattoo?.caption}
                     </StyledTableCell>
                   </StyledTableRow>
 
                   <StyledTableRow>
                     <StyledTableCell>
                       <b>Styles :</b>
-                      {tattoo.styles}
+                      {tattoo?.styles}
                     </StyledTableCell>
                   </StyledTableRow>
 
                   <StyledTableRow>
                     <StyledTableCell>
                       <b>Categories :</b>
-                      {tattoo.categories}
+                      {tattoo?.categories}
                     </StyledTableCell>
                   </StyledTableRow>
 
                   <StyledTableRow>
                     <StyledTableCell>
                       <b>Tags :</b>
-                      {tattoo.tags.map((style: string, index: number) => (
+                      {tattoo?.tags?.map((style: string, index: number) => (
                         <Chip label={style} size="small" key={index} className={classes.chips} />
                       ))}
                     </StyledTableCell>
@@ -621,7 +640,7 @@ function StudioArtists({ artists }: { artists: Admin.ArtistProfile[] }) {
                     <StyledTableRow key={index}>
                       <StyledTableCell>
                         <Link href={`/admin/artists/${artist.id}`}>
-                          <a target="_blank" rel="noreferrer">
+                          <a target="_blank" className={classes.listLink}>
                             {artist.name ?? "Null"}
                           </a>
                         </Link>
