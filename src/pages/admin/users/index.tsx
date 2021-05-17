@@ -137,7 +137,9 @@ export default function Users() {
                   {userListData.map((user: Admin.User, index: number) => (
                     <StyledTableRow key={index}>
                       <StyledTableCell>
-                        <Link href={`${router.pathname}/${user.id}`}>{user.full_name}</Link>
+                        <Link href={`${router.pathname}/${user.id}`}>
+                          <a className={classes.listLink}>{user.full_name}</a>
+                        </Link>
                       </StyledTableCell>
                       <StyledTableCell>{user.email}</StyledTableCell>
                       <StyledTableCell>{user.role}</StyledTableCell>

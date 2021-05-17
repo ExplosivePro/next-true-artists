@@ -134,54 +134,24 @@ export const useAppBarStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const useMenuStyles = makeStyles((theme: Theme) =>
+export const useMenuStyles = makeStyles(() =>
   createStyles({
-    root: {
-      width: "100%",
-      maxWidth: 360,
-      backgroundColor: theme.palette.background.paper,
-    },
-    list: {
-      paddingRight: "10px",
-    },
     listItem: {
       borderTopRightRadius: "25px",
       borderBottomRightRadius: "25px",
       cursor: "pointer",
     },
-    nested: {
-      paddingLeft: theme.spacing(8),
-      borderTopRightRadius: "25px",
-      borderBottomRightRadius: "25px",
-      "& .MuiListItemText-root": {
-        paddingLeft: "10px",
-      },
-    },
     activeBar: {
-      backgroundColor: colors.defaultColor,
-      borderTopRightRadius: "25px",
-      borderBottomRightRadius: "25px",
-      color: "white",
-      fontWeight: "bold",
+      backgroundColor: colors.primaryColor,
+      color: colors.white,
       "&:hover": {
-        backgroundColor: colors.defaultColor,
-        borderTopRightRadius: "25px",
-        borderBottomRightRadius: "25px",
-      },
-      "& span": {
-        fontWeight: "bold",
+        backgroundColor: colors.primaryColor,
       },
       "& svg": {
         fill: colors.white,
       },
     },
-    activeSubBar: {
-      "& .MuiListItemText-root": {
-        borderLeft: `solid 4px ${colors.defaultColor}`,
-        color: colors.defaultColor,
-      },
-    },
-    listItemRoot: {
+    listItemIcon: {
       minWidth: "35px",
     },
   }),

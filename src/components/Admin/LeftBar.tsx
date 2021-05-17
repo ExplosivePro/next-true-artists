@@ -13,6 +13,7 @@ import SupervisorAccountOutlinedIcon from "@material-ui/icons/SupervisorAccountO
 import PeopleIcon from "@material-ui/icons/People";
 import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import SubjectIcon from "@material-ui/icons/Subject";
+import Typography from "@material-ui/core/Typography";
 
 import { menuAdminBar } from "src/constants";
 import { useMenuStyles } from "./styles";
@@ -77,74 +78,82 @@ export default function LeftBar() {
   };
 
   return (
-    <div>
-      <List classes={{ root: classes.list }}>
-        <ListItem
-          button
-          key={"Dashboard"}
-          onClick={() => handleAdminMenuClick("dashboard")}
-          className={clsx(classes.listItem, { [classes.activeBar]: currentActiveBar === menuAdminBar.DASHBOARD })}
-        >
-          <ListItemIcon classes={{ root: classes.listItemRoot }}>
-            <DashboardOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Dashboard"} />
-        </ListItem>
+    <List>
+      <ListItem
+        button
+        key={"Dashboard"}
+        onClick={() => handleAdminMenuClick("dashboard")}
+        className={clsx(classes.listItem, { [classes.activeBar]: currentActiveBar === menuAdminBar.DASHBOARD })}
+      >
+        <ListItemIcon className={classes.listItemIcon}>
+          <DashboardOutlinedIcon />
+        </ListItemIcon>
+        <ListItemText>
+          <Typography color="inherit">Dashboard</Typography>
+        </ListItemText>
+      </ListItem>
 
-        <ListItem
-          button
-          key={"Users"}
-          onClick={() => handleAdminMenuClick("users")}
-          className={clsx(classes.listItem, { [classes.activeBar]: currentActiveBar.indexOf(menuAdminBar.USERS) > -1 })}
-        >
-          <ListItemIcon classes={{ root: classes.listItemRoot }}>
-            <SupervisorAccountOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Users"} />
-        </ListItem>
+      <ListItem
+        button
+        key={"Users"}
+        onClick={() => handleAdminMenuClick("users")}
+        className={clsx(classes.listItem, { [classes.activeBar]: currentActiveBar.indexOf(menuAdminBar.USERS) > -1 })}
+      >
+        <ListItemIcon className={classes.listItemIcon}>
+          <SupervisorAccountOutlinedIcon />
+        </ListItemIcon>
+        <ListItemText>
+          <Typography color="inherit">Users</Typography>
+        </ListItemText>
+      </ListItem>
 
-        <ListItem
-          button
-          key={"Artists"}
-          onClick={() => handleAdminMenuClick("artists")}
-          className={clsx(classes.listItem, {
-            [classes.activeBar]: currentActiveBar.indexOf(menuAdminBar.ARTISTS) > -1,
-          })}
-        >
-          <ListItemIcon classes={{ root: classes.listItemRoot }}>
-            <PeopleIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Artists"} />
-        </ListItem>
+      <ListItem
+        button
+        key={"Artists"}
+        onClick={() => handleAdminMenuClick("artists")}
+        className={clsx(classes.listItem, {
+          [classes.activeBar]: currentActiveBar.indexOf(menuAdminBar.ARTISTS) > -1,
+        })}
+      >
+        <ListItemIcon className={classes.listItemIcon}>
+          <PeopleIcon />
+        </ListItemIcon>
+        <ListItemText>
+          <Typography color="inherit">Artists</Typography>
+        </ListItemText>
+      </ListItem>
 
-        <ListItem
-          button
-          key={"Studios"}
-          onClick={() => handleAdminMenuClick("studios")}
-          className={clsx(classes.listItem, {
-            [classes.activeBar]: currentActiveBar.indexOf(menuAdminBar.STUDIOS) > -1,
-          })}
-        >
-          <ListItemIcon classes={{ root: classes.listItemRoot }}>
-            <SupervisedUserCircleIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Studios"} />
-        </ListItem>
+      <ListItem
+        button
+        key={"Studios"}
+        onClick={() => handleAdminMenuClick("studios")}
+        className={clsx(classes.listItem, {
+          [classes.activeBar]: currentActiveBar.indexOf(menuAdminBar.STUDIOS) > -1,
+        })}
+      >
+        <ListItemIcon className={classes.listItemIcon}>
+          <SupervisedUserCircleIcon />
+        </ListItemIcon>
+        <ListItemText>
+          <Typography color="inherit">Studios</Typography>
+        </ListItemText>
+      </ListItem>
 
-        <ListItem
-          button
-          key={"Articles"}
-          onClick={() => handleAdminMenuClick("articles")}
-          className={clsx(classes.listItem, {
-            [classes.activeBar]: currentActiveBar.indexOf(menuAdminBar.ARTICLES) > -1,
-          })}
-        >
-          <ListItemIcon classes={{ root: classes.listItemRoot }}>
-            <SubjectIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Articles"} />
-        </ListItem>
-      </List>
-    </div>
+      <ListItem
+        button
+        key={"Articles"}
+        onClick={() => handleAdminMenuClick("articles")}
+        className={clsx(classes.listItem, {
+          [classes.activeBar]: currentActiveBar.indexOf(menuAdminBar.ARTICLES) > -1,
+        })}
+      >
+        <ListItemIcon className={classes.listItemIcon}>
+          <SubjectIcon />
+        </ListItemIcon>
+        <ListItemText>
+          <Typography color="inherit">Articles</Typography>
+        </ListItemText>
+      </ListItem>
+    </List>
   );
 }
