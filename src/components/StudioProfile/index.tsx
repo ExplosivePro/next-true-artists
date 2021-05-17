@@ -68,6 +68,7 @@ export default function StudioProfile({
   currency,
   pricePerHour,
   minimumRate,
+  setValue,
 }: Props) {
   const {
     street_address: streetAddress,
@@ -129,6 +130,8 @@ export default function StudioProfile({
                 variant={"outlined"}
                 defaultValue={city || ""}
                 errors={errors.city}
+                googleAutoComplete
+                setValueFn={setValue}
               />
             </Grid>
             <Grid item lg={6} md={6} xs={6}>
@@ -280,4 +283,5 @@ interface Props {
   handleToggleSetting: any;
   onInputChange: (event: string[], name: string) => void;
   onPriceChange: (event: any, name: string) => void;
+  setValue: any;
 }
