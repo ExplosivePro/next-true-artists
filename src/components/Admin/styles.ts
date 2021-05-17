@@ -136,6 +136,9 @@ export const useAppBarStyles = makeStyles((theme: Theme) =>
 
 export const useMenuStyles = makeStyles(() =>
   createStyles({
+    root: {
+      marginRight: "5px",
+    },
     listItem: {
       borderTopRightRadius: "25px",
       borderBottomRightRadius: "25px",

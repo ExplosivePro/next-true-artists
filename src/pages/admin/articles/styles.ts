@@ -11,22 +11,21 @@ export const useStyles = makeStyles({
   tableContainer: {
     marginTop: "10px",
   },
-  divider: {
-    marginTop: "10px",
-    marginBottom: "10px",
-  },
   paginationWrapper: {
     border: "solid thin lightGrey",
   },
+  listLink: {
+    color: colors.primaryColor,
+  },
+  statusHeader: {
+    textAlign: "center",
+  },
+  deleteCell: {
+    textDecoration: "underline",
+    cursor: "pointer",
+  },
   metaWrapper: {
     borderLeft: "solid thin lightGrey",
-  },
-  titleText: {
-    fontSize: "16px",
-    fontWeight: 600,
-  },
-  articleText: {
-    padding: "0px 0px 10px 10px",
   },
   closeButton: {
     float: "right",
@@ -34,10 +33,6 @@ export const useStyles = makeStyles({
     backgroundColor: colors.normalGrey,
     top: 0,
     right: 0,
-  },
-  statusChip: {
-    marginTop: "5px",
-    paddingLeft: "40px",
   },
   cardItem: {
     border: "none",
@@ -56,7 +51,7 @@ export const useStyles = makeStyles({
     margin: "2px",
     padding: 0,
   },
-  avatar: {
+  addArticleImage: {
     width: "300px",
     height: "220px",
     cursor: "pointer",

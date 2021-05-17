@@ -78,7 +78,7 @@ export default function LeftBar() {
   };
 
   return (
-    <List>
+    <List className={classes.root}>
       <ListItem
         button
         key={"Dashboard"}
