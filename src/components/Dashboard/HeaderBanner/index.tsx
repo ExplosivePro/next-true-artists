@@ -133,7 +133,7 @@ export default function HeaderBanner({ status, requireActivation = false }: Prop
             <Typography variant={"h6"}>Activate your profile</Typography>
 
             <Typography variant={"subtitle2"} className={classes.modalTitle}>
-              Complete your profile to get verified and gain full access to True Artist
+              Complete your profile to get verified and gain full access to TrueArtists
             </Typography>
             {attributes.map((attribute, index) => {
               if (attribute.acceptRoles.includes(user?.role as Role)) {
