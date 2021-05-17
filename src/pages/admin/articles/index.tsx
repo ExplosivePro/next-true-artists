@@ -75,7 +75,7 @@ export default function Articles() {
   );
 
   const onDelete = async (title: string, articleId: string) => {
-    if (!confirm(`Deleting Article... \n\n  ${title} ?`)) return;
+    if (!confirm(`Are you sure you want to delete this article? \n\n  ${title} ?`)) return;
     try {
       const response = await deleteArticle(articleId);
       if (response) setInfoAlert({ severity: "error", message: "Error deleting article !" });
@@ -115,7 +115,7 @@ export default function Articles() {
 
         <Grid item xs={12} sm={6} md={2} lg={2}>
           <PrimaryButton bluePastel onClick={() => router.push(`${router.pathname}/create`)}>
-            Create Article
+            Add New Article
           </PrimaryButton>
         </Grid>
 
@@ -166,7 +166,6 @@ export default function Articles() {
                   <TableHead>
                     <TableRow>
                       <StyledTableCell>Title</StyledTableCell>
-                      <StyledTableCell>Page Title</StyledTableCell>
                       <StyledTableCell>Author</StyledTableCell>
                       <StyledTableCell>Status</StyledTableCell>
                       <StyledTableCell>Actions</StyledTableCell>
@@ -177,17 +176,13 @@ export default function Articles() {
                     {articleListData.map((article: Admin.Articles, index: number) => (
                       <StyledTableRow key={index}>
                         <StyledTableCell>
-                          <Link href={`${router.pathname}/${article.id}`}>{article.title}</Link>
+                          <Link href={`${router.pathname}/edit/${article.id}`}>{article.title}</Link>
                         </StyledTableCell>
-                        <StyledTableCell>{article.page_title}</StyledTableCell>
                         <StyledTableCell>{article.user.full_name}</StyledTableCell>
                         <StyledTableCell>{article.status}</StyledTableCell>
                         <StyledTableCell>
-                          <PrimaryButton
-                            variant="outlined"
-                            size="small"
-                            onClick={() => onDelete(article.title, article.id.toString())}
-                          >
+                          <Link href={`${router.pathname}/edit/${article.id}`}>Edit</Link>
+                          <PrimaryButton size="small" onClick={() => onDelete(article.title, article.id.toString())}>
                             Delete
                           </PrimaryButton>
                         </StyledTableCell>
