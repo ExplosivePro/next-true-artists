@@ -17,7 +17,7 @@ import {
 import { useApp } from "./app";
 
 // Constants
-import { unauthRoutes, nonRememberRoutes } from "../constants";
+import { unauthRoutes, nonRememberRoutes, adminRoute } from "../constants";
 
 // Custom Component
 import Loading from "../components/Loading";
@@ -77,7 +77,7 @@ export function AuthContext({ children }: Props) {
           }
         }
       } else {
-        app.showErrorDialog(true, errors ? errors.toString() : "Login fail");
+        app.showErrorDialog(true, errors ? errors.toString() : "Enter a valid email/password.");
       }
 
       return response;
@@ -142,7 +142,7 @@ export function AuthContext({ children }: Props) {
           }
         }
       } else {
-        app.showErrorDialog(true, errors ? errors.toString() : "Login fail");
+        app.showErrorDialog(true, errors ? errors.toString() : "Enter a valid email/password");
       }
 
       return response;
@@ -370,8 +370,8 @@ export function AuthContext({ children }: Props) {
       .then(({ data }) => {
         user.current = data;
 
-        // These router does not redirect
-        if (unauthRoutes.indexOf(router.pathname) === -1) {
+        // Redirect to dashboard if not unauthRoute or adminRoute
+        if (unauthRoutes.indexOf(router.pathname) === -1 && router.pathname.substring(0, 6) !== adminRoute) {
           // Navigate to dashboard page
           router.replace("/dashboard");
         }
