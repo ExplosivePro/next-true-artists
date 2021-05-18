@@ -1,0 +1,401 @@
+import React, { useState, useEffect } from "react";
+import { useQuery } from "react-query";
+import { useForm, Controller } from "react-hook-form";
+
+import { useRouter } from "next/router";
+import Head from "next/head";
+import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const importJodit = () => import("jodit-react");
+const JoditEditor = dynamic(importJodit, {
+  ssr: false,
+});
+import "jodit/build/jodit.min.css";
+
+import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Alert from "@material-ui/lab/Alert";
+import Chip from "@material-ui/core/Chip";
+import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
+
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardActions from "@material-ui/core/CardActions";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableContainer from "@material-ui/core/TableContainer";
+
+import AdminBody from "src/components/Admin/AdminBody";
+import handleApiErrors from "src/components/Admin/handleApiErrors";
+import PrimaryButton from "src/components/PrimaryButton";
+import Loading from "src/components/Loading";
+import { InfoAlert, TextInput, SelectInput } from "src/components/Admin/FormInputs";
+
+import { getLandingPage, editLandingPage } from "../api";
+import { landingPage_status } from "../constants";
+import { useStyles, StyledTableCell, StyledTableRow } from "../styles";
+
+export default function EditLandingPages() {
+  const classes = useStyles();
+  const router = useRouter();
+
+  const [pageId, setPageId] = useState("");
+
+  // Fetch Landing Page data using param
+  const { status: pageDataStatus, data: pageData, error: pageDataError, refetch: refetchPageData } = useQuery(
+    "landingPageData",
+    async () => await getLandingPage(pageId),
+    {
+      enabled: pageId ? true : false,
+    },
+  );
+
+  useEffect(() => {
+    router.query.id ? setPageId(router.query.id?.toString()) : null;
+  }, [router.query.id]);
+
+  // Create a reference to the hidden file input element
+  const hiddenFileInput = React.useRef(null);
+  const [preview, setPreview] = useState<any>("");
+  const [avatar, setAvatar] = useState<File | string>("");
+
+  // Create an Alert for info feedback
+  const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
+
+  const getFormDefaultValues = () => ({
+    status: "",
+    page_key: "",
+    page_url: "",
+    title: "",
+    page_title: "",
+    content: "",
+  });
+
+  const {
+    register,
+    handleSubmit,
+    errors,
+    control,
+    setValue,
+    formState: { isSubmitting },
+  } = useForm({
+    defaultValues: getFormDefaultValues(),
+    shouldUnregister: false,
+  });
+
+  useEffect(() => {
+    if (pageDataStatus === "success") {
+      setValue("status", pageData?.status);
+      setValue("page_key", pageData?.page_key);
+      setValue("page_url", pageData?.page_url);
+      setValue("title", pageData?.title);
+      setValue("page_title", pageData?.page_title);
+      setValue("content", pageData?.content);
+    }
+  }, [pageDataStatus]);
+
+  const onSubmit = async (formValues: { [T: string]: any }) => {
+    const { title, page_title } = formValues;
+    const formData = new FormData();
+
+    Object.entries(formValues).map(([key, value]) => formData.append(key, value));
+    formData.append("meta_description", JSON.stringify({ title: title, page_title: page_title }));
+    if (avatar)
+      if (avatar === "remove") formData.append("avatar", "");
+      else formData.append("avatar", avatar);
+
+    try {
+      const response = await editLandingPage(formData, pageId);
+      if (!response) setInfoAlert({ severity: "error", message: "Error updating article !" });
+      else {
+        setInfoAlert({ severity: "success", message: "Landing page updated successfully" });
+        setPreview("");
+        refetchPageData();
+      }
+    } catch (error) {
+      setInfoAlert({ severity: "error", message: `Error updating landing page! - ${handleApiErrors(error)}` });
+    }
+    setTimeout(() => {
+      setInfoAlert({ severity: "info", message: "" });
+    }, 4500);
+  };
+
+  const handleAvatarChangeClick = () => {
+    // @ts-ignore
+    hiddenFileInput?.current?.click();
+  };
+
+  const handleAvatarRemoveClick = () => {
+    setAvatar("remove");
+    setPreview(" ");
+  };
+
+  // avatar change
+  const handleAvatarChange = (fileUploaded: File) => {
+    setAvatar(fileUploaded);
+    const reader = new FileReader();
+    reader.readAsDataURL(fileUploaded);
+    reader.onloadend = () => setPreview(reader.result);
+  };
+
+  const handleCancel = () => {
+    router.back();
+  };
+
+  return (
+    <AdminBody>
+      <Head>
+        <title>TrueArtists: Admin/Landing Pages/{pageData?.page_url ?? pageId}</title>
+      </Head>
+
+      <Grid container>
+        <Grid item xs={12} sm={6} md={6} lg={6}>
+          <Breadcrumbs>
+            <Typography variant="h6">
+              <Link href="/admin">Dashboard</Link>
+            </Typography>
+            <Typography variant="h6">
+              <Link href="/admin/landing-pages">Landing Pages</Link>
+            </Typography>
+            <Typography variant="h6">{pageData?.page_url ?? pageId}</Typography>
+          </Breadcrumbs>
+        </Grid>
+
+        <Grid item xs={12} className={classes.buttonWrapper}>
+          {pageDataStatus === "loading" ? (
+            <React.Fragment>
+              <Alert severity="info">Loading... </Alert>
+              <Loading />
+            </React.Fragment>
+          ) : pageDataStatus === "error" ? (
+            <Alert severity="error">{`Retrieving Landing Pages - ${handleApiErrors(pageDataError)}`}</Alert>
+          ) : pageData ? (
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={8}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                      <TextInput
+                        name="page_key"
+                        register={register}
+                        required={true}
+                        label="Page Key *"
+                        errors={!!errors.page_key}
+                        errorMessage={errors.page_key?.message}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                      <TextInput
+                        name="page_url"
+                        register={register}
+                        required={true}
+                        label="Page Url *"
+                        errors={!!errors.page_url}
+                        errorMessage={errors.page_url?.message}
+                      />
+                    </Grid>
+
+                    <Grid item xs={6}>
+                      <SelectInput
+                        name="status"
+                        control={control}
+                        required={true}
+                        label="Status"
+                        errors={!!errors.status}
+                        errorMessage={errors.status?.message}
+                        dropDownList={landingPage_status.map((status) => ({ id: status, name: status }))}
+                      />
+                    </Grid>
+
+                    <Grid item xs={10}>
+                      <TextInput
+                        name="title"
+                        register={register}
+                        required={true}
+                        label="Title *"
+                        errors={!!errors.title}
+                        errorMessage={errors.title?.message}
+                      />
+                    </Grid>
+
+                    <Grid item xs={10}>
+                      <TextInput
+                        name="page_title"
+                        register={register}
+                        required={true}
+                        label="Page Title *"
+                        errors={!!errors.page_title}
+                        errorMessage={errors.page_title?.message}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <FormControl fullWidth error={errors.content ? true : false} required={true}>
+                        <FormHelperText>
+                          <b>Content</b>
+                        </FormHelperText>
+                        <Controller
+                          name={"content"}
+                          control={control}
+                          rules={{ required: true }}
+                          render={(props: any) => (
+                            <JoditEditor
+                              value={props?.value ?? ""}
+                              onChange={(newContent) => {
+                                props.onChange(newContent);
+                              }}
+                            />
+                          )}
+                        />
+
+                        {errors.content && (
+                          <FormHelperText error>{`Required ! ${errors.content?.message}`}</FormHelperText>
+                        )}
+                        <Typography variant="caption" gutterBottom>
+                          <i>(Drag and drop or copy and paste images)</i>
+                        </Typography>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                </Grid>
+
+                <Grid item xs={12} md={4} className={classes.metaWrapper}>
+                  <Grid container>
+                    <Grid item xs={12}>
+                      <Card variant="outlined" className={classes.imageCard}>
+                        <CardContent>
+                          <Typography>Landing Page avatar</Typography>
+                          <CardMedia
+                            className={classes.imageCardMedia}
+                            image={preview ? preview : pageData?.avatar?.image_url ?? "/images/camera.png"}
+                          />
+                          <input
+                            className={classes.fileInput}
+                            type={"file"}
+                            ref={hiddenFileInput}
+                            onChange={(e) => {
+                              if (e.target.files) handleAvatarChange(e.target.files[0]);
+                            }}
+                          />
+                        </CardContent>
+                        <CardActions>
+                          <Chip icon={<EditIcon />} label="Change" size="small" onClick={handleAvatarChangeClick} />
+                          <Chip
+                            icon={<DeleteOutlineIcon />}
+                            label="Remove"
+                            size="small"
+                            onClick={handleAvatarRemoveClick}
+                          />
+                        </CardActions>
+                      </Card>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Card variant="outlined" className={classes.cardItem}>
+                        <CardContent>
+                          <Typography>Category</Typography>
+                          <TableContainer>
+                            <Table size="small">
+                              <colgroup>
+                                <col width="15%" />
+                                <col width="auto" />
+                              </colgroup>
+                              <TableBody>
+                                <StyledTableRow>
+                                  <StyledTableCell>
+                                    <b>Name </b>
+                                  </StyledTableCell>
+                                  <StyledTableCell>{pageData?.category?.name}</StyledTableCell>
+                                </StyledTableRow>
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Card variant="outlined" className={classes.cardItem}>
+                        <CardContent>
+                          <Typography>Tags</Typography>
+                          {pageData?.tags?.map((style: string, index: number) => (
+                            <Chip label={style} size="small" key={index} className={classes.tagsChips} />
+                          ))}
+                        </CardContent>
+                      </Card>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Card variant="outlined" className={classes.cardItem}>
+                        <CardContent>
+                          <Typography>Author</Typography>
+                          <TableContainer>
+                            <Table size="small">
+                              <colgroup>
+                                <col width="15%" />
+                                <col width="auto" />
+                              </colgroup>
+                              <TableBody>
+                                <StyledTableRow>
+                                  <StyledTableCell>
+                                    <b>Name </b>
+                                  </StyledTableCell>
+                                  <StyledTableCell>{pageData?.user?.full_name}</StyledTableCell>
+                                </StyledTableRow>
+
+                                <StyledTableRow>
+                                  <StyledTableCell>
+                                    <b>Email </b>
+                                  </StyledTableCell>
+                                  <StyledTableCell>
+                                    <Link href={`mailto:${pageData?.user?.email}`}>
+                                      <a target="_blank" className={classes.listLink}>
+                                        {pageData?.user?.email}
+                                      </a>
+                                    </Link>
+                                  </StyledTableCell>
+                                </StyledTableRow>
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={2}>
+                    <PrimaryButton size="small" fullWidth variant="outlined" primaryColor onClick={handleCancel}>
+                      Cancel
+                    </PrimaryButton>
+                  </Grid>
+
+                  <Grid item xs={12} md={3}>
+                    <PrimaryButton size="small" fullWidth primaryColor disabled={isSubmitting} type="submit">
+                      Save Changes
+                    </PrimaryButton>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </form>
+          ) : (
+            <Alert severity="info">Landing Page record not found...</Alert>
+          )}
+        </Grid>
+      </Grid>
+    </AdminBody>
+  );
+}
