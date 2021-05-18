@@ -79,7 +79,9 @@ export const PasswordInput = ({ name, register, required, label, errors, errorMe
 
   return (
     <FormControl fullWidth error={errors} required={required}>
-      <FormHelperText>{label}</FormHelperText>
+      <FormHelperText>
+        <b>{label}</b>
+      </FormHelperText>
       <TextField
         id={name}
         name={name}
@@ -107,7 +109,9 @@ export const PasswordInput = ({ name, register, required, label, errors, errorMe
 
 export const SearchInput = ({ name, control, required, label, errors, errorMessage, searchList }: any) => (
   <FormControl fullWidth error={errors} required={required}>
-    <FormHelperText>{label}</FormHelperText>
+    <FormHelperText>
+      <b>{label}</b>
+    </FormHelperText>
     <Controller
       name={name}
       control={control}

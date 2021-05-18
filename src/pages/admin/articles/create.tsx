@@ -22,6 +22,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 
 import AdminBody from "src/components/Admin/AdminBody";
+import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
 import { TextInput, InfoAlert } from "src/components/Admin/FormInputs";
 
@@ -81,7 +82,7 @@ export default function CreateNew() {
         return;
       }
     } catch (error) {
-      setInfoAlert({ severity: "error", message: `Error creating article! - ${error}` });
+      setInfoAlert({ severity: "error", message: `Error creating article! - ${handleApiErrors(error)}` });
     }
     setTimeout(() => {
       setInfoAlert({ severity: "info", message: "" });

@@ -33,6 +33,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 
 import AdminBody from "src/components/Admin/AdminBody";
+import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
 import { InfoAlert, TextInput, SelectInput } from "src/components/Admin/FormInputs";
@@ -121,7 +122,7 @@ export default function EditArticles() {
         refetchArticleData();
       }
     } catch (error) {
-      setInfoAlert({ severity: "error", message: `Error updating article! - ${error}` });
+      setInfoAlert({ severity: "error", message: `Error updating article! - ${handleApiErrors(error)}` });
     }
     setTimeout(() => {
       setInfoAlert({ severity: "info", message: "" });
@@ -176,7 +177,7 @@ export default function EditArticles() {
               <Loading />
             </React.Fragment>
           ) : articleDataStatus === "error" ? (
-            <Alert severity="error">{`Retrieving Articles - ${articleDataError}`}</Alert>
+            <Alert severity="error">{`Retrieving Articles - ${handleApiErrors(articleDataError)}`}</Alert>
           ) : articleData ? (
             <form onSubmit={handleSubmit(onSubmit)}>
               <Grid container spacing={2}>
@@ -270,7 +271,7 @@ export default function EditArticles() {
                           <Typography>Article image</Typography>
                           <CardMedia
                             className={classes.imageCardMedia}
-                            image={preview ? preview : articleData.image.image_url ?? "/images/camera.png"}
+                            image={preview ? preview : articleData?.image?.image_url ?? "/images/camera.png"}
                           />
                           <input
                             className={classes.fileInput}
@@ -353,7 +354,7 @@ export default function EditArticles() {
                                   <StyledTableCell>
                                     <Link href={`mailto:${articleData?.user?.email}`}>
                                       <a target="_blank" className={classes.listLink}>
-                                        {articleData?.user.email}
+                                        {articleData?.user?.email}
                                       </a>
                                     </Link>
                                   </StyledTableCell>
