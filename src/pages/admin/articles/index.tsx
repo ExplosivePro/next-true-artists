@@ -19,6 +19,13 @@ import TableHead from "@material-ui/core/TableHead";
 import TableContainer from "@material-ui/core/TableContainer";
 import TablePagination from "@material-ui/core/TablePagination";
 
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+
 import AdminBody from "src/components/Admin/AdminBody";
 import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
@@ -27,9 +34,12 @@ import { InfoAlert } from "src/components/Admin/FormInputs";
 import { getArticleList, deleteArticle } from "./api";
 import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
 
+import getConfig from "next/config";
+
 export default function Articles() {
   const classes = useStyles();
   const router = useRouter();
+  const PUBLIC_BASE = getConfig().publicRuntimeConfig.PUBLIC_PAGE_BASE_URL;
 
   // Fetch Article list
   const {
@@ -48,6 +58,8 @@ export default function Articles() {
 
   const [searchInputValue, setSearchInputValue] = useState("");
   const [searchValue, setSearchValue] = useState("");
+
+  const [deleteArticleDialog, setDeleteArticleDialog] = useState({ isOpen: false, title: "", articleId: "" });
 
   // Force refetch after search update
   useEffect(() => {
@@ -74,16 +86,14 @@ export default function Articles() {
     [],
   );
 
-  const onDelete = async (title: string, articleId: string) => {
-    if (!confirm(`Are you sure you want to delete this article? \n\n  ${title} ?`)) return;
+  const onDelete = async (articleId: string) => {
+    deleteArticleDialogClose();
     try {
       const response = await deleteArticle(articleId);
       if (response) setInfoAlert({ severity: "error", message: "Error deleting article !" });
       else {
         setInfoAlert({ severity: "success", message: "Article deleted successfully" });
-        setTimeout(() => {
-          router.push(`/admin/articles`);
-        }, 2500);
+        setTimeout(() => articleListRefetch(), 500);
       }
     } catch (error) {
       setInfoAlert({ severity: "error", message: `Error deleting article! - ${error}` });
@@ -93,6 +103,14 @@ export default function Articles() {
     }, 4500);
   };
 
+  const deleteArticleDialogOpen = (title: string, articleId: string) => {
+    setDeleteArticleDialog({ isOpen: true, title: title, articleId: articleId });
+  };
+
+  const deleteArticleDialogClose = () => {
+    setDeleteArticleDialog({ isOpen: false, title: "", articleId: "" });
+  };
+
   return (
     <AdminBody>
       <Head>
@@ -100,7 +118,7 @@ export default function Articles() {
       </Head>
 
       <Grid container>
-        <Grid item xs={12} sm={6} md={6} lg={6}>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
           {infoAlert.message ? (
             <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} />
           ) : (
@@ -111,12 +129,6 @@ export default function Articles() {
               <Typography variant="h6">Articles</Typography>
             </Breadcrumbs>
           )}
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={2} lg={2}>
-          <PrimaryButton bluePastel onClick={() => router.push(`${router.pathname}/create`)}>
-            Add New Article
-          </PrimaryButton>
         </Grid>
 
         <Grid item xs={12} sm={6} md={4} lg={4}>
@@ -144,6 +156,14 @@ export default function Articles() {
           />
         </Grid>
 
+        <Grid item xs={12} sm={6} md={4} lg={4}>
+          <Grid container item justify="center">
+            <PrimaryButton primaryColor onClick={() => router.push(`${router.pathname}/create`)}>
+              Add New Article
+            </PrimaryButton>
+          </Grid>
+        </Grid>
+
         <Grid item xs={12}>
           {articleListStatus === "loading" ? (
             <React.Fragment>
@@ -159,16 +179,18 @@ export default function Articles() {
                   <colgroup>
                     <col width="auto" />
                     <col width="auto" />
-                    <col width="auto" />
                     <col width="10%" />
-                    <col width="10%" />
+                    <col width="5%" />
+                    <col width="5%" />
                   </colgroup>
                   <TableHead>
                     <TableRow>
                       <StyledTableCell>Title</StyledTableCell>
                       <StyledTableCell>Author</StyledTableCell>
                       <StyledTableCell>Status</StyledTableCell>
-                      <StyledTableCell>Actions</StyledTableCell>
+                      <StyledTableCell className={classes.statusHeader} colSpan={2}>
+                        Actions
+                      </StyledTableCell>
                     </TableRow>
                   </TableHead>
 
@@ -176,15 +198,24 @@ export default function Articles() {
                     {articleListData.map((article: Admin.Articles, index: number) => (
                       <StyledTableRow key={index}>
                         <StyledTableCell>
-                          <Link href={`${router.pathname}/edit/${article.id}`}>{article.title}</Link>
+                          <Link href={`${PUBLIC_BASE}/blog/${article.slug}`}>
+                            <a target="_blank" className={classes.listLink}>
+                              {article.title}
+                            </a>
+                          </Link>
                         </StyledTableCell>
                         <StyledTableCell>{article.user.full_name}</StyledTableCell>
                         <StyledTableCell>{article.status}</StyledTableCell>
                         <StyledTableCell>
-                          <Link href={`${router.pathname}/edit/${article.id}`}>Edit</Link>
-                          <PrimaryButton size="small" onClick={() => onDelete(article.title, article.id.toString())}>
-                            Delete
-                          </PrimaryButton>
+                          <Link href={`${router.pathname}/edit/${article.id}`}>
+                            <a className={classes.listLink}>Edit</a>
+                          </Link>
+                        </StyledTableCell>
+                        <StyledTableCell
+                          className={classes.deleteCell}
+                          onClick={() => deleteArticleDialogOpen(article.title, article.id.toString())}
+                        >
+                          Delete
                         </StyledTableCell>
                       </StyledTableRow>
                     ))}
@@ -208,6 +239,61 @@ export default function Articles() {
           )}
         </Grid>
       </Grid>
+
+      {deleteArticleDialog.isOpen ? (
+        <ConfirmResetPassword
+          title={deleteArticleDialog.title}
+          articleId={deleteArticleDialog.articleId}
+          close={deleteArticleDialogClose}
+          isOpen={deleteArticleDialog.isOpen}
+          handleDelete={onDelete}
+        />
+      ) : (
+        <React.Fragment />
+      )}
     </AdminBody>
+  );
+}
+
+function ConfirmResetPassword({
+  title,
+  articleId,
+  close,
+  isOpen,
+  handleDelete,
+}: {
+  title: string;
+  articleId: string;
+  close: () => void;
+  isOpen: boolean;
+  handleDelete: (T: string) => void;
+}) {
+  const classes = useStyles();
+
+  return (
+    <React.Fragment>
+      <IconButton className={classes.closeButton} onClick={close}>
+        <CloseIcon />
+      </IconButton>
+      <Dialog open={isOpen} onClose={close}>
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" gutterBottom>
+            Are you sure you want to delete this article?
+          </Typography>
+          <Typography variant="body2" align="center" gutterBottom>
+            <b>{title}</b>
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <PrimaryButton variant="outlined" size="small" primaryColor onClick={close}>
+            Cancel
+          </PrimaryButton>
+          <PrimaryButton size="small" primaryColor onClick={() => handleDelete(articleId)}>
+            Delete
+          </PrimaryButton>
+        </DialogActions>
+      </Dialog>
+    </React.Fragment>
   );
 }

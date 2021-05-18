@@ -16,7 +16,9 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 
 export const TextInput = ({ name, register, required, label, errors, errorMessage, disabled, multiline }: any) => (
   <FormControl fullWidth error={errors} required={required}>
-    <FormHelperText>{label}</FormHelperText>
+    <FormHelperText>
+      <b>{label}</b>
+    </FormHelperText>
     <TextField
       multiline={multiline ? true : false}
       id={name}
@@ -35,7 +37,9 @@ export const TextInput = ({ name, register, required, label, errors, errorMessag
 
 export const SelectInput = ({ name, disabled, control, required, label, errors, errorMessage, dropDownList }: any) => (
   <FormControl fullWidth error={errors} required={required}>
-    <FormHelperText>{label}</FormHelperText>
+    <FormHelperText>
+      <b>{label}</b>
+    </FormHelperText>
     <Controller
       name={name}
       control={control}

@@ -103,6 +103,7 @@ declare namespace Admin {
   declare interface Articles {
     id: number;
     title: string;
+    slug: string;
     page_title: string;
     meta_description: string;
     introduction: string;

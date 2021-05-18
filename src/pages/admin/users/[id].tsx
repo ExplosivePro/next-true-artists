@@ -156,11 +156,11 @@ export default function User() {
                     </Grid>
 
                     <Grid container item justify="space-around" className={classes.buttonWrapper}>
-                      <PrimaryButton variant="contained" size="small" bluePastel onClick={editModeOpen}>
-                        Edit Profile
-                      </PrimaryButton>
-                      <PrimaryButton size="small" bluePastel onClick={resetPasswordConfirmOpen}>
+                      <PrimaryButton variant="outlined" size="small" primaryColor onClick={resetPasswordConfirmOpen}>
                         Reset Password
+                      </PrimaryButton>
+                      <PrimaryButton size="small" primaryColor onClick={editModeOpen}>
+                        Edit Profile
                       </PrimaryButton>
                     </Grid>
                   </CardContent>
@@ -173,7 +173,10 @@ export default function User() {
 
                   <CardContent>
                     <Typography>
-                      E-mail : <Link href={`mailto:${userData?.email}`}>{userData?.email}</Link>
+                      E-mail :{" "}
+                      <Link href={`mailto:${userData?.email}`}>
+                        <a className={classes.listLink}>{userData?.email}</a>
+                      </Link>
                     </Typography>
                   </CardContent>
                 </Card>
@@ -302,11 +305,11 @@ function EditProfile({
 
           <CardActions>
             <Grid container item xs={12} md={6} justify="space-around">
-              <PrimaryButton variant="outlined" size="small" bluePastel onClick={editModeClose}>
+              <PrimaryButton variant="outlined" size="small" primaryColor onClick={editModeClose}>
                 Cancel
               </PrimaryButton>
 
-              <PrimaryButton size="small" bluePastel disabled={isSubmitting} type="submit">
+              <PrimaryButton size="small" primaryColor disabled={isSubmitting} type="submit">
                 Save Profile
               </PrimaryButton>
             </Grid>
@@ -323,15 +326,15 @@ function ConfirmResetPassword({ name, close, isOpen, handleResetPassword }: any)
       <Dialog open={isOpen} onClose={close}>
         <DialogTitle>Confirm Reset Password</DialogTitle>
         <DialogContent>
-          <Typography variant="body2">
-            Reset password for user - <b>{name}</b> ?
+          <Typography variant="body2" gutterBottom>
+            Reset password for - <b>{name}</b> ?
           </Typography>
         </DialogContent>
         <DialogActions>
-          <PrimaryButton variant="outlined" size="small" bluePastel onClick={close}>
+          <PrimaryButton variant="outlined" size="small" primaryColor onClick={close}>
             Cancel
           </PrimaryButton>
-          <PrimaryButton size="small" bluePastel onClick={handleResetPassword}>
+          <PrimaryButton size="small" primaryColor onClick={handleResetPassword}>
             Reset Password
           </PrimaryButton>
         </DialogActions>

@@ -35,6 +35,9 @@ export const useStyles = makeStyles({
     margin: "2px",
     padding: 0,
   },
+  listLink: {
+    color: colors.primaryColor,
+  },
 });
 
 export const StyledTableCell = withStyles((theme: Theme) =>

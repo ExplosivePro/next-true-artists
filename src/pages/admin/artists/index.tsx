@@ -143,7 +143,9 @@ export default function Artists() {
                     {artistListData.map((artist: Admin.ArtistProfile, index: number) => (
                       <StyledTableRow key={index}>
                         <StyledTableCell>
-                          <Link href={`${router.pathname}/${artist.id}`}>{artist.name ?? "Null"}</Link>
+                          <Link href={`${router.pathname}/${artist.id}`}>
+                            <a className={classes.listLink}>{artist.name ?? "Null"}</a>
+                          </Link>
                         </StyledTableCell>
                         <StyledTableCell>{artist.phone_number}</StyledTableCell>
                         <StyledTableCell>{artist.city}</StyledTableCell>

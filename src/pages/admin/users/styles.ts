@@ -15,6 +15,9 @@ export const useStyles = makeStyles({
     marginTop: "10px",
     marginBottom: "10px",
   },
+  listLink: {
+    color: colors.primaryColor,
+  },
   paginationWrapper: {
     border: "solid thin lightGrey",
   },

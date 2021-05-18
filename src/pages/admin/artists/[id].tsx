@@ -145,10 +145,15 @@ export default function Artist() {
                     </Grid>
 
                     <Grid container item justify="space-evenly">
-                      <PrimaryButton size="small" bluePastel onClick={() => updateStatus("approve")}>
+                      <PrimaryButton size="small" primaryColor onClick={() => updateStatus("approve")}>
                         Approve
                       </PrimaryButton>
-                      <PrimaryButton size="small" yellow onClick={() => updateStatus("reject")}>
+                      <PrimaryButton
+                        size="small"
+                        variant="outlined"
+                        primaryColor
+                        onClick={() => updateStatus("reject")}
+                      >
                         Reject
                       </PrimaryButton>
                     </Grid>
@@ -175,28 +180,36 @@ export default function Artist() {
                       {artistData?.facebook_url ? (
                         <ListItem>
                           <FacebookIcon />
-                          <Link href={artistData?.facebook_url}>Facebook</Link>
+                          <Link href={artistData?.facebook_url}>
+                            <a className={classes.listLink}>Facebook</a>
+                          </Link>
                         </ListItem>
                       ) : null}
 
                       {artistData?.instagram_url ? (
                         <ListItem>
                           <InstagramIcon />
-                          <Link href={artistData?.instagram_url}>Instagram</Link>
+                          <Link href={artistData?.instagram_url}>
+                            <a className={classes.listLink}>Instagram</a>
+                          </Link>
                         </ListItem>
                       ) : null}
 
                       {artistData?.twitter_url ? (
                         <ListItem>
                           <TwitterIcon />
-                          <Link href={artistData?.twitter_url}>Twitter</Link>
+                          <Link href={artistData?.twitter_url}>
+                            <a className={classes.listLink}>Twitter</a>
+                          </Link>
                         </ListItem>
                       ) : null}
 
                       {artistData?.website ? (
                         <ListItem>
                           <LanguageIcon />
-                          <Link href={artistData?.website}>Website</Link>
+                          <Link href={artistData?.website}>
+                            <a className={classes.listLink}>Website</a>
+                          </Link>
                         </ListItem>
                       ) : null}
                     </List>
@@ -432,18 +445,22 @@ function TattooImage({ tattoo }: { tattoo: Admin.Tattoo }) {
       <Grid item xs={12} sm={6} md={4}>
         <Card variant="outlined">
           <CardContent>
-            <CardMedia className={classes.media} image={tattoo.image.image_url} title={tattoo.color} />
-            <CardHeader subheader={tattoo.image.name} className={classes.cardHeader} />
+            <CardMedia
+              className={classes.media}
+              image={tattoo?.image?.image_url ?? "/images/camera.png"}
+              title={tattoo?.color}
+            />
+            <CardHeader subheader={tattoo?.image?.name} className={classes.cardHeader} />
           </CardContent>
         </Card>
 
         <Grid container item xs={12} justify="space-evenly" className={classes.buttonWrapper}>
           <Typography variant="body2">
             <b>Status : </b>
-            {tattoo.image.status}
+            {tattoo?.image?.status}
           </Typography>
 
-          <PrimaryButton size="small" yellow onClick={updateStatus}>
+          <PrimaryButton size="small" primaryColor onClick={updateStatus}>
             Flag image
           </PrimaryButton>
         </Grid>
@@ -463,14 +480,14 @@ function TattooImage({ tattoo }: { tattoo: Admin.Tattoo }) {
                     <StyledTableCell>
                       <b>Color :</b>
                     </StyledTableCell>
-                    <StyledTableCell>{tattoo.color}</StyledTableCell>
+                    <StyledTableCell>{tattoo?.color}</StyledTableCell>
                   </StyledTableRow>
 
                   <StyledTableRow>
                     <StyledTableCell>
                       <b>Size :</b>
                     </StyledTableCell>
-                    <StyledTableCell>{tattoo.size}</StyledTableCell>
+                    <StyledTableCell>{tattoo?.size}</StyledTableCell>
                   </StyledTableRow>
                 </TableBody>
               </Table>
@@ -489,14 +506,14 @@ function TattooImage({ tattoo }: { tattoo: Admin.Tattoo }) {
                     <StyledTableCell>
                       <b>Placement :</b>
                     </StyledTableCell>
-                    <StyledTableCell>{tattoo.placement}</StyledTableCell>
+                    <StyledTableCell>{tattoo?.placement}</StyledTableCell>
                   </StyledTableRow>
 
                   <StyledTableRow>
                     <StyledTableCell>
                       <b>Featured :</b>
                     </StyledTableCell>
-                    <StyledTableCell>{tattoo.featured ? "Yes" : "No"}</StyledTableCell>
+                    <StyledTableCell>{tattoo?.featured ? "Yes" : "No"}</StyledTableCell>
                   </StyledTableRow>
                 </TableBody>
               </Table>
@@ -510,28 +527,28 @@ function TattooImage({ tattoo }: { tattoo: Admin.Tattoo }) {
                   <StyledTableRow>
                     <StyledTableCell>
                       <b>Caption :</b>
-                      {tattoo.caption}
+                      {tattoo?.caption}
                     </StyledTableCell>
                   </StyledTableRow>
 
                   <StyledTableRow>
                     <StyledTableCell>
                       <b>Styles :</b>
-                      {tattoo.styles}
+                      {tattoo?.styles}
                     </StyledTableCell>
                   </StyledTableRow>
 
                   <StyledTableRow>
                     <StyledTableCell>
                       <b>Categories :</b>
-                      {tattoo.categories}
+                      {tattoo?.categories}
                     </StyledTableCell>
                   </StyledTableRow>
 
                   <StyledTableRow>
                     <StyledTableCell>
                       <b>Tags :</b>
-                      {tattoo.tags.map((style: string, index: number) => (
+                      {tattoo?.tags?.map((style: string, index: number) => (
                         <Chip label={style} size="small" key={index} className={classes.chips} />
                       ))}
                     </StyledTableCell>

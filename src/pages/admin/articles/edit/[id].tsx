@@ -146,6 +146,10 @@ export default function EditArticles() {
     reader.onloadend = () => setPreview(reader.result);
   };
 
+  const handleCancel = () => {
+    router.back();
+  };
+
   return (
     <AdminBody>
       <Head>
@@ -176,13 +180,13 @@ export default function EditArticles() {
           ) : articleData ? (
             <form onSubmit={handleSubmit(onSubmit)}>
               <Grid container spacing={2}>
-                <Grid item xs={8}>
+                <Grid item xs={12} md={8}>
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
                       {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
                     </Grid>
 
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={6}>
                       <SelectInput
                         name="status"
                         control={control}
@@ -230,7 +234,9 @@ export default function EditArticles() {
 
                     <Grid item xs={12}>
                       <FormControl fullWidth error={errors.content ? true : false} required={true}>
-                        <FormHelperText>Content</FormHelperText>
+                        <FormHelperText>
+                          <b>Content</b>
+                        </FormHelperText>
                         <Controller
                           name={"content"}
                           control={control}
@@ -238,39 +244,25 @@ export default function EditArticles() {
                           render={(props: any) => (
                             <JoditEditor
                               value={props?.value ?? ""}
-                              //onBlur={(newContent) => setContent(newContent)}
                               onChange={(newContent) => {
                                 props.onChange(newContent);
                               }}
                             />
                           )}
                         />
-                        <FormHelperText>
-                          <i>(Drag and drop or copy and paste images)</i>
-                        </FormHelperText>
+
                         {errors.content && (
                           <FormHelperText error>{`Required ! ${errors.content?.message}`}</FormHelperText>
                         )}
+                        <Typography variant="caption" gutterBottom>
+                          <i>(Drag and drop or copy and paste images)</i>
+                        </Typography>
                       </FormControl>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                      <Grid item>
-                        <PrimaryButton size="small" bluePastel disabled={isSubmitting} type="submit">
-                          Save Changes
-                        </PrimaryButton>
-                      </Grid>
-
-                      <Grid item>
-                        <PrimaryButton variant="outlined" size="small" bluePastel onClick={() => router.back()}>
-                          Cancel
-                        </PrimaryButton>
-                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
 
-                <Grid item xs={4} className={classes.metaWrapper}>
+                <Grid item xs={12} md={4} className={classes.metaWrapper}>
                   <Grid container>
                     <Grid item xs={12}>
                       <Card variant="outlined" className={classes.imageCard}>
@@ -359,7 +351,11 @@ export default function EditArticles() {
                                     <b>Email </b>
                                   </StyledTableCell>
                                   <StyledTableCell>
-                                    <Link href={`mailto:${articleData?.user?.email}`}>{articleData?.user.email}</Link>
+                                    <Link href={`mailto:${articleData?.user?.email}`}>
+                                      <a target="_blank" className={classes.listLink}>
+                                        {articleData?.user.email}
+                                      </a>
+                                    </Link>
                                   </StyledTableCell>
                                 </StyledTableRow>
                               </TableBody>
@@ -368,6 +364,20 @@ export default function EditArticles() {
                         </CardContent>
                       </Card>
                     </Grid>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={2}>
+                    <PrimaryButton size="small" fullWidth variant="outlined" primaryColor onClick={handleCancel}>
+                      Cancel
+                    </PrimaryButton>
+                  </Grid>
+
+                  <Grid item xs={12} md={3}>
+                    <PrimaryButton size="small" fullWidth primaryColor disabled={isSubmitting} type="submit">
+                      Save Changes
+                    </PrimaryButton>
                   </Grid>
                 </Grid>
               </Grid>

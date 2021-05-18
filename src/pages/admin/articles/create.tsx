@@ -170,7 +170,7 @@ export default function CreateNew() {
 
             <Grid item xs={12} md={4}>
               <Grid container item justify={"center"}>
-                <Card variant="outlined" className={classes.imageCard && classes.avatar}>
+                <Card variant="outlined" className={classes.imageCard && classes.addArticleImage}>
                   <CardContent>
                     <Typography>Article image</Typography>
                     <CardMedia
@@ -198,7 +198,9 @@ export default function CreateNew() {
 
           <Grid container item xs={12} className={classes.buttonWrapper}>
             <FormControl fullWidth error={errors.content ? true : false} required={true}>
-              <FormHelperText>Content</FormHelperText>
+              <FormHelperText>
+                <b>Content</b>
+              </FormHelperText>
               <Controller
                 name={"content"}
                 control={control}
@@ -206,30 +208,30 @@ export default function CreateNew() {
                 render={(props: any) => (
                   <JoditEditor
                     value={props?.value ?? ""}
-                    //onBlur={(newContent) => setContent(newContent)}
                     onChange={(newContent) => {
                       props.onChange(newContent);
                     }}
                   />
                 )}
               />
-              <FormHelperText>
-                <i>(Drag and drop or copy and paste images)</i>
-              </FormHelperText>
+
               {errors.content && <FormHelperText error>{`Required ! ${errors.content?.message}`}</FormHelperText>}
+              <Typography variant="caption" gutterBottom>
+                <i>(Drag and drop or copy and paste images)</i>
+              </Typography>
             </FormControl>
           </Grid>
 
           <Grid container spacing={2} className={classes.buttonWrapper}>
-            <Grid item>
-              <PrimaryButton size="small" bluePastel disabled={isSubmitting} type="submit">
-                Save
+            <Grid item xs={12} md={2}>
+              <PrimaryButton size="small" fullWidth variant="outlined" primaryColor onClick={handleCancel}>
+                Cancel
               </PrimaryButton>
             </Grid>
 
-            <Grid item>
-              <PrimaryButton variant="outlined" size="small" bluePastel onClick={handleCancel}>
-                Cancel
+            <Grid item xs={12} md={3}>
+              <PrimaryButton size="small" fullWidth primaryColor disabled={isSubmitting} type="submit">
+                Save
               </PrimaryButton>
             </Grid>
           </Grid>
