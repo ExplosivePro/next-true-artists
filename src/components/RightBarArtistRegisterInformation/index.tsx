@@ -420,7 +420,9 @@ export default function RightBarArtistRegisterInformation({
             control={control}
             variant={"outlined"}
             defaultValue={streetAddress || ""}
+            googleAutoComplete={[]}
             errors={errors.streetAddress}
+            setValueFn={setValue}
           />
 
           <FormInput
@@ -447,7 +449,7 @@ export default function RightBarArtistRegisterInformation({
             variant={"outlined"}
             defaultValue={city || ""}
             errors={errors.city}
-            googleAutoComplete
+            googleAutoComplete={["(cities)"]}
             setValueFn={setValue}
           />
 

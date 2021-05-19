@@ -15,7 +15,7 @@ type CustomTextFieldProps = TextFieldProps & {
   control: any;
   errors: any;
   setValueFn?: any;
-  googleAutoComplete?: boolean;
+  googleAutoComplete?: string[];
 };
 
 export default function FormInput(props: CustomTextFieldProps) {
@@ -35,22 +35,26 @@ export default function FormInput(props: CustomTextFieldProps) {
 
   useEffect(() => {
     if (props.googleAutoComplete) {
+      const options = {
+        types: props.googleAutoComplete,
+      };
+
       // Create the search box and link it to the UI element.
       const input = document.getElementById(props.id as string) as HTMLInputElement;
-      const searchBox = new google.maps.places.SearchBox(input);
+      const searchBox = new google.maps.places.Autocomplete(input, options);
 
       // Set place value
       const setPlaceValue = () => {
-        const places = searchBox.getPlaces();
+        const place = searchBox.getPlace();
 
-        if (places.length == 0) {
+        if (!place) {
           return;
         }
 
-        props.setValueFn(props.name, places[0].name);
+        props.setValueFn(props.name, place.name);
       };
 
-      searchBox.addListener("places_changed", setPlaceValue);
+      searchBox.addListener("place_changed", setPlaceValue);
 
       if (!props.defaultValue) {
         setTimeout(() => {

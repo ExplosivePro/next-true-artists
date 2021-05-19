@@ -115,6 +115,7 @@ export default function StudioProfile({
             variant={"outlined"}
             defaultValue={streetAddress || ""}
             errors={errors.streetAddress}
+            googleAutoComplete={[]}
           />
 
           <Grid container spacing={2}>
@@ -130,7 +131,7 @@ export default function StudioProfile({
                 variant={"outlined"}
                 defaultValue={city || ""}
                 errors={errors.city}
-                googleAutoComplete
+                googleAutoComplete={["(cities)"]}
                 setValueFn={setValue}
               />
             </Grid>
