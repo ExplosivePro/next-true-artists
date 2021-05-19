@@ -9,7 +9,7 @@ import { Grid, Typography } from "@material-ui/core";
 import Tattoos, { Image } from "./Tattoos";
 import PrimaryButton from "../PrimaryButton";
 
-import { uploadTattoos, updateTattoos } from "../../api";
+import { uploadTattoos, updateTattoos, deleteTattooByRole } from "../../api";
 
 // Context
 import { useApp } from "../../contexts";
@@ -127,7 +127,7 @@ export default function RightBarRegisterTattooUpload({ role, currentUserId, onPr
     const { error, errors, data } = response;
     // No error happens
     if (!error) {
-      app.showSuccessDialog(true, "Update successfully");
+      app.showSuccessDialog(true, "Updated successfully");
 
       // Mark this tattoo image info is already saved
       const tattooDetail = tattoos[index];
@@ -139,6 +139,20 @@ export default function RightBarRegisterTattooUpload({ role, currentUserId, onPr
       return data;
     } else {
       app.showErrorDialog(true, errors ? errors.toString() : "Upload fail");
+    }
+  };
+
+  // On tattoos delete
+  const onDelete = async (tattooId: number) => {
+    const response = await deleteTattooByRole(currentUserId as number, role, tattooId);
+
+    const { error, errors, data } = response;
+    // No error happens
+    if (!error) {
+      setTattoos(tattoos.filter((tattoo) => tattoo.id !== tattooId));
+      return data;
+    } else {
+      app.showErrorDialog(true, errors ? errors.toString() : "Remove fail");
     }
   };
 
@@ -170,6 +184,7 @@ export default function RightBarRegisterTattooUpload({ role, currentUserId, onPr
             }}
             onChange={onFieldsChange}
             onUpdate={onUpdate}
+            onDelete={onDelete}
           />
         </Grid>
 

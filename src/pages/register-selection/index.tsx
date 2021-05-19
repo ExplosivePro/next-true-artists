@@ -30,7 +30,7 @@ import RightBarRegisterAvatarUpload, {
 import RightBarRegisterTattooUpload from "../../components/RightBarRegisterTattooUpload";
 
 // Utils
-import { getWorkingStyleList } from "../../api";
+import { getWorkingStyleList, submitArtistProfileForReview, submitStudioProfileForReview } from "../../api";
 import { AuthState, Role, useApp, useAuth, User } from "../../contexts";
 
 import colors from "../../palette";
@@ -132,6 +132,29 @@ export default function RegisterSelection({ workingStyles }: Props) {
         return {};
       }
     }
+  };
+
+  // Submit profile for review
+  const submitForReview = async () => {
+    switch (role) {
+      case "artist": {
+        await submitArtistProfileForReview(currentUserRoleId as number);
+        break;
+      }
+      case "studio": {
+        await submitStudioProfileForReview(currentUserRoleId as number);
+        break;
+      }
+    }
+
+    // Get updated user data
+    await updateUserData();
+
+    // Remove pending status saved in local storage
+    localStorage.removeItem("pendingRegistrationType");
+
+    // Go to dashboard
+    replace("/dashboard");
   };
 
   useEffect(() => {
@@ -361,14 +384,7 @@ export default function RegisterSelection({ workingStyles }: Props) {
               currentUserId={currentUserRoleId}
               currentData={stepData[4] || {}}
               onNext={() => {
-                // Get updated user data
-                updateUserData();
-
-                // Remove pending status saved in local storage
-                localStorage.removeItem("pendingRegistrationType");
-
-                // Go to dashboard
-                replace("/dashboard");
+                submitForReview();
               }}
               onPreviousStep={() => {
                 setStep(4);

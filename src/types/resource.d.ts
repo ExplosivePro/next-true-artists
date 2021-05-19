@@ -70,6 +70,11 @@ declare namespace Resource {
     guest_artist?: boolean;
     licensed?: boolean;
     cpr_certified?: boolean;
+    status?: string;
+    has_avatar?: boolean;
+    has_social_profiles?: boolean;
+    has_styles?: boolean;
+    has_tattoo_gallery?: boolean;
   }
 
   interface ArtistListResponse {
@@ -111,6 +116,11 @@ declare namespace Resource {
     lat?: number;
     long?: number;
     artists: ArtistDetail[];
+    status?: string;
+    has_avatar?: boolean;
+    has_social_profiles?: boolean;
+    has_styles?: boolean;
+    has_tattoo_gallery?: boolean;
   }
 
   interface StudioListResponse {

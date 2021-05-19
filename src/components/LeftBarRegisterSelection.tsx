@@ -13,6 +13,8 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 // Custom Components
 import StepCircle from "./StepCircle";
 
+import { publicPageBaseUrl } from "../constants";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -109,7 +111,7 @@ export default function LeftBarRegisterSelection({ step, role }: { step: number;
   return (
     <>
       <Grid container className={clsx(classes.root, classes.desktopDisplay)} alignItems={"center"} justify={"center"}>
-        <Link href={"/artists"}>
+        <Link href={`${publicPageBaseUrl}/artists`}>
           <div className={classes.logoWrapper}>
             <img src={"/images/icons/logo.svg"} className={classes.logo} alt={"logo"} />
           </div>

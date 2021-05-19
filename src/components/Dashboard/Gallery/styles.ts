@@ -17,6 +17,9 @@ const useStyles = makeStyles(() =>
     moreButton: {
       backgroundColor: colors.standardGreySubFooter,
       opacity: 0.4,
+      "&:hover": {
+        backgroundColor: colors.standardGreyInputBorder,
+      },
     },
     seeMoreButton: {
       width: "191px",

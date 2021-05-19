@@ -13,7 +13,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { Typography } from "@material-ui/core";
+import { Divider, Typography } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import Grid from "@material-ui/core/Grid";
 import Menu from "@material-ui/core/Menu";
@@ -24,18 +24,18 @@ import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import CloseIcon from "@material-ui/icons/Close";
-import { Divider } from "@material-ui/core";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 // Custom Components
 import PrimaryButton from "../components/PrimaryButton";
 import AppBarMenuItems from "../components/Header/AppBarMenuItems";
+import HeaderBanner, { getTypeByStatus } from "../components/Dashboard/HeaderBanner";
 
 // Contexts
-import { AuthState, useAuth, Role } from "./auth";
+import { AuthState, Role, useAuth } from "./auth";
 
 // Constants
-import { dashboardRoutes, mainItems, helpItems, dashboardRouteDetails, drawerWidth } from "../constants";
+import { dashboardRouteDetails, dashboardRoutes, drawerWidth, helpItems, mainItems } from "../constants";
 
 import colors from "../palette";
 
@@ -84,6 +84,12 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
       padding: theme.spacing(3),
       backgroundColor: colors.standardGreySubFooter,
+    },
+    hasBanner: {
+      paddingTop: theme.spacing(8),
+      [theme.breakpoints.down("sm")]: {
+        paddingTop: theme.spacing(14),
+      },
     },
     bottomList: {
       position: "absolute",
@@ -185,7 +191,14 @@ const getRouteDetail = (path: string) => {
 };
 
 export function DashboardContext({ children }: Props) {
-  const { status, user, logOut } = useAuth();
+  const {
+    status,
+    user,
+    user: { role } = { role: Role.REGULAR },
+    logOut,
+    getRoleDetail,
+    isCompleteRoleProfile,
+  } = useAuth();
   const classes = useStyles();
   const { pathname, push } = useRouter();
 
@@ -324,7 +337,17 @@ export function DashboardContext({ children }: Props) {
               })}
             </List>
           </Drawer>
-          <main className={classes.content}>
+          {role !== Role.REGULAR && getRoleDetail().status !== "approved" && (
+            <HeaderBanner
+              status={getTypeByStatus(getRoleDetail().status)}
+              requireActivation={!isCompleteRoleProfile()}
+            />
+          )}
+          <main
+            className={clsx(classes.content, {
+              [classes.hasBanner]: role !== Role.REGULAR && getRoleDetail().status !== "approved",
+            })}
+          >
             <MenuIcon className={classes.menuIcon} onClick={handleModalOpen} />
             <Grid container item alignItems={"center"} className={classes.operationContainer}>
               {enableBackButton && (

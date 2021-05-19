@@ -30,6 +30,11 @@ export const getMyStudioList = async (id: number, page = 0, searchKey = "", filt
   }
 };
 
+// Submit for review
+export const submitArtistProfileForReview = async (id: number) => {
+  return await api.put(`/api/v1/artists/${id}/submit_for_review`);
+};
+
 // Get client list
 
 export const getArtistClientList = async (id: number, page = 0, searchKey = "", filters?: any) => {

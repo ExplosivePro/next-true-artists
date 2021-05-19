@@ -191,9 +191,9 @@ export default function RightBarArtistRegisterInformation({
           country,
           phone_number: phoneNumber,
           website,
-          facebook_url: `${baseFacebookUrl}${facebook}`,
-          instagram_url: `${baseInstagramUrl}${instagram}`,
-          twitter_url: `${baseTwitterUrl}${twitter}`,
+          facebook_url: facebook ? `${baseFacebookUrl}${facebook}` : "",
+          instagram_url: instagram ? `${baseInstagramUrl}${instagram}` : "",
+          twitter_url: twitter ? `${baseTwitterUrl}${twitter}` : "",
           specialty: specialties.join(","),
         });
 
@@ -242,9 +242,9 @@ export default function RightBarArtistRegisterInformation({
           country,
           phone_number: phoneNumber,
           website,
-          facebook_url: `${baseFacebookUrl}${facebook}`,
-          instagram_url: `${baseInstagramUrl}${instagram}`,
-          twitter_url: `${baseTwitterUrl}${twitter}`,
+          facebook_url: facebook ? `${baseFacebookUrl}${facebook}` : "",
+          instagram_url: instagram ? `${baseInstagramUrl}${instagram}` : "",
+          twitter_url: twitter ? `${baseTwitterUrl}${twitter}` : "",
           specialty: specialties.join(","),
         });
 

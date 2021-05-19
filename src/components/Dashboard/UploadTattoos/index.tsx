@@ -9,7 +9,7 @@ import { Grid, Typography } from "@material-ui/core";
 import PrimaryButton from "../../PrimaryButton";
 import Tattoos, { Image } from "../../../components/RightBarRegisterTattooUpload/Tattoos";
 
-import { updateTattoos, uploadTattoos } from "../../../api";
+import { deleteTattooByRole, updateTattoos, uploadTattoos } from "../../../api";
 
 // Context
 import { useApp, useAuth, Role } from "../../../contexts";
@@ -20,7 +20,7 @@ import useStyles from "./styles";
 
 export default function UploadTattoos() {
   const app = useApp();
-  const { user: { role } = { role: Role.REGULAR }, getRoleId } = useAuth();
+  const { user: { role } = { role: Role.REGULAR }, getRoleId, updateUserData } = useAuth();
   const { push } = useRouter();
 
   const classes = useStyles();
@@ -52,6 +52,9 @@ export default function UploadTattoos() {
     const { error, errors, data } = response;
     // No error happens
     if (!error) {
+      // Get updated user data
+      updateUserData();
+
       return data;
     } else {
       app.showErrorDialog(true, errors ? errors.toString() : "Image upload failed. Try again");
@@ -91,7 +94,7 @@ export default function UploadTattoos() {
     const { error, errors, data } = response;
     // No error happens
     if (!error) {
-      app.showSuccessDialog(true, "Update successfully");
+      app.showSuccessDialog(true, "Updated successfully");
 
       // Mark this tattoo image info is already saved
       const tattooDetail = tattoos[index];
@@ -103,6 +106,20 @@ export default function UploadTattoos() {
       return data;
     } else {
       app.showErrorDialog(true, errors ? errors.toString() : "Upload fail");
+    }
+  };
+
+  // On tattoos delete
+  const onDelete = async (tattooId: number) => {
+    const response = await deleteTattooByRole(currentUserId as number, role, tattooId);
+
+    const { error, errors, data } = response;
+    // No error happens
+    if (!error) {
+      setTattoos(tattoos.filter((tattoo) => tattoo.id !== tattooId));
+      return data;
+    } else {
+      app.showErrorDialog(true, errors ? errors.toString() : "Remove fail");
     }
   };
 
@@ -131,6 +148,7 @@ export default function UploadTattoos() {
             }}
             onChange={onFieldsChange}
             onUpdate={onUpdate}
+            onDelete={onDelete}
           />
         </Grid>
 
