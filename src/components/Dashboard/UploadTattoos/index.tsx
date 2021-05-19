@@ -9,7 +9,7 @@ import { Grid, Typography } from "@material-ui/core";
 import PrimaryButton from "../../PrimaryButton";
 import Tattoos, { Image } from "../../../components/RightBarRegisterTattooUpload/Tattoos";
 
-import { updateTattoos, uploadTattoos } from "../../../api";
+import { deleteTattooByRole, updateTattoos, uploadTattoos } from "../../../api";
 
 // Context
 import { useApp, useAuth, Role } from "../../../contexts";
@@ -109,6 +109,20 @@ export default function UploadTattoos() {
     }
   };
 
+  // On tattoos delete
+  const onDelete = async (tattooId: number) => {
+    const response = await deleteTattooByRole(currentUserId as number, role, tattooId);
+
+    const { error, errors, data } = response;
+    // No error happens
+    if (!error) {
+      setTattoos(tattoos.filter((tattoo) => tattoo.id !== tattooId));
+      return data;
+    } else {
+      app.showErrorDialog(true, errors ? errors.toString() : "Remove fail");
+    }
+  };
+
   return (
     <Grid
       container
@@ -134,6 +148,7 @@ export default function UploadTattoos() {
             }}
             onChange={onFieldsChange}
             onUpdate={onUpdate}
+            onDelete={onDelete}
           />
         </Grid>
 

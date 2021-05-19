@@ -43,37 +43,41 @@ const AddImageItem = ({ onAdd, setLoading }: { onAdd: (data: any) => void; setLo
     return new Promise((resolve) => {
       const fileUploaded = files[i];
 
-      const reader = new FileReader();
-      reader.readAsDataURL(fileUploaded);
+      if (fileUploaded) {
+        const reader = new FileReader();
+        reader.readAsDataURL(fileUploaded);
 
-      reader.onloadend = async function () {
-        results.push({
-          file: fileUploaded,
-          preview: reader.result,
-          color: "",
-          placement: "",
-          caption: "",
-          featured: false,
-        });
+        reader.onloadend = async function () {
+          results.push({
+            file: fileUploaded,
+            preview: reader.result,
+            color: "",
+            placement: "",
+            caption: "",
+            featured: false,
+          });
 
-        if (i === files.length - 1) {
-          resolve(results);
-        } else {
-          resolve(await processFileUpload(i + 1, files, results));
-        }
-      };
+          if (i === files.length - 1) {
+            resolve(results);
+          } else {
+            resolve(await processFileUpload(i + 1, files, results));
+          }
+        };
+      }
     });
   };
 
   // File input change
   const handleChange = async (event: any) => {
-    // Show loading
-    setLoading(true);
+    if (event.target.files.length > 0) {
+      // Show loading
+      setLoading(true);
 
-    // Process uploading files
-    const results = await processFileUpload(0, event.target.files, []);
+      // Process uploading files
+      const results = await processFileUpload(0, event.target.files, []);
 
-    onAdd(results);
+      onAdd(results);
+    }
   };
 
   const handleClick = () => {
@@ -91,7 +95,7 @@ const AddImageItem = ({ onAdd, setLoading }: { onAdd: (data: any) => void; setLo
   );
 };
 
-const Tattoos = ({ data, addImage, loading = false, onSetLoading, onUpdate, onChange }: Props) => {
+const Tattoos = ({ data, addImage, loading = false, onSetLoading, onUpdate, onChange, onDelete }: Props) => {
   // Import class styles
   const classes = useStyles();
 
@@ -121,7 +125,12 @@ const Tattoos = ({ data, addImage, loading = false, onSetLoading, onUpdate, onCh
                   </Grid>
                 )}
 
-                <IconButton className={classes.deleteIcon}>
+                <IconButton
+                  className={classes.deleteIcon}
+                  onClick={() => {
+                    onDelete(item.id as number);
+                  }}
+                >
                   <DeleteIcon />
                 </IconButton>
 
@@ -269,6 +278,7 @@ interface Props {
   loading: boolean;
   onSetLoading: (value: boolean) => void;
   onUpdate: (id: number, payload: any, index: number) => void;
+  onDelete: (id: number) => void;
   onChange: (index: number, name: string, value: any) => void;
 }
 
