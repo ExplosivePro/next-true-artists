@@ -237,6 +237,7 @@ export default function RightBarStudioRegisterInformation({
             defaultValue={streetAddress || ""}
             errors={errors.streetAddress}
             googleAutoComplete={[]}
+            setValueFn={setValue}
           />
 
           <Grid container spacing={2}>
@@ -292,6 +293,8 @@ export default function RightBarStudioRegisterInformation({
                 variant={"outlined"}
                 defaultValue={state || ""}
                 errors={errors.state}
+                googleAutoComplete={["(regions)"]}
+                setValueFn={setValue}
               />
             </Grid>
             <Grid item lg={6} md={6} xs={6}>
