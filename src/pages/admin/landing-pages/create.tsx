@@ -140,36 +140,14 @@ export default function CreateNew() {
               <Grid container spacing={2}>
                 {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
 
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={12}>
                   <TextInput
                     name="page_key"
                     register={register}
                     required={true}
-                    label="Page Key *"
+                    label="Page url (Example /tattoos/back) *"
                     errors={!!errors.page_key}
                     errorMessage={errors.page_key?.message}
-                  />
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                  <TextInput
-                    name="page_url"
-                    register={register}
-                    required={true}
-                    label="Page Url *"
-                    errors={!!errors.page_url}
-                    errorMessage={errors.page_url?.message}
-                  />
-                </Grid>
-
-                <Grid item xs={12} md={12}>
-                  <TextInput
-                    name="title"
-                    register={register}
-                    required={true}
-                    label="Title *"
-                    errors={!!errors.title}
-                    errorMessage={errors.title?.message}
                   />
                 </Grid>
 
@@ -183,6 +161,17 @@ export default function CreateNew() {
                     errorMessage={errors.page_title?.message}
                   />
                 </Grid>
+
+                <Grid item xs={12} md={12}>
+                  <TextInput
+                    name="title"
+                    register={register}
+                    required={true}
+                    label="Header Title *"
+                    errors={!!errors.title}
+                    errorMessage={errors.title?.message}
+                  />
+                </Grid>
               </Grid>
             </Grid>
 
@@ -190,7 +179,7 @@ export default function CreateNew() {
               <Grid container item justify={"center"}>
                 <Card variant="outlined" className={classes.imageCard && classes.addLandingPageImage}>
                   <CardContent>
-                    <Typography>Landing page avatar</Typography>
+                    <Typography>Upload LP image</Typography>
                     <CardMedia
                       className={classes.imageCardMedia}
                       image={preview ? preview : "/images/camera.png"}
@@ -221,7 +210,7 @@ export default function CreateNew() {
           <Grid container item xs={12} className={classes.buttonWrapper}>
             <FormControl fullWidth error={errors.content ? true : false} required={true}>
               <FormHelperText>
-                <b>Content</b>
+                <b>Page Content</b>
               </FormHelperText>
               <Controller
                 name={"content"}
