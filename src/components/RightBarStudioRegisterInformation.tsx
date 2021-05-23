@@ -209,7 +209,7 @@ export default function RightBarStudioRegisterInformation({
 
         <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
           <Typography variant={"h6"} className={classes.sectionTitle}>
-            Address
+            Studio Information
           </Typography>
 
           <FormInput
@@ -342,6 +342,10 @@ export default function RightBarStudioRegisterInformation({
             defaultValue={phoneNumber || ""}
             errors={errors.phoneNumber}
           />
+
+          <Typography variant={"h6"} className={classes.sectionTitle}>
+            Social Media Handles
+          </Typography>
 
           <Grid container spacing={2}>
             <Grid item lg={6} md={6} xs={6}>
