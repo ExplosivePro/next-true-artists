@@ -52,7 +52,7 @@ const PricingList = ({
       <Grid container spacing={2} className={clsx(classes.inputWrapper, inputWrapperClass)}>
         <Grid item lg={12} md={12} xs={12}>
           <MultipleSelection
-            name={"Payment Method"}
+            name={"Accepted Payment Methods"}
             value={paymentMethods}
             optionList={paymentMethodList.map((method) => method.value)}
             onChange={(e) => {

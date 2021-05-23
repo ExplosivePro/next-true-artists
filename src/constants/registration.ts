@@ -1,13 +1,13 @@
 // Business setting list
 export const settingList = [
   {
-    groupName: "Features",
+    groupName: "",
     settings: [
       {
-        title: "Accepting guest artist",
+        title: "Guest artists",
         name: "accepting_guest_artist",
         defaultValue: false,
-        subTitle: null,
+        subTitle: "Are you accepting guest artists?",
       },
       {
         title: "Appointments Only",
@@ -19,54 +19,48 @@ export const settingList = [
         title: "Piercings",
         name: "piercings",
         defaultValue: false,
-        subTitle: "",
-      },
-      {
-        title: "Cosmetic Tattoos",
-        name: "cosmetic_tattoos",
-        defaultValue: true,
-        subTitle: "",
+        subTitle: "Do you offer body piercing services?",
       },
       {
         title: "Vegan Ink",
         name: "vegan_ink",
         defaultValue: false,
-        subTitle: "",
+        subTitle: "Do you offer vegan ink?",
       },
     ],
   },
   {
-    groupName: "Amenities",
+    groupName: "Studio Amenities",
     settings: [
       {
         title: "LGBTQ Friendly",
         name: "lgbt_friendly",
         defaultValue: true,
-        subTitle: "",
+        subTitle: "Is your studio LGBTQ friendly?",
       },
       {
-        title: "Wifi",
+        title: "WIFI",
         name: "wifi",
         defaultValue: true,
-        subTitle: "",
+        subTitle: "Do you have free WIFI?",
       },
       {
         title: "Privacy Dividers",
         name: "privacy_dividers",
         defaultValue: false,
-        subTitle: "",
+        subTitle: "Do you have privacy dividers?",
       },
       {
         title: "Wheelchair Access",
         name: "wheelchair_access",
         defaultValue: false,
-        subTitle: "",
+        subTitle: "Is your studio wheelchair accessible?",
       },
       {
-        title: "Parking Access",
+        title: "Parking",
         name: "parking",
         defaultValue: false,
-        subTitle: "",
+        subTitle: "Is there parking available on your premises?",
       },
     ],
   },
@@ -221,19 +215,19 @@ export const placements = [
   },
   {
     value: "Back - full",
-    label: "Back - full",
+    label: "back_full",
   },
   {
     value: "Back - lower",
-    label: "Back - lower",
+    label: "back_lower",
   },
   {
     value: "Back - upper",
-    label: "Back - upper",
+    label: "back_upper",
   },
   {
     value: "Behind ear",
-    label: "Behind ear",
+    label: "behind_ear",
   },
   {
     value: "Calf",
@@ -253,15 +247,15 @@ export const placements = [
   },
   {
     value: "Forearm - inner",
-    label: "Forearm - inner",
+    label: "forearm_inner",
   },
   {
     value: "Forearm - outer",
-    label: "Forearm - outer",
+    label: "forearm_outer",
   },
   {
     value: "Full sleeve",
-    label: "Full sleeve",
+    label: "full_sleeve",
   },
   {
     value: "Hand",
@@ -293,7 +287,7 @@ export const placements = [
   },
   {
     value: "Shoulder blade",
-    label: "Shoulder blade",
+    label: "shoulder_blade",
   },
   {
     value: "Sternum",
@@ -305,11 +299,11 @@ export const placements = [
   },
   {
     value: "Thigh - back",
-    label: "Thigh - back",
+    label: "thigh_back",
   },
   {
     value: "Thigh - front",
-    label: "Thigh - front",
+    label: "thigh_front",
   },
   {
     value: "Throat",
@@ -317,11 +311,11 @@ export const placements = [
   },
   {
     value: "Upper arm - inner",
-    label: "Upper arm - inner",
+    label: "upper_arm_inner",
   },
   {
     value: "Upper arm - outer",
-    label: "Upper arm - outer",
+    label: "upper_arm_outer",
   },
   {
     value: "Wrist",
@@ -343,8 +337,20 @@ export const colors = [
 
 export const serviceList = [
   {
+    value: "Tattooing",
+    label: "Tattooing",
+  },
+  {
     value: "Tattoo Consultation",
     label: "Tattoo Consultation",
+  },
+  {
+    value: "Tattoo Design",
+    label: "Tattoo Design",
+  },
+  {
+    value: "Tattoo Coverup",
+    label: "Tattoo Coverup",
   },
   {
     value: "Aftercare Consultation",
@@ -361,17 +367,5 @@ export const serviceList = [
   {
     value: "Scarification",
     label: "Scarification",
-  },
-  {
-    value: "Tattoo Coverup",
-    label: "Tattoo Coverup",
-  },
-  {
-    value: "Tattoo Design",
-    label: "Tattoo Design",
-  },
-  {
-    value: "Tattooing",
-    label: "Tattooing",
   },
 ];

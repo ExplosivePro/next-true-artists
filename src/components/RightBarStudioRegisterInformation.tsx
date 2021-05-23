@@ -97,7 +97,7 @@ export default function RightBarStudioRegisterInformation({
 
   const classes = useStyles();
   const resolver = useYupValidationResolver(validationSchema);
-  const { control, handleSubmit, errors } = useForm({ resolver });
+  const { control, handleSubmit, errors, setValue } = useForm({ resolver });
 
   const onSubmit = async ({
     name,
@@ -209,7 +209,7 @@ export default function RightBarStudioRegisterInformation({
 
         <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
           <Typography variant={"h6"} className={classes.sectionTitle}>
-            Address
+            Studio Information
           </Typography>
 
           <FormInput
@@ -236,6 +236,8 @@ export default function RightBarStudioRegisterInformation({
             variant={"outlined"}
             defaultValue={streetAddress || ""}
             errors={errors.streetAddress}
+            googleAutoComplete={[]}
+            setValueFn={setValue}
           />
 
           <Grid container spacing={2}>
@@ -251,6 +253,8 @@ export default function RightBarStudioRegisterInformation({
                 variant={"outlined"}
                 defaultValue={city || ""}
                 errors={errors.city}
+                googleAutoComplete={["(cities)"]}
+                setValueFn={setValue}
               />
             </Grid>
             <Grid item lg={6} md={6} xs={6}>
@@ -289,6 +293,8 @@ export default function RightBarStudioRegisterInformation({
                 variant={"outlined"}
                 defaultValue={state || ""}
                 errors={errors.state}
+                googleAutoComplete={["(regions)"]}
+                setValueFn={setValue}
               />
             </Grid>
             <Grid item lg={6} md={6} xs={6}>
@@ -336,6 +342,10 @@ export default function RightBarStudioRegisterInformation({
             defaultValue={phoneNumber || ""}
             errors={errors.phoneNumber}
           />
+
+          <Typography variant={"h6"} className={classes.sectionTitle}>
+            Social Media Handles
+          </Typography>
 
           <Grid container spacing={2}>
             <Grid item lg={6} md={6} xs={6}>

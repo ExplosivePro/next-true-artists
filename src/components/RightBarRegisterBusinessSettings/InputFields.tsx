@@ -34,7 +34,7 @@ const InputFields = ({ services, language, onInputChange, hasTitle = true }: Pro
   return (
     <div className={classes.root}>
       <Grid container spacing={2} className={classes.inputWrapper}>
-        {hasTitle && <Typography className={classes.groupName}>Services</Typography>}
+        {hasTitle && <Typography className={classes.groupName}>What services do you offer?</Typography>}
         <Grid item lg={12} md={12} xs={12}>
           <MultipleSelection
             name={"Services"}
@@ -48,7 +48,7 @@ const InputFields = ({ services, language, onInputChange, hasTitle = true }: Pro
       </Grid>
 
       <Grid container spacing={2} className={classes.inputWrapper}>
-        {hasTitle && <Typography className={classes.groupName}>Language</Typography>}
+        {hasTitle && <Typography className={classes.groupName}>What languages are spoken at your studio?</Typography>}
         <Grid item lg={12} md={12} xs={12}>
           <MultipleSelection
             name={"Languages"}
