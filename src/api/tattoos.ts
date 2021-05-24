@@ -10,29 +10,34 @@ export const uploadTattoos = async (data: any): Promise<RestApi.Response> => {
         return { error: false, data: response.data, errors: "" };
       })
       .catch((e) => {
-        const errors = [];
+        return errorHandler(e);
+      });
+  } catch (e) {
+    return { error: true, data: null, errors: "Internal Server Error" };
+  }
+};
 
-        if (e.response.data && typeof e.response.data === "string") {
-          errors.push(e.response.data);
-        }
+// Edit tattoos with form data
+export const editTattoos = async (
+  artistId: number,
+  tattooId: string,
+  role: string,
+  data: any,
+): Promise<RestApi.Response> => {
+  try {
+    let queryRole = "artists";
 
-        if (e.response.data && typeof e.response.data === "object") {
-          Object.keys(e.response.data).map((name: any) => {
-            // String error format
-            if (e.response.data[name] && typeof e.response.data[name] === "string") {
-              errors.push(e.response.data[name]);
-            }
+    if (role === Role.STUDIO) {
+      queryRole = "studios";
+    }
 
-            // Array error format
-            if (typeof e.response.data[name] === "object" && e.response.data[name].length > 0) {
-              e.response.data[name].map((item: { attribute: any; message: any }) => {
-                errors.push(`${item.attribute} ${item.message}`);
-              });
-            }
-          });
-        }
-
-        return { error: true, data: null, errors };
+    return await api
+      .put(`/api/v1/${queryRole}/${artistId}/tattoos/${tattooId}`, data)
+      .then((response) => {
+        return { error: false, data: response.data, errors: "" };
+      })
+      .catch((e) => {
+        return errorHandler(e);
       });
   } catch (e) {
     return { error: true, data: null, errors: "Internal Server Error" };
@@ -52,29 +57,28 @@ export const updateTattoos = async (
         return { error: false, data: response.data, errors: "" };
       })
       .catch((e) => {
-        const errors = [];
+        return errorHandler(e);
+      });
+  } catch (e) {
+    return { error: true, data: null, errors: "Internal Server Error" };
+  }
+};
 
-        if (e.response.data && typeof e.response.data === "string") {
-          errors.push(e.response.data);
-        }
+export const getTattooDetail = async (artistId: number, tattooId: string, role: string): Promise<RestApi.Response> => {
+  try {
+    let queryRole = "artists";
 
-        if (e.response.data && typeof e.response.data === "object") {
-          Object.keys(e.response.data).map((name: any) => {
-            // String error format
-            if (e.response.data[name] && typeof e.response.data[name] === "string") {
-              errors.push(e.response.data[name]);
-            }
+    if (role === Role.STUDIO) {
+      queryRole = "studios";
+    }
 
-            // Array error format
-            if (typeof e.response.data[name] === "object" && e.response.data[name].length > 0) {
-              e.response.data[name].map((item: { attribute: any; message: any }) => {
-                errors.push(`${item.attribute} ${item.message}`);
-              });
-            }
-          });
-        }
-
-        return { error: true, data: null, errors };
+    return await api
+      .get(`/api/v1/${queryRole}/${artistId}/tattoos/${tattooId}`)
+      .then((response) => {
+        return { error: false, data: response.data, errors: "" };
+      })
+      .catch((e) => {
+        return errorHandler(e);
       });
   } catch (e) {
     return { error: true, data: null, errors: "Internal Server Error" };

@@ -16,6 +16,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
+import EditIcon from "@material-ui/icons/Edit";
 
 // Utils
 import { capitalizeFirstLetter } from "../../../utils";
@@ -24,11 +25,13 @@ import { Role } from "../../../constants";
 import { useAuth } from "../../../contexts";
 
 import useStyles from "./styles";
+import { useRouter } from "next/router";
 
 export default function ImageCard({ item, getTattooList }: Props) {
   const { user: { role } = { role: Role.REGULAR }, getRoleId } = useAuth();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const { push } = useRouter();
 
   // More open
   const open = Boolean(anchorEl);
@@ -83,6 +86,10 @@ export default function ImageCard({ item, getTattooList }: Props) {
     getTattooList();
   };
 
+  const editImage = (id: number) => {
+    push(`/dashboard/gallery/${id}`);
+  };
+
   return (
     <Card className={classes.root}>
       <CardHeader
@@ -108,6 +115,17 @@ export default function ImageCard({ item, getTattooList }: Props) {
         }}
       >
         <List component="nav" aria-label="main mailbox folders">
+          <ListItem
+            button
+            onClick={() => {
+              editImage(item.id);
+            }}
+          >
+            <ListItemIcon>
+              <EditIcon />
+            </ListItemIcon>
+            <ListItemText primary="Edit" />
+          </ListItem>
           <ListItem
             button
             onClick={() => {
