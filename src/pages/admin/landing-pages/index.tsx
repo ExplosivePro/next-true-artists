@@ -113,8 +113,6 @@ export default function LandingPages() {
     setDeletePageDialog({ isOpen: false, title: "", pageId: "" });
   };
 
-  if (pageListStatus === "success") console.log(pageListData);
-
   return (
     <AdminBody>
       <Head>
