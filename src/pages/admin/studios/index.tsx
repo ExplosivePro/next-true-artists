@@ -11,6 +11,7 @@ import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Alert from "@material-ui/lab/Alert";
 import TextField from "@material-ui/core/TextField";
+import MenuItem from "@material-ui/core/MenuItem";
 
 import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
@@ -23,6 +24,7 @@ import AdminBody from "src/components/Admin/AdminBody";
 import Loading from "src/components/Loading";
 
 import { getStudioList } from "./api";
+import { studio_status } from "./constants";
 import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
 
 export default function Studios() {
@@ -35,6 +37,7 @@ export default function Studios() {
     data: { studios: studioListData = [], meta = { limit_value: 60, total_count: 0 } } = {},
     error: studioListError,
     refetch: studioListRefetch,
+    isFetching: studioListIsFetching,
   } = useQuery("studioList", async () => await getStudioList(location.search));
 
   const [pageOptions, setPageOptions] = useState({});
@@ -42,16 +45,17 @@ export default function Studios() {
   const [rowsPerPage, setRowsPerPage] = useState(meta.limit_value);
 
   const [searchInputValue, setSearchInputValue] = useState("");
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState({});
+  const [statusFilter, setStatusFilter] = useState({});
 
   // Force refetch after search update
   useEffect(() => {
     router.replace({
       pathname: router.pathname,
-      query: searchValue ? { query: searchValue, ...pageOptions } : pageOptions,
+      query: { ...statusFilter, ...searchValue, ...pageOptions },
     });
     setTimeout(() => studioListRefetch(), 500);
-  }, [searchValue, pageOptions]);
+  }, [statusFilter, searchValue, pageOptions]);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
@@ -65,9 +69,13 @@ export default function Studios() {
   };
 
   const debouncedSearchInput = useCallback(
-    debounce((value: string) => setSearchValue(value), 2000),
+    debounce((value: string) => (value ? setSearchValue({ query: value }) : setSearchValue({})), 2000),
     [],
   );
+
+  const handleStatusFilterChange = (value: string) => {
+    value ? setStatusFilter({ status: value }) : setStatusFilter({});
+  };
 
   return (
     <AdminBody>
@@ -76,36 +84,65 @@ export default function Studios() {
       </Head>
 
       <Grid container>
-        <Grid item xs={12} sm={6} md={8} lg={8}>
-          <Breadcrumbs>
-            <Typography variant="h6">
-              <Link href="/admin">Dashboard</Link>
-            </Typography>
-            <Typography variant="h6">Studios</Typography>
-          </Breadcrumbs>
-        </Grid>
+        <Grid item xs={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={4}>
+              <Breadcrumbs>
+                <Typography variant="h6">
+                  <Link href="/admin">Dashboard</Link>
+                </Typography>
+                <Typography variant="h6">Studios</Typography>
+              </Breadcrumbs>
+            </Grid>
 
-        <Grid item xs={12} sm={6} md={4} lg={4}>
-          <Autocomplete
-            freeSolo
-            options={
-              studioListStatus === "success" ? studioListData?.map((option: Admin.StudioProfile) => option.name) : []
-            }
-            inputValue={searchInputValue}
-            onInputChange={(event, newInputValue) => {
-              setSearchInputValue(newInputValue);
-              debouncedSearchInput(newInputValue);
-            }}
-            renderInput={(params) => (
+            <Grid item xs={12} sm={2}>
+              {studioListIsFetching ? <Loading /> : null}
+            </Grid>
+
+            <Grid item xs={12} sm={2}>
               <TextField
-                {...params}
-                label="Search Studios"
-                size="small"
                 variant="outlined"
-                InputProps={{ ...params.InputProps, type: "search" }}
+                select
+                fullWidth
+                size="small"
+                label="Filter by Status"
+                defaultValue=""
+                onChange={(e) => handleStatusFilterChange(e.target.value)}
+              >
+                <MenuItem value="">Clear Filter...</MenuItem>
+                {studio_status.map((status, index) => (
+                  <MenuItem value={status} key={index}>
+                    {status}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <Autocomplete
+                freeSolo
+                options={
+                  studioListStatus === "success"
+                    ? studioListData?.map((option: Admin.StudioProfile) => option.name)
+                    : []
+                }
+                inputValue={searchInputValue}
+                onInputChange={(event, newInputValue) => {
+                  setSearchInputValue(newInputValue);
+                  debouncedSearchInput(newInputValue);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Search Studios"
+                    size="small"
+                    variant="outlined"
+                    InputProps={{ ...params.InputProps, type: "search" }}
+                  />
+                )}
               />
-            )}
-          />
+            </Grid>
+          </Grid>
         </Grid>
 
         <Grid item xs={12}>
