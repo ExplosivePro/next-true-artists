@@ -183,7 +183,7 @@ export default function EditLandingPages() {
                       {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
                     </Grid>
 
-                    <Grid item xs={6}>
+                    <Grid item xs={6} sm={4} lg={3}>
                       <SelectInput
                         name="status"
                         control={control}
@@ -195,12 +195,12 @@ export default function EditLandingPages() {
                       />
                     </Grid>
 
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={10}>
                       <TextInput
                         name="page_key"
                         register={register}
                         required={true}
-                        label="Page Key *"
+                        label="Page url (Example /tattoos/back) *"
                         errors={!!errors.page_key}
                         errorMessage={errors.page_key?.message}
                       />
@@ -211,7 +211,7 @@ export default function EditLandingPages() {
                         name="title"
                         register={register}
                         required={true}
-                        label="Title *"
+                        label="Header Title *"
                         errors={!!errors.title}
                         errorMessage={errors.title?.message}
                       />
@@ -231,7 +231,7 @@ export default function EditLandingPages() {
                     <Grid item xs={12}>
                       <FormControl fullWidth error={errors.content ? true : false} required={true}>
                         <FormHelperText>
-                          <b>Content</b>
+                          <b>Page Content</b>
                         </FormHelperText>
                         <Controller
                           name={"content"}
@@ -263,7 +263,7 @@ export default function EditLandingPages() {
                     <Grid item xs={12}>
                       <Card variant="outlined" className={classes.imageCard}>
                         <CardContent>
-                          <Typography>Landing Page avatar</Typography>
+                          <Typography>Edit LP image</Typography>
                           <CardMedia
                             className={classes.imageCardMedia}
                             image={preview ? preview : pageData?.avatar?.image_url ?? "/images/camera.png"}
