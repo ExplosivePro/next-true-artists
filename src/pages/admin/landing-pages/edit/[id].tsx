@@ -72,7 +72,6 @@ export default function EditLandingPages() {
   const getFormDefaultValues = () => ({
     status: "",
     page_key: "",
-    page_url: "",
     title: "",
     page_title: "",
     content: "",
@@ -94,7 +93,6 @@ export default function EditLandingPages() {
     if (pageDataStatus === "success") {
       setValue("status", pageData?.status);
       setValue("page_key", pageData?.page_key);
-      setValue("page_url", pageData?.page_url);
       setValue("title", pageData?.title);
       setValue("page_title", pageData?.page_title);
       setValue("content", pageData?.content);
@@ -152,11 +150,11 @@ export default function EditLandingPages() {
   return (
     <AdminBody>
       <Head>
-        <title>TrueArtists: Admin/Landing Pages/{pageData?.page_url ?? pageId}</title>
+        <title>TrueArtists: Admin/Landing Pages/{pageData?.title ?? pageId}</title>
       </Head>
 
       <Grid container>
-        <Grid item xs={12} sm={6} md={6} lg={6}>
+        <Grid item xs={12}>
           <Breadcrumbs>
             <Typography variant="h6">
               <Link href="/admin">Dashboard</Link>
@@ -164,7 +162,7 @@ export default function EditLandingPages() {
             <Typography variant="h6">
               <Link href="/admin/landing-pages">Landing Pages</Link>
             </Typography>
-            <Typography variant="h6">{pageData?.page_url ?? pageId}</Typography>
+            <Typography variant="h6">{pageData?.title ?? pageId}</Typography>
           </Breadcrumbs>
         </Grid>
 
@@ -185,28 +183,6 @@ export default function EditLandingPages() {
                       {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
                     </Grid>
 
-                    <Grid item xs={12} md={6}>
-                      <TextInput
-                        name="page_key"
-                        register={register}
-                        required={true}
-                        label="Page Key *"
-                        errors={!!errors.page_key}
-                        errorMessage={errors.page_key?.message}
-                      />
-                    </Grid>
-
-                    <Grid item xs={12} md={6}>
-                      <TextInput
-                        name="page_url"
-                        register={register}
-                        required={true}
-                        label="Page Url *"
-                        errors={!!errors.page_url}
-                        errorMessage={errors.page_url?.message}
-                      />
-                    </Grid>
-
                     <Grid item xs={6}>
                       <SelectInput
                         name="status"
@@ -216,6 +192,17 @@ export default function EditLandingPages() {
                         errors={!!errors.status}
                         errorMessage={errors.status?.message}
                         dropDownList={landingPage_status.map((status) => ({ id: status, name: status }))}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                      <TextInput
+                        name="page_key"
+                        register={register}
+                        required={true}
+                        label="Page Key *"
+                        errors={!!errors.page_key}
+                        errorMessage={errors.page_key?.message}
                       />
                     </Grid>
 

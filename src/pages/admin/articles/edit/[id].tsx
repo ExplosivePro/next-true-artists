@@ -158,7 +158,7 @@ export default function EditArticles() {
       </Head>
 
       <Grid container>
-        <Grid item xs={12} sm={6} md={6} lg={6}>
+        <Grid item xs={12}>
           <Breadcrumbs>
             <Typography variant="h6">
               <Link href="/admin">Dashboard</Link>

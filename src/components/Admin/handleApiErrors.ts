@@ -1,11 +1,10 @@
 const handleApiErrors = (e: any) => {
   const errors = [];
-
   if (e.response.data) {
     const response = e.response.data;
 
     if (typeof response === "string")
-      if (response.includes("<!DOCTYPE html>")) errors.push("Error fetching data !");
+      if (response.includes("<!DOCTYPE html>")) errors.push("Internal Server Error !");
       else errors.push(response);
 
     if (typeof response === "object") {

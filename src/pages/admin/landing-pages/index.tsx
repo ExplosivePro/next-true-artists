@@ -200,7 +200,7 @@ export default function LandingPages() {
                     {pageListData.map((landingPage: Admin.LandingPages, index: number) => (
                       <StyledTableRow key={index}>
                         <StyledTableCell>
-                          <Link href={`${PUBLIC_BASE}/${landingPage?.page_url}`}>
+                          <Link href={`${PUBLIC_BASE}/landing_pages${landingPage?.page_key}`}>
                             <a target="_blank" className={classes.listLink}>
                               {landingPage?.title}
                             </a>
