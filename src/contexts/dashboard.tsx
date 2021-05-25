@@ -337,7 +337,7 @@ export function DashboardContext({ children }: Props) {
               })}
             </List>
           </Drawer>
-          {role !== Role.REGULAR && getRoleDetail().status !== "approved" && (
+          {role !== Role.REGULAR && role !== Role.ADMIN && getRoleDetail().status !== "approved" && (
             <HeaderBanner
               status={getTypeByStatus(getRoleDetail().status)}
               requireActivation={!isCompleteRoleProfile()}
@@ -345,7 +345,8 @@ export function DashboardContext({ children }: Props) {
           )}
           <main
             className={clsx(classes.content, {
-              [classes.hasBanner]: role !== Role.REGULAR && getRoleDetail().status !== "approved",
+              [classes.hasBanner]:
+                role !== Role.REGULAR && role !== Role.ADMIN && getRoleDetail().status !== "approved",
             })}
           >
             <MenuIcon className={classes.menuIcon} onClick={handleModalOpen} />
@@ -364,7 +365,7 @@ export function DashboardContext({ children }: Props) {
                 <b>{name}</b>
               </Typography>
 
-              {user?.role !== Role.REGULAR && (
+              {user?.role !== Role.REGULAR && role !== Role.ADMIN && (
                 <PrimaryButton
                   variant="contained"
                   startIcon={<AddIcon />}
@@ -384,7 +385,7 @@ export function DashboardContext({ children }: Props) {
                 aria-haspopup="true"
                 color="inherit"
                 onClick={handleProfileMenuOpen}
-                className={clsx({ [classes.leftAuto]: user?.role === Role.REGULAR })}
+                className={clsx({ [classes.leftAuto]: user?.role === Role.REGULAR || user?.role === Role.ADMIN })}
                 classes={{ root: classes.profileButton }}
               >
                 <Avatar alt={user?.full_name || "Avatar"} src={user?.avatar?.image_url} />
