@@ -129,6 +129,7 @@ export default function RightBarArtistRegisterInformation({
         streetAddress: yup.string().required("Street address is required"),
         zipCode: yup.string().required("Zip code is required"),
         city: yup.string().required("City is required"),
+        state: yup.string().required("State is required"),
         country: yup.string().required("Country is required"),
       }),
     [],
@@ -150,6 +151,7 @@ export default function RightBarArtistRegisterInformation({
     streetAddress,
     zipCode,
     city,
+    state,
     country,
     facebook,
     website,
@@ -163,6 +165,7 @@ export default function RightBarArtistRegisterInformation({
     zipCode,
     city,
     country,
+    state,
     phoneNumber,
     yearsOfExperience,
     website,
@@ -188,6 +191,7 @@ export default function RightBarArtistRegisterInformation({
           street_address: streetAddress,
           zip_code: zipCode,
           city,
+          state,
           country,
           phone_number: phoneNumber,
           website,
@@ -215,6 +219,7 @@ export default function RightBarArtistRegisterInformation({
               streetAddress,
               zipCode,
               city,
+              state,
               country,
               phoneNumber,
               specialties,
@@ -240,6 +245,7 @@ export default function RightBarArtistRegisterInformation({
           zip_code: zipCode,
           city,
           country,
+          state,
           phone_number: phoneNumber,
           website,
           facebook_url: facebook ? `${baseFacebookUrl}${facebook}` : "",
@@ -423,6 +429,25 @@ export default function RightBarArtistRegisterInformation({
             googleAutoComplete={[]}
             errors={errors.streetAddress}
             setValueFn={setValue}
+            referenceFields={[
+              { fieldName: "zipCode", referenceField: "postal_code" },
+              { fieldName: "city", referenceField: "administrative_area_level_1" },
+              { fieldName: "state", referenceField: "administrative_area_level_1" },
+              { fieldName: "country", referenceField: "country", matchList: countryList },
+            ]}
+          />
+
+          <FormInput
+            name="state"
+            classes={{ root: classes.formInput }}
+            label={"State"}
+            id="state"
+            placeholder={"State"}
+            fullWidth
+            control={control}
+            variant={"outlined"}
+            defaultValue={state || ""}
+            errors={errors.state}
           />
 
           <FormInput
@@ -616,6 +641,7 @@ interface submitFormData {
   streetAddress: string;
   zipCode: string;
   city: string;
+  state: string;
   country: string;
   phoneNumber: string;
   yearsOfExperience: number;

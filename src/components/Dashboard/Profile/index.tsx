@@ -227,6 +227,7 @@ export default function UserProfile() {
       zipCode,
       country,
       phoneNumber,
+      state,
       specialties,
     }: any,
     editUserResponse: RestApi.Response,
@@ -245,6 +246,7 @@ export default function UserProfile() {
       street_address: streetAddress,
       zip_code: zipCode,
       country,
+      state,
       phone_number: phoneNumber,
       specialty: specialties ? specialties.join(",") : [],
       styles: getSelectedIds(artistStyles),
@@ -674,6 +676,7 @@ export default function UserProfile() {
                           onStyleChange={onArtistStyleChange}
                           specialties={specialties}
                           workingStyles={workingStyles}
+                          setValue={setValue}
                         />
                       )}
 

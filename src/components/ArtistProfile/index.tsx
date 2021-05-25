@@ -19,7 +19,7 @@ import MultipleSelection from "./MutilpleSelection";
 import PricingList from "./PricingList";
 
 // Constants
-import { artistSettingList, specialtyList } from "../../constants";
+import { artistSettingList, countryList, specialtyList } from "../../constants";
 
 // Styles
 import useStyles from "./styles";
@@ -40,6 +40,7 @@ export default function ArtistProfile({
   styleValues,
   workingStyles,
   onStyleChange,
+  setValue,
 }: Props) {
   const classes = useStyles();
 
@@ -50,6 +51,7 @@ export default function ArtistProfile({
     street_address: streetAddress,
     zip_code: zipCode,
     country,
+    state,
   } = currentData;
 
   return (
@@ -182,6 +184,27 @@ export default function ArtistProfile({
             variant={"outlined"}
             defaultValue={streetAddress || ""}
             errors={errors.streetAddress}
+            googleAutoComplete={[]}
+            setValueFn={setValue}
+            referenceFields={[
+              { fieldName: "zipCode", referenceField: "postal_code" },
+              { fieldName: "state", referenceField: "administrative_area_level_1" },
+              { fieldName: "city", referenceField: "administrative_area_level_1" },
+              { fieldName: "country", referenceField: "country", matchList: countryList },
+            ]}
+          />
+
+          <FormInput
+            name="state"
+            classes={{ root: classes.formInput }}
+            label={"State"}
+            id="state"
+            placeholder={"State"}
+            fullWidth
+            control={control}
+            variant={"outlined"}
+            defaultValue={state || ""}
+            errors={errors.state}
           />
 
           <FormInput
@@ -223,6 +246,7 @@ export const validationSchema = yup.object({
   yearsOfExperience: yup.string().required("Years of experience is required"),
   phoneNumber: yup.string().required("Phone number is required"),
   streetAddress: yup.string().required("Street address is required"),
+  state: yup.string().required("State is required"),
   zipCode: yup.string().required("Zip code is required"),
   country: yup.string().required("Country is required"),
 });
@@ -243,4 +267,5 @@ interface Props {
   workingStyles: Resource.WorkingStyle[];
   onStyleChange: (e: any) => void;
   styleValues: any;
+  setValue: any;
 }

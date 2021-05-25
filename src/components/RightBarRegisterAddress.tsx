@@ -14,6 +14,7 @@ import PrimaryButton from "./PrimaryButton";
 
 import { createArtistProfile } from "../api";
 import { useApp } from "../contexts";
+import { countryList } from "../constants";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -64,7 +65,7 @@ export default function RightBarRegisterAddress({ onPreviousStep, onNext, curren
 
   const classes = useStyles();
   const resolver = useYupValidationResolver(validationSchema);
-  const { control, handleSubmit, errors } = useForm({ resolver });
+  const { control, handleSubmit, errors, setValue } = useForm({ resolver });
 
   const onSubmit = async ({ streetAddress, zipCode, country, phoneNumber }: submitFormData) => {
     if (currentUserId) {
@@ -122,6 +123,13 @@ export default function RightBarRegisterAddress({ onPreviousStep, onNext, curren
             variant={"outlined"}
             defaultValue={""}
             errors={errors.streetAddress}
+            googleAutoComplete={[]}
+            setValueFn={setValue}
+            referenceFields={[
+              { fieldName: "zipCode", referenceField: "postal_code" },
+              { fieldName: "city", referenceField: "administrative_area_level_1" },
+              { fieldName: "country", referenceField: "country", matchList: countryList },
+            ]}
           />
 
           <FormInput

@@ -116,6 +116,13 @@ export default function StudioProfile({
             defaultValue={streetAddress || ""}
             errors={errors.streetAddress}
             googleAutoComplete={[]}
+            setValueFn={setValue}
+            referenceFields={[
+              { fieldName: "zipCode", referenceField: "postal_code" },
+              { fieldName: "city", referenceField: "administrative_area_level_1" },
+              { fieldName: "state", referenceField: "administrative_area_level_1" },
+              { fieldName: "country", referenceField: "country", matchList: countryList },
+            ]}
           />
 
           <Grid container spacing={2}>
