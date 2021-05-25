@@ -292,7 +292,7 @@ export default function EditLandingPages() {
                     <Grid item xs={12}>
                       <Card variant="outlined" className={classes.cardItem}>
                         <CardContent>
-                          <Typography>Category</Typography>
+                          <Typography>Last updated by</Typography>
                           <TableContainer>
                             <Table size="small">
                               <colgroup>
@@ -304,55 +304,7 @@ export default function EditLandingPages() {
                                   <StyledTableCell>
                                     <b>Name </b>
                                   </StyledTableCell>
-                                  <StyledTableCell>{pageData?.category?.name}</StyledTableCell>
-                                </StyledTableRow>
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <Card variant="outlined" className={classes.cardItem}>
-                        <CardContent>
-                          <Typography>Tags</Typography>
-                          {pageData?.tags?.map((style: string, index: number) => (
-                            <Chip label={style} size="small" key={index} className={classes.tagsChips} />
-                          ))}
-                        </CardContent>
-                      </Card>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <Card variant="outlined" className={classes.cardItem}>
-                        <CardContent>
-                          <Typography>Author</Typography>
-                          <TableContainer>
-                            <Table size="small">
-                              <colgroup>
-                                <col width="15%" />
-                                <col width="auto" />
-                              </colgroup>
-                              <TableBody>
-                                <StyledTableRow>
-                                  <StyledTableCell>
-                                    <b>Name </b>
-                                  </StyledTableCell>
-                                  <StyledTableCell>{pageData?.user?.full_name}</StyledTableCell>
-                                </StyledTableRow>
-
-                                <StyledTableRow>
-                                  <StyledTableCell>
-                                    <b>Email </b>
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    <Link href={`mailto:${pageData?.user?.email}`}>
-                                      <a target="_blank" className={classes.listLink}>
-                                        {pageData?.user?.email}
-                                      </a>
-                                    </Link>
-                                  </StyledTableCell>
+                                  <StyledTableCell>{pageData?.last_updated_by}</StyledTableCell>
                                 </StyledTableRow>
                               </TableBody>
                             </Table>
