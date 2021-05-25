@@ -114,4 +114,10 @@ declare namespace Admin {
     category: { name: string };
     tag_list: string[];
   }
+
+  declare interface Style {
+    id: number;
+    name: string;
+    slug: string;
+  }
 }
