@@ -29,7 +29,7 @@ import StudioProfile, { validationSchema as studioSchema } from "../../StudioPro
 import ChangePassword, { titleHeader as changePasswordHeader } from "./ChangePassword";
 import SocialLinks, { titleHeader as socialLinksHeader } from "./SocialLinks";
 import TitleHeader from "./TitleHeader";
-import Cover from "./Cover";
+// import Cover from "./Cover";
 
 // Utils
 import { useYupValidationResolver } from "../../../utils";
@@ -618,7 +618,7 @@ export default function UserProfile() {
             </div>
           </Grid>
           <Grid item lg={7} md={7} sm={12} xs={12} className={classes.rightBar}>
-            <Cover />
+            {/*<Cover />*/}
             <Grid container item alignItems={"center"} className={classes.formContainer}>
               <TitleHeader data={getTitleHeaderByTab(activeTab)} />
               <div className={classes.divider}>
