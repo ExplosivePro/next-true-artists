@@ -45,6 +45,7 @@ declare namespace Resource {
     first_name?: string;
     last_name?: string;
     street_address?: string;
+    street_address_2?: string;
     city?: string;
     country?: string;
     years_of_experience?: number;
@@ -112,6 +113,7 @@ declare namespace Resource {
     avatar: Image;
     bio?: string;
     street_address?: string;
+    street_address_2?: string;
     hero_banner?: Image;
     lat?: number;
     long?: number;

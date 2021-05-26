@@ -44,7 +44,9 @@ declare namespace Register {
     instagram_url?: string;
     twitter_url?: string;
     street_address?: string;
+    street_address_2?: string;
     zip_code?: string;
+    state?: string;
     city?: string;
     country?: string;
     styles?: number[];
@@ -71,9 +73,11 @@ declare namespace Register {
     instagram_url?: string;
     twitter_url?: string;
     street_address?: string;
+    street_address_2?: string;
     zip_code?: string;
     city?: string;
     country?: string;
+    state?: string;
     styles?: number[];
     phone_number?: string;
     specialty?: string;
@@ -91,6 +95,7 @@ declare namespace Register {
     last_name?: string;
     email?: string;
     street_address?: string;
+    street_address_2?: string;
     zip_code?: string;
     country?: string;
     styles?: number[];
@@ -111,6 +116,7 @@ declare namespace Register {
     last_name?: string;
     email?: string;
     street_address?: string;
+    street_address_2?: string;
     zip_code?: string;
     city?: string;
     state?: string;
