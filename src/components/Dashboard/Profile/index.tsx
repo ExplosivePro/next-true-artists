@@ -224,6 +224,7 @@ export default function UserProfile() {
       pricePerHour,
       currency,
       streetAddress,
+      streetAddress2,
       zipCode,
       country,
       phoneNumber,
@@ -244,6 +245,7 @@ export default function UserProfile() {
       price_per_hour: pricePerHour,
       currency_code: currency,
       street_address: streetAddress,
+      street_address_2: streetAddress2,
       zip_code: zipCode,
       country,
       state,
@@ -277,7 +279,7 @@ export default function UserProfile() {
 
   // Submit edit profile for studio role
   const submitEditStudioProfile = async (
-    { name, email, streetAddress, city, country, state, zipCode, phoneNumber }: any,
+    { name, email, streetAddress, streetAddress2, city, country, state, zipCode, phoneNumber }: any,
     editUserResponse: RestApi.Response,
   ) => {
     const editStudioResponse = await editStudioProfile({
@@ -290,6 +292,7 @@ export default function UserProfile() {
       zip_code: zipCode,
       phone_number: phoneNumber,
       street_address: streetAddress,
+      street_address_2: streetAddress2,
       minimum_spend: minimumRate,
       price_per_hour: pricePerHour,
       currency_code: currency,

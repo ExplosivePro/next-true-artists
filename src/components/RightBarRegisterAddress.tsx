@@ -67,12 +67,13 @@ export default function RightBarRegisterAddress({ onPreviousStep, onNext, curren
   const resolver = useYupValidationResolver(validationSchema);
   const { control, handleSubmit, errors, setValue } = useForm({ resolver });
 
-  const onSubmit = async ({ streetAddress, zipCode, country, phoneNumber }: submitFormData) => {
+  const onSubmit = async ({ streetAddress, streetAddress2, zipCode, country, phoneNumber }: submitFormData) => {
     if (currentUserId) {
       // Call APIs to create artist profile
       const response = await createArtistProfile({
         user_id: currentUserId,
         street_address: streetAddress, // Put this down temporarily due to missing APIs
+        street_address_2: streetAddress2 as string,
         zip_code: zipCode,
         country,
         phone_number: phoneNumber,
@@ -81,7 +82,7 @@ export default function RightBarRegisterAddress({ onPreviousStep, onNext, curren
       const { error, data, errors } = response;
       // No error happens
       if (!error) {
-        onNext && onNext(data.id, { streetAddress, zipCode, country, phoneNumber });
+        onNext && onNext(data.id, { streetAddress, streetAddress2, zipCode, country, phoneNumber });
       } else {
         app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
       }
@@ -130,6 +131,21 @@ export default function RightBarRegisterAddress({ onPreviousStep, onNext, curren
               { fieldName: "city", referenceField: "administrative_area_level_1" },
               { fieldName: "country", referenceField: "country", matchList: countryList },
             ]}
+          />
+
+          <FormInput
+            name="streetAddress2"
+            classes={{ root: classes.formInput }}
+            label={"Street Address 2"}
+            id="streetAddress2"
+            placeholder={"Street Address 2"}
+            fullWidth
+            control={control}
+            variant={"outlined"}
+            defaultValue={""}
+            googleAutoComplete={[]}
+            errors={errors.streetAddress2}
+            setValueFn={setValue}
           />
 
           <FormInput
@@ -194,6 +210,7 @@ interface Props {
 
 interface submitFormData {
   streetAddress: string;
+  streetAddress2?: string;
   zipCode: string;
   country: string;
   phoneNumber: "string";
