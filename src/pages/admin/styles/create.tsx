@@ -13,6 +13,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 
 import AdminBody from "src/components/Admin/AdminBody";
+import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
 import { TextInput, InfoAlert } from "src/components/Admin/FormInputs";
 
@@ -46,7 +47,7 @@ export default function Style() {
         setInfoAlert({ severity: "success", message: "Style updated successfully" });
       }
     } catch (error) {
-      setInfoAlert({ severity: "error", message: `Error updating Style! - ${error}` });
+      setInfoAlert({ severity: "error", message: `Error updating Style! - ${handleApiErrors(error)}` });
     }
     setTimeout(() => {
       setInfoAlert({ severity: "info", message: "" });

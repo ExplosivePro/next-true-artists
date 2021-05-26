@@ -15,6 +15,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 
 import AdminBody from "src/components/Admin/AdminBody";
+import handleApiErrors from "src/components/Admin/handleApiErrors";
 import Loading from "src/components/Loading";
 import PrimaryButton from "src/components/PrimaryButton";
 import { TextInput, InfoAlert } from "src/components/Admin/FormInputs";
@@ -72,7 +73,7 @@ export default function Style() {
         refetchStyleData();
       }
     } catch (error) {
-      setInfoAlert({ severity: "error", message: `Error updating Style! - ${error}` });
+      setInfoAlert({ severity: "error", message: `Error updating Style! - ${handleApiErrors(error)}` });
     }
     setTimeout(() => {
       setInfoAlert({ severity: "info", message: "" });
@@ -110,7 +111,7 @@ export default function Style() {
               <Loading />
             </React.Fragment>
           ) : styleDataStatus === "error" ? (
-            <Alert severity="error">{`Retrieving Styles - ${styleDataError}`}</Alert>
+            <Alert severity="error">{`Retrieving Styles - ${handleApiErrors(styleDataError)}`}</Alert>
           ) : styleData ? (
             <Grid container spacing={2} className={classes.buttonWrapper}>
               <Grid item xs={12} md={6}>

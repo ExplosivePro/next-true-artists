@@ -28,6 +28,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 
 import AdminBody from "src/components/Admin/AdminBody";
+import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
 import { InfoAlert } from "src/components/Admin/FormInputs";
@@ -92,7 +93,7 @@ export default function Styles() {
         setTimeout(() => styleListRefetch(), 500);
       }
     } catch (error) {
-      setInfoAlert({ severity: "error", message: `Error deleting style! - ${error}` });
+      setInfoAlert({ severity: "error", message: `Error deleting style! - ${handleApiErrors(error)}` });
     }
     setTimeout(() => {
       setInfoAlert({ severity: "info", message: "" });
@@ -167,7 +168,7 @@ export default function Styles() {
                 <Loading />
               </React.Fragment>
             ) : styleListStatus === "error" ? (
-              <Alert severity="error">{`Retrieving Styles - ${styleListError}`}</Alert>
+              <Alert severity="error">{`Retrieving Styles - ${handleApiErrors(styleListError)}`}</Alert>
             ) : styleListData.length > 0 ? (
               <React.Fragment>
                 <TableContainer className={classes.tableContainer}>
