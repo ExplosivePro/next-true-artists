@@ -23,6 +23,7 @@ export const useStyles = makeStyles({
   deleteCell: {
     textDecoration: "underline",
     cursor: "pointer",
+    textAlign: "center",
   },
   metaWrapper: {
     borderLeft: "solid thin lightGrey",
