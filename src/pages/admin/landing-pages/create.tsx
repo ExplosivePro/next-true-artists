@@ -31,9 +31,12 @@ import { TextInput, InfoAlert } from "src/components/Admin/FormInputs";
 import { createLandingPage } from "./api";
 import { useStyles } from "./styles";
 
+import getConfig from "next/config";
+
 export default function CreateNew() {
   const classes = useStyles();
   const router = useRouter();
+  const PUBLIC_BASE = getConfig().publicRuntimeConfig.PUBLIC_PAGE_BASE_URL;
 
   // Create an Alert for info feedback
   const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
@@ -47,7 +50,6 @@ export default function CreateNew() {
   const getFormDefaultValues = () => ({
     status: "",
     page_key: "",
-    page_url: "",
     title: "",
     page_title: "",
     content: "",
@@ -65,14 +67,11 @@ export default function CreateNew() {
   });
 
   const onSubmit = async (formValues: { [T: string]: any }) => {
-    const { title, page_title, introduction } = formValues;
+    const { title, page_title, page_key } = formValues;
     const formData = new FormData();
 
     Object.entries(formValues).map(([key, value]) => formData.append(key, value));
-    formData.append(
-      "meta_description",
-      JSON.stringify({ title: title, page_title: page_title, introduction: introduction }),
-    );
+    formData.append("meta_description", JSON.stringify({ title: title, page_title: page_title, page_key: page_key }));
     if (avatar) formData.append("avatar", avatar);
 
     try {
@@ -81,7 +80,7 @@ export default function CreateNew() {
       else {
         setInfoAlert({ severity: "success", message: "Landing page created successfully" });
         setTimeout(() => {
-          router.push(`/admin/landing_pages/${response.id}`);
+          router.push(`${PUBLIC_BASE}/landing_pages${response.page_key}`);
         }, 2500);
         return;
       }
@@ -122,7 +121,7 @@ export default function CreateNew() {
       </Head>
 
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={6} lg={6}>
+        <Grid item xs={12}>
           <Breadcrumbs>
             <Typography variant="h6">
               <Link href="/admin">Dashboard</Link>
@@ -140,7 +139,7 @@ export default function CreateNew() {
               <Grid container spacing={2}>
                 {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
 
-                <Grid item xs={12} md={12}>
+                <Grid item xs={12}>
                   <TextInput
                     name="page_key"
                     register={register}
@@ -151,18 +150,7 @@ export default function CreateNew() {
                   />
                 </Grid>
 
-                <Grid item xs={12} md={12}>
-                  <TextInput
-                    name="page_title"
-                    register={register}
-                    required={true}
-                    label="Page Title *"
-                    errors={!!errors.page_title}
-                    errorMessage={errors.page_title?.message}
-                  />
-                </Grid>
-
-                <Grid item xs={12} md={12}>
+                <Grid item xs={12}>
                   <TextInput
                     name="title"
                     register={register}
@@ -170,6 +158,17 @@ export default function CreateNew() {
                     label="Header Title *"
                     errors={!!errors.title}
                     errorMessage={errors.title?.message}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextInput
+                    name="page_title"
+                    register={register}
+                    required={true}
+                    label="Page Title *"
+                    errors={!!errors.page_title}
+                    errorMessage={errors.page_title?.message}
                   />
                 </Grid>
               </Grid>

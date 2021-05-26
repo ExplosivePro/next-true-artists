@@ -29,9 +29,12 @@ import { TextInput, InfoAlert } from "src/components/Admin/FormInputs";
 import { createArticle } from "./api";
 import { useStyles } from "./styles";
 
+import getConfig from "next/config";
+
 export default function CreateNew() {
   const classes = useStyles();
   const router = useRouter();
+  const PUBLIC_BASE = getConfig().publicRuntimeConfig.PUBLIC_PAGE_BASE_URL;
 
   // Create an Alert for info feedback
   const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
@@ -77,7 +80,7 @@ export default function CreateNew() {
       else {
         setInfoAlert({ severity: "success", message: "Article created successfully" });
         setTimeout(() => {
-          router.push(`/admin/articles/${response.id}`);
+          router.push(`${PUBLIC_BASE}/articles/${response.slug}`);
         }, 2500);
         return;
       }
@@ -113,7 +116,7 @@ export default function CreateNew() {
       </Head>
 
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={6} lg={6}>
+        <Grid item xs={12}>
           <Breadcrumbs>
             <Typography variant="h6">
               <Link href="/admin">Dashboard</Link>

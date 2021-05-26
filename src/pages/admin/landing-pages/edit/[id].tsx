@@ -72,7 +72,6 @@ export default function EditLandingPages() {
   const getFormDefaultValues = () => ({
     status: "",
     page_key: "",
-    page_url: "",
     title: "",
     page_title: "",
     content: "",
@@ -94,7 +93,6 @@ export default function EditLandingPages() {
     if (pageDataStatus === "success") {
       setValue("status", pageData?.status);
       setValue("page_key", pageData?.page_key);
-      setValue("page_url", pageData?.page_url);
       setValue("title", pageData?.title);
       setValue("page_title", pageData?.page_title);
       setValue("content", pageData?.content);
@@ -152,11 +150,11 @@ export default function EditLandingPages() {
   return (
     <AdminBody>
       <Head>
-        <title>TrueArtists: Admin/Landing Pages/{pageData?.page_url ?? pageId}</title>
+        <title>TrueArtists: Admin/Landing Pages/{pageData?.title ?? pageId}</title>
       </Head>
 
       <Grid container>
-        <Grid item xs={12} sm={6} md={6} lg={6}>
+        <Grid item xs={12}>
           <Breadcrumbs>
             <Typography variant="h6">
               <Link href="/admin">Dashboard</Link>
@@ -164,7 +162,7 @@ export default function EditLandingPages() {
             <Typography variant="h6">
               <Link href="/admin/landing-pages">Landing Pages</Link>
             </Typography>
-            <Typography variant="h6">{pageData?.page_url ?? pageId}</Typography>
+            <Typography variant="h6">{pageData?.title ?? pageId}</Typography>
           </Breadcrumbs>
         </Grid>
 
@@ -185,29 +183,7 @@ export default function EditLandingPages() {
                       {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
                     </Grid>
 
-                    <Grid item xs={12} md={6}>
-                      <TextInput
-                        name="page_key"
-                        register={register}
-                        required={true}
-                        label="Page Key *"
-                        errors={!!errors.page_key}
-                        errorMessage={errors.page_key?.message}
-                      />
-                    </Grid>
-
-                    <Grid item xs={12} md={6}>
-                      <TextInput
-                        name="page_url"
-                        register={register}
-                        required={true}
-                        label="Page Url *"
-                        errors={!!errors.page_url}
-                        errorMessage={errors.page_url?.message}
-                      />
-                    </Grid>
-
-                    <Grid item xs={6}>
+                    <Grid item xs={6} sm={4} lg={3}>
                       <SelectInput
                         name="status"
                         control={control}
@@ -221,10 +197,21 @@ export default function EditLandingPages() {
 
                     <Grid item xs={10}>
                       <TextInput
+                        name="page_key"
+                        register={register}
+                        required={true}
+                        label="Page url (Example /tattoos/back) *"
+                        errors={!!errors.page_key}
+                        errorMessage={errors.page_key?.message}
+                      />
+                    </Grid>
+
+                    <Grid item xs={10}>
+                      <TextInput
                         name="title"
                         register={register}
                         required={true}
-                        label="Title *"
+                        label="Header Title *"
                         errors={!!errors.title}
                         errorMessage={errors.title?.message}
                       />
@@ -244,7 +231,7 @@ export default function EditLandingPages() {
                     <Grid item xs={12}>
                       <FormControl fullWidth error={errors.content ? true : false} required={true}>
                         <FormHelperText>
-                          <b>Content</b>
+                          <b>Page Content</b>
                         </FormHelperText>
                         <Controller
                           name={"content"}
@@ -276,7 +263,7 @@ export default function EditLandingPages() {
                     <Grid item xs={12}>
                       <Card variant="outlined" className={classes.imageCard}>
                         <CardContent>
-                          <Typography>Landing Page avatar</Typography>
+                          <Typography>Edit LP image</Typography>
                           <CardMedia
                             className={classes.imageCardMedia}
                             image={preview ? preview : pageData?.avatar?.image_url ?? "/images/camera.png"}
@@ -305,7 +292,7 @@ export default function EditLandingPages() {
                     <Grid item xs={12}>
                       <Card variant="outlined" className={classes.cardItem}>
                         <CardContent>
-                          <Typography>Category</Typography>
+                          <Typography>Last updated by</Typography>
                           <TableContainer>
                             <Table size="small">
                               <colgroup>
@@ -317,55 +304,7 @@ export default function EditLandingPages() {
                                   <StyledTableCell>
                                     <b>Name </b>
                                   </StyledTableCell>
-                                  <StyledTableCell>{pageData?.category?.name}</StyledTableCell>
-                                </StyledTableRow>
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <Card variant="outlined" className={classes.cardItem}>
-                        <CardContent>
-                          <Typography>Tags</Typography>
-                          {pageData?.tags?.map((style: string, index: number) => (
-                            <Chip label={style} size="small" key={index} className={classes.tagsChips} />
-                          ))}
-                        </CardContent>
-                      </Card>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <Card variant="outlined" className={classes.cardItem}>
-                        <CardContent>
-                          <Typography>Author</Typography>
-                          <TableContainer>
-                            <Table size="small">
-                              <colgroup>
-                                <col width="15%" />
-                                <col width="auto" />
-                              </colgroup>
-                              <TableBody>
-                                <StyledTableRow>
-                                  <StyledTableCell>
-                                    <b>Name </b>
-                                  </StyledTableCell>
-                                  <StyledTableCell>{pageData?.user?.full_name}</StyledTableCell>
-                                </StyledTableRow>
-
-                                <StyledTableRow>
-                                  <StyledTableCell>
-                                    <b>Email </b>
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    <Link href={`mailto:${pageData?.user?.email}`}>
-                                      <a target="_blank" className={classes.listLink}>
-                                        {pageData?.user?.email}
-                                      </a>
-                                    </Link>
-                                  </StyledTableCell>
+                                  <StyledTableCell>{pageData?.last_updated_by}</StyledTableCell>
                                 </StyledTableRow>
                               </TableBody>
                             </Table>

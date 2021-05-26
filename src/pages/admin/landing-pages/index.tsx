@@ -113,8 +113,6 @@ export default function LandingPages() {
     setDeletePageDialog({ isOpen: false, title: "", pageId: "" });
   };
 
-  if (pageListStatus === "success") console.log(pageListData);
-
   return (
     <AdminBody>
       <Head>
@@ -182,8 +180,8 @@ export default function LandingPages() {
                     <col width="auto" />
                     <col width="auto" />
                     <col width="10%" />
-                    <col width="5%" />
-                    <col width="5%" />
+                    <col width="10%" />
+                    <col width="10%" />
                   </colgroup>
                   <TableHead>
                     <TableRow>
@@ -208,7 +206,7 @@ export default function LandingPages() {
                         </StyledTableCell>
                         <StyledTableCell>{landingPage?.page_title}</StyledTableCell>
                         <StyledTableCell>{landingPage?.status}</StyledTableCell>
-                        <StyledTableCell>
+                        <StyledTableCell className={classes.statusHeader}>
                           <Link href={`${router.pathname}/edit/${landingPage?.id}`}>
                             <a className={classes.listLink}>Edit</a>
                           </Link>
