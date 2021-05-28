@@ -131,4 +131,16 @@ declare namespace Admin {
     status: string;
     avatar: ImageAsset;
   }
+
+  declare interface Conventions {
+    id: number;
+    name: string;
+    description: string;
+    link_to_official_site: string;
+    facebook_link: string;
+    start_date: any;
+    end_date: string;
+    status: string;
+    image: ImageAsset;
+  }
 }

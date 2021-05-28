@@ -7,4 +7,5 @@ export const menuAdminBar = {
   ARTICLES: "/admin/articles",
   STYLES: "/admin/styles",
   LANDING_PAGES: "/admin/landing-pages",
+  CONVENTIONS: "/admin/conventions",
 };
