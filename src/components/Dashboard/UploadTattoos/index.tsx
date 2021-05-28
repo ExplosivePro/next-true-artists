@@ -31,26 +31,27 @@ export default function UploadTattoos({ id }: Props) {
 
   const editMode = !isNaN(id as number);
 
-  const uploadImages = async (tattoos: Image[]) => {
+  const uploadImages = async (tattooImages: Image[]) => {
     const formData = new FormData();
-    const metaData: any[] = [];
-
-    // Add all images into formData
-    tattoos.map((tattoo) => {
-      formData.append("images[]", tattoo.file);
-      metaData.push({
-        placement: tattoo.placement,
-        workplace: tattoo.workplace,
-        color: tattoo.color,
-        caption: tattoo.caption,
-        featured: tattoo.featured,
-      });
-    });
-
-    formData.append("meta_data", JSON.stringify(metaData));
 
     // Create the new one
     if (isNaN(id as number)) {
+      const metaData: any[] = [];
+
+      // Add all images into formData
+      tattooImages.map((tattoo) => {
+        formData.append("images[]", tattoo.file);
+        metaData.push({
+          placement: tattoo.placement,
+          workplace: tattoo.workplace,
+          color: tattoo.color,
+          caption: tattoo.caption,
+          featured: tattoo.featured,
+        });
+      });
+
+      formData.append("meta_data", JSON.stringify(metaData));
+
       const response = await uploadTattoos(formData);
 
       const { error, errors, data } = response;
@@ -64,6 +65,13 @@ export default function UploadTattoos({ id }: Props) {
         app.showErrorDialog(true, errors ? errors.toString() : "Image upload failed. Try again");
       }
     } else {
+      formData.append("image", tattooImages[0].file);
+      formData.append("placement", tattoos[0].placement);
+      formData.append("workplace", tattoos[0].workplace);
+      formData.append("color", tattoos[0].color);
+      formData.append("caption", tattoos[0].caption);
+      formData.append("featured", tattoos[0].featured.toString());
+
       // Edit
       const response = await editTattoos(currentUserId as number, query.id as string, role, formData);
 
