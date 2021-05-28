@@ -45,6 +45,10 @@ export default function Style() {
       if (!response) setInfoAlert({ severity: "error", message: "Error updating Style !" });
       else {
         setInfoAlert({ severity: "success", message: "Style updated successfully" });
+        setTimeout(() => {
+          handleCancel();
+        }, 2500);
+        return;
       }
     } catch (error) {
       setInfoAlert({ severity: "error", message: `Error updating Style! - ${handleApiErrors(error)}` });
