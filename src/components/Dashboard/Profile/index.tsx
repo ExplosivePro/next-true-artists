@@ -29,7 +29,7 @@ import StudioProfile, { validationSchema as studioSchema } from "../../StudioPro
 import ChangePassword, { titleHeader as changePasswordHeader } from "./ChangePassword";
 import SocialLinks, { titleHeader as socialLinksHeader } from "./SocialLinks";
 import TitleHeader from "./TitleHeader";
-import Cover from "./Cover";
+// import Cover from "./Cover";
 
 // Utils
 import { useYupValidationResolver } from "../../../utils";
@@ -224,9 +224,11 @@ export default function UserProfile() {
       pricePerHour,
       currency,
       streetAddress,
+      streetAddress2,
       zipCode,
       country,
       phoneNumber,
+      state,
       specialties,
     }: any,
     editUserResponse: RestApi.Response,
@@ -243,8 +245,10 @@ export default function UserProfile() {
       price_per_hour: pricePerHour,
       currency_code: currency,
       street_address: streetAddress,
+      street_address_2: streetAddress2,
       zip_code: zipCode,
       country,
+      state,
       phone_number: phoneNumber,
       specialty: specialties ? specialties.join(",") : [],
       styles: getSelectedIds(artistStyles),
@@ -275,7 +279,7 @@ export default function UserProfile() {
 
   // Submit edit profile for studio role
   const submitEditStudioProfile = async (
-    { name, email, streetAddress, city, country, state, zipCode, phoneNumber }: any,
+    { name, email, streetAddress, streetAddress2, city, country, state, zipCode, phoneNumber }: any,
     editUserResponse: RestApi.Response,
   ) => {
     const editStudioResponse = await editStudioProfile({
@@ -288,6 +292,7 @@ export default function UserProfile() {
       zip_code: zipCode,
       phone_number: phoneNumber,
       street_address: streetAddress,
+      street_address_2: streetAddress2,
       minimum_spend: minimumRate,
       price_per_hour: pricePerHour,
       currency_code: currency,
@@ -616,7 +621,7 @@ export default function UserProfile() {
             </div>
           </Grid>
           <Grid item lg={7} md={7} sm={12} xs={12} className={classes.rightBar}>
-            <Cover />
+            {/*<Cover />*/}
             <Grid container item alignItems={"center"} className={classes.formContainer}>
               <TitleHeader data={getTitleHeaderByTab(activeTab)} />
               <div className={classes.divider}>
@@ -674,6 +679,7 @@ export default function UserProfile() {
                           onStyleChange={onArtistStyleChange}
                           specialties={specialties}
                           workingStyles={workingStyles}
+                          setValue={setValue}
                         />
                       )}
 

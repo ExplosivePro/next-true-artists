@@ -120,4 +120,15 @@ declare namespace Admin {
     name: string;
     slug: string;
   }
+
+  declare interface LandingPages {
+    id: number;
+    title: string;
+    page_key: string;
+    page_title: string;
+    meta_description: string;
+    content: string;
+    status: string;
+    avatar: ImageAsset;
+  }
 }

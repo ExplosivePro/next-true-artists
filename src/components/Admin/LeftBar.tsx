@@ -15,6 +15,7 @@ import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import SubjectIcon from "@material-ui/icons/Subject";
 import FilterVintageIcon from "@material-ui/icons/FilterVintage";
 import Typography from "@material-ui/core/Typography";
+import EventNoteIcon from "@material-ui/icons/EventNote";
 
 import { menuAdminBar } from "src/constants";
 import { useMenuStyles } from "./styles";
@@ -65,6 +66,12 @@ export default function LeftBar() {
       case "styles":
         if (currentActiveBar !== menuAdminBar.STYLES) {
           goToPage(`/admin/styles`, { mainBar: menuAdminBar.STYLES });
+        }
+        break;
+
+      case "landingPages":
+        if (currentActiveBar !== menuAdminBar.LANDING_PAGES) {
+          goToPage(`/admin/landing-pages`, { mainBar: menuAdminBar.LANDING_PAGES });
         }
         break;
 
@@ -175,6 +182,22 @@ export default function LeftBar() {
         </ListItemIcon>
         <ListItemText>
           <Typography color="inherit">Styles</Typography>
+        </ListItemText>
+      </ListItem>
+
+      <ListItem
+        button
+        key={"Landing-Pages"}
+        onClick={() => handleAdminMenuClick("landingPages")}
+        className={clsx(classes.listItem, {
+          [classes.activeBar]: currentActiveBar.indexOf(menuAdminBar.LANDING_PAGES) > -1,
+        })}
+      >
+        <ListItemIcon className={classes.listItemIcon}>
+          <EventNoteIcon />
+        </ListItemIcon>
+        <ListItemText>
+          <Typography color="inherit">Landing Pages</Typography>
         </ListItemText>
       </ListItem>
     </List>

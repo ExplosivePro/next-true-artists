@@ -20,13 +20,15 @@ import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
+import Chip from "@material-ui/core/Chip";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 
 import AdminBody from "src/components/Admin/AdminBody";
 import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
 import { TextInput, InfoAlert } from "src/components/Admin/FormInputs";
 
-import { createArticle } from "./api";
+import { createLandingPage } from "./api";
 import { useStyles } from "./styles";
 
 import getConfig from "next/config";
@@ -43,11 +45,12 @@ export default function CreateNew() {
   const hiddenFileInput = React.useRef(null);
 
   const [preview, setPreview] = useState<any>("");
-  const [image, setImage] = useState<File | string>("");
+  const [avatar, setAvatar] = useState<File | string>("");
 
   const getFormDefaultValues = () => ({
+    status: "",
+    page_key: "",
     title: "",
-    introduction: "",
     page_title: "",
     content: "",
   });
@@ -64,42 +67,44 @@ export default function CreateNew() {
   });
 
   const onSubmit = async (formValues: { [T: string]: any }) => {
-    const { title, page_title, introduction } = formValues;
+    const { title, page_title, page_key } = formValues;
     const formData = new FormData();
 
     Object.entries(formValues).map(([key, value]) => formData.append(key, value));
-    formData.append(
-      "meta_description",
-      JSON.stringify({ title: title, page_title: page_title, introduction: introduction }),
-    );
-    if (image) formData.append("image", image);
+    formData.append("meta_description", JSON.stringify({ title: title, page_title: page_title, page_key: page_key }));
+    if (avatar) formData.append("avatar", avatar);
 
     try {
-      const response = await createArticle(formData);
-      if (!response) setInfoAlert({ severity: "error", message: "Error creating article !" });
+      const response = await createLandingPage(formData);
+      if (!response) setInfoAlert({ severity: "error", message: "Error creating landing page!" });
       else {
-        setInfoAlert({ severity: "success", message: "Article created successfully" });
+        setInfoAlert({ severity: "success", message: "Landing page created successfully" });
         setTimeout(() => {
-          router.push(`${PUBLIC_BASE}/articles/${response.slug}`);
+          router.push(`${PUBLIC_BASE}/landing_pages${response.page_key}`);
         }, 2500);
         return;
       }
     } catch (error) {
-      setInfoAlert({ severity: "error", message: `Error creating article! - ${handleApiErrors(error)}` });
+      setInfoAlert({ severity: "error", message: `Error creating landing page! - ${handleApiErrors(error)}` });
     }
     setTimeout(() => {
       setInfoAlert({ severity: "info", message: "" });
     }, 4500);
   };
 
-  const handleImageClick = () => {
+  const handleAvatarClick = () => {
     // @ts-ignore
     hiddenFileInput?.current?.click();
   };
 
+  const handleAvatarRemoveClick = () => {
+    setAvatar("remove");
+    setPreview("");
+  };
+
   // File input change
-  const handleImageChange = (fileUploaded: File) => {
-    setImage(fileUploaded);
+  const handleAvatarChange = (fileUploaded: File) => {
+    setAvatar(fileUploaded);
     const reader = new FileReader();
     reader.readAsDataURL(fileUploaded);
     reader.onloadend = () => setPreview(reader.result);
@@ -112,7 +117,7 @@ export default function CreateNew() {
   return (
     <AdminBody>
       <Head>
-        <title>TrueArtists: Admin/Articles</title>
+        <title>TrueArtists: Admin/Landing Pages</title>
       </Head>
 
       <Grid container spacing={2}>
@@ -122,29 +127,41 @@ export default function CreateNew() {
               <Link href="/admin">Dashboard</Link>
             </Typography>
             <Typography variant="h6">
-              <Link href="/admin/articles">Articles</Link>
+              <Link href="/admin/landing-pages">Landing Pages</Link>
             </Typography>
-            <Typography variant="h6">New Article</Typography>
+            <Typography variant="h6">New Landing Page</Typography>
           </Breadcrumbs>
         </Grid>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container>
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} md={6}>
               <Grid container spacing={2}>
                 {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
-                <Grid item xs={12} md={8}>
+
+                <Grid item xs={12}>
+                  <TextInput
+                    name="page_key"
+                    register={register}
+                    required={true}
+                    label="Page url (Example /tattoos/back) *"
+                    errors={!!errors.page_key}
+                    errorMessage={errors.page_key?.message}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
                   <TextInput
                     name="title"
                     register={register}
                     required={true}
-                    label="Title *"
+                    label="Header Title *"
                     errors={!!errors.title}
                     errorMessage={errors.title?.message}
                   />
                 </Grid>
 
-                <Grid item xs={12} md={8}>
+                <Grid item xs={12}>
                   <TextInput
                     name="page_title"
                     register={register}
@@ -154,48 +171,37 @@ export default function CreateNew() {
                     errorMessage={errors.page_title?.message}
                   />
                 </Grid>
-
-                <Grid item xs={12}>
-                  <TextInput
-                    multiline={true}
-                    name="introduction"
-                    register={register}
-                    required={true}
-                    label="Introduction *"
-                    errors={!!errors.introduction}
-                    errorMessage={errors.introduction?.message}
-                  />
-                  <Typography variant="caption">
-                    <i>Provide a short description of the article.</i>
-                  </Typography>
-                </Grid>
               </Grid>
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={6}>
               <Grid container item justify={"center"}>
-                <Card variant="outlined" className={classes.imageCard && classes.addArticleImage}>
+                <Card variant="outlined" className={classes.imageCard && classes.addLandingPageImage}>
                   <CardContent>
-                    <Typography>Article image</Typography>
+                    <Typography>Upload LP image</Typography>
                     <CardMedia
                       className={classes.imageCardMedia}
                       image={preview ? preview : "/images/camera.png"}
-                      onClick={handleImageClick}
+                      onClick={handleAvatarClick}
                     />
                     <input
                       className={classes.fileInput}
                       type={"file"}
                       ref={hiddenFileInput}
                       onChange={(e) => {
-                        if (e.target.files) handleImageChange(e.target.files[0]);
+                        if (e.target.files) handleAvatarChange(e.target.files[0]);
                       }}
                     />
+                    {preview ? (
+                      <Chip
+                        icon={<DeleteOutlineIcon />}
+                        label="Remove"
+                        size="small"
+                        onClick={handleAvatarRemoveClick}
+                      />
+                    ) : null}
                   </CardContent>
                 </Card>
-              </Grid>
-
-              <Grid container item justify={"center"}>
-                <Typography variant="caption">Add article image</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -203,7 +209,7 @@ export default function CreateNew() {
           <Grid container item xs={12} className={classes.buttonWrapper}>
             <FormControl fullWidth error={errors.content ? true : false} required={true}>
               <FormHelperText>
-                <b>Content</b>
+                <b>Page Content</b>
               </FormHelperText>
               <Controller
                 name={"content"}
@@ -227,13 +233,13 @@ export default function CreateNew() {
           </Grid>
 
           <Grid container spacing={2} className={classes.buttonWrapper}>
-            <Grid item xs={12} md={2}>
+            <Grid item xs={12} sm={6} md={2}>
               <PrimaryButton size="small" fullWidth variant="outlined" primaryColor onClick={handleCancel}>
                 Cancel
               </PrimaryButton>
             </Grid>
 
-            <Grid item xs={12} md={3}>
+            <Grid item xs={12} sm={6} md={3}>
               <PrimaryButton size="small" fullWidth primaryColor disabled={isSubmitting} type="submit">
                 Save
               </PrimaryButton>

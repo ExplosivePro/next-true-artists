@@ -32,23 +32,23 @@ import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
 import { InfoAlert } from "src/components/Admin/FormInputs";
 
-import { getArticleList, deleteArticle } from "./api";
+import { getLandingPageList, deleteLandingPage } from "./api";
 import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
 
 import getConfig from "next/config";
 
-export default function Articles() {
+export default function LandingPages() {
   const classes = useStyles();
   const router = useRouter();
   const PUBLIC_BASE = getConfig().publicRuntimeConfig.PUBLIC_PAGE_BASE_URL;
 
-  // Fetch Article list
+  // Fetch Landing Page list
   const {
-    status: articleListStatus,
-    data: { articles: articleListData = [], meta = { limit_value: 60, total_count: 0 } } = {},
-    error: articleListError,
-    refetch: articleListRefetch,
-  } = useQuery("articleList", async () => await getArticleList(location.search));
+    status: pageListStatus,
+    data: { landing_pages: pageListData = [], meta = { limit_value: 60, total_count: 0 } } = {},
+    error: pageListError,
+    refetch: pageListRefetch,
+  } = useQuery("landingPageList", async () => await getLandingPageList(location.search));
 
   // Create an Alert for info feedback
   const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
@@ -60,7 +60,7 @@ export default function Articles() {
   const [searchInputValue, setSearchInputValue] = useState("");
   const [searchValue, setSearchValue] = useState("");
 
-  const [deleteArticleDialog, setDeleteArticleDialog] = useState({ isOpen: false, title: "", articleId: "" });
+  const [deletePageDialog, setDeletePageDialog] = useState({ isOpen: false, title: "", pageId: "" });
 
   // Force refetch after search update
   useEffect(() => {
@@ -68,7 +68,7 @@ export default function Articles() {
       pathname: router.pathname,
       query: searchValue ? { query: searchValue, ...pageOptions } : pageOptions,
     });
-    setTimeout(() => articleListRefetch(), 500);
+    setTimeout(() => pageListRefetch(), 500);
   }, [searchValue, pageOptions]);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -87,40 +87,40 @@ export default function Articles() {
     [],
   );
 
-  const onDelete = async (articleId: string) => {
-    deleteArticleDialogClose();
+  const onDelete = async (pageId: string) => {
+    deletePageDialogClose();
     try {
-      const response = await deleteArticle(articleId);
+      const response = await deleteLandingPage(pageId);
       if (response)
-        setInfoAlert({ severity: "error", message: `Error deleting article! - ${handleApiErrors(response)}` });
+        setInfoAlert({ severity: "error", message: `Error deleting landing page! - ${handleApiErrors(response)}` });
       else {
-        setInfoAlert({ severity: "success", message: "Article deleted successfully" });
-        setTimeout(() => articleListRefetch(), 500);
+        setInfoAlert({ severity: "success", message: "Landing page deleted successfully" });
+        setTimeout(() => pageListRefetch(), 500);
       }
     } catch (error) {
-      setInfoAlert({ severity: "error", message: `Error deleting article! - ${handleApiErrors(error)}` });
+      setInfoAlert({ severity: "error", message: `Error deleting landing page! - ${handleApiErrors(error)}` });
     }
     setTimeout(() => {
       setInfoAlert({ severity: "info", message: "" });
     }, 4500);
   };
 
-  const deleteArticleDialogOpen = (title: string, articleId: string) => {
-    setDeleteArticleDialog({ isOpen: true, title: title, articleId: articleId });
+  const deletePageDialogOpen = (title: string, pageId: string) => {
+    setDeletePageDialog({ isOpen: true, title: title, pageId: pageId });
   };
 
-  const deleteArticleDialogClose = () => {
-    setDeleteArticleDialog({ isOpen: false, title: "", articleId: "" });
+  const deletePageDialogClose = () => {
+    setDeletePageDialog({ isOpen: false, title: "", pageId: "" });
   };
 
   return (
     <AdminBody>
       <Head>
-        <title>TrueArtists: Admin/Articles</title>
+        <title>TrueArtists: Admin/Landing Pages</title>
       </Head>
 
       <Grid container>
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={4} md={4} lg={4}>
           {infoAlert.message ? (
             <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} />
           ) : (
@@ -128,18 +128,16 @@ export default function Articles() {
               <Typography variant="h6">
                 <Link href="/admin">Dashboard</Link>
               </Typography>
-              <Typography variant="h6">Articles</Typography>
+              <Typography variant="h6">Landing Pages</Typography>
             </Breadcrumbs>
           )}
         </Grid>
 
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={4} md={4} lg={4}>
           <Autocomplete
             freeSolo
             options={
-              articleListStatus === "success"
-                ? articleListData?.map((option: Admin.Articles) => option.title ?? "")
-                : []
+              pageListStatus === "success" ? pageListData?.map((option: Admin.LandingPages) => option.title ?? "") : []
             }
             inputValue={searchInputValue}
             onInputChange={(event, newInputValue) => {
@@ -149,7 +147,7 @@ export default function Articles() {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Search Articles"
+                label="Search LandingPages"
                 size="small"
                 variant="outlined"
                 InputProps={{ ...params.InputProps, type: "search" }}
@@ -158,23 +156,23 @@ export default function Articles() {
           />
         </Grid>
 
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={4} md={4} lg={4}>
           <Grid container item justify="center">
             <PrimaryButton primaryColor onClick={() => router.push(`${router.pathname}/create`)}>
-              Add New Article
+              Add New Landing Page
             </PrimaryButton>
           </Grid>
         </Grid>
 
         <Grid item xs={12}>
-          {articleListStatus === "loading" ? (
+          {pageListStatus === "loading" ? (
             <React.Fragment>
               <Alert severity="info">Loading... </Alert>
               <Loading />
             </React.Fragment>
-          ) : articleListStatus === "error" ? (
-            <Alert severity="error">{`Retrieving Articles - ${handleApiErrors(articleListError)}`}</Alert>
-          ) : articleListData.length > 0 ? (
+          ) : pageListStatus === "error" ? (
+            <Alert severity="error">{`Retrieving Landing Pages - ${handleApiErrors(pageListError)}`}</Alert>
+          ) : pageListData.length > 0 ? (
             <React.Fragment>
               <TableContainer className={classes.tableContainer}>
                 <Table size="small" stickyHeader>
@@ -182,13 +180,13 @@ export default function Articles() {
                     <col width="auto" />
                     <col width="auto" />
                     <col width="10%" />
-                    <col width="5%" />
-                    <col width="5%" />
+                    <col width="10%" />
+                    <col width="10%" />
                   </colgroup>
                   <TableHead>
                     <TableRow>
                       <StyledTableCell>Title</StyledTableCell>
-                      <StyledTableCell>Author</StyledTableCell>
+                      <StyledTableCell>Page Title</StyledTableCell>
                       <StyledTableCell>Status</StyledTableCell>
                       <StyledTableCell className={classes.statusHeader} colSpan={2}>
                         Actions
@@ -197,25 +195,25 @@ export default function Articles() {
                   </TableHead>
 
                   <TableBody>
-                    {articleListData.map((article: Admin.Articles, index: number) => (
+                    {pageListData.map((landingPage: Admin.LandingPages, index: number) => (
                       <StyledTableRow key={index}>
                         <StyledTableCell>
-                          <Link href={`${PUBLIC_BASE}/blog/${article?.slug}`}>
+                          <Link href={`${PUBLIC_BASE}${landingPage?.page_key}`}>
                             <a target="_blank" className={classes.listLink}>
-                              {article?.title}
+                              {landingPage?.title}
                             </a>
                           </Link>
                         </StyledTableCell>
-                        <StyledTableCell>{article?.user?.full_name}</StyledTableCell>
-                        <StyledTableCell>{article?.status}</StyledTableCell>
-                        <StyledTableCell>
-                          <Link href={`${router.pathname}/edit/${article?.id}`}>
+                        <StyledTableCell>{landingPage?.page_title}</StyledTableCell>
+                        <StyledTableCell>{landingPage?.status}</StyledTableCell>
+                        <StyledTableCell className={classes.statusHeader}>
+                          <Link href={`${router.pathname}/edit/${landingPage?.id}`}>
                             <a className={classes.listLink}>Edit</a>
                           </Link>
                         </StyledTableCell>
                         <StyledTableCell
                           className={classes.deleteCell}
-                          onClick={() => deleteArticleDialogOpen(article?.title, article?.id.toString())}
+                          onClick={() => deletePageDialogOpen(landingPage?.title, landingPage?.id.toString())}
                         >
                           Delete
                         </StyledTableCell>
@@ -237,17 +235,17 @@ export default function Articles() {
               />
             </React.Fragment>
           ) : (
-            <Alert severity="info">No articles records found...</Alert>
+            <Alert severity="info">No landing pages records found...</Alert>
           )}
         </Grid>
       </Grid>
 
-      {deleteArticleDialog.isOpen ? (
+      {deletePageDialog.isOpen ? (
         <ConfirmResetPassword
-          title={deleteArticleDialog.title}
-          articleId={deleteArticleDialog.articleId}
-          close={deleteArticleDialogClose}
-          isOpen={deleteArticleDialog.isOpen}
+          title={deletePageDialog.title}
+          pageId={deletePageDialog.pageId}
+          close={deletePageDialogClose}
+          isOpen={deletePageDialog.isOpen}
           handleDelete={onDelete}
         />
       ) : (
@@ -259,13 +257,13 @@ export default function Articles() {
 
 function ConfirmResetPassword({
   title,
-  articleId,
+  pageId,
   close,
   isOpen,
   handleDelete,
 }: {
   title: string;
-  articleId: string;
+  pageId: string;
   close: () => void;
   isOpen: boolean;
   handleDelete: (T: string) => void;
@@ -281,9 +279,10 @@ function ConfirmResetPassword({
           </IconButton>
           Confirm Delete
         </DialogTitle>
+
         <DialogContent>
           <Typography variant="body1" gutterBottom>
-            Are you sure you want to delete this article?
+            Are you sure you want to delete this landing page?
           </Typography>
           <Typography variant="body2" align="center" gutterBottom>
             <b>{title}</b>
@@ -293,7 +292,7 @@ function ConfirmResetPassword({
           <PrimaryButton variant="outlined" size="small" primaryColor onClick={close}>
             Cancel
           </PrimaryButton>
-          <PrimaryButton size="small" primaryColor onClick={() => handleDelete(articleId)}>
+          <PrimaryButton size="small" primaryColor onClick={() => handleDelete(pageId)}>
             Delete
           </PrimaryButton>
         </DialogActions>
