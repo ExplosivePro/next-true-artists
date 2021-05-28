@@ -10,12 +10,9 @@ export const useStyles = makeStyles({
   },
   tableContainer: {
     marginTop: "10px",
-    width: "65%",
   },
   paginationWrapper: {
     border: "solid thin lightGrey",
-    width: "65%",
-    textAlign: "center",
   },
   listLink: {
     color: colors.primaryColor,
@@ -26,6 +23,7 @@ export const useStyles = makeStyles({
   deleteCell: {
     textDecoration: "underline",
     cursor: "pointer",
+    textAlign: "center",
   },
   closeButton: {
     float: "right",

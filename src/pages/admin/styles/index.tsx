@@ -161,68 +161,66 @@ export default function Styles() {
 
         <Grid item xs={12}>
           <Divider className={classes.buttonWrapper} />
-          <Grid container item justify="center">
-            {styleListStatus === "loading" ? (
-              <React.Fragment>
-                <Alert severity="info">Loading... </Alert>
-                <Loading />
-              </React.Fragment>
-            ) : styleListStatus === "error" ? (
-              <Alert severity="error">{`Retrieving Styles - ${handleApiErrors(styleListError)}`}</Alert>
-            ) : styleListData.length > 0 ? (
-              <React.Fragment>
-                <TableContainer className={classes.tableContainer}>
-                  <Table stickyHeader>
-                    <colgroup>
-                      <col width="auto" />
-                      <col width="15%" />
-                      <col width="15%" />
-                    </colgroup>
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell>Name</StyledTableCell>
-                        <StyledTableCell className={classes.actionsHeader} colSpan={2}>
-                          Actions
+          {styleListStatus === "loading" ? (
+            <React.Fragment>
+              <Alert severity="info">Loading... </Alert>
+              <Loading />
+            </React.Fragment>
+          ) : styleListStatus === "error" ? (
+            <Alert severity="error">{`Retrieving Styles - ${handleApiErrors(styleListError)}`}</Alert>
+          ) : styleListData.length > 0 ? (
+            <React.Fragment>
+              <TableContainer className={classes.tableContainer}>
+                <Table stickyHeader>
+                  <colgroup>
+                    <col width="auto" />
+                    <col width="15%" />
+                    <col width="15%" />
+                  </colgroup>
+                  <TableHead>
+                    <TableRow>
+                      <StyledTableCell>Name</StyledTableCell>
+                      <StyledTableCell className={classes.actionsHeader} colSpan={2}>
+                        Actions
+                      </StyledTableCell>
+                    </TableRow>
+                  </TableHead>
+
+                  <TableBody>
+                    {styleListData.map((style: Admin.Style, index: number) => (
+                      <StyledTableRow key={index}>
+                        <StyledTableCell>{style.name}</StyledTableCell>
+                        <StyledTableCell className={classes.actionsHeader}>
+                          <Link href={`${router.pathname}/${style.id}`}>
+                            <a className={classes.listLink}>Edit</a>
+                          </Link>
                         </StyledTableCell>
-                      </TableRow>
-                    </TableHead>
+                        <StyledTableCell
+                          className={classes.deleteCell}
+                          onClick={() => deleteStyleDialogOpen(style.name, style.id.toString())}
+                        >
+                          Delete
+                        </StyledTableCell>
+                      </StyledTableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
 
-                    <TableBody>
-                      {styleListData.map((style: Admin.Style, index: number) => (
-                        <StyledTableRow key={index}>
-                          <StyledTableCell>{style.name}</StyledTableCell>
-                          <StyledTableCell>
-                            <Link href={`${router.pathname}/${style.id}`}>
-                              <a className={classes.listLink}>Edit</a>
-                            </Link>
-                          </StyledTableCell>
-                          <StyledTableCell
-                            className={classes.deleteCell}
-                            onClick={() => deleteStyleDialogOpen(style.name, style.id.toString())}
-                          >
-                            Delete
-                          </StyledTableCell>
-                        </StyledTableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-
-                <TablePagination
-                  component="div"
-                  rowsPerPageOptions={[5, 10, 25, 40, 60]}
-                  rowsPerPage={rowsPerPage}
-                  count={-1}
-                  page={page}
-                  onChangePage={handleChangePage}
-                  onChangeRowsPerPage={handleChangeRowsPerPage}
-                  className={classes.paginationWrapper}
-                />
-              </React.Fragment>
-            ) : (
-              <Alert severity="info">No styles records found...</Alert>
-            )}
-          </Grid>
+              <TablePagination
+                component="div"
+                rowsPerPageOptions={[5, 10, 25, 40, 60]}
+                rowsPerPage={rowsPerPage}
+                count={styleListData?.length}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+                className={classes.paginationWrapper}
+              />
+            </React.Fragment>
+          ) : (
+            <Alert severity="info">No styles records found...</Alert>
+          )}
         </Grid>
       </Grid>
 
