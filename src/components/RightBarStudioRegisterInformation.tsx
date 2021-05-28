@@ -67,6 +67,7 @@ export default function RightBarStudioRegisterInformation({
 
   const {
     streetAddress,
+    streetAddress2,
     state,
     city,
     country,
@@ -103,6 +104,7 @@ export default function RightBarStudioRegisterInformation({
     name,
     email,
     streetAddress,
+    streetAddress2,
     city,
     country,
     state,
@@ -131,6 +133,7 @@ export default function RightBarStudioRegisterInformation({
           instagram_url: instagram ? `${baseInstagramUrl}${instagram}` : "",
           twitter_url: twitter ? `${baseTwitterUrl}${twitter}` : "",
           street_address: streetAddress,
+          street_address_2: streetAddress2,
         });
 
         const { error, data, errors } = response;
@@ -141,6 +144,7 @@ export default function RightBarStudioRegisterInformation({
               name,
               email,
               streetAddress,
+              streetAddress2,
               city,
               country,
               state,
@@ -169,7 +173,8 @@ export default function RightBarStudioRegisterInformation({
           facebook_url: facebook ? `${baseFacebookUrl}${facebook}` : "",
           instagram_url: instagram ? `${baseInstagramUrl}${instagram}` : "",
           twitter_url: twitter ? `${baseTwitterUrl}${twitter}` : "",
-          street_address: streetAddress, // Put this down temporarily due to missing APIs
+          street_address: streetAddress,
+          street_address_2: streetAddress2,
         });
 
         const { error, data, errors } = response;
@@ -180,6 +185,7 @@ export default function RightBarStudioRegisterInformation({
               name,
               email,
               streetAddress,
+              streetAddress2,
               city,
               country,
               state,
@@ -237,6 +243,27 @@ export default function RightBarStudioRegisterInformation({
             defaultValue={streetAddress || ""}
             errors={errors.streetAddress}
             googleAutoComplete={[]}
+            setValueFn={setValue}
+            referenceFields={[
+              { fieldName: "zipCode", referenceField: "postal_code" },
+              { fieldName: "city", referenceField: "administrative_area_level_1" },
+              { fieldName: "state", referenceField: "administrative_area_level_1" },
+              { fieldName: "country", referenceField: "country", matchList: countryList },
+            ]}
+          />
+
+          <FormInput
+            name="streetAddress2"
+            classes={{ root: classes.formInput }}
+            label={"Street Address 2"}
+            id="streetAddress2"
+            placeholder={"Street Address 2"}
+            fullWidth
+            control={control}
+            variant={"outlined"}
+            defaultValue={streetAddress2 || ""}
+            googleAutoComplete={[]}
+            errors={errors.streetAddress2}
             setValueFn={setValue}
           />
 
@@ -435,6 +462,7 @@ export const preloadRightBarStudioRegisterInformationData = ({
   name,
   email,
   street_address,
+  street_address_2,
   city,
   country,
   state,
@@ -449,6 +477,7 @@ export const preloadRightBarStudioRegisterInformationData = ({
     name,
     email,
     streetAddress: street_address,
+    streetAddress2: street_address_2,
     city,
     country,
     state,
@@ -474,6 +503,7 @@ interface submitFormData {
   name: string;
   email?: string;
   streetAddress: string;
+  streetAddress2?: string;
   city: string;
   country: string;
   state: string;

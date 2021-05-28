@@ -38,42 +38,41 @@ import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
 import { InfoAlert, TextInput, SelectInput } from "src/components/Admin/FormInputs";
 
-import { getArticle, editArticle } from "../api";
-import { article_status } from "../constants";
+import { getLandingPage, editLandingPage } from "../api";
+import { landingPage_status } from "../constants";
 import { useStyles, StyledTableCell, StyledTableRow } from "../styles";
 
-export default function EditArticles() {
+export default function EditLandingPages() {
   const classes = useStyles();
   const router = useRouter();
 
-  const [articleId, setArticleId] = useState("");
+  const [pageId, setPageId] = useState("");
 
-  // Fetch Article data using param
-  const {
-    status: articleDataStatus,
-    data: articleData,
-    error: articleDataError,
-    refetch: refetchArticleData,
-  } = useQuery("articleData", async () => await getArticle(articleId), {
-    enabled: articleId ? true : false,
-  });
+  // Fetch Landing Page data using param
+  const { status: pageDataStatus, data: pageData, error: pageDataError, refetch: refetchPageData } = useQuery(
+    "landingPageData",
+    async () => await getLandingPage(pageId),
+    {
+      enabled: pageId ? true : false,
+    },
+  );
 
   useEffect(() => {
-    router.query.id ? setArticleId(router.query.id?.toString()) : null;
+    router.query.id ? setPageId(router.query.id?.toString()) : null;
   }, [router.query.id]);
 
   // Create a reference to the hidden file input element
   const hiddenFileInput = React.useRef(null);
   const [preview, setPreview] = useState<any>("");
-  const [image, setImage] = useState<File | string>("");
+  const [avatar, setAvatar] = useState<File | string>("");
 
   // Create an Alert for info feedback
   const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
 
   const getFormDefaultValues = () => ({
     status: "",
+    page_key: "",
     title: "",
-    introduction: "",
     page_title: "",
     content: "",
   });
@@ -91,57 +90,54 @@ export default function EditArticles() {
   });
 
   useEffect(() => {
-    if (articleDataStatus === "success") {
-      setValue("status", articleData?.status);
-      setValue("title", articleData?.title);
-      setValue("introduction", articleData?.introduction);
-      setValue("page_title", articleData?.page_title);
-      setValue("content", articleData?.content);
+    if (pageDataStatus === "success") {
+      setValue("status", pageData?.status);
+      setValue("page_key", pageData?.page_key);
+      setValue("title", pageData?.title);
+      setValue("page_title", pageData?.page_title);
+      setValue("content", pageData?.content);
     }
-  }, [articleDataStatus]);
+  }, [pageDataStatus]);
 
   const onSubmit = async (formValues: { [T: string]: any }) => {
-    const { title, page_title, introduction } = formValues;
+    const { title, page_title } = formValues;
     const formData = new FormData();
 
     Object.entries(formValues).map(([key, value]) => formData.append(key, value));
-    formData.append(
-      "meta_description",
-      JSON.stringify({ title: title, page_title: page_title, introduction: introduction }),
-    );
-    if (image)
-      if (image === "remove") formData.append("image", "");
-      else formData.append("image", image);
+    formData.append("meta_description", JSON.stringify({ title: title, page_title: page_title }));
+    if (avatar)
+      if (avatar === "remove") formData.append("avatar", "");
+      else formData.append("avatar", avatar);
 
     try {
-      const response = await editArticle(formData, articleId);
+      const response = await editLandingPage(formData, pageId);
       if (!response) setInfoAlert({ severity: "error", message: "Error updating article !" });
       else {
-        setInfoAlert({ severity: "success", message: "Article updated successfully" });
+        setInfoAlert({ severity: "success", message: "Landing page updated successfully" });
         setPreview("");
-        refetchArticleData();
+        refetchPageData();
       }
     } catch (error) {
-      setInfoAlert({ severity: "error", message: `Error updating article! - ${handleApiErrors(error)}` });
+      setInfoAlert({ severity: "error", message: `Error updating landing page! - ${handleApiErrors(error)}` });
     }
     setTimeout(() => {
       setInfoAlert({ severity: "info", message: "" });
     }, 4500);
   };
 
-  const handleImageChangeClick = () => {
+  const handleAvatarChangeClick = () => {
     // @ts-ignore
     hiddenFileInput?.current?.click();
   };
 
-  const handleImageRemoveClick = () => {
-    setImage("remove");
+  const handleAvatarRemoveClick = () => {
+    setAvatar("remove");
     setPreview(" ");
   };
 
-  // image change
-  const handleImageChange = (fileUploaded: File) => {
-    setImage(fileUploaded);
+  // avatar change
+  const handleAvatarChange = (fileUploaded: File) => {
+    setAvatar(fileUploaded);
     const reader = new FileReader();
     reader.readAsDataURL(fileUploaded);
     reader.onloadend = () => setPreview(reader.result);
@@ -154,7 +150,7 @@ export default function EditArticles() {
   return (
     <AdminBody>
       <Head>
-        <title>TrueArtists: Admin/Articles/{articleData?.slug ?? articleId}</title>
+        <title>TrueArtists: Admin/Landing Pages/{pageData?.title ?? pageId}</title>
       </Head>
 
       <Grid container>
@@ -164,21 +160,21 @@ export default function EditArticles() {
               <Link href="/admin">Dashboard</Link>
             </Typography>
             <Typography variant="h6">
-              <Link href="/admin/articles">Articles</Link>
+              <Link href="/admin/landing-pages">Landing Pages</Link>
             </Typography>
-            <Typography variant="h6">{articleData?.slug ?? articleId}</Typography>
+            <Typography variant="h6">{pageData?.title ?? pageId}</Typography>
           </Breadcrumbs>
         </Grid>
 
         <Grid item xs={12} className={classes.buttonWrapper}>
-          {articleDataStatus === "loading" ? (
+          {pageDataStatus === "loading" ? (
             <React.Fragment>
               <Alert severity="info">Loading... </Alert>
               <Loading />
             </React.Fragment>
-          ) : articleDataStatus === "error" ? (
-            <Alert severity="error">{`Retrieving Articles - ${handleApiErrors(articleDataError)}`}</Alert>
-          ) : articleData ? (
+          ) : pageDataStatus === "error" ? (
+            <Alert severity="error">{`Retrieving Landing Pages - ${handleApiErrors(pageDataError)}`}</Alert>
+          ) : pageData ? (
             <form onSubmit={handleSubmit(onSubmit)}>
               <Grid container spacing={2}>
                 <Grid item xs={12} md={8}>
@@ -187,7 +183,7 @@ export default function EditArticles() {
                       {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
                     </Grid>
 
-                    <Grid item xs={6}>
+                    <Grid item xs={6} sm={4} lg={3}>
                       <SelectInput
                         name="status"
                         control={control}
@@ -195,7 +191,18 @@ export default function EditArticles() {
                         label="Status"
                         errors={!!errors.status}
                         errorMessage={errors.status?.message}
-                        dropDownList={article_status.map((status) => ({ id: status, name: status }))}
+                        dropDownList={landingPage_status.map((status) => ({ id: status, name: status }))}
+                      />
+                    </Grid>
+
+                    <Grid item xs={10}>
+                      <TextInput
+                        name="page_key"
+                        register={register}
+                        required={true}
+                        label="Page url (Example /tattoos/back) *"
+                        errors={!!errors.page_key}
+                        errorMessage={errors.page_key?.message}
                       />
                     </Grid>
 
@@ -204,7 +211,7 @@ export default function EditArticles() {
                         name="title"
                         register={register}
                         required={true}
-                        label="Title *"
+                        label="Header Title *"
                         errors={!!errors.title}
                         errorMessage={errors.title?.message}
                       />
@@ -221,22 +228,10 @@ export default function EditArticles() {
                       />
                     </Grid>
 
-                    <Grid item xs={10}>
-                      <TextInput
-                        name="introduction"
-                        register={register}
-                        required={true}
-                        multiline={true}
-                        label="Introduction *"
-                        errors={!!errors.introduction}
-                        errorMessage={errors.introduction?.message}
-                      />
-                    </Grid>
-
                     <Grid item xs={12}>
                       <FormControl fullWidth error={errors.content ? true : false} required={true}>
                         <FormHelperText>
-                          <b>Content</b>
+                          <b>Page Content</b>
                         </FormHelperText>
                         <Controller
                           name={"content"}
@@ -268,27 +263,27 @@ export default function EditArticles() {
                     <Grid item xs={12}>
                       <Card variant="outlined" className={classes.imageCard}>
                         <CardContent>
-                          <Typography>Article image</Typography>
+                          <Typography>Edit LP image</Typography>
                           <CardMedia
                             className={classes.imageCardMedia}
-                            image={preview ? preview : articleData?.image?.image_url ?? "/images/camera.png"}
+                            image={preview ? preview : pageData?.avatar?.image_url ?? "/images/camera.png"}
                           />
                           <input
                             className={classes.fileInput}
                             type={"file"}
                             ref={hiddenFileInput}
                             onChange={(e) => {
-                              if (e.target.files) handleImageChange(e.target.files[0]);
+                              if (e.target.files) handleAvatarChange(e.target.files[0]);
                             }}
                           />
                         </CardContent>
                         <CardActions>
-                          <Chip icon={<EditIcon />} label="Change" size="small" onClick={handleImageChangeClick} />
+                          <Chip icon={<EditIcon />} label="Change" size="small" onClick={handleAvatarChangeClick} />
                           <Chip
                             icon={<DeleteOutlineIcon />}
                             label="Remove"
                             size="small"
-                            onClick={handleImageRemoveClick}
+                            onClick={handleAvatarRemoveClick}
                           />
                         </CardActions>
                       </Card>
@@ -297,7 +292,7 @@ export default function EditArticles() {
                     <Grid item xs={12}>
                       <Card variant="outlined" className={classes.cardItem}>
                         <CardContent>
-                          <Typography>Category</Typography>
+                          <Typography>Last updated by</Typography>
                           <TableContainer>
                             <Table size="small">
                               <colgroup>
@@ -309,55 +304,7 @@ export default function EditArticles() {
                                   <StyledTableCell>
                                     <b>Name </b>
                                   </StyledTableCell>
-                                  <StyledTableCell>{articleData?.category?.name}</StyledTableCell>
-                                </StyledTableRow>
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <Card variant="outlined" className={classes.cardItem}>
-                        <CardContent>
-                          <Typography>Tags</Typography>
-                          {articleData?.tags?.map((style: string, index: number) => (
-                            <Chip label={style} size="small" key={index} className={classes.tagsChips} />
-                          ))}
-                        </CardContent>
-                      </Card>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <Card variant="outlined" className={classes.cardItem}>
-                        <CardContent>
-                          <Typography>Author</Typography>
-                          <TableContainer>
-                            <Table size="small">
-                              <colgroup>
-                                <col width="15%" />
-                                <col width="auto" />
-                              </colgroup>
-                              <TableBody>
-                                <StyledTableRow>
-                                  <StyledTableCell>
-                                    <b>Name </b>
-                                  </StyledTableCell>
-                                  <StyledTableCell>{articleData?.user?.full_name}</StyledTableCell>
-                                </StyledTableRow>
-
-                                <StyledTableRow>
-                                  <StyledTableCell>
-                                    <b>Email </b>
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    <Link href={`mailto:${articleData?.user?.email}`}>
-                                      <a target="_blank" className={classes.listLink}>
-                                        {articleData?.user?.email}
-                                      </a>
-                                    </Link>
-                                  </StyledTableCell>
+                                  <StyledTableCell>{pageData?.last_updated_by}</StyledTableCell>
                                 </StyledTableRow>
                               </TableBody>
                             </Table>
@@ -384,7 +331,7 @@ export default function EditArticles() {
               </Grid>
             </form>
           ) : (
-            <Alert severity="info">Article record not found...</Alert>
+            <Alert severity="info">Landing Page record not found...</Alert>
           )}
         </Grid>
       </Grid>

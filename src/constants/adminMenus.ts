@@ -5,4 +5,5 @@ export const menuAdminBar = {
   ARTISTS: "/admin/artists",
   STUDIOS: "/admin/studios",
   ARTICLES: "/admin/articles",
+  LANDING_PAGES: "/admin/landing-pages",
 };

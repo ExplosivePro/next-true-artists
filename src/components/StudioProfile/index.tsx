@@ -72,6 +72,7 @@ export default function StudioProfile({
 }: Props) {
   const {
     street_address: streetAddress,
+    street_address_2: streetAddress2,
     state,
     city,
     country,
@@ -116,6 +117,28 @@ export default function StudioProfile({
             defaultValue={streetAddress || ""}
             errors={errors.streetAddress}
             googleAutoComplete={[]}
+            setValueFn={setValue}
+            referenceFields={[
+              { fieldName: "zipCode", referenceField: "postal_code" },
+              { fieldName: "city", referenceField: "administrative_area_level_1" },
+              { fieldName: "state", referenceField: "administrative_area_level_1" },
+              { fieldName: "country", referenceField: "country", matchList: countryList },
+            ]}
+          />
+
+          <FormInput
+            name="streetAddress2"
+            classes={{ root: classes.formInput }}
+            label={"Street Address 2"}
+            id="streetAddress2"
+            placeholder={"Street Address 2"}
+            fullWidth
+            control={control}
+            variant={"outlined"}
+            defaultValue={streetAddress2 || ""}
+            googleAutoComplete={[]}
+            errors={errors.streetAddress2}
+            setValueFn={setValue}
           />
 
           <Grid container spacing={2}>

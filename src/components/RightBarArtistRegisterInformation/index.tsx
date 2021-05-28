@@ -129,6 +129,7 @@ export default function RightBarArtistRegisterInformation({
         streetAddress: yup.string().required("Street address is required"),
         zipCode: yup.string().required("Zip code is required"),
         city: yup.string().required("City is required"),
+        state: yup.string().required("State is required"),
         country: yup.string().required("Country is required"),
       }),
     [],
@@ -148,8 +149,10 @@ export default function RightBarArtistRegisterInformation({
     yearsOfExperience,
     phoneNumber,
     streetAddress,
+    streetAddress2,
     zipCode,
     city,
+    state,
     country,
     facebook,
     website,
@@ -160,9 +163,11 @@ export default function RightBarArtistRegisterInformation({
   const onSubmit = async ({
     bio,
     streetAddress,
+    streetAddress2,
     zipCode,
     city,
     country,
+    state,
     phoneNumber,
     yearsOfExperience,
     website,
@@ -186,8 +191,10 @@ export default function RightBarArtistRegisterInformation({
           price_per_hour: pricePerHour,
           currency_code: currency,
           street_address: streetAddress,
+          street_address_2: streetAddress2 as string,
           zip_code: zipCode,
           city,
+          state,
           country,
           phone_number: phoneNumber,
           website,
@@ -213,8 +220,10 @@ export default function RightBarArtistRegisterInformation({
               instagram,
               twitter,
               streetAddress,
+              streetAddress2,
               zipCode,
               city,
+              state,
               country,
               phoneNumber,
               specialties,
@@ -237,9 +246,11 @@ export default function RightBarArtistRegisterInformation({
           currency_code: currency,
           user_id: currentUserId,
           street_address: streetAddress,
+          street_address_2: streetAddress2 as string,
           zip_code: zipCode,
           city,
           country,
+          state,
           phone_number: phoneNumber,
           website,
           facebook_url: facebook ? `${baseFacebookUrl}${facebook}` : "",
@@ -264,8 +275,11 @@ export default function RightBarArtistRegisterInformation({
               instagram,
               twitter,
               streetAddress,
+              streetAddress2,
               zipCode,
               country,
+              state,
+              city,
               phoneNumber,
               specialties,
             });
@@ -423,6 +437,40 @@ export default function RightBarArtistRegisterInformation({
             googleAutoComplete={[]}
             errors={errors.streetAddress}
             setValueFn={setValue}
+            referenceFields={[
+              { fieldName: "zipCode", referenceField: "postal_code" },
+              { fieldName: "city", referenceField: "administrative_area_level_1" },
+              { fieldName: "state", referenceField: "administrative_area_level_1" },
+              { fieldName: "country", referenceField: "country", matchList: countryList },
+            ]}
+          />
+
+          <FormInput
+            name="streetAddress2"
+            classes={{ root: classes.formInput }}
+            label={"Street Address 2"}
+            id="streetAddress2"
+            placeholder={"Street Address 2"}
+            fullWidth
+            control={control}
+            variant={"outlined"}
+            defaultValue={streetAddress2 || ""}
+            googleAutoComplete={[]}
+            errors={errors.streetAddress2}
+            setValueFn={setValue}
+          />
+
+          <FormInput
+            name="state"
+            classes={{ root: classes.formInput }}
+            label={"State"}
+            id="state"
+            placeholder={"State"}
+            fullWidth
+            control={control}
+            variant={"outlined"}
+            defaultValue={state || ""}
+            errors={errors.state}
           />
 
           <FormInput
@@ -614,8 +662,10 @@ interface Props {
 interface submitFormData {
   bio: string;
   streetAddress: string;
+  streetAddress2?: string;
   zipCode: string;
   city: string;
+  state: string;
   country: string;
   phoneNumber: string;
   yearsOfExperience: number;

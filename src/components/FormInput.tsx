@@ -11,13 +11,6 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import FormControl from "@material-ui/core/FormControl";
 
-type CustomTextFieldProps = TextFieldProps & {
-  control: any;
-  errors: any;
-  setValueFn?: any;
-  googleAutoComplete?: string[];
-};
-
 export default function FormInput(props: CustomTextFieldProps) {
   const customProps = { ...props };
   // Delete invalid props for text field so that material ui wont complain with any alert
@@ -26,11 +19,38 @@ export default function FormInput(props: CustomTextFieldProps) {
   delete customProps.defaultValue;
   delete customProps.setValueFn;
   delete customProps.googleAutoComplete;
+  delete customProps.referenceFields;
 
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
+  };
+
+  // Get desired component from google autocomplete results
+  const getAutoCompleteComponentData = (data: any, name: string) => {
+    const componentData = data.address_components.filter((item: any) => item.types.includes(name));
+    return componentData[0];
+  };
+
+  // Set referenced autocomplete fields
+  const setAutoCompleteFields = (fields: AutoCompleteReferenceFields[], data: any, setFunction: any) => {
+    fields.map((field) => {
+      const componentValue = getAutoCompleteComponentData(data, field.referenceField);
+      if (componentValue) {
+        // If match list is set, do compare first
+        if (field.matchList) {
+          const matchedValue = field.matchList.filter((item) => item.value === componentValue.long_name);
+
+          // Set value if this auto complete result exists in match list
+          if (matchedValue.length > 0) {
+            setFunction(field.fieldName, componentValue.long_name);
+          }
+        } else {
+          setFunction(field.fieldName, componentValue.long_name);
+        }
+      }
+    });
   };
 
   useEffect(() => {
@@ -52,6 +72,11 @@ export default function FormInput(props: CustomTextFieldProps) {
         }
 
         props.setValueFn(props.name, place.name);
+
+        // If referenced field is set
+        if (props.referenceFields) {
+          setAutoCompleteFields(props.referenceFields as AutoCompleteReferenceFields[], place, props.setValueFn);
+        }
       };
 
       searchBox.addListener("place_changed", setPlaceValue);
@@ -133,4 +158,23 @@ export default function FormInput(props: CustomTextFieldProps) {
       }}
     />
   );
+}
+
+type CustomTextFieldProps = TextFieldProps & {
+  control: any;
+  errors: any;
+  setValueFn?: any;
+  googleAutoComplete?: string[];
+  referenceFields?: AutoCompleteReferenceFields[];
+};
+
+interface ListItem {
+  label: string;
+  value: string;
+}
+
+interface AutoCompleteReferenceFields {
+  fieldName: string; // Form field name
+  referenceField: string; // Autocomplete result fields
+  matchList?: ListItem[];
 }
