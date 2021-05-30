@@ -11,6 +11,7 @@ import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Alert from "@material-ui/lab/Alert";
 import TextField from "@material-ui/core/TextField";
+import MenuItem from "@material-ui/core/MenuItem";
 
 import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
@@ -33,6 +34,7 @@ import Loading from "src/components/Loading";
 import { InfoAlert } from "src/components/Admin/FormInputs";
 
 import { getArticleList, deleteArticle } from "./api";
+import { article_status } from "./constants";
 import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
 
 import getConfig from "next/config";
@@ -48,6 +50,7 @@ export default function Articles() {
     data: { articles: articleListData = [], meta = { limit_value: 60, total_count: 0 } } = {},
     error: articleListError,
     refetch: articleListRefetch,
+    isFetching: articleListIsFetching,
   } = useQuery("articleList", async () => await getArticleList(location.search));
 
   // Create an Alert for info feedback
@@ -58,7 +61,8 @@ export default function Articles() {
   const [rowsPerPage, setRowsPerPage] = useState(meta.limit_value);
 
   const [searchInputValue, setSearchInputValue] = useState("");
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState({});
+  const [statusFilter, setStatusFilter] = useState({});
 
   const [deleteArticleDialog, setDeleteArticleDialog] = useState({ isOpen: false, title: "", articleId: "" });
 
@@ -66,10 +70,10 @@ export default function Articles() {
   useEffect(() => {
     router.replace({
       pathname: router.pathname,
-      query: searchValue ? { query: searchValue, ...pageOptions } : pageOptions,
+      query: { ...statusFilter, ...searchValue, ...pageOptions },
     });
     setTimeout(() => articleListRefetch(), 500);
-  }, [searchValue, pageOptions]);
+  }, [statusFilter, searchValue, pageOptions]);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
@@ -113,6 +117,10 @@ export default function Articles() {
     setDeleteArticleDialog({ isOpen: false, title: "", articleId: "" });
   };
 
+  const handleStatusFilterChange = (value: string) => {
+    value ? setStatusFilter({ status: value }) : setStatusFilter({});
+  };
+
   return (
     <AdminBody>
       <Head>
@@ -120,49 +128,76 @@ export default function Articles() {
       </Head>
 
       <Grid container>
-        <Grid item xs={12} sm={4}>
-          {infoAlert.message ? (
-            <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} />
-          ) : (
-            <Breadcrumbs>
-              <Typography variant="h6">
-                <Link href="/admin">Dashboard</Link>
-              </Typography>
-              <Typography variant="h6">Articles</Typography>
-            </Breadcrumbs>
-          )}
-        </Grid>
+        <Grid item xs={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={4}>
+              {infoAlert.message ? (
+                <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} />
+              ) : (
+                <Breadcrumbs>
+                  <Typography variant="h6">
+                    <Link href="/admin">Dashboard</Link>
+                  </Typography>
+                  <Typography variant="h6">Articles</Typography>
+                </Breadcrumbs>
+              )}
+            </Grid>
 
-        <Grid item xs={12} sm={4}>
-          <Autocomplete
-            freeSolo
-            options={
-              articleListStatus === "success"
-                ? articleListData?.map((option: Admin.Articles) => option.title ?? "")
-                : []
-            }
-            inputValue={searchInputValue}
-            onInputChange={(event, newInputValue) => {
-              setSearchInputValue(newInputValue);
-              debouncedSearchInput(newInputValue);
-            }}
-            renderInput={(params) => (
+            <Grid item xs={12} sm={1}>
+              {articleListIsFetching ? <Loading /> : null}
+            </Grid>
+
+            <Grid item xs={12} sm={2}>
               <TextField
-                {...params}
-                label="Search Articles"
-                size="small"
                 variant="outlined"
-                InputProps={{ ...params.InputProps, type: "search" }}
-              />
-            )}
-          />
-        </Grid>
+                select
+                fullWidth
+                size="small"
+                label="Filter by Status"
+                defaultValue=""
+                onChange={(e) => handleStatusFilterChange(e.target.value)}
+              >
+                <MenuItem value="">Clear Filter...</MenuItem>
+                {article_status.map((status, index) => (
+                  <MenuItem value={status} key={index}>
+                    {status}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
 
-        <Grid item xs={12} sm={4}>
-          <Grid container item justify="center">
-            <PrimaryButton primaryColor onClick={() => router.push(`${router.pathname}/create`)}>
-              Add New Article
-            </PrimaryButton>
+            <Grid item xs={12} sm={3}>
+              <Autocomplete
+                freeSolo
+                options={
+                  articleListStatus === "success"
+                    ? articleListData?.map((option: Admin.Articles) => option.title ?? "")
+                    : []
+                }
+                inputValue={searchInputValue}
+                onInputChange={(event, newInputValue) => {
+                  setSearchInputValue(newInputValue);
+                  debouncedSearchInput(newInputValue);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Search Articles"
+                    size="small"
+                    variant="outlined"
+                    InputProps={{ ...params.InputProps, type: "search" }}
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={2}>
+              <Grid container item justify="center">
+                <PrimaryButton primaryColor onClick={() => router.push(`${router.pathname}/create`)}>
+                  Add New Article
+                </PrimaryButton>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
 

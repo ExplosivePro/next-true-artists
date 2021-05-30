@@ -11,6 +11,7 @@ import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Alert from "@material-ui/lab/Alert";
 import TextField from "@material-ui/core/TextField";
+import MenuItem from "@material-ui/core/MenuItem";
 
 import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
@@ -33,6 +34,7 @@ import Loading from "src/components/Loading";
 import { InfoAlert } from "src/components/Admin/FormInputs";
 
 import { getLandingPageList, deleteLandingPage } from "./api";
+import { landingPage_status } from "./constants";
 import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
 
 import getConfig from "next/config";
@@ -48,6 +50,7 @@ export default function LandingPages() {
     data: { landing_pages: pageListData = [], meta = { limit_value: 60, total_count: 0 } } = {},
     error: pageListError,
     refetch: pageListRefetch,
+    isFetching: pageListIsFetching,
   } = useQuery("landingPageList", async () => await getLandingPageList(location.search));
 
   // Create an Alert for info feedback
@@ -58,7 +61,8 @@ export default function LandingPages() {
   const [rowsPerPage, setRowsPerPage] = useState(meta.limit_value);
 
   const [searchInputValue, setSearchInputValue] = useState("");
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState({});
+  const [statusFilter, setStatusFilter] = useState({});
 
   const [deletePageDialog, setDeletePageDialog] = useState({ isOpen: false, title: "", pageId: "" });
 
@@ -66,10 +70,10 @@ export default function LandingPages() {
   useEffect(() => {
     router.replace({
       pathname: router.pathname,
-      query: searchValue ? { query: searchValue, ...pageOptions } : pageOptions,
+      query: { ...statusFilter, ...searchValue, ...pageOptions },
     });
     setTimeout(() => pageListRefetch(), 500);
-  }, [searchValue, pageOptions]);
+  }, [statusFilter, searchValue, pageOptions]);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
@@ -113,6 +117,10 @@ export default function LandingPages() {
     setDeletePageDialog({ isOpen: false, title: "", pageId: "" });
   };
 
+  const handleStatusFilterChange = (value: string) => {
+    value ? setStatusFilter({ status: value }) : setStatusFilter({});
+  };
+
   return (
     <AdminBody>
       <Head>
@@ -120,47 +128,76 @@ export default function LandingPages() {
       </Head>
 
       <Grid container>
-        <Grid item xs={12} sm={4} md={4} lg={4}>
-          {infoAlert.message ? (
-            <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} />
-          ) : (
-            <Breadcrumbs>
-              <Typography variant="h6">
-                <Link href="/admin">Dashboard</Link>
-              </Typography>
-              <Typography variant="h6">Landing Pages</Typography>
-            </Breadcrumbs>
-          )}
-        </Grid>
+        <Grid item xs={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={4}>
+              {infoAlert.message ? (
+                <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} />
+              ) : (
+                <Breadcrumbs>
+                  <Typography variant="h6">
+                    <Link href="/admin">Dashboard</Link>
+                  </Typography>
+                  <Typography variant="h6">Landing Pages</Typography>
+                </Breadcrumbs>
+              )}
+            </Grid>
 
-        <Grid item xs={12} sm={4} md={4} lg={4}>
-          <Autocomplete
-            freeSolo
-            options={
-              pageListStatus === "success" ? pageListData?.map((option: Admin.LandingPages) => option.title ?? "") : []
-            }
-            inputValue={searchInputValue}
-            onInputChange={(event, newInputValue) => {
-              setSearchInputValue(newInputValue);
-              debouncedSearchInput(newInputValue);
-            }}
-            renderInput={(params) => (
+            <Grid item xs={12} sm={1}>
+              {pageListIsFetching ? <Loading /> : null}
+            </Grid>
+
+            <Grid item xs={12} sm={2}>
               <TextField
-                {...params}
-                label="Search LandingPages"
-                size="small"
                 variant="outlined"
-                InputProps={{ ...params.InputProps, type: "search" }}
-              />
-            )}
-          />
-        </Grid>
+                select
+                fullWidth
+                size="small"
+                label="Filter by Status"
+                defaultValue=""
+                onChange={(e) => handleStatusFilterChange(e.target.value)}
+              >
+                <MenuItem value="">Clear Filter...</MenuItem>
+                {landingPage_status.map((status, index) => (
+                  <MenuItem value={status} key={index}>
+                    {status}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
 
-        <Grid item xs={12} sm={4} md={4} lg={4}>
-          <Grid container item justify="center">
-            <PrimaryButton primaryColor onClick={() => router.push(`${router.pathname}/create`)}>
-              Add New Landing Page
-            </PrimaryButton>
+            <Grid item xs={12} sm={3}>
+              <Autocomplete
+                freeSolo
+                options={
+                  pageListStatus === "success"
+                    ? pageListData?.map((option: Admin.LandingPages) => option.title ?? "")
+                    : []
+                }
+                inputValue={searchInputValue}
+                onInputChange={(event, newInputValue) => {
+                  setSearchInputValue(newInputValue);
+                  debouncedSearchInput(newInputValue);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Search LandingPages"
+                    size="small"
+                    variant="outlined"
+                    InputProps={{ ...params.InputProps, type: "search" }}
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={2}>
+              <Grid container item justify="center">
+                <PrimaryButton primaryColor onClick={() => router.push(`${router.pathname}/create`)}>
+                  Add New Landing Page
+                </PrimaryButton>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
 
