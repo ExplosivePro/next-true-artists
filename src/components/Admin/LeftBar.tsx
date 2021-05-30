@@ -171,22 +171,6 @@ export default function LeftBar() {
 
       <ListItem
         button
-        key={"Styles"}
-        onClick={() => handleAdminMenuClick("styles")}
-        className={clsx(classes.listItem, {
-          [classes.activeBar]: currentActiveBar.indexOf(menuAdminBar.STYLES) > -1,
-        })}
-      >
-        <ListItemIcon className={classes.listItemIcon}>
-          <FilterVintageIcon />
-        </ListItemIcon>
-        <ListItemText>
-          <Typography color="inherit">Styles</Typography>
-        </ListItemText>
-      </ListItem>
-
-      <ListItem
-        button
         key={"Landing-Pages"}
         onClick={() => handleAdminMenuClick("landingPages")}
         className={clsx(classes.listItem, {
@@ -198,6 +182,22 @@ export default function LeftBar() {
         </ListItemIcon>
         <ListItemText>
           <Typography color="inherit">Landing Pages</Typography>
+        </ListItemText>
+      </ListItem>
+
+      <ListItem
+        button
+        key={"Styles"}
+        onClick={() => handleAdminMenuClick("styles")}
+        className={clsx(classes.listItem, {
+          [classes.activeBar]: currentActiveBar.indexOf(menuAdminBar.STYLES) > -1,
+        })}
+      >
+        <ListItemIcon className={classes.listItemIcon}>
+          <FilterVintageIcon />
+        </ListItemIcon>
+        <ListItemText>
+          <Typography color="inherit">Styles</Typography>
         </ListItemText>
       </ListItem>
     </List>
