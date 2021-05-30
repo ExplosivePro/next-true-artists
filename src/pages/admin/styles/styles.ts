@@ -29,6 +29,9 @@ export const useStyles = makeStyles({
     float: "right",
     color: colors.grey[500],
   },
+  nameCell: {
+    paddingLeft: "50px",
+  },
 });
 
 export const StyledTableCell = withStyles((theme: Theme) =>

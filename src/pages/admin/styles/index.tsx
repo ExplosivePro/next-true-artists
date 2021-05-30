@@ -179,7 +179,7 @@ export default function Styles() {
                   </colgroup>
                   <TableHead>
                     <TableRow>
-                      <StyledTableCell>Name</StyledTableCell>
+                      <StyledTableCell className={classes.nameCell}>Name</StyledTableCell>
                       <StyledTableCell className={classes.actionsHeader} colSpan={2}>
                         Actions
                       </StyledTableCell>
@@ -189,7 +189,9 @@ export default function Styles() {
                   <TableBody>
                     {styleListData.map((style: Admin.Style, index: number) => (
                       <StyledTableRow key={index}>
-                        <StyledTableCell>{style.name}</StyledTableCell>
+                        <StyledTableCell className={classes.nameCell}>
+                          <b>{style.name}</b>
+                        </StyledTableCell>
                         <StyledTableCell className={classes.actionsHeader}>
                           <Link href={`${router.pathname}/${style.id}`}>
                             <a className={classes.listLink}>Edit</a>
