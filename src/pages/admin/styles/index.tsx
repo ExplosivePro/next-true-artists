@@ -187,24 +187,28 @@ export default function Styles() {
                   </TableHead>
 
                   <TableBody>
-                    {styleListData.map((style: Admin.Style, index: number) => (
-                      <StyledTableRow key={index}>
-                        <StyledTableCell className={classes.nameCell}>
-                          <b>{style.name}</b>
-                        </StyledTableCell>
-                        <StyledTableCell className={classes.actionsHeader}>
-                          <Link href={`${router.pathname}/${style.id}`}>
-                            <a className={classes.listLink}>Edit</a>
-                          </Link>
-                        </StyledTableCell>
-                        <StyledTableCell
-                          className={classes.deleteCell}
-                          onClick={() => deleteStyleDialogOpen(style.name, style.id.toString())}
-                        >
-                          Delete
-                        </StyledTableCell>
-                      </StyledTableRow>
-                    ))}
+                    {styleListData
+                      .filter((styles: Admin.Style) =>
+                        searchValue ? styles.name.toLowerCase().indexOf(searchValue.toLowerCase()) > -1 : styles,
+                      )
+                      .map((style: Admin.Style, index: number) => (
+                        <StyledTableRow key={index}>
+                          <StyledTableCell className={classes.nameCell}>
+                            <b>{style.name}</b>
+                          </StyledTableCell>
+                          <StyledTableCell className={classes.actionsHeader}>
+                            <Link href={`${router.pathname}/${style.id}`}>
+                              <a className={classes.listLink}>Edit</a>
+                            </Link>
+                          </StyledTableCell>
+                          <StyledTableCell
+                            className={classes.deleteCell}
+                            onClick={() => deleteStyleDialogOpen(style.name, style.id.toString())}
+                          >
+                            Delete
+                          </StyledTableCell>
+                        </StyledTableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>
