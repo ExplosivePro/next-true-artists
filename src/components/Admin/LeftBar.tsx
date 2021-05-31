@@ -13,6 +13,7 @@ import SupervisorAccountOutlinedIcon from "@material-ui/icons/SupervisorAccountO
 import PeopleIcon from "@material-ui/icons/People";
 import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import SubjectIcon from "@material-ui/icons/Subject";
+import FilterVintageIcon from "@material-ui/icons/FilterVintage";
 import Typography from "@material-ui/core/Typography";
 import EventNoteIcon from "@material-ui/icons/EventNote";
 
@@ -59,6 +60,12 @@ export default function LeftBar() {
       case "articles":
         if (currentActiveBar !== menuAdminBar.ARTICLES) {
           goToPage(`/admin/articles`, { mainBar: menuAdminBar.ARTICLES });
+        }
+        break;
+
+      case "styles":
+        if (currentActiveBar !== menuAdminBar.STYLES) {
+          goToPage(`/admin/styles`, { mainBar: menuAdminBar.STYLES });
         }
         break;
 
@@ -175,6 +182,22 @@ export default function LeftBar() {
         </ListItemIcon>
         <ListItemText>
           <Typography color="inherit">Landing Pages</Typography>
+        </ListItemText>
+      </ListItem>
+
+      <ListItem
+        button
+        key={"Styles"}
+        onClick={() => handleAdminMenuClick("styles")}
+        className={clsx(classes.listItem, {
+          [classes.activeBar]: currentActiveBar.indexOf(menuAdminBar.STYLES) > -1,
+        })}
+      >
+        <ListItemIcon className={classes.listItemIcon}>
+          <FilterVintageIcon />
+        </ListItemIcon>
+        <ListItemText>
+          <Typography color="inherit">Styles</Typography>
         </ListItemText>
       </ListItem>
     </List>

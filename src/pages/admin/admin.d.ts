@@ -115,6 +115,12 @@ declare namespace Admin {
     tag_list: string[];
   }
 
+  declare interface Style {
+    id: number;
+    name: string;
+    slug: string;
+  }
+
   declare interface LandingPages {
     id: number;
     title: string;
