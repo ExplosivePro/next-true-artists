@@ -163,13 +163,15 @@ export default function Artists() {
                     <col width="auto" />
                     <col width="auto" />
                     <col width="auto" />
+                    <col width="auto" />
                   </colgroup>
                   <TableHead>
                     <TableRow>
                       <StyledTableCell>Name</StyledTableCell>
                       <StyledTableCell>Phone</StyledTableCell>
-                      <StyledTableCell>City</StyledTableCell>
                       <StyledTableCell>Country</StyledTableCell>
+                      <StyledTableCell>State</StyledTableCell>
+                      <StyledTableCell>City</StyledTableCell>
                       <StyledTableCell>Status</StyledTableCell>
                     </TableRow>
                   </TableHead>
@@ -183,8 +185,9 @@ export default function Artists() {
                           </Link>
                         </StyledTableCell>
                         <StyledTableCell>{artist.phone_number}</StyledTableCell>
-                        <StyledTableCell>{artist.city}</StyledTableCell>
                         <StyledTableCell>{artist.country}</StyledTableCell>
+                        <StyledTableCell>{artist.state}</StyledTableCell>
+                        <StyledTableCell>{artist.city}</StyledTableCell>
                         <StyledTableCell>{artist.status}</StyledTableCell>
                       </StyledTableRow>
                     ))}

@@ -74,7 +74,7 @@ export default function Artist() {
       if (status === "approve") response = await approveArtist(artistData?.id);
       if (status === "reject") response = await rejectArtist(artistData?.id);
 
-      if (!response) setInfoAlert({ severity: "error", message: "Error updating artist !" });
+      if (response) setInfoAlert({ severity: "error", message: "Error updating artist !" });
       else {
         setInfoAlert({ severity: "success", message: "Artist updated successfully" });
         artistDataRefetch();

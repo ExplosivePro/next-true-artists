@@ -163,13 +163,15 @@ export default function Studios() {
                     <col width="auto" />
                     <col width="auto" />
                     <col width="auto" />
+                    <col width="auto" />
                   </colgroup>
                   <TableHead>
                     <TableRow>
                       <StyledTableCell>Name</StyledTableCell>
                       <StyledTableCell>Phone</StyledTableCell>
-                      <StyledTableCell>City</StyledTableCell>
                       <StyledTableCell>Country</StyledTableCell>
+                      <StyledTableCell>State</StyledTableCell>
+                      <StyledTableCell>City</StyledTableCell>
                       <StyledTableCell>Status</StyledTableCell>
                     </TableRow>
                   </TableHead>
@@ -183,8 +185,9 @@ export default function Studios() {
                           </Link>
                         </StyledTableCell>
                         <StyledTableCell>{studio.phone_number}</StyledTableCell>
-                        <StyledTableCell>{studio.city}</StyledTableCell>
                         <StyledTableCell>{studio.country}</StyledTableCell>
+                        <StyledTableCell>{studio.state}</StyledTableCell>
+                        <StyledTableCell>{studio.city}</StyledTableCell>
                         <StyledTableCell>{studio.status}</StyledTableCell>
                       </StyledTableRow>
                     ))}
