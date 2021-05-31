@@ -21,6 +21,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TablePagination from "@material-ui/core/TablePagination";
 
 import AdminBody from "src/components/Admin/AdminBody";
+import handleApiErrors from "src/components/Admin/handleApiErrors";
 import Loading from "src/components/Loading";
 
 import { getStudioList } from "./api";
@@ -152,7 +153,7 @@ export default function Studios() {
               <Loading />
             </React.Fragment>
           ) : studioListStatus === "error" ? (
-            <Alert severity="error">{`Retrieving Studios - ${studioListError}`}</Alert>
+            <Alert severity="error">{`Retrieving Studios - ${handleApiErrors(studioListError)}`}</Alert>
           ) : studioListData.length > 0 ? (
             <React.Fragment>
               <TableContainer className={classes.tableContainer}>

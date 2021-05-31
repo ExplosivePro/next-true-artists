@@ -21,6 +21,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TablePagination from "@material-ui/core/TablePagination";
 
 import AdminBody from "src/components/Admin/AdminBody";
+import handleApiErrors from "src/components/Admin/handleApiErrors";
 import Loading from "src/components/Loading";
 
 import { getArtistList } from "./api";
@@ -152,7 +153,7 @@ export default function Artists() {
               <Loading />
             </React.Fragment>
           ) : artistListStatus === "error" ? (
-            <Alert severity="error">{`Retrieving Artists - ${artistListError}`}</Alert>
+            <Alert severity="error">{`Retrieving Artists - ${handleApiErrors(artistListError)}`}</Alert>
           ) : artistListData.length > 0 ? (
             <React.Fragment>
               <TableContainer className={classes.tableContainer}>

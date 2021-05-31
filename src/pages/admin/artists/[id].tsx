@@ -33,6 +33,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 
 import AdminBody from "src/components/Admin/AdminBody";
+import handleApiErrors from "src/components/Admin/handleApiErrors";
 import Loading from "src/components/Loading";
 import PrimaryButton from "src/components/PrimaryButton";
 import { InfoAlert } from "src/components/Admin/FormInputs";
@@ -80,7 +81,7 @@ export default function Artist() {
         artistDataRefetch();
       }
     } catch (error) {
-      setInfoAlert({ severity: "error", message: `Error updating artist! - ${error}` });
+      setInfoAlert({ severity: "error", message: `Error updating artist! - ${handleApiErrors(error)}` });
     }
     setTimeout(() => {
       setInfoAlert({ severity: "info", message: "" });
@@ -113,7 +114,7 @@ export default function Artist() {
               <Loading />
             </React.Fragment>
           ) : artistDataStatus === "error" ? (
-            <Alert severity="error">{`Retrieving Artist record - ${artistDataError}`}</Alert>
+            <Alert severity="error">{`Retrieving Artist record - ${handleApiErrors(artistDataError)}`}</Alert>
           ) : artistData ? (
             <Grid container spacing={2}>
               <Grid item xs={12} md={3} lg={3}>
@@ -433,7 +434,7 @@ function TattooImage({ tattoo }: { tattoo: Admin.Tattoo }) {
         setInfoAlert({ severity: "success", message: "Image updated successfully" });
       }
     } catch (error) {
-      setInfoAlert({ severity: "error", message: `Error updating image! - ${error}` });
+      setInfoAlert({ severity: "error", message: `Error updating image! - ${handleApiErrors(error)}` });
     }
     setTimeout(() => {
       setInfoAlert({ severity: "info", message: "" });

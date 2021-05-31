@@ -21,6 +21,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TablePagination from "@material-ui/core/TablePagination";
 
 import AdminBody from "src/components/Admin/AdminBody";
+import handleApiErrors from "src/components/Admin/handleApiErrors";
 import Loading from "src/components/Loading";
 
 import { getUserList } from "./api";
@@ -150,7 +151,7 @@ export default function Users() {
               <Loading />
             </React.Fragment>
           ) : userListStatus === "error" ? (
-            <Alert severity="error">{`Retrieving Users - ${userListError}`}</Alert>
+            <Alert severity="error">{`Retrieving Users - ${handleApiErrors(userListError)}`}</Alert>
           ) : userListData.length > 0 ? (
             <React.Fragment>
               <TableContainer className={classes.tableContainer}>
