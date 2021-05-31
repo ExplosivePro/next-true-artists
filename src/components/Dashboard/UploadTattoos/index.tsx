@@ -1,5 +1,5 @@
 // External
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 
 // Material UI Components
@@ -9,7 +9,7 @@ import { Grid, Typography } from "@material-ui/core";
 import PrimaryButton from "../../PrimaryButton";
 import Tattoos, { Image } from "../../../components/RightBarRegisterTattooUpload/Tattoos";
 
-import { deleteTattooByRole, updateTattoos, uploadTattoos } from "../../../api";
+import { deleteTattooByRole, updateTattoos, uploadTattoos, getTattooDetail, editTattoos } from "../../../api";
 
 // Context
 import { useApp, useAuth, Role } from "../../../contexts";
@@ -18,10 +18,10 @@ import { useRouter } from "next/router";
 // Styles
 import useStyles from "./styles";
 
-export default function UploadTattoos() {
+export default function UploadTattoos({ id }: Props) {
   const app = useApp();
   const { user: { role } = { role: Role.REGULAR }, getRoleId, updateUserData } = useAuth();
-  const { push } = useRouter();
+  const { push, query } = useRouter();
 
   const classes = useStyles();
 
@@ -29,35 +29,62 @@ export default function UploadTattoos() {
   const [tattoos, setTattoos] = useState<Image[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const uploadImages = async (tattoos: Image[]) => {
+  const editMode = !isNaN(id as number);
+
+  const uploadImages = async (tattooImages: Image[]) => {
     const formData = new FormData();
-    const metaData: any[] = [];
 
-    // Add all images into formData
-    tattoos.map((tattoo) => {
-      formData.append("images[]", tattoo.file);
-      metaData.push({
-        placement: tattoo.placement,
-        workplace: tattoo.workplace,
-        color: tattoo.color,
-        caption: tattoo.caption,
-        featured: tattoo.featured,
+    // Create the new one
+    if (isNaN(id as number)) {
+      const metaData: any[] = [];
+
+      // Add all images into formData
+      tattooImages.map((tattoo) => {
+        formData.append("images[]", tattoo.file);
+        metaData.push({
+          placement: tattoo.placement,
+          workplace: tattoo.workplace,
+          color: tattoo.color,
+          caption: tattoo.caption,
+          featured: tattoo.featured,
+        });
       });
-    });
 
-    formData.append("meta_data", JSON.stringify(metaData));
+      formData.append("meta_data", JSON.stringify(metaData));
 
-    const response = await uploadTattoos(formData);
+      const response = await uploadTattoos(formData);
 
-    const { error, errors, data } = response;
-    // No error happens
-    if (!error) {
-      // Get updated user data
-      updateUserData();
+      const { error, errors, data } = response;
+      // No error happens
+      if (!error) {
+        // Get updated user data
+        updateUserData();
 
-      return data;
+        return data;
+      } else {
+        app.showErrorDialog(true, errors ? errors.toString() : "Image upload failed. Try again");
+      }
     } else {
-      app.showErrorDialog(true, errors ? errors.toString() : "Image upload failed. Try again");
+      formData.append("image", tattooImages[0].file);
+      formData.append("placement", tattoos[0].placement);
+      formData.append("workplace", tattoos[0].workplace);
+      formData.append("color", tattoos[0].color);
+      formData.append("caption", tattoos[0].caption);
+      formData.append("featured", tattoos[0].featured.toString());
+
+      // Edit
+      const response = await editTattoos(currentUserId as number, query.id as string, role, formData);
+
+      const { error, errors, data } = response;
+      // No error happens
+      if (!error) {
+        // Get updated user data
+        updateUserData();
+
+        return data;
+      } else {
+        app.showErrorDialog(true, errors ? errors.toString() : "Image update failed. Try again");
+      }
     }
   };
 
@@ -65,13 +92,17 @@ export default function UploadTattoos() {
     const rs = await uploadImages(data);
 
     if (rs) {
-      rs.results.map((image: any, index: number) => {
-        // Attach id to existing file
-        if (data[index].file.name === image.body.image.name) {
-          data[index].id = image.body.id;
-        }
-      });
-      setTattoos([...tattoos, ...data]);
+      if (editMode) {
+        push("/dashboard/gallery");
+      } else {
+        rs.results.map((image: any, index: number) => {
+          // Attach id to existing file
+          if (data[index].file.name === image.body.image.name) {
+            data[index].id = image.body.id;
+          }
+        });
+        setTattoos([...tattoos, ...data]);
+      }
     }
 
     // Hide loading
@@ -89,7 +120,13 @@ export default function UploadTattoos() {
 
   // On tattoos update
   const onUpdate = async (tattooId: number, payload: any, index: number) => {
-    const response = await updateTattoos(currentUserId as number, tattooId, payload, role);
+    let queryRole = "artist";
+
+    if (role === Role.STUDIO) {
+      queryRole = "studio";
+    }
+
+    const response = await updateTattoos(currentUserId as number, tattooId, payload, queryRole);
 
     const { error, errors, data } = response;
     // No error happens
@@ -102,6 +139,11 @@ export default function UploadTattoos() {
 
       // Simply remove old object then add the new item
       setTattoos([...tattoos.slice(0, index), tattooDetail, ...tattoos.slice(index + 1)]);
+
+      // In edit mode, back to gallery
+      if (editMode) {
+        push("/dashboard/gallery");
+      }
 
       return data;
     } else {
@@ -117,11 +159,28 @@ export default function UploadTattoos() {
     // No error happens
     if (!error) {
       setTattoos(tattoos.filter((tattoo) => tattoo.id !== tattooId));
+      // In edit mode, back to gallery
+      if (editMode) {
+        push("/dashboard/gallery");
+      }
       return data;
     } else {
       app.showErrorDialog(true, errors ? errors.toString() : "Remove fail");
     }
   };
+
+  const getImageDetail = async (id: string) => {
+    const { data } = await getTattooDetail(currentUserId as number, id, role);
+
+    setTattoos([data]);
+  };
+
+  useEffect(() => {
+    // Get detail if currently edtting tattoos
+    if (query.id) {
+      getImageDetail(query.id as string);
+    }
+  }, [query.id]);
 
   return (
     <Grid
@@ -133,9 +192,13 @@ export default function UploadTattoos() {
       <div className={classes.formWrapper}>
         <div className={classes.titleWrapper}>
           <Typography variant={"h5"} className={classes.titleText}>
-            {"Upload Images of Your Work"}
+            {!editMode ? "Upload Images of Your Work" : "Edit Image"}
           </Typography>
-          <Typography>Upload your work to showcase your skills and share your portfolio with the community.</Typography>
+          {!editMode && (
+            <Typography>
+              Upload your work to showcase your skills and share your portfolio with the community.
+            </Typography>
+          )}
         </div>
 
         <Grid container>
@@ -149,42 +212,49 @@ export default function UploadTattoos() {
             onChange={onFieldsChange}
             onUpdate={onUpdate}
             onDelete={onDelete}
+            editMode={editMode}
           />
         </Grid>
 
-        <Grid container item justify={"center"} alignItems={"center"} className={classes.buttonWrapper} spacing={2}>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <PrimaryButton
-              type={"button"}
-              variant="outlined"
-              color="primary"
-              size="large"
-              primaryColor
-              fullWidth
-              onClick={() => {
-                push("/dashboard");
-              }}
-            >
-              Back
-            </PrimaryButton>
+        {!editMode && (
+          <Grid container item justify={"center"} alignItems={"center"} className={classes.buttonWrapper} spacing={2}>
+            <Grid item lg={6} md={6} sm={12} xs={12}>
+              <PrimaryButton
+                type={"button"}
+                variant="outlined"
+                color="primary"
+                size="large"
+                primaryColor
+                fullWidth
+                onClick={() => {
+                  push("/dashboard");
+                }}
+              >
+                Back
+              </PrimaryButton>
+            </Grid>
+            <Grid item lg={6} md={6} sm={12} xs={12}>
+              <PrimaryButton
+                onClick={() => {
+                  push("/dashboard/gallery");
+                }}
+                type={"button"}
+                variant="contained"
+                fullWidth
+                color="primary"
+                size="large"
+                primaryColor
+              >
+                Done
+              </PrimaryButton>
+            </Grid>
           </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <PrimaryButton
-              onClick={() => {
-                push("/dashboard/gallery");
-              }}
-              type={"button"}
-              variant="contained"
-              fullWidth
-              color="primary"
-              size="large"
-              primaryColor
-            >
-              Done
-            </PrimaryButton>
-          </Grid>
-        </Grid>
+        )}
       </div>
     </Grid>
   );
+}
+
+interface Props {
+  id?: number;
 }

@@ -20,19 +20,28 @@ import Loading from "../../Loading";
 import { placements, colors as colorList } from "../../../constants";
 
 import useStyles from "./styles";
+import { useRouter } from "next/router";
 
-const ImageItem = ({ data, className }: { data: Image; className?: any }) => {
+const ImageItem = ({ data, className, editMode = false }: { data: any; className?: any; editMode?: boolean }) => {
   // Import class styles
   const classes = useStyles();
 
   return (
     <div className={clsx(classes.imageBox, className)}>
-      <img src={data.preview} alt={`tattoos`} />
+      <img src={editMode ? data.image?.image_url : data.preview} alt={`tattoos`} />
     </div>
   );
 };
 
-const AddImageItem = ({ onAdd, setLoading }: { onAdd: (data: any) => void; setLoading: (value: boolean) => void }) => {
+const AddImageItem = ({
+  onAdd,
+  setLoading,
+  editMode = false,
+}: {
+  onAdd: (data: any) => void;
+  setLoading: (value: boolean) => void;
+  editMode: boolean;
+}) => {
   // Import class styles
   const classes = useStyles();
 
@@ -88,21 +97,31 @@ const AddImageItem = ({ onAdd, setLoading }: { onAdd: (data: any) => void; setLo
   return (
     <>
       <PrimaryButton variant="outlined" color="primary" primaryColor size="medium" onClick={handleClick}>
-        Upload images
+        {editMode ? "Replace image" : "Upload images"}
       </PrimaryButton>
       <input className={classes.fileInput} type={"file"} multiple ref={hiddenFileInput} onChange={handleChange} />
     </>
   );
 };
 
-const Tattoos = ({ data, addImage, loading = false, onSetLoading, onUpdate, onChange, onDelete }: Props) => {
+const Tattoos = ({
+  data,
+  addImage,
+  loading = false,
+  onSetLoading,
+  onUpdate,
+  onChange,
+  onDelete,
+  editMode = false,
+}: Props) => {
   // Import class styles
   const classes = useStyles();
+  const { push } = useRouter();
 
   return (
     <>
       <div className={classes.imageList}>
-        <AddImageItem onAdd={addImage} setLoading={onSetLoading} />
+        <AddImageItem onAdd={addImage} setLoading={onSetLoading} editMode={editMode} />
       </div>
       <Grid container>
         <Grid container justify={"center"}>
@@ -113,10 +132,10 @@ const Tattoos = ({ data, addImage, loading = false, onSetLoading, onUpdate, onCh
           return (
             <Grid container key={index} spacing={2} className={classes.tattooCard}>
               <Grid item lg={5} md={5} sm={12} xs={12}>
-                <ImageItem data={item} className={classes.alignCenter} />
+                <ImageItem data={item} className={classes.alignCenter} editMode={editMode} />
               </Grid>
               <Grid item lg={7} md={7} sm={12} xs={12}>
-                {!item.saved && (
+                {!editMode && !item?.saved && (
                   <Grid container alignItems={"center"} className={classes.alertWrapper}>
                     <ErrorIcon />
                     <Typography display={"inline"} variant={"subtitle2"}>
@@ -228,28 +247,74 @@ const Tattoos = ({ data, addImage, loading = false, onSetLoading, onUpdate, onCh
                     />
                   </Grid>
 
-                  <PrimaryButton
-                    type={"button"}
-                    variant="contained"
-                    fullWidth
-                    color="primary"
-                    size="large"
-                    primaryColor
-                    onClick={() => {
-                      onUpdate(
-                        item.id as number,
-                        {
-                          color: item.color,
-                          placement: item.placement,
-                          caption: item.caption,
-                          featured: item.featured,
-                        },
-                        index,
-                      );
-                    }}
-                  >
-                    Save changes
-                  </PrimaryButton>
+                  {!editMode && (
+                    <PrimaryButton
+                      type={"button"}
+                      variant="contained"
+                      fullWidth
+                      color="primary"
+                      size="large"
+                      primaryColor
+                      onClick={() => {
+                        onUpdate(
+                          item.id as number,
+                          {
+                            color: item.color,
+                            placement: item.placement,
+                            caption: item.caption,
+                            featured: item.featured,
+                          },
+                          index,
+                        );
+                      }}
+                    >
+                      Save changes
+                    </PrimaryButton>
+                  )}
+
+                  {editMode && (
+                    <Grid container spacing={1}>
+                      <Grid item lg={6} md={6} xs={6}>
+                        <PrimaryButton
+                          type={"button"}
+                          variant="outlined"
+                          fullWidth
+                          color="primary"
+                          size="large"
+                          primaryColor
+                          onClick={() => {
+                            push("/dashboard/gallery");
+                          }}
+                        >
+                          Cancel
+                        </PrimaryButton>
+                      </Grid>
+                      <Grid item lg={6} md={6} xs={6}>
+                        <PrimaryButton
+                          type={"button"}
+                          variant="contained"
+                          fullWidth
+                          color="primary"
+                          size="large"
+                          primaryColor
+                          onClick={() => {
+                            onUpdate(
+                              item.id as number,
+                              {
+                                color: item.color,
+                                placement: item.placement,
+                                caption: item.caption,
+                                featured: item.featured,
+                              },
+                              index,
+                            );
+                          }}
+                        >
+                          Save changes
+                        </PrimaryButton>
+                      </Grid>
+                    </Grid>
+                  )}
                 </form>
               </Grid>
             </Grid>
@@ -280,6 +345,7 @@ interface Props {
   onUpdate: (id: number, payload: any, index: number) => void;
   onDelete: (id: number) => void;
   onChange: (index: number, name: string, value: any) => void;
+  editMode: boolean;
 }
 
 export default Tattoos;
