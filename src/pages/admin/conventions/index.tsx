@@ -126,10 +126,7 @@ export default function Conventions() {
 
         <Grid item xs={12} sm={4} md={4} lg={4}>
           <Grid container item justify="center">
-            <PrimaryButton
-              primaryColor
-              onClick={() => console.log(conventionListData) /* router.push(`${router.pathname}/create`) */}
-            >
+            <PrimaryButton primaryColor onClick={() => router.push(`${router.pathname}/create`)}>
               Add New Convention
             </PrimaryButton>
           </Grid>
