@@ -64,7 +64,7 @@ export default function LandingPages() {
   const [searchValue, setSearchValue] = useState({});
   const [statusFilter, setStatusFilter] = useState({});
 
-  const [deletePageDialog, setDeletePageDialog] = useState({ isOpen: false, title: "", pageId: "" });
+  const [confirmDeleteDialog, setConfirmDeleteDialog] = useState({ isOpen: false, title: "", pageId: "" });
 
   // Force refetch after search update
   useEffect(() => {
@@ -92,7 +92,7 @@ export default function LandingPages() {
   );
 
   const onDelete = async (pageId: string) => {
-    deletePageDialogClose();
+    confirmDeleteDialogClose();
     try {
       const response = await deleteLandingPage(pageId);
       if (response)
@@ -109,12 +109,12 @@ export default function LandingPages() {
     }, 4500);
   };
 
-  const deletePageDialogOpen = (title: string, pageId: string) => {
-    setDeletePageDialog({ isOpen: true, title: title, pageId: pageId });
+  const confirmDeleteDialogOpen = (title: string, pageId: string) => {
+    setConfirmDeleteDialog({ isOpen: true, title: title, pageId: pageId });
   };
 
-  const deletePageDialogClose = () => {
-    setDeletePageDialog({ isOpen: false, title: "", pageId: "" });
+  const confirmDeleteDialogClose = () => {
+    setConfirmDeleteDialog({ isOpen: false, title: "", pageId: "" });
   };
 
   const handleStatusFilterChange = (value: string) => {
@@ -250,7 +250,7 @@ export default function LandingPages() {
                         </StyledTableCell>
                         <StyledTableCell
                           className={classes.deleteCell}
-                          onClick={() => deletePageDialogOpen(landingPage?.title, landingPage?.id.toString())}
+                          onClick={() => confirmDeleteDialogOpen(landingPage?.title, landingPage?.id.toString())}
                         >
                           Delete
                         </StyledTableCell>
@@ -277,12 +277,12 @@ export default function LandingPages() {
         </Grid>
       </Grid>
 
-      {deletePageDialog.isOpen ? (
-        <ConfirmResetPassword
-          title={deletePageDialog.title}
-          pageId={deletePageDialog.pageId}
-          close={deletePageDialogClose}
-          isOpen={deletePageDialog.isOpen}
+      {confirmDeleteDialog.isOpen ? (
+        <ConfirmDeleteDialog
+          title={confirmDeleteDialog.title}
+          pageId={confirmDeleteDialog.pageId}
+          close={confirmDeleteDialogClose}
+          isOpen={confirmDeleteDialog.isOpen}
           handleDelete={onDelete}
         />
       ) : (
@@ -292,7 +292,7 @@ export default function LandingPages() {
   );
 }
 
-function ConfirmResetPassword({
+function ConfirmDeleteDialog({
   title,
   pageId,
   close,
