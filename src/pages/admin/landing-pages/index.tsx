@@ -87,7 +87,7 @@ export default function LandingPages() {
   };
 
   const debouncedSearchInput = useCallback(
-    debounce((value: string) => setSearchValue(value), 2000),
+    debounce((value: string) => (value ? setSearchValue({ query: value }) : setSearchValue({})), 2000),
     [],
   );
 
