@@ -1,1 +1,4 @@
-export const landingPage_status = ["draft", "published", "archived"];
+export const convention_status = [
+  { status: "Verified", value: "true" },
+  { status: "Not verified", value: "false" },
+];

@@ -11,7 +11,7 @@ export const getConvention = async (conventionId: string | undefined) => {
   return data;
 };
 
-export const editConvention = async (payload: any, conventionId: string) => {
+export const editConvention = async (payload: any, conventionId: number) => {
   const { data } = await api.patch(`/api/v1/admin/conventions/${conventionId}`, payload);
   return data;
 };

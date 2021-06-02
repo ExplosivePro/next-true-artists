@@ -1,12 +1,19 @@
 import { makeStyles, createStyles, Theme, withStyles } from "@material-ui/core/styles";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
+import { green, red } from "@material-ui/core/colors";
 
 import colors from "src/palette";
 
 export const useStyles = makeStyles({
   buttonWrapper: {
     marginTop: "15px",
+  },
+  greenIcon: {
+    color: green[500],
+  },
+  redIcon: {
+    color: red[500],
   },
   tableContainer: {
     marginTop: "10px",
@@ -16,6 +23,14 @@ export const useStyles = makeStyles({
   },
   listLink: {
     color: colors.primaryColor,
+  },
+  statusCell: {
+    textAlign: "center",
+    padding: 0,
+  },
+  deleteCell: {
+    textDecoration: "underline",
+    cursor: "pointer",
   },
   metaWrapper: {
     borderLeft: "solid thin lightGrey",

@@ -138,9 +138,14 @@ declare namespace Admin {
     description: string;
     link_to_official_site: string;
     facebook_link: string;
-    start_date: any;
+    start_date: string;
     end_date: string;
-    status: string;
+    verified: boolean;
+    address: string;
+    city: string;
+    state: string;
+    country: string;
     image: ImageAsset;
+    user: { full_name: string; email: string };
   }
 }
