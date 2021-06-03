@@ -86,7 +86,7 @@ export default function EditConventions() {
       else {
         setInfoAlert({ severity: "success", message: "Convention created successfully" });
         setTimeout(() => {
-          router.push(`${PUBLIC_BASE}/conventions/${response.name}`);
+          router.push(`${PUBLIC_BASE}/conventions/${response.slug}`);
         }, 2500);
         return;
       }

@@ -13,9 +13,13 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import Alert from "@material-ui/lab/Alert";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
+import Chip from "@material-ui/core/Chip";
+
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CancelIcon from "@material-ui/icons/Cancel";
 import VolumeUpIcon from "@material-ui/icons/VolumeUp";
+import PageviewIcon from "@material-ui/icons/Pageview";
+import AdjustIcon from "@material-ui/icons/Adjust";
 
 import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
@@ -122,11 +126,7 @@ export default function Conventions() {
   };
 
   const handleStatusFilterChange = (value: string) => {
-    value
-      ? value === "true"
-        ? setStatusFilter({ verified: true })
-        : setStatusFilter({ verified: false })
-      : setStatusFilter({});
+    value ? setStatusFilter({ verified: value }) : setStatusFilter({});
   };
 
   const showBoolean = (value: boolean) =>
@@ -134,6 +134,43 @@ export default function Conventions() {
       <CheckCircleIcon fontSize="small" className={classes.greenIcon} />
     ) : (
       <CancelIcon fontSize="small" className={classes.redIcon} />
+    );
+
+  const showVerified = (value: string) =>
+    value === "approved" ? (
+      <Chip
+        icon={<CheckCircleIcon fontSize="small" className={classes.greenIcon} />}
+        label="Approved"
+        variant="outlined"
+        size="small"
+        className={classes.tableChip}
+      />
+    ) : value === "rejected" ? (
+      <Chip
+        icon={<CancelIcon fontSize="small" className={classes.redIcon} />}
+        label="Rejected"
+        variant="outlined"
+        size="small"
+        className={classes.tableChip}
+      />
+    ) : value === "pending_review" ? (
+      <Chip
+        icon={<PageviewIcon fontSize="small" className={classes.blueIcon} />}
+        label="Review"
+        variant="outlined"
+        size="small"
+        className={classes.tableChip}
+      />
+    ) : value === "pending" ? (
+      <Chip
+        icon={<AdjustIcon fontSize="small" />}
+        label="Pending"
+        variant="outlined"
+        size="small"
+        className={classes.tableChip}
+      />
+    ) : (
+      value
     );
 
   return (
@@ -231,11 +268,11 @@ export default function Conventions() {
                   <colgroup>
                     <col width="auto" />
                     <col width="auto" />
-                    <col width="auto" />
-                    <col width="auto" />
+                    <col width="10%" />
+                    <col width="10%" />
                     <col width="3%" />
                     <col width="2%" />
-                    <col width="3%" />
+                    <col width="10%" />
                     <col width="5%" />
                     <col width="5%" />
                   </colgroup>
@@ -243,10 +280,11 @@ export default function Conventions() {
                     <TableRow>
                       <StyledTableCell>Name</StyledTableCell>
                       <StyledTableCell>Description</StyledTableCell>
-                      <StyledTableCell className={classes.statusCell}>Start Date</StyledTableCell>
-                      <StyledTableCell className={classes.statusCell}>End Date</StyledTableCell>
-                      <StyledTableCell className={classes.statusCell}>Active</StyledTableCell>
-                      <StyledTableCell className={classes.statusCell} />
+                      <StyledTableCell>Start date</StyledTableCell>
+                      <StyledTableCell>End date</StyledTableCell>
+                      <StyledTableCell className={classes.statusCell} colSpan={2}>
+                        Active/On
+                      </StyledTableCell>
                       <StyledTableCell className={classes.statusCell}>Verified</StyledTableCell>
                       <StyledTableCell className={classes.statusCell} colSpan={2}>
                         Actions
@@ -281,7 +319,7 @@ export default function Conventions() {
                           ) : null}
                         </StyledTableCell>
                         <StyledTableCell className={classes.statusCell}>
-                          {showBoolean(convention?.verified)}
+                          {showVerified(convention?.verified)}
                         </StyledTableCell>
                         <StyledTableCell>
                           <Link href={`${router.pathname}/${convention?.id}`}>

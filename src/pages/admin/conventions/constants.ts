@@ -1,4 +1,6 @@
 export const convention_status = [
-  { status: "Verified", value: "true" },
-  { status: "Not verified", value: "false" },
+  { status: "Pending", value: "pending" },
+  { status: "Pending Review", value: "pending_review" },
+  { status: "Approved", value: "approved" },
+  { status: "Rejected", value: "rejected" },
 ];

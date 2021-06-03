@@ -30,3 +30,19 @@ export const createConvention = async (payload: any) => {
   const { data } = await api.post(`/api/v1/admin/conventions`, payload);
   return data;
 };
+
+// ---- Approve-Reject conventions
+export const approveConvention = async (conventionId: number | undefined) => {
+  const { data } = await api.put(`/api/v1/admin/conventions/${conventionId}/approve`);
+  return data;
+};
+
+export const rejectConvention = async (conventionId: number | undefined) => {
+  const { data } = await api.put(`/api/v1/admin/conventions/${conventionId}/reject`);
+  return data;
+};
+
+export const submitForReviewConvention = async (conventionId: number | undefined) => {
+  const { data } = await api.put(`/api/v1/admin/conventions/${conventionId}/submit_for_review`);
+  return data;
+};

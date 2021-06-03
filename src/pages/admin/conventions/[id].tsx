@@ -17,14 +17,20 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import Backdrop from "@material-ui/core/Backdrop";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardActions from "@material-ui/core/CardActions";
+
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CancelIcon from "@material-ui/icons/Cancel";
+import SyncIcon from "@material-ui/icons/Sync";
+import PageviewIcon from "@material-ui/icons/Pageview";
 
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -34,18 +40,18 @@ import AdminBody from "src/components/Admin/AdminBody";
 import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
-import { InfoAlert, TextInput, SelectInput } from "src/components/Admin/FormInputs";
+import { InfoAlert, TextInput } from "src/components/Admin/FormInputs";
 
-import { getConvention, editConvention } from "./api";
-import { convention_status } from "./constants";
+import { getConvention, editConvention, approveConvention, rejectConvention, submitForReviewConvention } from "./api";
 import { countryList } from "src/constants";
-import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
+import { useStyles, StyledTableCell, StyledTableRow, useBackDropStyles } from "./styles";
 
-export default function EditConventions() {
+export default function ShowEditConventions() {
   const classes = useStyles();
   const router = useRouter();
 
   const [conventionId, setConventionId] = useState("");
+  const [editMode, setEditMode] = useState(false);
 
   // Fetch Convention data using param
   const {
@@ -80,7 +86,7 @@ export default function EditConventions() {
           </Breadcrumbs>
         </Grid>
 
-        <Grid item xs={12} className={classes.buttonWrapper}>
+        <Grid item xs={12} className={classes.gridSpacer}>
           {conventionDataStatus === "loading" ? (
             <React.Fragment>
               <Alert severity="info">Loading... </Alert>
@@ -89,7 +95,19 @@ export default function EditConventions() {
           ) : conventionDataStatus === "error" ? (
             <Alert severity="error">{`Retrieving Conventions - ${handleApiErrors(conventionDataError)}`}</Alert>
           ) : conventionData ? (
-            <Edit conventionData={conventionData} refetchConventionData={refetchConventionData} />
+            editMode ? (
+              <EditConvention
+                setEditMode={setEditMode}
+                conventionData={conventionData}
+                refetchConventionData={refetchConventionData}
+              />
+            ) : (
+              <ShowConvention
+                setEditMode={setEditMode}
+                conventionData={conventionData}
+                refetchConventionData={refetchConventionData}
+              />
+            )
           ) : (
             <Alert severity="info">Convention record not found...</Alert>
           )}
@@ -99,26 +117,299 @@ export default function EditConventions() {
   );
 }
 
-function Edit({
+function ShowConvention({
   conventionData,
   refetchConventionData,
+  setEditMode,
 }: {
   conventionData: Admin.Conventions;
   refetchConventionData: () => void;
+  setEditMode: (T: boolean) => void;
 }) {
   const classes = useStyles();
   const router = useRouter();
+
+  // Create an Alert for info feedback
+  const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
+
+  const updateStatus = async (status: string) => {
+    try {
+      let response = "null";
+      if (status === "approve") response = await approveConvention(conventionData?.id);
+      if (status === "reject") response = await rejectConvention(conventionData?.id);
+      if (status === "review") response = await submitForReviewConvention(conventionData?.id);
+
+      if (response) setInfoAlert({ severity: "error", message: "Error updating convention !" });
+      else {
+        setInfoAlert({ severity: "success", message: "Convention updated successfully" });
+        refetchConventionData();
+      }
+    } catch (error) {
+      setInfoAlert({ severity: "error", message: `Error updating convention! - ${handleApiErrors(error)}` });
+    }
+    setTimeout(() => {
+      setInfoAlert({ severity: "info", message: "" });
+    }, 4500);
+  };
+
+  const enableEditMode = () => {
+    setEditMode(true);
+  };
+
+  // Go back
+  const goBack = () => {
+    router.back();
+  };
+
+  const showVerified = (value: string) =>
+    value === "approved" ? (
+      <Chip icon={<CheckCircleIcon fontSize="small" className={classes.greenIcon} />} label="Approved" size="small" />
+    ) : value === "rejected" ? (
+      <Chip icon={<CancelIcon fontSize="small" className={classes.redIcon} />} label="Rejected" size="small" />
+    ) : value === "pending" ? (
+      <Chip icon={<PageviewIcon fontSize="small" className={classes.blueIcon} />} label="Pending" size="small" />
+    ) : (
+      <Chip icon={<PageviewIcon fontSize="small" className={classes.blueIcon} />} label="Pending Review" size="small" />
+    );
+
+  return (
+    <Grid container spacing={2} direction="column">
+      <Grid item xs={12} md={8} lg={6}>
+        {infoAlert.message ? <InfoAlert infoAlert={infoAlert} setInfoAlert={setInfoAlert} /> : null}
+      </Grid>
+
+      <Grid item xs={12}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={12} md={3} lg={3} xl={2}>
+            <Card variant="outlined">
+              <CardContent>
+                <Typography variant="h6" component="h2" align="center" gutterBottom>
+                  {conventionData?.name ?? "<no name>"}
+                </Typography>
+
+                <Grid container spacing={2} justify="center">
+                  <Grid item className={classes.titleCell}>
+                    Status:
+                  </Grid>
+                  <Grid item>{showVerified(conventionData?.verified)}</Grid>
+                </Grid>
+
+                {conventionData?.verified !== "rejected" && conventionData?.verified !== "approved" ? (
+                  <React.Fragment>
+                    <Grid container item justify="space-evenly" className={classes.buttonWrapper}>
+                      <PrimaryButton size="small" primaryColor onClick={() => updateStatus("approve")}>
+                        Approve
+                      </PrimaryButton>
+
+                      <PrimaryButton
+                        size="small"
+                        variant="outlined"
+                        primaryColor
+                        onClick={() => updateStatus("reject")}
+                      >
+                        Reject
+                      </PrimaryButton>
+                    </Grid>
+
+                    {conventionData?.verified === "pending" ? (
+                      <Grid container justify="center" className={classes.buttonWrapper}>
+                        <Grid item xs={8}>
+                          <PrimaryButton
+                            fullWidth
+                            size="small"
+                            variant="outlined"
+                            primaryColor
+                            onClick={() => updateStatus("review")}
+                          >
+                            Submit for Review
+                          </PrimaryButton>
+                        </Grid>
+                      </Grid>
+                    ) : null}
+                  </React.Fragment>
+                ) : null}
+
+                <Grid container item xs={12} justify="center" className={classes.buttonWrapper}>
+                  <PrimaryButton variant="outlined" size="small" primaryColor onClick={enableEditMode}>
+                    Edit
+                  </PrimaryButton>
+                </Grid>
+              </CardContent>
+            </Card>
+
+            <Card variant="outlined" className={classes.gridSpacer}>
+              <CardContent>
+                <Typography>Created by</Typography>
+                <Table size="small">
+                  <colgroup>
+                    <col width="15%" />
+                    <col width="auto" />
+                  </colgroup>
+                  <TableBody>
+                    <StyledTableRow>
+                      <StyledTableCell>
+                        <b>Name </b>
+                      </StyledTableCell>
+                      <StyledTableCell>{conventionData?.user?.full_name}</StyledTableCell>
+                    </StyledTableRow>
+
+                    <StyledTableRow>
+                      <StyledTableCell>
+                        <b>Email </b>
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        <Link href={`mailto:${conventionData?.user?.email}`}>
+                          <a target="_blank" className={classes.listLink}>
+                            {conventionData?.user?.email}
+                          </a>
+                        </Link>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+
+            <Grid container justify="center" className={classes.buttonWrapper}>
+              <Grid item xs={8}>
+                <PrimaryButton variant="outlined" fullWidth size="small" primaryColor onClick={goBack}>
+                  Back
+                </PrimaryButton>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid item xs={12} sm={12} md={8}>
+            <Grid container spacing={2}>
+              <Grid item sm={12} md={6}>
+                <Card variant="outlined">
+                  <Table size="medium">
+                    <colgroup>
+                      <col width="150px" />
+                      <col width="auto" />
+                    </colgroup>
+                    <TableBody>
+                      <StyledTableRow>
+                        <StyledTableCell className={classes.titleCell}>Start Date</StyledTableCell>
+                        <StyledTableCell>
+                          {moment(conventionData?.start_date).format("dddd, DD MMMM yyyy")}
+                        </StyledTableCell>
+                      </StyledTableRow>
+
+                      <StyledTableRow>
+                        <StyledTableCell className={classes.titleCell}>End Date</StyledTableCell>
+                        <StyledTableCell>
+                          {moment(conventionData?.end_date).format("dddd, DD MMMM yyyy")}
+                        </StyledTableCell>
+                      </StyledTableRow>
+                      <StyledTableRow>
+                        <StyledTableCell className={classes.titleCell}>Link to official site</StyledTableCell>
+                        <StyledTableCell>
+                          {conventionData?.link_to_official_site ? (
+                            <Link href={conventionData?.link_to_official_site}>
+                              <a target="_blank" className={classes.listLink}>
+                                {conventionData?.link_to_official_site}
+                              </a>
+                            </Link>
+                          ) : (
+                            "--"
+                          )}
+                        </StyledTableCell>
+                      </StyledTableRow>
+
+                      <StyledTableRow>
+                        <StyledTableCell className={classes.titleCell}>Facebook link</StyledTableCell>
+                        <StyledTableCell>
+                          {conventionData?.facebook_link ? (
+                            <Link href={conventionData?.facebook_link}>
+                              <a target="_blank" className={classes.listLink}>
+                                {conventionData?.facebook_link}
+                              </a>
+                            </Link>
+                          ) : (
+                            "--"
+                          )}
+                        </StyledTableCell>
+                      </StyledTableRow>
+
+                      <StyledTableRow>
+                        <StyledTableCell className={classes.titleCell}>Country</StyledTableCell>
+                        <StyledTableCell>{conventionData?.country}</StyledTableCell>
+                      </StyledTableRow>
+
+                      <StyledTableRow>
+                        <StyledTableCell className={classes.titleCell}>State</StyledTableCell>
+                        <StyledTableCell>{conventionData?.state}</StyledTableCell>
+                      </StyledTableRow>
+
+                      <StyledTableRow>
+                        <StyledTableCell className={classes.titleCell}>City</StyledTableCell>
+                        <StyledTableCell>{conventionData?.city}</StyledTableCell>
+                      </StyledTableRow>
+
+                      <StyledTableRow>
+                        <StyledTableCell className={classes.titleCell}>Address</StyledTableCell>
+                        <StyledTableCell>{conventionData?.address}</StyledTableCell>
+                      </StyledTableRow>
+                    </TableBody>
+                  </Table>
+                </Card>
+              </Grid>
+
+              <Grid item sm={12} md={6}>
+                <Card variant="outlined" className={classes.imageCard}>
+                  <CardContent>
+                    <Typography>Convention image</Typography>
+                    <CardMedia
+                      className={classes.imageCardMedia}
+                      image={conventionData?.image?.image_url ?? "/images/camera.png"}
+                    />
+                  </CardContent>
+                </Card>
+
+                <Card variant="outlined" className={classes.gridSpacer}>
+                  <Table size="medium">
+                    <TableBody>
+                      <StyledTableRow>
+                        <StyledTableCell className={classes.titleCell}>Description:</StyledTableCell>
+                      </StyledTableRow>
+                      <StyledTableRow>
+                        <StyledTableCell>{conventionData?.description}</StyledTableCell>
+                      </StyledTableRow>
+                    </TableBody>
+                  </Table>
+                </Card>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+}
+
+function EditConvention({
+  conventionData,
+  refetchConventionData,
+  setEditMode,
+}: {
+  conventionData: Admin.Conventions;
+  refetchConventionData: () => void;
+  setEditMode: (T: boolean) => void;
+}) {
+  const classes = useStyles();
+  const classBackDrop = useBackDropStyles();
 
   // Create a reference to the hidden file input element
   const hiddenFileInput = React.useRef(null);
   const [preview, setPreview] = useState<any>("");
   const [image, setImage] = useState<File | string>("");
+  const [formImageIsDirty, setFormIsDirty] = useState(false);
 
   // Create an Alert for info feedback
   const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
 
   const getFormDefaultValues = () => ({
-    verified: conventionData?.verified,
     name: conventionData?.name,
     description: conventionData?.description,
     start_date: conventionData?.start_date,
@@ -136,7 +427,8 @@ function Edit({
     handleSubmit,
     errors,
     control,
-    formState: { isSubmitting },
+
+    formState: { isSubmitting, isDirty },
   } = useForm({
     defaultValues: getFormDefaultValues(),
     shouldUnregister: false,
@@ -172,9 +464,11 @@ function Edit({
     hiddenFileInput?.current?.click();
   };
 
+  // image remove
   const handleImageRemoveClick = () => {
     setImage("remove");
-    setPreview(" ");
+    setPreview("");
+    setFormIsDirty(true);
   };
 
   // image change
@@ -183,14 +477,38 @@ function Edit({
     const reader = new FileReader();
     reader.readAsDataURL(fileUploaded);
     reader.onloadend = () => setPreview(reader.result);
+    setFormIsDirty(true);
   };
 
+  // image reset
+  const handleImageResetClick = () => {
+    setImage("");
+    setPreview("");
+    setFormIsDirty(false);
+  };
+
+  const ShowBackdrop = () => (
+    <Backdrop className={classBackDrop.backdrop} open={true}>
+      <Card>
+        <CardContent>
+          <Typography gutterBottom>Editing is not available !! - for now.</Typography>
+          <Typography align="center" className={classes.buttonWrapper}>
+            <PrimaryButton size="small" primaryColor onClick={handleCancel}>
+              Back
+            </PrimaryButton>
+          </Typography>
+        </CardContent>
+      </Card>
+    </Backdrop>
+  );
+
   const handleCancel = () => {
-    router.back();
+    setEditMode(false);
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <ShowBackdrop />
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>
           <Grid container spacing={2}>
@@ -200,22 +518,10 @@ function Edit({
 
             <Grid item xs={12}>
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={4}>
-                  <SelectInput
-                    name="verified"
-                    control={control}
-                    required={true}
-                    label="Status"
-                    errors={!!errors.verified}
-                    errorMessage={errors.verified?.message}
-                    dropDownList={convention_status.map((status) => ({ id: status.value, name: status.status }))}
-                  />
-                </Grid>
-
                 <Grid item xs={12}>
                   <Grid container spacing={2}>
                     <Grid item xs={6} sm={4} lg={3}>
-                      <FormControl fullWidth error={errors.start_date ? true : false} required={true}>
+                      <FormControl fullWidth error={errors.start_date ? true : false} required>
                         <FormHelperText>
                           <b>Start Date *</b>
                         </FormHelperText>
@@ -241,7 +547,7 @@ function Edit({
                     </Grid>
 
                     <Grid item xs={6} sm={4} lg={3}>
-                      <FormControl fullWidth error={errors.end_date ? true : false} required={true}>
+                      <FormControl fullWidth error={errors.end_date ? true : false} required>
                         <FormHelperText>
                           <b>End Date *</b>
                         </FormHelperText>
@@ -270,7 +576,7 @@ function Edit({
               </Grid>
             </Grid>
 
-            <Grid item xs={12} md={6} className={classes.buttonWrapper}>
+            <Grid item xs={12} md={6} className={classes.gridSpacer}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextInput
@@ -305,10 +611,10 @@ function Edit({
               </Grid>
             </Grid>
 
-            <Grid item xs={12} md={6} className={classes.buttonWrapper}>
+            <Grid item xs={12} md={6} className={classes.gridSpacer}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <FormControl fullWidth error={errors.country ? true : false} required={true}>
+                  <FormControl fullWidth error={errors.country ? true : false} required>
                     <FormHelperText>
                       <b>Country *</b>
                     </FormHelperText>
@@ -374,7 +680,7 @@ function Edit({
               </Grid>
             </Grid>
 
-            <Grid item xs={12} className={classes.buttonWrapper}>
+            <Grid item xs={12} className={classes.gridSpacer}>
               <TextInput
                 name="description"
                 register={register}
@@ -396,7 +702,13 @@ function Edit({
                   <Typography>Convention image</Typography>
                   <CardMedia
                     className={classes.imageCardMedia}
-                    image={preview ? preview : conventionData?.image?.image_url ?? "/images/camera.png"}
+                    image={
+                      preview
+                        ? preview
+                        : image === "remove"
+                        ? "/images/camera.png"
+                        : conventionData?.image?.image_url ?? "/images/camera.png"
+                    }
                   />
                   <input
                     className={classes.fileInput}
@@ -409,7 +721,14 @@ function Edit({
                 </CardContent>
                 <CardActions>
                   <Chip icon={<EditIcon />} label="Change" size="small" onClick={handleImageChangeClick} />
-                  <Chip icon={<DeleteOutlineIcon />} label="Remove" size="small" onClick={handleImageRemoveClick} />
+
+                  {(conventionData?.image && image !== "remove") || preview ? (
+                    <Chip icon={<DeleteOutlineIcon />} label="Remove" size="small" onClick={handleImageRemoveClick} />
+                  ) : null}
+
+                  {formImageIsDirty ? (
+                    <Chip icon={<SyncIcon />} label="Reset" size="small" onClick={handleImageResetClick} />
+                  ) : null}
                 </CardActions>
               </Card>
             </Grid>
@@ -454,7 +773,7 @@ function Edit({
         </Grid>
 
         <Grid item xs={12}>
-          <Grid container spacing={2} className={classes.buttonWrapper}>
+          <Grid container spacing={2} className={classes.gridSpacer}>
             <Grid item xs={12} sm={4} md={2}>
               <PrimaryButton size="small" fullWidth variant="outlined" primaryColor onClick={handleCancel}>
                 Cancel
@@ -462,7 +781,14 @@ function Edit({
             </Grid>
 
             <Grid item xs={12} sm={6} md={3}>
-              <PrimaryButton size="small" fullWidth primaryColor disabled={isSubmitting} type="submit">
+              <PrimaryButton
+                size="small"
+                fullWidth
+                variant={isDirty || formImageIsDirty ? "contained" : "outlined"}
+                primaryColor
+                disabled={(isSubmitting || !isDirty) && !formImageIsDirty}
+                type="submit"
+              >
                 Save Changes
               </PrimaryButton>
             </Grid>

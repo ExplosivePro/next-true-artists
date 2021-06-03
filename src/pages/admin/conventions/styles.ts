@@ -1,12 +1,24 @@
 import { makeStyles, createStyles, Theme, withStyles } from "@material-ui/core/styles";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
-import { green, red } from "@material-ui/core/colors";
+import { green, red, blue } from "@material-ui/core/colors";
 
 import colors from "src/palette";
 
+export const useBackDropStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    backdrop: {
+      zIndex: theme.zIndex.drawer + 1,
+      color: "#fff",
+    },
+  }),
+);
+
 export const useStyles = makeStyles({
   buttonWrapper: {
+    marginTop: "15px",
+  },
+  gridSpacer: {
     marginTop: "15px",
   },
   greenIcon: {
@@ -14,6 +26,9 @@ export const useStyles = makeStyles({
   },
   redIcon: {
     color: red[500],
+  },
+  blueIcon: {
+    color: blue[500],
   },
   tableContainer: {
     marginTop: "10px",
@@ -31,6 +46,9 @@ export const useStyles = makeStyles({
   deleteCell: {
     textDecoration: "underline",
     cursor: "pointer",
+  },
+  titleCell: {
+    fontWeight: 600,
   },
   metaWrapper: {
     borderLeft: "solid thin lightGrey",
@@ -58,6 +76,9 @@ export const useStyles = makeStyles({
   tagsChips: {
     margin: "2px",
     padding: 0,
+  },
+  tableChip: {
+    border: "none",
   },
   addConventionImage: {
     width: "300px",

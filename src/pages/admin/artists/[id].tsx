@@ -91,7 +91,7 @@ export default function Artist() {
   return (
     <AdminBody>
       <Head>
-        <title>TrueArtists: Admin/Artist - {artistData?.name ?? "Null"}</title>
+        <title>TrueArtists: Admin/Artist - {artistData?.slug ?? artistId}</title>
       </Head>
 
       <Grid container>
@@ -103,7 +103,7 @@ export default function Artist() {
             <Typography variant="body1">
               <Link href="/admin/artists">Artists</Link>
             </Typography>
-            <Typography variant="body1">Profile</Typography>
+            <Typography variant="body1">{artistData?.slug ?? artistId}</Typography>
           </Breadcrumbs>
         </Grid>
 
