@@ -10,6 +10,7 @@ import AppBar from "src/components/Admin/AppBar";
 import LeftBar from "src/components/Admin/LeftBar";
 import { useLayoutStyles } from "./styles";
 import { AuthState, useAuth } from "src/contexts/auth";
+import PrimaryButton from "../PrimaryButton";
 
 const context = createContext<Context>({});
 
@@ -67,29 +68,37 @@ function NotAdmin() {
   return (
     <main className={classes.content}>
       <div className={classes.toolbar} />
-      <Grid container spacing={4}>
+      <Grid container justify="center" spacing={4}>
         <Grid item xs={12}>
           <Typography variant={"h6"} align="center" gutterBottom>
-            <b>You are not authorized to access resource..</b>
+            <b>You are not authorized to access this resource...</b>
           </Typography>
         </Grid>
 
-        <Grid container item xs={12} justify="center">
-          {user ? (
-            <Typography component="button" color="textPrimary" variant="h6" align="center" onClick={logOut}>
-              Log out
-            </Typography>
-          ) : (
-            <Typography
-              component="button"
-              color="textPrimary"
-              variant="h6"
-              align="center"
-              onClick={() => push("/login")}
-            >
-              Log in
-            </Typography>
-          )}
+        <Grid item xs={6} sm={4} md={3} lg={2}>
+          <Grid container item justify="center" direction="column" spacing={4}>
+            {user ? (
+              <React.Fragment>
+                <Grid item>
+                  <PrimaryButton yellow fullWidth onClick={() => push(`/dashboard`)}>
+                    Home
+                  </PrimaryButton>
+                </Grid>
+
+                <Grid item>
+                  <PrimaryButton primaryColor fullWidth onClick={logOut}>
+                    Log Out
+                  </PrimaryButton>
+                </Grid>
+              </React.Fragment>
+            ) : (
+              <Grid item>
+                <PrimaryButton primaryColor fullWidth onClick={() => push("/login")}>
+                  Log in
+                </PrimaryButton>
+              </Grid>
+            )}
+          </Grid>
         </Grid>
       </Grid>
     </main>

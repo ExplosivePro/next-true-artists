@@ -64,7 +64,7 @@ export default function Articles() {
   const [searchValue, setSearchValue] = useState({});
   const [statusFilter, setStatusFilter] = useState({});
 
-  const [deleteArticleDialog, setDeleteArticleDialog] = useState({ isOpen: false, title: "", articleId: "" });
+  const [confirmDeleteDialog, setConfirmDeleteDialog] = useState({ isOpen: false, title: "", articleId: "" });
 
   // Force refetch after search update
   useEffect(() => {
@@ -87,12 +87,12 @@ export default function Articles() {
   };
 
   const debouncedSearchInput = useCallback(
-    debounce((value: string) => setSearchValue(value), 2000),
+    debounce((value: string) => (value ? setSearchValue({ query: value }) : setSearchValue({})), 2000),
     [],
   );
 
   const onDelete = async (articleId: string) => {
-    deleteArticleDialogClose();
+    confirmDeleteDialogClose();
     try {
       const response = await deleteArticle(articleId);
       if (response)
@@ -109,12 +109,12 @@ export default function Articles() {
     }, 4500);
   };
 
-  const deleteArticleDialogOpen = (title: string, articleId: string) => {
-    setDeleteArticleDialog({ isOpen: true, title: title, articleId: articleId });
+  const confirmDeleteDialogOpen = (title: string, articleId: string) => {
+    setConfirmDeleteDialog({ isOpen: true, title: title, articleId: articleId });
   };
 
-  const deleteArticleDialogClose = () => {
-    setDeleteArticleDialog({ isOpen: false, title: "", articleId: "" });
+  const confirmDeleteDialogClose = () => {
+    setConfirmDeleteDialog({ isOpen: false, title: "", articleId: "" });
   };
 
   const handleStatusFilterChange = (value: string) => {
@@ -250,7 +250,7 @@ export default function Articles() {
                         </StyledTableCell>
                         <StyledTableCell
                           className={classes.deleteCell}
-                          onClick={() => deleteArticleDialogOpen(article?.title, article?.id.toString())}
+                          onClick={() => confirmDeleteDialogOpen(article?.title, article?.id.toString())}
                         >
                           Delete
                         </StyledTableCell>
@@ -277,12 +277,12 @@ export default function Articles() {
         </Grid>
       </Grid>
 
-      {deleteArticleDialog.isOpen ? (
-        <ConfirmResetPassword
-          title={deleteArticleDialog.title}
-          articleId={deleteArticleDialog.articleId}
-          close={deleteArticleDialogClose}
-          isOpen={deleteArticleDialog.isOpen}
+      {confirmDeleteDialog.isOpen ? (
+        <ConfirmDeleteDialog
+          title={confirmDeleteDialog.title}
+          articleId={confirmDeleteDialog.articleId}
+          close={confirmDeleteDialogClose}
+          isOpen={confirmDeleteDialog.isOpen}
           handleDelete={onDelete}
         />
       ) : (
@@ -292,7 +292,7 @@ export default function Articles() {
   );
 }
 
-function ConfirmResetPassword({
+function ConfirmDeleteDialog({
   title,
   articleId,
   close,

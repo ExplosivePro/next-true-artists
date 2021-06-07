@@ -30,10 +30,13 @@ import LanguageIcon from "@material-ui/icons/Language";
 
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 import TableContainer from "@material-ui/core/TableContainer";
 import TablePagination from "@material-ui/core/TablePagination";
 
 import AdminBody from "src/components/Admin/AdminBody";
+import handleApiErrors from "src/components/Admin/handleApiErrors";
 import Loading from "src/components/Loading";
 import PrimaryButton from "src/components/PrimaryButton";
 import { InfoAlert } from "src/components/Admin/FormInputs";
@@ -75,13 +78,13 @@ export default function Studio() {
       if (status === "approve") response = await approveStudio(studioData?.id);
       if (status === "reject") response = await rejectStudio(studioData?.id);
 
-      if (!response) setInfoAlert({ severity: "error", message: "Error updating studio !" });
+      if (response) setInfoAlert({ severity: "error", message: "Error updating studio !" });
       else {
         setInfoAlert({ severity: "success", message: "Studio updated successfully" });
         studioDataRefetch();
       }
     } catch (error) {
-      setInfoAlert({ severity: "error", message: `Error updating studio! - ${error}` });
+      setInfoAlert({ severity: "error", message: `Error updating studio! - ${handleApiErrors(error)}` });
     }
     setTimeout(() => {
       setInfoAlert({ severity: "info", message: "" });
@@ -114,7 +117,7 @@ export default function Studio() {
               <Loading />
             </React.Fragment>
           ) : studioDataStatus === "error" ? (
-            <Alert severity="error">{`Retrieving Studio record - ${studioDataError}`}</Alert>
+            <Alert severity="error">{`Retrieving Studio record - ${handleApiErrors(studioDataError)}`}</Alert>
           ) : studioData ? (
             <Grid container spacing={2}>
               <Grid item xs={12} md={3} lg={3}>
@@ -471,7 +474,7 @@ function TattooImage({ tattoo }: { tattoo: Admin.Tattoo }) {
         setInfoAlert({ severity: "success", message: "Image updated successfully" });
       }
     } catch (error) {
-      setInfoAlert({ severity: "error", message: `Error updating image! - ${error}` });
+      setInfoAlert({ severity: "error", message: `Error updating image! - ${handleApiErrors(error)}` });
     }
     setTimeout(() => {
       setInfoAlert({ severity: "info", message: "" });
@@ -610,15 +613,24 @@ function StudioArtists({ artists }: { artists: Admin.ArtistProfile[] }) {
   const classes = useStyles();
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
+  const [start, setStart] = useState(0);
+  const [end, setEnd] = useState(25);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
+    pager(newPage, rowsPerPage);
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+    pager(page, parseInt(event.target.value));
+  };
+
+  const pager = (page: number, rowsPerPage: number) => {
+    setStart(page * rowsPerPage);
+    setEnd(page * rowsPerPage + rowsPerPage);
   };
 
   return (
@@ -633,10 +645,21 @@ function StudioArtists({ artists }: { artists: Admin.ArtistProfile[] }) {
                   <col width="auto" />
                   <col width="auto" />
                   <col width="auto" />
-                  <col width="30%" />
+                  <col width="10%" />
+                  <col width="10%" />
                 </colgroup>
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell>Name</StyledTableCell>
+                    <StyledTableCell>Phone</StyledTableCell>
+                    <StyledTableCell>City</StyledTableCell>
+                    <StyledTableCell>State</StyledTableCell>
+                    <StyledTableCell>Country</StyledTableCell>
+                    <StyledTableCell onClick={() => console.log(start, end)}>Status</StyledTableCell>
+                  </TableRow>
+                </TableHead>
                 <TableBody>
-                  {artists.map((artist, index) => (
+                  {artists.slice(start, end).map((artist, index) => (
                     <StyledTableRow key={index}>
                       <StyledTableCell>
                         <Link href={`/admin/artists/${artist.id}`}>
@@ -647,8 +670,9 @@ function StudioArtists({ artists }: { artists: Admin.ArtistProfile[] }) {
                       </StyledTableCell>
                       <StyledTableCell>{artist.phone_number}</StyledTableCell>
                       <StyledTableCell>{artist.city}</StyledTableCell>
+                      <StyledTableCell>{artist.state}</StyledTableCell>
                       <StyledTableCell>{artist.country}</StyledTableCell>
-                      <StyledTableCell></StyledTableCell>
+                      <StyledTableCell>{artist.status}</StyledTableCell>
                     </StyledTableRow>
                   ))}
                 </TableBody>
@@ -657,7 +681,7 @@ function StudioArtists({ artists }: { artists: Admin.ArtistProfile[] }) {
 
             <TablePagination
               component="div"
-              rowsPerPageOptions={[5, 10, 20, 40, 60, { value: artists.length, label: "All" }]}
+              rowsPerPageOptions={[5, 15, 25]}
               rowsPerPage={rowsPerPage}
               count={artists.length}
               page={page}
