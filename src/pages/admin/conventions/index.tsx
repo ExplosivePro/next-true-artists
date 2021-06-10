@@ -42,7 +42,7 @@ import Loading from "src/components/Loading";
 import { InfoAlert } from "src/components/Admin/FormInputs";
 
 import { getConventionList, deleteConvention } from "./api";
-import { convention_status } from "./constants";
+import { conventionStatus } from "./constants";
 import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
 
 import getConfig from "next/config";
@@ -210,7 +210,7 @@ export default function Conventions() {
                 onChange={(e) => handleStatusFilterChange(e.target.value)}
               >
                 <MenuItem value="">Clear Filter...</MenuItem>
-                {convention_status.map((status, index) => (
+                {conventionStatus.map((status, index) => (
                   <MenuItem value={status.value} key={index}>
                     {status.status}
                   </MenuItem>

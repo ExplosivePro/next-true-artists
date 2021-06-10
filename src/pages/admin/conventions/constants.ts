@@ -1,4 +1,4 @@
-export const convention_status = [
+export const conventionStatus = [
   { status: "Pending", value: "pending" },
   { status: "Pending Review", value: "pending_review" },
   { status: "Approved", value: "approved" },

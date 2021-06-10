@@ -282,6 +282,7 @@ function ShowConvention({
           <Grid item xs={12} sm={12} md={8}>
             <Grid container spacing={2}>
               <Grid item sm={12} md={6}>
+                <Typography>Convention info</Typography>
                 <Card variant="outlined">
                   <Table size="medium">
                     <colgroup>
@@ -302,36 +303,18 @@ function ShowConvention({
                           {moment(conventionData?.end_date).format("dddd, DD MMMM yyyy")}
                         </StyledTableCell>
                       </StyledTableRow>
-                      <StyledTableRow>
-                        <StyledTableCell className={classes.titleCell}>Link to official site</StyledTableCell>
-                        <StyledTableCell>
-                          {conventionData?.link_to_official_site ? (
-                            <Link href={conventionData?.link_to_official_site}>
-                              <a target="_blank" className={classes.listLink}>
-                                {conventionData?.link_to_official_site}
-                              </a>
-                            </Link>
-                          ) : (
-                            "--"
-                          )}
-                        </StyledTableCell>
-                      </StyledTableRow>
+                    </TableBody>
+                  </Table>
+                </Card>
 
-                      <StyledTableRow>
-                        <StyledTableCell className={classes.titleCell}>Facebook link</StyledTableCell>
-                        <StyledTableCell>
-                          {conventionData?.facebook_link ? (
-                            <Link href={conventionData?.facebook_link}>
-                              <a target="_blank" className={classes.listLink}>
-                                {conventionData?.facebook_link}
-                              </a>
-                            </Link>
-                          ) : (
-                            "--"
-                          )}
-                        </StyledTableCell>
-                      </StyledTableRow>
-
+                <Typography className={classes.gridSpacer}>Address info</Typography>
+                <Card variant="outlined">
+                  <Table size="medium">
+                    <colgroup>
+                      <col width="150px" />
+                      <col width="auto" />
+                    </colgroup>
+                    <TableBody>
                       <StyledTableRow>
                         <StyledTableCell className={classes.titleCell}>Country</StyledTableCell>
                         <StyledTableCell>{conventionData?.country}</StyledTableCell>
@@ -350,6 +333,47 @@ function ShowConvention({
                       <StyledTableRow>
                         <StyledTableCell className={classes.titleCell}>Address</StyledTableCell>
                         <StyledTableCell>{conventionData?.address}</StyledTableCell>
+                      </StyledTableRow>
+                    </TableBody>
+                  </Table>
+                </Card>
+
+                <Typography className={classes.gridSpacer}>Social media details</Typography>
+                <Card variant="outlined">
+                  <Table size="medium">
+                    <colgroup>
+                      <col width="150px" />
+                      <col width="auto" />
+                    </colgroup>
+                    <TableBody>
+                      <StyledTableRow>
+                        <StyledTableCell className={classes.titleCell}>Official site</StyledTableCell>
+                        <StyledTableCell>
+                          {conventionData?.link_to_official_site ? (
+                            <Link href={conventionData?.link_to_official_site}>
+                              <a target="_blank" className={classes.listLink}>
+                                {conventionData?.link_to_official_site}
+                              </a>
+                            </Link>
+                          ) : (
+                            "--"
+                          )}
+                        </StyledTableCell>
+                      </StyledTableRow>
+
+                      <StyledTableRow>
+                        <StyledTableCell className={classes.titleCell}>Facebook</StyledTableCell>
+                        <StyledTableCell>
+                          {conventionData?.facebook_link ? (
+                            <Link href={conventionData?.facebook_link}>
+                              <a target="_blank" className={classes.listLink}>
+                                {conventionData?.facebook_link}
+                              </a>
+                            </Link>
+                          ) : (
+                            "--"
+                          )}
+                        </StyledTableCell>
                       </StyledTableRow>
                     </TableBody>
                   </Table>
@@ -517,9 +541,21 @@ function EditConvention({
             </Grid>
 
             <Grid item xs={12}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
+              <Typography>Convention info</Typography>
+              <Card variant="outlined" className={classes.cardItem}>
+                <CardContent>
                   <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                      <TextInput
+                        name="name"
+                        register={register}
+                        required={true}
+                        label="Convention name *"
+                        errors={!!errors.name}
+                        errorMessage={errors.name?.message}
+                      />
+                    </Grid>
+
                     <Grid item xs={6} sm={4} lg={3}>
                       <FormControl fullWidth error={errors.start_date ? true : false} required>
                         <FormHelperText>
@@ -572,129 +608,135 @@ function EditConvention({
                       </FormControl>
                     </Grid>
                   </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid item xs={12} md={6} className={classes.gridSpacer}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextInput
-                    name="name"
-                    register={register}
-                    required={true}
-                    label="Convention name *"
-                    errors={!!errors.name}
-                    errorMessage={errors.name?.message}
-                  />
-                </Grid>
-
-                <Grid item xs={12}>
-                  <TextInput
-                    name="link_to_official_site"
-                    register={register}
-                    label="Link to official site"
-                    errors={!!errors.link_to_official_site}
-                    errorMessage={errors.link_to_official_site?.message}
-                  />
-                </Grid>
-
-                <Grid item xs={12}>
-                  <TextInput
-                    name="facebook_link"
-                    register={register}
-                    label="Facebook link"
-                    errors={!!errors.facebook_link}
-                    errorMessage={errors.facebook_link?.message}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid item xs={12} md={6} className={classes.gridSpacer}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <FormControl fullWidth error={errors.country ? true : false} required>
-                    <FormHelperText>
-                      <b>Country *</b>
-                    </FormHelperText>
-                    <Controller
-                      name={"country"}
-                      control={control}
-                      rules={{ required: true }}
-                      render={(props: any) => (
-                        <Autocomplete
-                          freeSolo
-                          options={countryList?.map((option: { label: string }) => option.label ?? "")}
-                          defaultValue={conventionData?.country}
-                          inputValue={props?.value}
-                          onInputChange={(event, newInputValue) => props.onChange(newInputValue)}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              size="small"
-                              variant="outlined"
-                              InputProps={{ ...params.InputProps }}
-                            />
-                          )}
-                        />
-                      )}
-                    />
-                    {errors.country && <FormHelperText error>{`Required ! ${errors.country?.message}`}</FormHelperText>}
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                  <TextInput
-                    name="state"
-                    register={register}
-                    required={true}
-                    label="State *"
-                    errors={!!errors.state}
-                    errorMessage={errors.state?.message}
-                  />
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                  <TextInput
-                    name="city"
-                    register={register}
-                    required={true}
-                    label="City *"
-                    errors={!!errors.city}
-                    errorMessage={errors.city?.message}
-                  />
-                </Grid>
-
-                <Grid item xs={12}>
-                  <TextInput
-                    name="address"
-                    register={register}
-                    required={true}
-                    multiline={true}
-                    label="Address *"
-                    errors={!!errors.address}
-                    errorMessage={errors.address?.message}
-                  />
-                </Grid>
-              </Grid>
+                </CardContent>
+              </Card>
             </Grid>
 
             <Grid item xs={12} className={classes.gridSpacer}>
-              <TextInput
-                name="description"
-                register={register}
-                required={true}
-                multiline={true}
-                label="Description *"
-                errors={!!errors.description}
-                errorMessage={errors.description?.message}
-              />
+              <Typography>Address info</Typography>
+              <Card variant="outlined" className={classes.cardItem}>
+                <CardContent>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                      <FormControl fullWidth error={errors.country ? true : false} required>
+                        <FormHelperText>
+                          <b>Country *</b>
+                        </FormHelperText>
+                        <Controller
+                          name={"country"}
+                          control={control}
+                          rules={{ required: true }}
+                          render={(props: any) => (
+                            <Autocomplete
+                              freeSolo
+                              options={countryList?.map((option: { label: string }) => option.label ?? "")}
+                              defaultValue={conventionData?.country}
+                              inputValue={props?.value}
+                              onInputChange={(event, newInputValue) => props.onChange(newInputValue)}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  size="small"
+                                  variant="outlined"
+                                  InputProps={{ ...params.InputProps }}
+                                />
+                              )}
+                            />
+                          )}
+                        />
+                        {errors.country && (
+                          <FormHelperText error>{`Required ! ${errors.country?.message}`}</FormHelperText>
+                        )}
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item xs={12} md={3}>
+                      <TextInput
+                        name="state"
+                        register={register}
+                        required={true}
+                        label="State *"
+                        errors={!!errors.state}
+                        errorMessage={errors.state?.message}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} md={3}>
+                      <TextInput
+                        name="city"
+                        register={register}
+                        required={true}
+                        label="City *"
+                        errors={!!errors.city}
+                        errorMessage={errors.city?.message}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextInput
+                        name="address"
+                        register={register}
+                        required={true}
+                        multiline={true}
+                        label="Address *"
+                        errors={!!errors.address}
+                        errorMessage={errors.address?.message}
+                      />
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            <Grid item xs={12} className={classes.gridSpacer}>
+              <Typography>Social media details</Typography>
+              <Card variant="outlined" className={classes.cardItem}>
+                <CardContent>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                      <TextInput
+                        name="link_to_official_site"
+                        register={register}
+                        label="Official site"
+                        errors={!!errors.link_to_official_site}
+                        errorMessage={errors.link_to_official_site?.message}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                      <TextInput
+                        name="facebook_link"
+                        register={register}
+                        label="Facebook"
+                        errors={!!errors.facebook_link}
+                        errorMessage={errors.facebook_link?.message}
+                      />
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            <Grid item xs={12} className={classes.gridSpacer}>
+              <Typography>Description *</Typography>
+              <Card variant="outlined" className={classes.cardItem}>
+                <CardContent>
+                  <TextInput
+                    name="description"
+                    register={register}
+                    required={true}
+                    multiline={true}
+                    rows={4}
+                    errors={!!errors.description}
+                    errorMessage={errors.description?.message}
+                  />
+                </CardContent>
+              </Card>
             </Grid>
           </Grid>
         </Grid>
 
-        <Grid item xs={12} md={4} className={classes.metaWrapper}>
+        <Grid item xs={12} md={4}>
           <Grid container>
             <Grid item xs={12}>
               <Card variant="outlined" className={classes.imageCard}>

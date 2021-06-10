@@ -139,7 +139,7 @@ export default function EditConventions() {
           </Breadcrumbs>
         </Grid>
 
-        <Grid item xs={12} className={classes.buttonWrapper}>
+        <Grid item xs={12} className={classes.gridSpacer}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={2}>
               <Grid item xs={12} md={8}>
@@ -149,9 +149,21 @@ export default function EditConventions() {
                   </Grid>
 
                   <Grid item xs={12}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12}>
+                    <Typography>Convention info</Typography>
+                    <Card variant="outlined" className={classes.cardItem}>
+                      <CardContent>
                         <Grid container spacing={2}>
+                          <Grid item xs={12} sm={6}>
+                            <TextInput
+                              name="name"
+                              register={register}
+                              required={true}
+                              label="Convention name *"
+                              errors={!!errors.name}
+                              errorMessage={errors.name?.message}
+                            />
+                          </Grid>
+
                           <Grid item xs={6} sm={4} lg={3}>
                             <FormControl fullWidth error={errors.start_date ? true : false} required={true}>
                               <FormHelperText>
@@ -204,131 +216,139 @@ export default function EditConventions() {
                             </FormControl>
                           </Grid>
                         </Grid>
-                      </Grid>
-                    </Grid>
+                      </CardContent>
+                    </Card>
                   </Grid>
 
-                  <Grid item xs={12} md={6} className={classes.buttonWrapper}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12}>
-                        <TextInput
-                          name="name"
-                          register={register}
-                          required={true}
-                          label="Convention name *"
-                          errors={!!errors.name}
-                          errorMessage={errors.name?.message}
-                        />
-                      </Grid>
-
-                      <Grid item xs={12}>
-                        <TextInput
-                          name="link_to_official_site"
-                          register={register}
-                          label="Link to official site"
-                          errors={!!errors.link_to_official_site}
-                          errorMessage={errors.link_to_official_site?.message}
-                        />
-                      </Grid>
-
-                      <Grid item xs={12}>
-                        <TextInput
-                          name="facebook_link"
-                          register={register}
-                          label="Facebook link"
-                          errors={!!errors.facebook_link}
-                          errorMessage={errors.facebook_link?.message}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-
-                  <Grid item xs={12} md={6} className={classes.buttonWrapper}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12}>
-                        <FormControl fullWidth error={errors.country ? true : false} required={true}>
-                          <FormHelperText>
-                            <b>Country *</b>
-                          </FormHelperText>
-                          <Controller
-                            name={"country"}
-                            control={control}
-                            rules={{ required: true }}
-                            render={(props: any) => (
-                              <Autocomplete
-                                freeSolo
-                                options={countryList?.map((option: { label: string }) => option.label ?? "")}
-                                defaultValue={""}
-                                inputValue={props?.value}
-                                onInputChange={(event, newInputValue) => props.onChange(newInputValue)}
-                                renderInput={(params) => (
-                                  <TextField
-                                    {...params}
-                                    size="small"
-                                    variant="outlined"
-                                    InputProps={{ ...params.InputProps }}
+                  <Grid item xs={12} className={classes.gridSpacer}>
+                    <Typography>Address info</Typography>
+                    <Card variant="outlined" className={classes.cardItem}>
+                      <CardContent>
+                        <Grid container spacing={2}>
+                          <Grid item xs={12} md={6}>
+                            <FormControl fullWidth error={errors.country ? true : false} required={true}>
+                              <FormHelperText>
+                                <b>Country *</b>
+                              </FormHelperText>
+                              <Controller
+                                name={"country"}
+                                control={control}
+                                rules={{ required: true }}
+                                render={(props: any) => (
+                                  <Autocomplete
+                                    autoHighlight
+                                    options={countryList?.map((option: { label: string }) => option.label ?? "")}
+                                    defaultValue={""}
+                                    inputValue={props?.value}
+                                    onInputChange={(event, newInputValue) => props.onChange(newInputValue)}
+                                    renderInput={(params) => (
+                                      <TextField
+                                        {...params}
+                                        size="small"
+                                        variant="outlined"
+                                        placeholder="Choose a country"
+                                        inputProps={{
+                                          ...params.inputProps,
+                                          autoComplete: "Country", // disable autocomplete and autofill
+                                        }}
+                                      />
+                                    )}
                                   />
                                 )}
                               />
-                            )}
-                          />
-                          {errors.country && (
-                            <FormHelperText error>{`Required ! ${errors.country?.message}`}</FormHelperText>
-                          )}
-                        </FormControl>
-                      </Grid>
+                              {errors.country && (
+                                <FormHelperText error>{`Required ! ${errors.country?.message}`}</FormHelperText>
+                              )}
+                            </FormControl>
+                          </Grid>
 
-                      <Grid item xs={12} md={6}>
-                        <TextInput
-                          name="state"
-                          register={register}
-                          required={true}
-                          label="State *"
-                          errors={!!errors.state}
-                          errorMessage={errors.state?.message}
-                        />
-                      </Grid>
+                          <Grid item xs={12} md={3}>
+                            <TextInput
+                              name="state"
+                              register={register}
+                              required={true}
+                              label="State *"
+                              errors={!!errors.state}
+                              errorMessage={errors.state?.message}
+                            />
+                          </Grid>
 
-                      <Grid item xs={12} md={6}>
-                        <TextInput
-                          name="city"
-                          register={register}
-                          required={true}
-                          label="City *"
-                          errors={!!errors.city}
-                          errorMessage={errors.city?.message}
-                        />
-                      </Grid>
+                          <Grid item xs={12} md={3}>
+                            <TextInput
+                              name="city"
+                              register={register}
+                              required={true}
+                              label="City *"
+                              errors={!!errors.city}
+                              errorMessage={errors.city?.message}
+                            />
+                          </Grid>
 
-                      <Grid item xs={12}>
+                          <Grid item xs={12}>
+                            <TextInput
+                              name="address"
+                              register={register}
+                              required={true}
+                              multiline={true}
+                              label="Address *"
+                              errors={!!errors.address}
+                              errorMessage={errors.address?.message}
+                            />
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+
+                  <Grid item xs={12} className={classes.gridSpacer}>
+                    <Typography>Social media details</Typography>
+                    <Card variant="outlined" className={classes.cardItem}>
+                      <CardContent>
+                        <Grid container spacing={2}>
+                          <Grid item xs={12} md={6}>
+                            <TextInput
+                              name="link_to_official_site"
+                              register={register}
+                              label="Official site"
+                              errors={!!errors.link_to_official_site}
+                              errorMessage={errors.link_to_official_site?.message}
+                            />
+                          </Grid>
+
+                          <Grid item xs={12} md={6}>
+                            <TextInput
+                              name="facebook_link"
+                              register={register}
+                              label="Facebook"
+                              errors={!!errors.facebook_link}
+                              errorMessage={errors.facebook_link?.message}
+                            />
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+
+                  <Grid item xs={12} className={classes.gridSpacer}>
+                    <Typography>Description *</Typography>
+                    <Card variant="outlined" className={classes.cardItem}>
+                      <CardContent>
                         <TextInput
-                          name="address"
+                          name="description"
                           register={register}
                           required={true}
                           multiline={true}
-                          label="Address *"
-                          errors={!!errors.address}
-                          errorMessage={errors.address?.message}
+                          rows={4}
+                          errors={!!errors.description}
+                          errorMessage={errors.description?.message}
                         />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-
-                  <Grid item xs={12} className={classes.buttonWrapper}>
-                    <TextInput
-                      name="description"
-                      register={register}
-                      required={true}
-                      multiline={true}
-                      label="Description *"
-                      errors={!!errors.description}
-                      errorMessage={errors.description?.message}
-                    />
+                      </CardContent>
+                    </Card>
                   </Grid>
                 </Grid>
               </Grid>
 
-              <Grid item xs={12} md={4} className={classes.metaWrapper}>
+              <Grid item xs={12} md={4}>
                 <Grid container>
                   <Grid item xs={12}>
                     <Card variant="outlined" className={classes.imageCard}>

@@ -50,9 +50,6 @@ export const useStyles = makeStyles({
   titleCell: {
     fontWeight: 600,
   },
-  metaWrapper: {
-    borderLeft: "solid thin lightGrey",
-  },
   closeButton: {
     float: "right",
     color: colors.grey[800],
@@ -61,7 +58,6 @@ export const useStyles = makeStyles({
     right: 0,
   },
   cardItem: {
-    border: "none",
     margin: 0,
     padding: 0,
   },

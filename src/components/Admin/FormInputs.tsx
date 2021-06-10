@@ -14,13 +14,24 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
-export const TextInput = ({ name, register, required, label, errors, errorMessage, disabled, multiline }: any) => (
+export const TextInput = ({
+  name,
+  register,
+  required,
+  label,
+  errors,
+  errorMessage,
+  disabled,
+  multiline,
+  rows,
+}: any) => (
   <FormControl fullWidth error={errors} required={required}>
     <FormHelperText>
       <b>{label}</b>
     </FormHelperText>
     <TextField
       multiline={multiline ? true : false}
+      rows={rows}
       id={name}
       disabled={disabled ? true : false}
       name={name}
