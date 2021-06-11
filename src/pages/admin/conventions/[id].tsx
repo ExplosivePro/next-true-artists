@@ -125,7 +125,6 @@ function ShowConvention({
   setEditMode: (T: boolean) => void;
 }) {
   const classes = useStyles();
-  const router = useRouter();
 
   // Create an Alert for info feedback
   const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
@@ -148,15 +147,6 @@ function ShowConvention({
     setTimeout(() => {
       setInfoAlert({ severity: "info", message: "" });
     }, 4500);
-  };
-
-  const enableEditMode = () => {
-    setEditMode(true);
-  };
-
-  // Go back
-  const goBack = () => {
-    router.back();
   };
 
   const showVerified = (value: string) =>
@@ -199,38 +189,43 @@ function ShowConvention({
                         Approve
                       </PrimaryButton>
 
-                      <PrimaryButton
-                        size="small"
-                        variant="outlined"
-                        primaryColor
-                        onClick={() => updateStatus("reject")}
-                      >
+                      <PrimaryButton size="small" yellow onClick={() => updateStatus("reject")}>
                         Reject
                       </PrimaryButton>
                     </Grid>
-
-                    {conventionData?.verified === "pending" ? (
-                      <Grid container justify="center" className={classes.buttonWrapper}>
-                        <Grid item xs={8}>
-                          <PrimaryButton
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            primaryColor
-                            onClick={() => updateStatus("review")}
-                          >
-                            Submit for Review
-                          </PrimaryButton>
-                        </Grid>
-                      </Grid>
-                    ) : null}
                   </React.Fragment>
                 ) : null}
+              </CardContent>
+            </Card>
 
-                <Grid container item xs={12} justify="center" className={classes.buttonWrapper}>
-                  <PrimaryButton variant="outlined" size="small" primaryColor onClick={enableEditMode}>
-                    Edit
-                  </PrimaryButton>
+            <Card variant="outlined" className={classes.gridSpacer}>
+              <CardContent>
+                <Grid container justify="center" spacing={2}>
+                  {conventionData?.verified === "pending" ? (
+                    <Grid item xs={8}>
+                      <PrimaryButton
+                        fullWidth
+                        size="small"
+                        variant="outlined"
+                        yellow
+                        onClick={() => updateStatus("review")}
+                      >
+                        Submit for Review
+                      </PrimaryButton>
+                    </Grid>
+                  ) : null}
+
+                  <Grid item xs={8}>
+                    <PrimaryButton
+                      fullWidth
+                      variant="outlined"
+                      primaryColor
+                      size="small"
+                      onClick={() => setEditMode(true)}
+                    >
+                      Edit Convention
+                    </PrimaryButton>
+                  </Grid>
                 </Grid>
               </CardContent>
             </Card>
@@ -267,14 +262,6 @@ function ShowConvention({
                 </Table>
               </CardContent>
             </Card>
-
-            <Grid container justify="center" className={classes.buttonWrapper}>
-              <Grid item xs={8}>
-                <PrimaryButton variant="outlined" fullWidth size="small" primaryColor onClick={goBack}>
-                  Back
-                </PrimaryButton>
-              </Grid>
-            </Grid>
           </Grid>
 
           <Grid item xs={12} sm={12} md={8}>

@@ -5,7 +5,6 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
-import getConfig from "next/config";
 
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
@@ -35,7 +34,6 @@ import { useStyles } from "./styles";
 export default function EditConventions() {
   const classes = useStyles();
   const router = useRouter();
-  const PUBLIC_BASE = getConfig().publicRuntimeConfig.PUBLIC_PAGE_BASE_URL;
 
   // Create a reference to the hidden file input element
   const hiddenFileInput = React.useRef(null);
@@ -84,7 +82,7 @@ export default function EditConventions() {
       else {
         setInfoAlert({ severity: "success", message: "Convention created successfully" });
         setTimeout(() => {
-          router.push(`${PUBLIC_BASE}/conventions/${response.slug}`);
+          handleCancel();
         }, 2500);
         return;
       }
