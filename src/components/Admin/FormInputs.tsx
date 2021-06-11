@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Controller } from "react-hook-form";
+import moment from "moment";
+import DateFnsUtils from "@date-io/date-fns";
 
 import Grid from "@material-ui/core/Grid";
 import FormControl from "@material-ui/core/FormControl";
@@ -13,6 +15,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 
 export const TextInput = ({
   name,
@@ -185,3 +188,38 @@ export const InfoAlert = ({
     </Grid>
   </Grid>
 );
+
+export const DatePickerInput = ({ name, disabled, control, required, label, errors, errorMessage }: any) => {
+  const [isOpen, setISOPen] = useState(false);
+
+  return (
+    <FormControl fullWidth error={errors} required={required}>
+      <FormHelperText>
+        <b>{label}</b>
+      </FormHelperText>
+      <Controller
+        name={name}
+        control={control}
+        rules={{ required: required }}
+        render={(props) => (
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              disableToolbar
+              disabled={disabled}
+              variant="inline"
+              inputVariant="outlined"
+              size="small"
+              format="MM/dd/yyyy"
+              value={props?.value ? moment(props?.value) : ""}
+              onChange={(date) => props.onChange(moment(date))}
+              onClick={() => setISOPen(true)}
+              open={isOpen}
+              onClose={() => setISOPen(false)}
+            />
+          </MuiPickersUtilsProvider>
+        )}
+      />
+      {errors && <FormHelperText error>{`Required ! ${errorMessage}`}</FormHelperText>}
+    </FormControl>
+  );
+};

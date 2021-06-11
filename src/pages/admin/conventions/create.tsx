@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import moment from "moment";
-import DateFnsUtils from "@date-io/date-fns";
 
 import { useRouter } from "next/router";
 import Head from "next/head";
@@ -16,7 +15,6 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -28,7 +26,7 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import AdminBody from "src/components/Admin/AdminBody";
 import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
-import { InfoAlert, TextInput } from "src/components/Admin/FormInputs";
+import { InfoAlert, TextInput, DatePickerInput } from "src/components/Admin/FormInputs";
 
 import { createConvention } from "./api";
 import { countryList } from "src/constants";
@@ -167,61 +165,25 @@ export default function EditConventions() {
 
                         <Grid container spacing={2}>
                           <Grid item xs={12} sm={6} lg={4}>
-                            <FormControl fullWidth error={errors.start_date ? true : false} required={true}>
-                              <FormHelperText>
-                                <b>Start Date *</b>
-                              </FormHelperText>
-                              <Controller
-                                name={"start_date"}
-                                control={control}
-                                rules={{ required: true }}
-                                render={(props: any) => (
-                                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                    <KeyboardDatePicker
-                                      disableToolbar
-                                      variant="inline"
-                                      inputVariant="outlined"
-                                      size="small"
-                                      format="MM/dd/yyyy"
-                                      value={props?.value ? moment(props?.value) : ""}
-                                      onChange={(date) => props.onChange(moment(date))}
-                                    />
-                                  </MuiPickersUtilsProvider>
-                                )}
-                              />
-                              {errors.start_date && (
-                                <FormHelperText error>{`Required ! ${errors.start_date?.message}`}</FormHelperText>
-                              )}
-                            </FormControl>
+                            <DatePickerInput
+                              name={"start_date"}
+                              control={control}
+                              required={true}
+                              label="Start Date *"
+                              errors={!!errors.start_date}
+                              errorMessage={errors.start_date?.message}
+                            />
                           </Grid>
 
                           <Grid item xs={12} sm={6} lg={4}>
-                            <FormControl fullWidth error={errors.end_date ? true : false} required={true}>
-                              <FormHelperText>
-                                <b>End Date *</b>
-                              </FormHelperText>
-                              <Controller
-                                name={"end_date"}
-                                control={control}
-                                rules={{ required: true }}
-                                render={(props: any) => (
-                                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                    <KeyboardDatePicker
-                                      disableToolbar
-                                      variant="inline"
-                                      inputVariant="outlined"
-                                      size="small"
-                                      format="MM/dd/yyyy"
-                                      value={props?.value ? moment(props?.value) : ""}
-                                      onChange={(date) => props.onChange(moment(date))}
-                                    />
-                                  </MuiPickersUtilsProvider>
-                                )}
-                              />
-                              {errors.end_date && (
-                                <FormHelperText error>{`Required ! ${errors.end_date?.message}`}</FormHelperText>
-                              )}
-                            </FormControl>
+                            <DatePickerInput
+                              name={"end_date"}
+                              control={control}
+                              required={true}
+                              label="End Date *"
+                              errors={!!errors.end_date}
+                              errorMessage={errors.end_date?.message}
+                            />
                           </Grid>
                         </Grid>
                       </CardContent>
