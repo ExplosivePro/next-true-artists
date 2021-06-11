@@ -299,18 +299,16 @@ export default function EditConventions() {
 
                   <Grid item xs={12} className={classes.gridSpacer}>
                     <Typography>Description *</Typography>
-                    <Card variant="outlined" className={classes.cardItem}>
-                      <CardContent>
-                        <TextInput
-                          name="description"
-                          register={register}
-                          required={true}
-                          multiline={true}
-                          rows={4}
-                          errors={!!errors.description}
-                          errorMessage={errors.description?.message}
-                        />
-                      </CardContent>
+                    <Card variant="outlined" className={classes.cardNoBorder}>
+                      <TextInput
+                        name="description"
+                        register={register}
+                        required={true}
+                        multiline={true}
+                        rows={4}
+                        errors={!!errors.description}
+                        errorMessage={errors.description?.message}
+                      />
                     </Card>
                   </Grid>
                 </Grid>

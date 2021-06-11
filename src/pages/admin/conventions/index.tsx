@@ -323,7 +323,7 @@ export default function Conventions() {
                         </StyledTableCell>
                         <StyledTableCell>
                           <Link href={`${router.pathname}/${convention?.id}`}>
-                            <a className={classes.listLink}>Edit</a>
+                            <a className={classes.listLink}>View</a>
                           </Link>
                         </StyledTableCell>
                         <StyledTableCell

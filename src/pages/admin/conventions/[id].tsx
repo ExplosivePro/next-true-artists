@@ -16,7 +16,6 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import Backdrop from "@material-ui/core/Backdrop";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -42,7 +41,7 @@ import { InfoAlert, TextInput, DatePickerInput } from "src/components/Admin/Form
 
 import { getConvention, editConvention, approveConvention, rejectConvention, submitForReviewConvention } from "./api";
 import { countryList } from "src/constants";
-import { useStyles, StyledTableCell, StyledTableRow, useBackDropStyles } from "./styles";
+import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
 
 export default function ShowEditConventions() {
   const classes = useStyles();
@@ -407,7 +406,6 @@ function EditConvention({
   setEditMode: (T: boolean) => void;
 }) {
   const classes = useStyles();
-  const classBackDrop = useBackDropStyles();
 
   // Create a reference to the hidden file input element
   const hiddenFileInput = React.useRef(null);
@@ -496,28 +494,12 @@ function EditConvention({
     setFormIsDirty(false);
   };
 
-  const ShowBackdrop = () => (
-    <Backdrop className={classBackDrop.backdrop} open={true}>
-      <Card>
-        <CardContent>
-          <Typography gutterBottom>Editing is not available !! - for now.</Typography>
-          <Typography align="center" className={classes.buttonWrapper}>
-            <PrimaryButton size="small" primaryColor onClick={handleCancel}>
-              Back
-            </PrimaryButton>
-          </Typography>
-        </CardContent>
-      </Card>
-    </Backdrop>
-  );
-
   const handleCancel = () => {
     setEditMode(false);
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <ShowBackdrop />
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>
           <Grid container spacing={2}>
@@ -676,18 +658,16 @@ function EditConvention({
 
             <Grid item xs={12} className={classes.gridSpacer}>
               <Typography>Description *</Typography>
-              <Card variant="outlined" className={classes.cardItem}>
-                <CardContent>
-                  <TextInput
-                    name="description"
-                    register={register}
-                    required={true}
-                    multiline={true}
-                    rows={4}
-                    errors={!!errors.description}
-                    errorMessage={errors.description?.message}
-                  />
-                </CardContent>
+              <Card variant="outlined" className={classes.cardNoBorder}>
+                <TextInput
+                  name="description"
+                  register={register}
+                  required={true}
+                  multiline={true}
+                  rows={4}
+                  errors={!!errors.description}
+                  errorMessage={errors.description?.message}
+                />
               </Card>
             </Grid>
           </Grid>

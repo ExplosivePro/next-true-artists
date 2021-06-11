@@ -5,15 +5,6 @@ import { green, red, blue } from "@material-ui/core/colors";
 
 import colors from "src/palette";
 
-export const useBackDropStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    backdrop: {
-      zIndex: theme.zIndex.drawer + 1,
-      color: "#fff",
-    },
-  }),
-);
-
 export const useStyles = makeStyles({
   buttonWrapper: {
     marginTop: "15px",
@@ -58,6 +49,11 @@ export const useStyles = makeStyles({
     right: 0,
   },
   cardItem: {
+    margin: 0,
+    padding: 0,
+  },
+  cardNoBorder: {
+    border: "none",
     margin: 0,
     padding: 0,
   },
