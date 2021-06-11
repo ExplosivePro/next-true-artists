@@ -249,7 +249,7 @@ export default function EditConventions() {
                                         placeholder="Choose a country"
                                         inputProps={{
                                           ...params.inputProps,
-                                          autoComplete: "Country", // disable autocomplete and autofill
+                                          autoComplete: "new-password", // disable autocomplete and autofill
                                         }}
                                       />
                                     )}
