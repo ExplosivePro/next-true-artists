@@ -8,12 +8,16 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     listTextHeader: {
       textTransform: "capitalize",
+      fontWeight: 600,
     },
     listTextBody: {
       textTransform: "capitalize",
     },
     listTextTable: {
       marginLeft: "10%",
+    },
+    gridSpacer: {
+      marginTop: "20px",
     },
   }),
 );
