@@ -153,7 +153,7 @@ export default function EditConventions() {
                     <Card variant="outlined" className={classes.cardItem}>
                       <CardContent>
                         <Grid container spacing={2}>
-                          <Grid item xs={12} sm={6}>
+                          <Grid item xs={12} lg={8}>
                             <TextInput
                               name="name"
                               register={register}
@@ -163,8 +163,10 @@ export default function EditConventions() {
                               errorMessage={errors.name?.message}
                             />
                           </Grid>
+                        </Grid>
 
-                          <Grid item xs={6} sm={4} lg={3}>
+                        <Grid container spacing={2}>
+                          <Grid item xs={12} sm={6} lg={4}>
                             <FormControl fullWidth error={errors.start_date ? true : false} required={true}>
                               <FormHelperText>
                                 <b>Start Date *</b>
@@ -177,7 +179,10 @@ export default function EditConventions() {
                                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                     <KeyboardDatePicker
                                       disableToolbar
-                                      format="dd MMM yyyy"
+                                      variant="inline"
+                                      inputVariant="outlined"
+                                      size="small"
+                                      format="MM/dd/yyyy"
                                       value={props?.value ? moment(props?.value) : ""}
                                       onChange={(date) => props.onChange(moment(date))}
                                     />
@@ -190,7 +195,7 @@ export default function EditConventions() {
                             </FormControl>
                           </Grid>
 
-                          <Grid item xs={6} sm={4} lg={3}>
+                          <Grid item xs={12} sm={6} lg={4}>
                             <FormControl fullWidth error={errors.end_date ? true : false} required={true}>
                               <FormHelperText>
                                 <b>End Date *</b>
@@ -203,7 +208,10 @@ export default function EditConventions() {
                                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                     <KeyboardDatePicker
                                       disableToolbar
-                                      format="dd MMM yyyy"
+                                      variant="inline"
+                                      inputVariant="outlined"
+                                      size="small"
+                                      format="MM/dd/yyyy"
                                       value={props?.value ? moment(props?.value) : ""}
                                       onChange={(date) => props.onChange(moment(date))}
                                     />
@@ -225,7 +233,7 @@ export default function EditConventions() {
                     <Card variant="outlined" className={classes.cardItem}>
                       <CardContent>
                         <Grid container spacing={2}>
-                          <Grid item xs={12} md={6}>
+                          <Grid item xs={12} md={8} lg={6}>
                             <FormControl fullWidth error={errors.country ? true : false} required={true}>
                               <FormHelperText>
                                 <b>Country *</b>
@@ -262,7 +270,7 @@ export default function EditConventions() {
                             </FormControl>
                           </Grid>
 
-                          <Grid item xs={12} md={3}>
+                          <Grid item xs={12} md={6} lg={3}>
                             <TextInput
                               name="state"
                               register={register}
@@ -273,7 +281,7 @@ export default function EditConventions() {
                             />
                           </Grid>
 
-                          <Grid item xs={12} md={3}>
+                          <Grid item xs={12} md={6} lg={3}>
                             <TextInput
                               name="city"
                               register={register}
