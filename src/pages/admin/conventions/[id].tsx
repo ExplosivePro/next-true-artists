@@ -181,19 +181,15 @@ function ShowConvention({
                   <Grid item>{showVerified(conventionData?.verified)}</Grid>
                 </Grid>
 
-                {conventionData?.verified !== "rejected" && conventionData?.verified !== "approved" ? (
-                  <React.Fragment>
-                    <Grid container item justify="space-evenly" className={classes.buttonWrapper}>
-                      <PrimaryButton size="small" primaryColor onClick={() => updateStatus("approve")}>
-                        Approve
-                      </PrimaryButton>
+                <Grid container item justify="space-evenly" className={classes.buttonWrapper}>
+                  <PrimaryButton size="small" primaryColor onClick={() => updateStatus("approve")}>
+                    Approve
+                  </PrimaryButton>
 
-                      <PrimaryButton size="small" yellow onClick={() => updateStatus("reject")}>
-                        Reject
-                      </PrimaryButton>
-                    </Grid>
-                  </React.Fragment>
-                ) : null}
+                  <PrimaryButton size="small" yellow onClick={() => updateStatus("reject")}>
+                    Reject
+                  </PrimaryButton>
+                </Grid>
               </CardContent>
             </Card>
 
