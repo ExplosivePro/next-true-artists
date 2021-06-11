@@ -23,12 +23,13 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 
 import AdminBody from "src/components/Admin/AdminBody";
+import handleApiErrors from "src/components/Admin/handleApiErrors";
 import Loading from "src/components/Loading";
 import PrimaryButton from "src/components/PrimaryButton";
 import { TextInput, SelectInput, InfoAlert } from "src/components/Admin/FormInputs";
-import { user_roles, user_status } from "./constants";
 
 import { useStyles } from "./styles";
+import { user_roles, user_status } from "./constants";
 import { getUser, updateUser, resetUserPassword } from "./api";
 
 export default function User() {
@@ -82,7 +83,7 @@ export default function User() {
         if (response) setInfoAlert({ severity: "error", message: "Error resetting password !" });
         else setInfoAlert({ severity: "success", message: "Password reset request successfull" });
       } catch (error) {
-        setInfoAlert({ severity: "error", message: `Error resetting password! - ${error}` });
+        setInfoAlert({ severity: "error", message: `Error resetting password! - ${handleApiErrors(error)}` });
       }
     setTimeout(() => {
       setInfoAlert({ severity: "info", message: "" });
@@ -121,7 +122,7 @@ export default function User() {
               <Loading />
             </React.Fragment>
           ) : userDataStatus === "error" ? (
-            <Alert severity="error">{`Retrieving Users - ${userDataError}`}</Alert>
+            <Alert severity="error">{`Retrieving Users - ${handleApiErrors(userDataError)}`}</Alert>
           ) : userData ? (
             <Grid container spacing={2}>
               <Grid item xs={12} md={3}>
@@ -247,7 +248,7 @@ function EditProfile({
         refetchUserData();
       }
     } catch (error) {
-      setInfoAlert({ severity: "error", message: `Error updating User! - ${error}` });
+      setInfoAlert({ severity: "error", message: `Error updating User! - ${handleApiErrors(error)}` });
     }
     setTimeout(() => {
       setInfoAlert({ severity: "info", message: "" });
