@@ -12,9 +12,11 @@ import Avatar from "@material-ui/core/Avatar";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PersonOutlineOutlinedIcon from "@material-ui/icons/PersonOutlineOutlined";
 import Typography from "@material-ui/core/Typography";
+import SettingsApplicationsIcon from "@material-ui/icons/SettingsApplications";
 
 // Context
 import { useAuth } from "../../contexts";
+import { Role } from "../../constants";
 
 const StyledMenuItem = withStyles(() => ({
   root: {},
@@ -60,6 +62,25 @@ const AppBarMenuItems = React.forwardRef((props: any, ref) => {
         </ListItemIcon>
         <ListItemText primary={<Typography>Profile</Typography>} />
       </StyledMenuItem>
+
+      {user?.role === Role.ADMIN ? (
+        <React.Fragment>
+          <Divider />
+          <StyledMenuItem
+            onClick={(e) => {
+              goToPage(e, "/admin");
+            }}
+            ref={ref}
+            {...rest}
+          >
+            <ListItemIcon>
+              <SettingsApplicationsIcon />
+            </ListItemIcon>
+            <ListItemText primary={<Typography>Admin Dashboard</Typography>} />
+          </StyledMenuItem>
+        </React.Fragment>
+      ) : null}
+
       <Divider />
       <StyledMenuItem onClick={logOut} ref={ref} {...rest}>
         <ListItemIcon>
