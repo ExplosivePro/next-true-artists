@@ -94,7 +94,7 @@ export default function Studio() {
   return (
     <AdminBody>
       <Head>
-        <title>TrueArtists: Admin/Studio - {studioData?.name ?? "Null"}</title>
+        <title>TrueArtists: Admin/Studio - {studioData?.slug ?? studioId}</title>
       </Head>
 
       <Grid container>
@@ -106,7 +106,7 @@ export default function Studio() {
             <Typography variant="body1">
               <Link href="/admin/studios">Studios</Link>
             </Typography>
-            <Typography variant="body1">Profile</Typography>
+            <Typography variant="body1">{studioData?.slug ?? studioId}</Typography>
           </Breadcrumbs>
         </Grid>
 
