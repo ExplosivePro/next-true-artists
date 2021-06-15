@@ -8,4 +8,5 @@ export const menuAdminBar = {
   STYLES: "/admin/styles",
   LANDING_PAGES: "/admin/landing-pages",
   CONVENTIONS: "/admin/conventions",
+  EXIT_ADMIN: "/dashboard",
 };
