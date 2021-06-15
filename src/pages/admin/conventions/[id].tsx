@@ -41,6 +41,7 @@ import { InfoAlert, TextInput, DatePickerInput } from "src/components/Admin/Form
 
 import { getConvention, editConvention, approveConvention, rejectConvention, submitForReviewConvention } from "./api";
 import { countryList } from "src/constants";
+import { conventionStatus } from "./constants";
 import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
 
 export default function ShowEditConventions() {
@@ -129,31 +130,35 @@ function ShowConvention({
   const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
 
   const updateStatus = async (status: string) => {
-    try {
-      let response = "null";
-      if (status === "approve") response = await approveConvention(conventionData?.id);
-      if (status === "reject") response = await rejectConvention(conventionData?.id);
-      if (status === "review") response = await submitForReviewConvention(conventionData?.id);
+    if (status === conventionData?.status) setInfoAlert({ severity: "warning", message: `Convention is ${status} !` });
+    else
+      try {
+        let response = "null";
+        if (status === conventionStatus.Approved) response = await approveConvention(conventionData?.id);
+        if (status === conventionStatus.Rejected) response = await rejectConvention(conventionData?.id);
+        if (status === conventionStatus["Pending Review"])
+          response = await submitForReviewConvention(conventionData?.id);
 
-      if (response) setInfoAlert({ severity: "error", message: "Error updating convention !" });
-      else {
-        setInfoAlert({ severity: "success", message: "Convention updated successfully" });
-        refetchConventionData();
+        if (response) setInfoAlert({ severity: "error", message: "Error updating convention !" });
+        else {
+          setInfoAlert({ severity: "success", message: "Convention updated successfully" });
+          refetchConventionData();
+        }
+      } catch (error) {
+        setInfoAlert({ severity: "error", message: `Error updating convention! - ${handleApiErrors(error)}` });
       }
-    } catch (error) {
-      setInfoAlert({ severity: "error", message: `Error updating convention! - ${handleApiErrors(error)}` });
-    }
+
     setTimeout(() => {
       setInfoAlert({ severity: "info", message: "" });
     }, 4500);
   };
 
-  const showVerified = (value: string) =>
-    value === "approved" ? (
+  const showStatus = (value: string) =>
+    value === conventionStatus.Approved ? (
       <Chip icon={<CheckCircleIcon fontSize="small" className={classes.greenIcon} />} label="Approved" size="small" />
-    ) : value === "rejected" ? (
+    ) : value === conventionStatus.Rejected ? (
       <Chip icon={<CancelIcon fontSize="small" className={classes.redIcon} />} label="Rejected" size="small" />
-    ) : value === "pending" ? (
+    ) : value === conventionStatus.Pending ? (
       <Chip icon={<PageviewIcon fontSize="small" className={classes.blueIcon} />} label="Pending" size="small" />
     ) : (
       <Chip icon={<PageviewIcon fontSize="small" className={classes.blueIcon} />} label="Pending Review" size="small" />
@@ -178,15 +183,15 @@ function ShowConvention({
                   <Grid item className={classes.titleCell}>
                     Status:
                   </Grid>
-                  <Grid item>{showVerified(conventionData?.verified)}</Grid>
+                  <Grid item>{showStatus(conventionData?.status)}</Grid>
                 </Grid>
 
                 <Grid container item justify="space-evenly" className={classes.buttonWrapper}>
-                  <PrimaryButton size="small" primaryColor onClick={() => updateStatus("approve")}>
+                  <PrimaryButton size="small" primaryColor onClick={() => updateStatus("approved")}>
                     Approve
                   </PrimaryButton>
 
-                  <PrimaryButton size="small" yellow onClick={() => updateStatus("reject")}>
+                  <PrimaryButton size="small" yellow onClick={() => updateStatus("rejected")}>
                     Reject
                   </PrimaryButton>
                 </Grid>
@@ -196,14 +201,14 @@ function ShowConvention({
             <Card variant="outlined" className={classes.gridSpacer}>
               <CardContent>
                 <Grid container justify="center" spacing={2}>
-                  {conventionData?.verified === "pending" ? (
+                  {conventionData?.status === "pending" ? (
                     <Grid item xs={8}>
                       <PrimaryButton
                         fullWidth
                         size="small"
                         variant="outlined"
                         yellow
-                        onClick={() => updateStatus("review")}
+                        onClick={() => updateStatus("pending_review")}
                       >
                         Submit for Review
                       </PrimaryButton>
@@ -430,7 +435,6 @@ function EditConvention({
     handleSubmit,
     errors,
     control,
-
     formState: { isSubmitting, isDirty },
   } = useForm({
     defaultValues: getFormDefaultValues(),
@@ -457,6 +461,7 @@ function EditConvention({
     } catch (error) {
       setInfoAlert({ severity: "error", message: `Error updating convention! - ${handleApiErrors(error)}` });
     }
+
     setTimeout(() => {
       setInfoAlert({ severity: "info", message: "" });
     }, 4500);

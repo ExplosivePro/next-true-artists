@@ -126,7 +126,7 @@ export default function Conventions() {
   };
 
   const handleStatusFilterChange = (value: string) => {
-    value ? setStatusFilter({ verified: value }) : setStatusFilter({});
+    value ? setStatusFilter({ status: value }) : setStatusFilter({});
   };
 
   const showBoolean = (value: boolean) =>
@@ -136,8 +136,8 @@ export default function Conventions() {
       <CancelIcon fontSize="small" className={classes.redIcon} />
     );
 
-  const showVerified = (value: string) =>
-    value === "approved" ? (
+  const showStatus = (value: string) =>
+    value === conventionStatus.Approved ? (
       <Chip
         icon={<CheckCircleIcon fontSize="small" className={classes.greenIcon} />}
         label="Approved"
@@ -145,7 +145,7 @@ export default function Conventions() {
         size="small"
         className={classes.tableChip}
       />
-    ) : value === "rejected" ? (
+    ) : value === conventionStatus.Rejected ? (
       <Chip
         icon={<CancelIcon fontSize="small" className={classes.redIcon} />}
         label="Rejected"
@@ -153,7 +153,7 @@ export default function Conventions() {
         size="small"
         className={classes.tableChip}
       />
-    ) : value === "pending_review" ? (
+    ) : value === conventionStatus["Pending Review"] ? (
       <Chip
         icon={<PageviewIcon fontSize="small" className={classes.blueIcon} />}
         label="Review"
@@ -161,7 +161,7 @@ export default function Conventions() {
         size="small"
         className={classes.tableChip}
       />
-    ) : value === "pending" ? (
+    ) : value === conventionStatus.Pending ? (
       <Chip
         icon={<AdjustIcon fontSize="small" />}
         label="Pending"
@@ -205,14 +205,14 @@ export default function Conventions() {
                 select
                 fullWidth
                 size="small"
-                label="Filter by Verified"
+                label="Filter by Status"
                 defaultValue=""
                 onChange={(e) => handleStatusFilterChange(e.target.value)}
               >
                 <MenuItem value="">Clear Filter...</MenuItem>
-                {conventionStatus.map((status, index) => (
-                  <MenuItem value={status.value} key={index}>
-                    {status.status}
+                {Object.entries(conventionStatus).map(([status, value], index) => (
+                  <MenuItem value={value} key={index}>
+                    {status}
                   </MenuItem>
                 ))}
               </TextField>
@@ -285,7 +285,7 @@ export default function Conventions() {
                       <StyledTableCell className={classes.statusCell} colSpan={2}>
                         Active/On
                       </StyledTableCell>
-                      <StyledTableCell className={classes.statusCell}>Verified</StyledTableCell>
+                      <StyledTableCell className={classes.statusCell}>Status</StyledTableCell>
                       <StyledTableCell className={classes.statusCell} colSpan={2}>
                         Actions
                       </StyledTableCell>
@@ -319,7 +319,7 @@ export default function Conventions() {
                           ) : null}
                         </StyledTableCell>
                         <StyledTableCell className={classes.statusCell}>
-                          {showVerified(convention?.verified)}
+                          {showStatus(convention?.status)}
                         </StyledTableCell>
                         <StyledTableCell>
                           <Link href={`${router.pathname}/${convention?.id}`}>

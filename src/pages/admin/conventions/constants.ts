@@ -1,6 +1,6 @@
-export const conventionStatus = [
-  { status: "Pending", value: "pending" },
-  { status: "Pending Review", value: "pending_review" },
-  { status: "Approved", value: "approved" },
-  { status: "Rejected", value: "rejected" },
-];
+export const conventionStatus = {
+  Pending: "pending",
+  "Pending Review": "pending_review",
+  Approved: "approved",
+  Rejected: "rejected",
+};

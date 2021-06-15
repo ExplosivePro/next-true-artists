@@ -140,7 +140,7 @@ declare namespace Admin {
     facebook_link: string;
     start_date: string;
     end_date: string;
-    verified: string;
+    status: string;
     address: string;
     city: string;
     state: string;
