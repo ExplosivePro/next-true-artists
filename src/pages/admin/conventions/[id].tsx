@@ -187,13 +187,17 @@ function ShowConvention({
                 </Grid>
 
                 <Grid container item justify="space-evenly" className={classes.buttonWrapper}>
-                  <PrimaryButton size="small" primaryColor onClick={() => updateStatus("approved")}>
-                    Approve
-                  </PrimaryButton>
+                  {conventionData?.status !== conventionStatus.Approved ? (
+                    <PrimaryButton size="small" primaryColor onClick={() => updateStatus("approved")}>
+                      Approve
+                    </PrimaryButton>
+                  ) : null}
 
-                  <PrimaryButton size="small" yellow onClick={() => updateStatus("rejected")}>
-                    Reject
-                  </PrimaryButton>
+                  {conventionData?.status !== conventionStatus.Rejected ? (
+                    <PrimaryButton size="small" yellow onClick={() => updateStatus("rejected")}>
+                      Reject
+                    </PrimaryButton>
+                  ) : null}
                 </Grid>
               </CardContent>
             </Card>
@@ -201,7 +205,7 @@ function ShowConvention({
             <Card variant="outlined" className={classes.gridSpacer}>
               <CardContent>
                 <Grid container justify="center" spacing={2}>
-                  {conventionData?.status === "pending" ? (
+                  {conventionData?.status === conventionStatus.Pending ? (
                     <Grid item xs={8}>
                       <PrimaryButton
                         fullWidth
