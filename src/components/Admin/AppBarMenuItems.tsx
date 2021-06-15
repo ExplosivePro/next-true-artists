@@ -2,7 +2,6 @@ import React, { forwardRef } from "react";
 import { useRouter } from "next/router";
 
 import Divider from "@material-ui/core/Divider";
-import List from "@material-ui/core/List";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
@@ -22,7 +21,7 @@ const AppBarMenuItems = forwardRef((props: any, ref) => {
   const loggedUser = useAuth().user;
 
   return (
-    <List>
+    <div>
       <StyledMenuItem ref={ref} {...rest} onClick={handleMenuClose}>
         <ListItemIcon>
           <Avatar alt={loggedUser?.full_name || "Avatar"} src={loggedUser?.avatar?.image_url} />
@@ -35,7 +34,7 @@ const AppBarMenuItems = forwardRef((props: any, ref) => {
         <ListItemIcon>
           <ArrowBackIcon />
         </ListItemIcon>
-        <ListItemText primary="Exit Admin" />
+        <ListItemText primary="Exit Admin (Main Dashboard)" />
       </StyledMenuItem>
 
       <Divider />
@@ -54,7 +53,7 @@ const AppBarMenuItems = forwardRef((props: any, ref) => {
           <ListItemText primary="Log in" />
         </StyledMenuItem>
       )}
-    </List>
+    </div>
   );
 });
 
