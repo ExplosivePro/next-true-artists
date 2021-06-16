@@ -17,6 +17,7 @@ import FilterVintageIcon from "@material-ui/icons/FilterVintage";
 import Typography from "@material-ui/core/Typography";
 import EventNoteIcon from "@material-ui/icons/EventNote";
 import SpeakerIcon from "@material-ui/icons/Speaker";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 import { menuAdminBar } from "src/constants";
 import { useMenuStyles } from "./styles";
@@ -79,6 +80,12 @@ export default function LeftBar() {
       case "conventions":
         if (currentActiveBar !== menuAdminBar.CONVENTIONS) {
           goToPage(`/admin/conventions`, { mainBar: menuAdminBar.CONVENTIONS });
+        }
+        break;
+
+      case "exitAdmin":
+        if (currentActiveBar !== menuAdminBar.EXIT_ADMIN) {
+          goToPage(`/dashboard`, { mainBar: menuAdminBar.EXIT_ADMIN });
         }
         break;
 
@@ -221,6 +228,22 @@ export default function LeftBar() {
         </ListItemIcon>
         <ListItemText>
           <Typography color="inherit">Styles</Typography>
+        </ListItemText>
+      </ListItem>
+
+      <ListItem
+        button
+        key={"ExitAdmin"}
+        onClick={() => handleAdminMenuClick("exitAdmin")}
+        className={clsx(classes.listItem, {
+          [classes.activeBar]: currentActiveBar.indexOf(menuAdminBar.EXIT_ADMIN) > -1,
+        })}
+      >
+        <ListItemIcon className={classes.listItemIcon}>
+          <ArrowBackIcon />
+        </ListItemIcon>
+        <ListItemText>
+          <Typography color="inherit">Exit Admin</Typography>
         </ListItemText>
       </ListItem>
     </List>

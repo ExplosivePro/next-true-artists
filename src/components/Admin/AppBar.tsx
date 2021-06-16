@@ -14,7 +14,7 @@ import { useAuth } from "../../contexts";
 import AppBarMenuItems from "./AppBarMenuItems";
 import { useAppBarStyles } from "./styles";
 
-export default function PrimarySearchAppBar() {
+export default function AdminAppBar() {
   const classes = useAppBarStyles();
   const loggedUser = useAuth().user;
 
@@ -23,18 +23,6 @@ export default function PrimarySearchAppBar() {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  /*
-  // Map query url to search input
-  useEffect(() => {
-    // Get query string
-    const queryString = location.search.split("?")[1];
-    const queryData = qs.parse(queryString);
-
-    if (queryData && queryData.term && queryData.term !== "") {
-      setSearchInput(queryData.term.toString());
-      setActiveSearchInput();
-    }
-  }, []); */
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -53,14 +41,14 @@ export default function PrimarySearchAppBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const menuId = "primary-search-account-menu";
+  // Desktop menu
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      id={menuId}
+      getContentAnchorEl={null}
+      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      id="menu"
       keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
@@ -68,25 +56,18 @@ export default function PrimarySearchAppBar() {
     </Menu>
   );
 
-  const mobileMenuId = "primary-search-account-menu-mobile";
+  // Mobile menu
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      id={mobileMenuId}
+      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      id="mobile-menu"
       keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
       <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-          classes={{ root: classes.profileButton }}
-        >
+        <IconButton color="inherit" classes={{ root: classes.profileButton }}>
           <Avatar alt={loggedUser?.full_name || "Avatar"} src={loggedUser?.avatar?.image_url} />
         </IconButton>
         <p>{loggedUser?.full_name}</p>
@@ -106,9 +87,6 @@ export default function PrimarySearchAppBar() {
           <div className={classes.sectionDesktop}>
             <IconButton
               edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
               onClick={handleProfileMenuOpen}
               color="inherit"
               classes={{ root: classes.profileButton }}
@@ -119,13 +97,7 @@ export default function PrimarySearchAppBar() {
             </IconButton>
           </div>
           <div className={classes.sectionMobile}>
-            <IconButton
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
+            <IconButton onClick={handleMobileMenuOpen} color="inherit">
               <MoreIcon />
             </IconButton>
           </div>

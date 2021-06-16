@@ -1,4 +1,4 @@
-import { makeStyles, createStyles, Theme, withStyles, fade } from "@material-ui/core/styles";
+import { makeStyles, createStyles, Theme, withStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 
 import colors from "src/palette";
@@ -53,56 +53,6 @@ export const useAppBarStyles = makeStyles((theme: Theme) =>
     grow: {
       flexGrow: 1,
     },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    title: {
-      display: "none",
-      [theme.breakpoints.up("sm")]: {
-        display: "block",
-      },
-    },
-    search: {
-      position: "absolute",
-      left: "50%",
-      transform: "translateX(-50%)",
-      borderRadius: theme.shape.borderRadius,
-      backgroundColor: fade(theme.palette.common.white, 0.15),
-      "&:hover": {
-        backgroundColor: fade(theme.palette.common.white, 0.25),
-      },
-      marginRight: theme.spacing(2),
-      marginLeft: 0,
-      width: "100%",
-      [theme.breakpoints.up("sm")]: {
-        marginLeft: theme.spacing(3),
-        width: "350px",
-      },
-      border: `solid 1px ${colors.grey} !important`,
-    },
-    searchIcon: {
-      padding: theme.spacing(0, 2),
-      height: "100%",
-      position: "absolute",
-      pointerEvents: "none",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    inputRoot: {
-      color: "inherit",
-      paddingLeft: "10px",
-    },
-    inputInput: {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-      transition: theme.transitions.create("width"),
-      width: "100%",
-      [theme.breakpoints.up("md")]: {
-        width: "20ch",
-      },
-    },
     sectionDesktop: {
       display: "none",
       [theme.breakpoints.up("md")]: {
@@ -122,7 +72,12 @@ export const useAppBarStyles = makeStyles((theme: Theme) =>
       fontSize: ".8rem",
     },
     profileButton: {
-      borderRadius: "5px",
+      borderRadius: "10px",
+      border: `solid 1px ${colors.standardGreySubFooter}`,
+      backgroundColor: colors.standardGreyFooter,
+    },
+    menuItems: {
+      marginRight: "20px",
     },
     logo: {
       width: "244px",
@@ -160,12 +115,12 @@ export const useMenuStyles = makeStyles(() =>
   }),
 );
 
-export const StyledMenuItem = withStyles((theme) => ({
+export const StyledMenuItem = withStyles(() => ({
   root: {
     "&:focus": {
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: colors.primaryColor,
       "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: theme.palette.common.white,
+        color: colors.white,
       },
     },
   },

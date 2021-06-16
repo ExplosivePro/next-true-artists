@@ -7,6 +7,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 import { useAuth } from "../../contexts";
 
@@ -29,12 +30,20 @@ const AppBarMenuItems = forwardRef((props: any, ref) => {
       </StyledMenuItem>
 
       <Divider />
+      <StyledMenuItem ref={ref} {...rest} onClick={() => router.push("/dashboard")}>
+        <ListItemIcon>
+          <ArrowBackIcon />
+        </ListItemIcon>
+        <ListItemText primary="Exit Admin (Main Dashboard)" />
+      </StyledMenuItem>
+
+      <Divider />
       {loggedUser ? (
         <StyledMenuItem ref={ref} {...rest} onClick={logOut}>
           <ListItemIcon>
             <ExitToAppIcon />
           </ListItemIcon>
-          <ListItemText color={"error"} primary="Log out" />
+          <ListItemText primary="Log out" />
         </StyledMenuItem>
       ) : (
         <StyledMenuItem ref={ref} {...rest} onClick={() => router.push("/login")}>
