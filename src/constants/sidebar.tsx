@@ -5,6 +5,7 @@ import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import GroupIcon from "@material-ui/icons/Group";
 import BusinessIcon from "@material-ui/icons/Business";
 import GroupAddOutlinedIcon from "@material-ui/icons/GroupAddOutlined";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
 
 import { Role } from "./auth";
 
@@ -55,6 +56,12 @@ export const mainItems = [
     name: "Manage Clients",
     icon: <GroupAddOutlinedIcon />,
     url: "/dashboard/manage-clients",
+    acceptRoles: [Role.ARTIST, Role.STUDIO],
+  },
+  {
+    name: "Invitations",
+    icon: <MailOutlineIcon />,
+    url: "/dashboard/invitations",
     acceptRoles: [Role.ARTIST, Role.STUDIO],
   },
 ];

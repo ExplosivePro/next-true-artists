@@ -4,3 +4,4 @@ export * from "./resources";
 export * from "./tattoos";
 export * from "./artist";
 export * from "./studio";
+export * from "./invitations";

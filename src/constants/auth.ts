@@ -21,6 +21,7 @@ export const unauthRoutes = [
   "/dashboard/manage-clients",
   "/dashboard/manage-clients/create",
   "/dashboard/manage-clients/[id]",
+  "/dashboard/invitations",
   "/password/[type]",
 ];
 
@@ -39,6 +40,7 @@ export const dashboardRoutes = [
   "/dashboard/manage-clients",
   "/dashboard/manage-clients/create",
   "/dashboard/manage-clients/[id]",
+  "/dashboard/invitations",
 ];
 
 // Route to Admin component
