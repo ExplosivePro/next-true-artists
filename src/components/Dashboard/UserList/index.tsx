@@ -23,7 +23,7 @@ import { Role, useApp, useAuth } from "../../../contexts";
 
 import useStyles from "./styles";
 
-import { getMyStudioList, getMyArtistList, inviteArtist } from "../../../api";
+import { getMyArtistList, getMyStudioList, inviteArtist, removeArtist } from "../../../api";
 import { useDebounce } from "../../../hooks";
 import Loading from "../../Loading";
 
@@ -80,6 +80,20 @@ export default function UserList() {
     }
   };
 
+  const getMyProfileByRole = (role: Role): any => {
+    switch (role) {
+      case Role.ARTIST: {
+        return user?.artist?.id;
+      }
+      case Role.STUDIO: {
+        return user?.studio?.id;
+      }
+      default: {
+        return null;
+      }
+    }
+  };
+
   // Modal open
   const [modalOpen, setModalOpen] = React.useState(false);
 
@@ -122,6 +136,18 @@ export default function UserList() {
     getUserList(user?.role as Role, keyword);
 
     // Hide loading
+    setLoading(false);
+  };
+
+  // On remove artist/studio
+  const onRemove = async (id: number) => {
+    setLoading(true);
+
+    // Remove artist if current role is studio
+    if (user?.role === Role.STUDIO) {
+      await removeArtist(getMyProfileByRole(user?.role as Role), id);
+    }
+
     setLoading(false);
   };
 
@@ -184,7 +210,7 @@ export default function UserList() {
             {userList.map((user, index) => {
               return (
                 <Grid container item lg={3} md={3} sm={4} xs={12} key={index} justify={"center"}>
-                  <UserCard data={user} />
+                  <UserCard data={user} onRemove={onRemove} />
                 </Grid>
               );
             })}

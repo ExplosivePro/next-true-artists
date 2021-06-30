@@ -43,6 +43,18 @@ export const inviteArtist = async (data: Studio.InviteArtistPayload) => {
     });
 };
 
+// Remove an artist from studio
+export const removeArtist = async (studioId: number, artistId: number) => {
+  return await api
+    .delete(`/api/v1/studios/${studioId}/studio_artists/${artistId}`)
+    .then((response) => {
+      return { error: false, data: response.data, errors: "" };
+    })
+    .catch((e) => {
+      return errorHandler(e);
+    });
+};
+
 // Submit for review
 export const submitStudioProfileForReview = async (id: number) => {
   return await api.put(`/api/v1/studios/${id}/submit_for_review`);
