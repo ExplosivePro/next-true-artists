@@ -79,7 +79,7 @@ const getAvatarByRole = (role: Role, profile: any): string => {
       return profile.studio.avatar?.image_url;
     }
     default: {
-      return "/broken-image.jpg";
+      return "";
     }
   }
 };

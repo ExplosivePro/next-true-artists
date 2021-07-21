@@ -182,7 +182,7 @@ export default function RightBarRegisterAvatarUpload({
             }
           >
             <input className={classes.fileInput} type={"file"} ref={hiddenFileInput} onChange={handleChange} />
-            <Avatar className={classes.avatar} src={preview || "/broken-image.jpg"} onClick={handleClick} />
+            <Avatar className={classes.avatar} src={preview || ""} onClick={handleClick} />
           </Badge>
         </Grid>
 
