@@ -24,6 +24,7 @@ export default function FormInput(props: CustomTextFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => {
+    console.log("toggle");
     setShowPassword(!showPassword);
   };
 
@@ -136,6 +137,7 @@ export default function FormInput(props: CustomTextFieldProps) {
                   onChange={(e) => {
                     onChange(e.target.value);
                   }}
+                  type={showPassword ? "text" : "password"}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
