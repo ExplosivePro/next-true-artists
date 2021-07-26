@@ -55,4 +55,12 @@ export const dashboardRouteDetails = [
       path: "/dashboard",
     },
   },
+  {
+    path: "/dashboard/invitations",
+    name: "Studio Invitations",
+    backButton: {
+      enable: true,
+      path: "/dashboard",
+    },
+  },
 ];
