@@ -44,6 +44,7 @@ import { getArtist, approveArtist, rejectArtist, flagTattoo } from "./api";
 export default function Artist() {
   const router = useRouter();
   const classes = useStyles();
+  const imageClasses = useImageStyles();
 
   const [artistId, setArtistId] = useState("");
   const [tabIndex, setTabIndex] = useState(0);
@@ -165,8 +166,12 @@ export default function Artist() {
 
                 <Card variant="outlined" className={classes.divider}>
                   <CardContent>
-                    {artistData?.styles.map((style: string, index: number) => (
-                      <Chip label={style} size="small" key={index} className={classes.chips} />
+                    <Typography variant="h6" component="h2" gutterBottom>
+                      Styles
+                    </Typography>
+
+                    {artistData?.styles.map((style: { name: string; id: number }) => (
+                      <Chip label={style.name} size="small" key={style.id} className={classes.chips} />
                     ))}
                   </CardContent>
                 </Card>
@@ -278,7 +283,7 @@ export default function Artist() {
               </Grid>
 
               <Grid item xs={12} md={9} lg={9}>
-                <Card style={{ height: "100%" }}>
+                <Card>
                   <Grid container>
                     <Grid item xs={12}>
                       <Tabs value={tabIndex} onChange={handleChange} indicatorColor="primary">
@@ -295,6 +300,24 @@ export default function Artist() {
                       </TabPanel>
                     </Grid>
                   </Grid>
+                </Card>
+
+                <Card variant="outlined">
+                  <CardContent>
+                    <Typography variant="h6" component="h2" gutterBottom>
+                      Hero Banner
+                    </Typography>
+
+                    {artistData?.hero_banner ? (
+                      <CardMedia
+                        className={imageClasses.media}
+                        image={artistData?.hero_banner?.image_url ?? "/images/camera.png"}
+                        title={artistData?.hero_banner?.name}
+                      />
+                    ) : (
+                      <CardHeader subheader="No image!" className={imageClasses.cardHeader} />
+                    )}
+                  </CardContent>
                 </Card>
               </Grid>
             </Grid>
