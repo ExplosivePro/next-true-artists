@@ -23,7 +23,9 @@
     "noEmit": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
   "exclude": ["node_modules", "build", "scripts", "acceptance-tests", "webpack", "jest"],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
