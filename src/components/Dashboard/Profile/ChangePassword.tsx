@@ -17,22 +17,29 @@ import { useYupValidationResolver } from "../../../utils";
 import useStyles from "./styles";
 import { PasswordValidationRegex } from "../../../constants";
 
+// APIs
+import { changePassword } from "../../../api";
+import { useApp } from "../../../contexts";
+
 export default function ChangePassword() {
+  const { showErrorDialog, showSuccessDialog } = useApp();
   const classes = useStyles();
+
   const { push } = useRouter();
 
   // Validation schema
   const validationSchema = useMemo(
     () =>
       yup.object({
-        oldPassword: yup
-          .string()
-          .required("Old Password field is required")
-          .matches(PasswordValidationRegex, "Password has to contain 6-10 characters, at least 1 letter and 1  number"),
         newPassword: yup
           .string()
           .required("New Password field is required")
           .matches(PasswordValidationRegex, "Password has to contain 6-10 characters, at least 1 letter and 1  number"),
+        confirmPassword: yup
+          .string()
+          .required("Confirm Password field is required")
+          .matches(PasswordValidationRegex, "Password has to contain 6-10 characters, at least 1 letter and 1  number")
+          .oneOf([yup.ref("newPassword")], "This field have to be same as Password field"),
       }),
     [],
   );
@@ -41,24 +48,19 @@ export default function ChangePassword() {
   const { control, handleSubmit, errors } = useForm({ resolver });
 
   // Submit the form
-  // TODO: Call API here
-  const onSubmit = async () => {};
+  const onSubmit = async (data: any) => {
+    const { newPassword, confirmPassword } = data;
+    const changePasswordResponse = await changePassword({ password: newPassword, confirmPassword });
+
+    if (changePasswordResponse.error) {
+      showErrorDialog(true, "Change password fail");
+    } else {
+      showSuccessDialog(true, "Change password successfully");
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <FormInput
-        name="oldPassword"
-        classes={{ root: classes.formInput }}
-        label={"Old Password"}
-        id="fullName"
-        placeholder={"Old Password"}
-        fullWidth
-        control={control}
-        variant={"outlined"}
-        defaultValue={""}
-        errors={errors.oldPassword}
-      />
-
       <FormInput
         name="newPassword"
         classes={{ root: classes.formInput }}
@@ -70,6 +72,18 @@ export default function ChangePassword() {
         variant={"outlined"}
         defaultValue={""}
         errors={errors.newPassword}
+      />
+      <FormInput
+        name="confirmPassword"
+        classes={{ root: classes.formInput }}
+        label={"Confirm Password"}
+        id="confirmPassword"
+        placeholder={"Confirm Password"}
+        fullWidth
+        control={control}
+        variant={"outlined"}
+        defaultValue={""}
+        errors={errors.confirmPassword}
       />
 
       <Grid container spacing={2} className={classes.buttonWrapper}>

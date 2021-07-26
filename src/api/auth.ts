@@ -490,3 +490,24 @@ export function verifyUser(token?: string) {
   }
   return api.get("api/v1/me");
 }
+
+// Change password
+export async function changePassword({
+  password,
+  confirmPassword,
+}: {
+  password: string;
+  confirmPassword: string;
+}): Promise<RestApi.Response> {
+  return await api
+    .put(`/api/v1/passwords/change_password`, {
+      password,
+      password_confirmation: confirmPassword,
+    })
+    .then((response) => {
+      return { error: false, data: response.data, errors: "" };
+    })
+    .catch((e) => {
+      return { error: true, data: null, errors: e.response ? e.response.data.errors : e.toString() };
+    });
+}
