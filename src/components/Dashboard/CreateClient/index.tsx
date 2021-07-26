@@ -420,5 +420,5 @@ interface SubmitFormData {
 }
 
 interface Props {
-  edit: boolean;
+  edit?: boolean;
 }

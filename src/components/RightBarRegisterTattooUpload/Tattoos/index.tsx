@@ -345,7 +345,7 @@ interface Props {
   onUpdate: (id: number, payload: any, index: number) => void;
   onDelete: (id: number) => void;
   onChange: (index: number, name: string, value: any) => void;
-  editMode: boolean;
+  editMode?: boolean;
 }
 
 export default Tattoos;
