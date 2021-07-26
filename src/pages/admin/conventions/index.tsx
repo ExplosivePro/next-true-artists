@@ -41,9 +41,9 @@ import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
 import { InfoAlert } from "src/components/Admin/FormInputs";
 
-import { getConventionList, deleteConvention } from "./api";
-import { conventionStatus } from "./constants";
-import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
+import { getConventionList, deleteConvention } from "src/api/admin/conventions";
+import { conventionStatus } from "src/constants/admin/conventions";
+import { useStyles, StyledTableCell, StyledTableRow } from "src/styles/admin/conventions";
 
 import getConfig from "next/config";
 

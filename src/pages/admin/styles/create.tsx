@@ -17,8 +17,8 @@ import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
 import { TextInput, InfoAlert } from "src/components/Admin/FormInputs";
 
-import { useStyles } from "./styles";
-import { createStyle } from "./api";
+import { useStyles } from "src/styles/admin/styles";
+import { createStyle } from "src/api/admin/styles";
 
 export default function Style() {
   const router = useRouter();

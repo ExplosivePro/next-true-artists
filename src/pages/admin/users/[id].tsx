@@ -28,9 +28,9 @@ import Loading from "src/components/Loading";
 import PrimaryButton from "src/components/PrimaryButton";
 import { TextInput, SelectInput, InfoAlert } from "src/components/Admin/FormInputs";
 
-import { useStyles } from "./styles";
-import { user_roles, user_status } from "./constants";
-import { getUser, updateUser, resetUserPassword } from "./api";
+import { useStyles } from "src/styles/admin/users";
+import { user_roles, user_status } from "src/constants/admin/users";
+import { getUser, updateUser, resetUserPassword } from "src/api/admin/users";
 
 export default function User() {
   const router = useRouter();

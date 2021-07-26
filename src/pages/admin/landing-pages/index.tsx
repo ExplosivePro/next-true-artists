@@ -33,9 +33,9 @@ import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
 import { InfoAlert } from "src/components/Admin/FormInputs";
 
-import { getLandingPageList, deleteLandingPage } from "./api";
-import { landingPage_status } from "./constants";
-import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
+import { getLandingPageList, deleteLandingPage } from "src/api/admin/landingPages";
+import { landingPage_status } from "src/constants/admin/landingPages";
+import { useStyles, StyledTableCell, StyledTableRow } from "src/styles/admin/landingPages";
 
 import getConfig from "next/config";
 

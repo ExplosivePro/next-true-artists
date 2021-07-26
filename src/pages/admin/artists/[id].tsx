@@ -38,8 +38,8 @@ import Loading from "src/components/Loading";
 import PrimaryButton from "src/components/PrimaryButton";
 import { InfoAlert } from "src/components/Admin/FormInputs";
 
-import { useStyles, StyledTableCell, StyledTableRow, useImageStyles } from "./styles";
-import { getArtist, approveArtist, rejectArtist, flagTattoo } from "./api";
+import { useStyles, StyledTableCell, StyledTableRow, useImageStyles } from "src/styles/admin/artists";
+import { getArtist, approveArtist, rejectArtist, flagTattoo } from "src/api/admin/artists";
 
 export default function Artist() {
   const router = useRouter();
