@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function UserCard({ data }: Props) {
+export default function UserCard({ data, onRemove }: Props) {
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -141,7 +141,12 @@ export default function UserCard({ data }: Props) {
             </ListItemIcon>
             <ListItemText primary="View" />
           </ListItem>
-          <ListItem button>
+          <ListItem
+            button
+            onClick={() => {
+              onRemove(data.id);
+            }}
+          >
             <ListItemIcon>
               <DeleteIcon />
             </ListItemIcon>
@@ -192,4 +197,5 @@ export default function UserCard({ data }: Props) {
 
 interface Props {
   data: any;
+  onRemove: (id: number) => void;
 }
