@@ -35,7 +35,7 @@ export default function Users() {
   // Fetch User list
   const {
     status: userListStatus,
-    data: userListData,
+    data: { users: userListData = [], meta = { limit_value: 60, total_count: 0 } } = {},
     error: userListError,
     refetch: userListRefetch,
     isFetching: userListIsFetching,
@@ -47,7 +47,7 @@ export default function Users() {
 
   const [pageOptions, setPageOptions] = useState({});
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
+  const [rowsPerPage, setRowsPerPage] = useState(meta.limit_value);
 
   // Force refetch after paginate and/or search update
   useEffect(() => {
@@ -190,9 +190,9 @@ export default function Users() {
 
               <TablePagination
                 component="div"
-                rowsPerPageOptions={[5, 10, 25, 50, 75, 100]}
+                rowsPerPageOptions={[5, 10, 25, 50, 75, 100, { value: meta.total_count, label: "All" }]}
                 rowsPerPage={rowsPerPage}
-                count={-1}
+                count={meta.total_count}
                 page={page}
                 onChangePage={handleChangePage}
                 onChangeRowsPerPage={handleChangeRowsPerPage}
