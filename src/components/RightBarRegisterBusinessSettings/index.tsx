@@ -203,7 +203,7 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, curren
             services,
           });
       } else {
-        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        app.showErrorDialog(true, errors ? errors.toString() : "We are not to complete your registration. Try again");
       }
     }
   };

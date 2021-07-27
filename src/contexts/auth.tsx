@@ -82,9 +82,9 @@ export function AuthContext({ children }: Props) {
 
       return response;
     } catch (error) {
-      app.showErrorDialog(true, "Internal server. Please try again");
+      app.showErrorDialog(true, "Error occured while processing your request. Please try again.");
       // Unknown issue or code issues
-      return { error: true, data: null, errors: "Internal server. Please try again" };
+      return { error: true, data: null, errors: "Error occured while processing your request. Please try again." };
     }
   }
 
@@ -113,7 +113,7 @@ export function AuthContext({ children }: Props) {
           router.replace("/login");
         });
     } catch (error) {
-      app.showErrorDialog(true, "Internal server. Please try again");
+      app.showErrorDialog(true, "Error occured while processing your request. Please try again.");
     }
   }
 
@@ -147,9 +147,9 @@ export function AuthContext({ children }: Props) {
 
       return response;
     } catch (error) {
-      app.showErrorDialog(true, "Internal server. Please try again");
+      app.showErrorDialog(true, "Error occured while processing your request. Please try again.");
       // Unknown issue or code issues
-      return { error: true, data: null, errors: "Internal server. Please try again" };
+      return { error: true, data: null, errors: "Error occured while processing your request. Please try again." };
     }
   }
 
@@ -172,14 +172,14 @@ export function AuthContext({ children }: Props) {
         // Navigate to register selection page
         router.push("/dashboard");
       } else {
-        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        app.showErrorDialog(true, errors ? errors.toString() : "We are not to complete your registration. Try again");
       }
 
       return response;
     } catch (error) {
-      app.showErrorDialog(true, "Internal server. Please try again");
+      app.showErrorDialog(true, "Error occured while processing your request. Please try again.");
       // Unknown issue or code issues
-      return { error: true, data: null, errors: "Internal server. Please try again" };
+      return { error: true, data: null, errors: "Error occured while processing your request. Please try again." };
     }
   }
 
@@ -202,14 +202,14 @@ export function AuthContext({ children }: Props) {
         // Navigate to register selection page
         router.push("/dashboard");
       } else {
-        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        app.showErrorDialog(true, errors ? errors.toString() : "We are not to complete your registration. Try again");
       }
 
       return response;
     } catch (error) {
-      app.showErrorDialog(true, "Internal server. Please try again");
+      app.showErrorDialog(true, "Error occured while processing your request. Please try again.");
       // Unknown issue or code issues
-      return { error: true, data: null, errors: "Internal server. Please try again" };
+      return { error: true, data: null, errors: "Error occured while processing your request. Please try again." };
     }
   }
 

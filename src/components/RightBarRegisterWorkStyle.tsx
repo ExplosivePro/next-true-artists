@@ -105,7 +105,7 @@ export default function RightBarRegisterWorkStyle({ data = [], currentUserId, cu
       if (!error) {
         onNext && onNext(optionValues);
       } else {
-        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        app.showErrorDialog(true, errors ? errors.toString() : "We are not to complete your registration. Try again");
       }
     }
   };

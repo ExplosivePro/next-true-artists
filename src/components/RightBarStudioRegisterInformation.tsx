@@ -156,7 +156,7 @@ export default function RightBarStudioRegisterInformation({
               twitter,
             });
         } else {
-          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+          app.showErrorDialog(true, errors ? errors.toString() : "We are not to complete your registration. Try again");
         }
       } else {
         // Call APIs to create studio profile
@@ -197,7 +197,7 @@ export default function RightBarStudioRegisterInformation({
               twitter,
             });
         } else {
-          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+          app.showErrorDialog(true, errors ? errors.toString() : "We are not to complete your registration. Try again");
         }
       }
     }
