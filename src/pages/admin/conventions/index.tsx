@@ -170,7 +170,7 @@ export default function Conventions() {
         className={classes.tableChip}
       />
     ) : (
-      value
+      <Chip label={value} variant="outlined" size="small" className={classes.tableChip} />
     );
 
   return (
@@ -318,9 +318,7 @@ export default function Conventions() {
                             <VolumeUpIcon fontSize="small" />
                           ) : null}
                         </StyledTableCell>
-                        <StyledTableCell className={classes.statusCell}>
-                          {showStatus(convention?.status)}
-                        </StyledTableCell>
+                        <StyledTableCell>{showStatus(convention?.status)}</StyledTableCell>
                         <StyledTableCell>
                           <Link href={`${router.pathname}/${convention?.id}`}>
                             <a className={classes.listLink}>View</a>

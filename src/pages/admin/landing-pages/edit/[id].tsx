@@ -39,7 +39,7 @@ import Loading from "src/components/Loading";
 import { InfoAlert, TextInput, SelectInput } from "src/components/Admin/FormInputs";
 
 import { getLandingPage, editLandingPage } from "src/api/admin/landingPages";
-import { landingPage_status } from "src/constants/admin/landingPages";
+import { landingPageStatus } from "src/constants/admin/landingPages";
 import { useStyles, StyledTableCell, StyledTableRow } from "src/styles/admin/landingPages";
 
 export default function EditLandingPages() {
@@ -191,7 +191,10 @@ export default function EditLandingPages() {
                         label="Status"
                         errors={!!errors.status}
                         errorMessage={errors.status?.message}
-                        dropDownList={landingPage_status.map((status) => ({ id: status, name: status }))}
+                        dropDownList={Object.entries(landingPageStatus).map(([status, value]) => ({
+                          id: value,
+                          name: status,
+                        }))}
                       />
                     </Grid>
 

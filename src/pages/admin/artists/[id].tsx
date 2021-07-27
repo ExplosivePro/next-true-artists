@@ -12,7 +12,8 @@ import Avatar from "@material-ui/core/Avatar";
 import Chip from "@material-ui/core/Chip";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CancelIcon from "@material-ui/icons/Cancel";
-import { green, red } from "@material-ui/core/colors";
+import PageviewIcon from "@material-ui/icons/Pageview";
+import AdjustIcon from "@material-ui/icons/Adjust";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -38,6 +39,7 @@ import Loading from "src/components/Loading";
 import PrimaryButton from "src/components/PrimaryButton";
 import { InfoAlert } from "src/components/Admin/FormInputs";
 
+import { artistStatus } from "src/constants/admin/artists";
 import { useStyles, StyledTableCell, StyledTableRow, useImageStyles } from "src/styles/admin/artists";
 import { getArtist, approveArtist, rejectArtist, flagTattoo } from "src/api/admin/artists";
 
@@ -89,6 +91,17 @@ export default function Artist() {
     }, 4500);
   };
 
+  const showStatus = (value: string) =>
+    value === artistStatus.Approved ? (
+      <Chip icon={<CheckCircleIcon fontSize="small" className={classes.greenIcon} />} label="Approved" size="small" />
+    ) : value === artistStatus.Rejected ? (
+      <Chip icon={<CancelIcon fontSize="small" className={classes.redIcon} />} label="Rejected" size="small" />
+    ) : value === artistStatus.Pending ? (
+      <Chip icon={<AdjustIcon fontSize="small" className={classes.blueIcon} />} label="Pending" size="small" />
+    ) : (
+      <Chip icon={<PageviewIcon fontSize="small" className={classes.blueIcon} />} label={value} size="small" />
+    );
+
   return (
     <AdminBody>
       <Head>
@@ -124,6 +137,7 @@ export default function Artist() {
                     <Typography variant="h6" component="h2">
                       Profile Details
                     </Typography>
+
                     <Grid container item justify="center">
                       <Avatar
                         alt={artistData?.name ?? "Null"}
@@ -132,32 +146,29 @@ export default function Artist() {
                       />
                     </Grid>
 
-                    <Grid container>
-                      <Grid item xs={12}>
-                        <Typography color="textPrimary" align="center">
-                          <b>{artistData?.name ?? "Null"}</b>
-                        </Typography>
-                        <pre>
-                          <Typography variant="body2" align="center">
-                            <b>Status:{"   "}</b>
-                            {artistData?.status}
-                          </Typography>
-                        </pre>
+                    <Typography color="textPrimary" align="center">
+                      <b>{artistData?.name ?? "<no name>"}</b>
+                    </Typography>
+
+                    <Grid container spacing={2} justify="center" className={classes.buttonWrapper}>
+                      <Grid item className={classes.titleCell}>
+                        Status:
                       </Grid>
+                      <Grid item>{showStatus(artistData?.status)}</Grid>
                     </Grid>
 
-                    <Grid container item justify="space-evenly">
-                      <PrimaryButton size="small" primaryColor onClick={() => updateStatus("approve")}>
-                        Approve
-                      </PrimaryButton>
-                      <PrimaryButton
-                        size="small"
-                        variant="outlined"
-                        primaryColor
-                        onClick={() => updateStatus("reject")}
-                      >
-                        Reject
-                      </PrimaryButton>
+                    <Grid container item justify="space-evenly" className={classes.buttonWrapper}>
+                      {artistData?.status !== artistStatus.Approved ? (
+                        <PrimaryButton size="small" primaryColor onClick={() => updateStatus("approve")}>
+                          Approve
+                        </PrimaryButton>
+                      ) : null}
+
+                      {artistData?.status !== artistStatus.Rejected ? (
+                        <PrimaryButton size="small" yellow onClick={() => updateStatus("reject")}>
+                          Reject
+                        </PrimaryButton>
+                      ) : null}
                     </Grid>
                   </CardContent>
                 </Card>
@@ -357,9 +368,9 @@ function BusinessSettings({ artistData }: { artistData: Admin.ArtistProfile }) {
 
   const showBoolean = (value: boolean) =>
     value ? (
-      <CheckCircleIcon fontSize="small" style={{ color: green[500] }} />
+      <CheckCircleIcon fontSize="small" className={classes.greenIcon} />
     ) : (
-      <CancelIcon fontSize="small" style={{ color: red[500] }} />
+      <CancelIcon fontSize="small" className={classes.redIcon} />
     );
 
   return (

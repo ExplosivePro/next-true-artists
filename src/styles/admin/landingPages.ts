@@ -1,6 +1,7 @@
 import { makeStyles, createStyles, Theme, withStyles } from "@material-ui/core/styles";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
+import { green, blue } from "@material-ui/core/colors";
 
 import colors from "src/palette";
 
@@ -19,6 +20,9 @@ export const useStyles = makeStyles({
   },
   statusHeader: {
     textAlign: "center",
+  },
+  statusText: {
+    textTransform: "capitalize",
   },
   deleteCell: {
     textDecoration: "underline",
@@ -65,6 +69,15 @@ export const useStyles = makeStyles({
   fileInput: {
     visibility: "hidden",
     width: 0,
+  },
+  greenIcon: {
+    color: green[500],
+  },
+  blueIcon: {
+    color: blue[500],
+  },
+  tableChip: {
+    border: "none",
   },
 });
 
