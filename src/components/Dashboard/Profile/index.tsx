@@ -269,7 +269,7 @@ export default function UserProfile() {
     if (editUserResponse.error || editArtistResponse.error || avatarUploadResponse?.error) {
       showErrorDialog(true, "Error occured while updating your profile. Try again.");
     } else {
-      showSuccessDialog(true, "Update profile successfully");
+      showSuccessDialog(true, "Profile updated successfully");
       // Get new info
       updateUserData();
       // Back to dashboard
@@ -326,7 +326,7 @@ export default function UserProfile() {
     if (editUserResponse.error || editStudioResponse.error || avatarUploadResponse?.error) {
       showErrorDialog(true, "Error occured while updating your profile. Try again.");
     } else {
-      showSuccessDialog(true, "Update profile successfully");
+      showSuccessDialog(true, "Profile updated successfully");
       // Get new info
       updateUserData();
       // Back to dashboard
@@ -340,7 +340,7 @@ export default function UserProfile() {
     if (editUserResponse.error) {
       showErrorDialog(true, "Error occured while updating your profile. Try again.");
     } else {
-      showSuccessDialog(true, "Update profile successfully");
+      showSuccessDialog(true, "Profile updated successfully");
       // Get new info
       updateUserData();
       // Back to dashboard

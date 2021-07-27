@@ -51,7 +51,7 @@ export default function SocialLinks({ data }: { data: any }) {
     if (editArtistResponse.error) {
       showErrorDialog(true, "Error occured while updating your profile. Try again.");
     } else {
-      showSuccessDialog(true, "Update profile successfully");
+      showSuccessDialog(true, "Profile updated successfully");
       // Get new info
       updateUserData();
       // Back to dashboard
@@ -73,7 +73,7 @@ export default function SocialLinks({ data }: { data: any }) {
     if (editStudioResponse.error) {
       showErrorDialog(true, "Error occured while updating your profile. Try again.");
     } else {
-      showSuccessDialog(true, "Update profile successfully");
+      showSuccessDialog(true, "Profile updated successfully");
       // Get new info
       updateUserData();
       // Back to dashboard
