@@ -37,4 +37,6 @@ package-lock.json
 yarn.lock
 .idea
 .env
+.env.staging
+.env.production
 .next
