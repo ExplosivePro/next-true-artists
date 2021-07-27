@@ -12,6 +12,11 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import Alert from "@material-ui/lab/Alert";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
+import Chip from "@material-ui/core/Chip";
+
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import PageviewIcon from "@material-ui/icons/Pageview";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
@@ -34,7 +39,7 @@ import Loading from "src/components/Loading";
 import { InfoAlert } from "src/components/Admin/FormInputs";
 
 import { getArticleList, deleteArticle } from "src/api/admin/articles";
-import { article_status } from "src/constants/admin/articles";
+import { articleStatus } from "src/constants/admin/articles";
 import { useStyles, StyledTableCell, StyledTableRow } from "src/styles/admin/articles";
 
 import getConfig from "next/config";
@@ -121,6 +126,35 @@ export default function Articles() {
     value ? setStatusFilter({ status: value }) : setStatusFilter({});
   };
 
+  const showStatus = (value: string) =>
+    value === articleStatus.Published ? (
+      <Chip
+        icon={<CheckCircleIcon fontSize="small" className={classes.greenIcon} />}
+        label="Published"
+        variant="outlined"
+        size="small"
+        className={classes.tableChip}
+      />
+    ) : value === articleStatus.Draft ? (
+      <Chip
+        icon={<PageviewIcon fontSize="small" className={classes.blueIcon} />}
+        label="Draft"
+        variant="outlined"
+        size="small"
+        className={classes.tableChip}
+      />
+    ) : value === articleStatus.Flagged ? (
+      <Chip
+        icon={<CancelIcon fontSize="small" className={classes.redIcon} />}
+        label="Flagged"
+        variant="outlined"
+        size="small"
+        className={classes.tableChip}
+      />
+    ) : (
+      <Chip label={value} variant="outlined" size="small" className={classes.tableChip} />
+    );
+
   return (
     <AdminBody>
       <Head>
@@ -158,8 +192,8 @@ export default function Articles() {
                 onChange={(e) => handleStatusFilterChange(e.target.value)}
               >
                 <MenuItem value="">Clear Filter...</MenuItem>
-                {article_status.map((status, index) => (
-                  <MenuItem value={status} key={index}>
+                {Object.entries(articleStatus).map(([status, value], index) => (
+                  <MenuItem value={value} key={index}>
                     {status}
                   </MenuItem>
                 ))}
@@ -224,7 +258,7 @@ export default function Articles() {
                     <TableRow>
                       <StyledTableCell>Title</StyledTableCell>
                       <StyledTableCell>Author</StyledTableCell>
-                      <StyledTableCell>Status</StyledTableCell>
+                      <StyledTableCell className={classes.statusHeader}>Status</StyledTableCell>
                       <StyledTableCell className={classes.statusHeader} colSpan={2}>
                         Actions
                       </StyledTableCell>
@@ -242,7 +276,7 @@ export default function Articles() {
                           </Link>
                         </StyledTableCell>
                         <StyledTableCell>{article?.user?.full_name}</StyledTableCell>
-                        <StyledTableCell>{article?.status}</StyledTableCell>
+                        <StyledTableCell>{showStatus(article?.status)}</StyledTableCell>
                         <StyledTableCell>
                           <Link href={`${router.pathname}/edit/${article?.id}`}>
                             <a className={classes.listLink}>Edit</a>
