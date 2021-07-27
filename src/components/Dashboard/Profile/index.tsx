@@ -267,7 +267,7 @@ export default function UserProfile() {
 
     // Show errors if there is any errors
     if (editUserResponse.error || editArtistResponse.error || avatarUploadResponse?.error) {
-      showErrorDialog(true, "Update profile fail");
+      showErrorDialog(true, "Error occured while updating your profile. Try again.");
     } else {
       showSuccessDialog(true, "Update profile successfully");
       // Get new info
@@ -324,7 +324,7 @@ export default function UserProfile() {
 
     // Show errors if there is any errors
     if (editUserResponse.error || editStudioResponse.error || avatarUploadResponse?.error) {
-      showErrorDialog(true, "Update profile fail");
+      showErrorDialog(true, "Error occured while updating your profile. Try again.");
     } else {
       showSuccessDialog(true, "Update profile successfully");
       // Get new info
@@ -338,7 +338,7 @@ export default function UserProfile() {
   const submitEditRegularProfile = (editUserResponse: RestApi.Response) => {
     // Show errors if there is any errors
     if (editUserResponse.error) {
-      showErrorDialog(true, "Update profile fail");
+      showErrorDialog(true, "Error occured while updating your profile. Try again.");
     } else {
       showSuccessDialog(true, "Update profile successfully");
       // Get new info
