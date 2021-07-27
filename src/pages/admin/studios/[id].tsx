@@ -41,8 +41,8 @@ import Loading from "src/components/Loading";
 import PrimaryButton from "src/components/PrimaryButton";
 import { InfoAlert } from "src/components/Admin/FormInputs";
 
-import { useStyles, StyledTableCell, StyledTableRow, useImageStyles } from "./styles";
-import { getStudio, approveStudio, rejectStudio, flagTattoo } from "./api";
+import { useStyles, StyledTableCell, StyledTableRow, useImageStyles } from "src/styles/admin/studios";
+import { getStudio, approveStudio, rejectStudio, flagTattoo } from "src/api/admin/studios";
 
 export default function Studio() {
   const router = useRouter();

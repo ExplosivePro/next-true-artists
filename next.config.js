@@ -25,13 +25,13 @@ module.exports = {
         permanent: true,
       },
       {
-        source: "/tattoos",
+        source: "/artists",
         destination: `${process.env.PUBLIC_PAGE_BASE_URL}/artists`,
         permanent: true,
       },
     ];
   },
   images: {
-    domains: ["localhost"],
+    domains: ["localhost", "qa_account.trueartists.com", "account.trueartists.com"],
   },
 };

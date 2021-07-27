@@ -28,8 +28,8 @@ import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
 import { TextInput, InfoAlert } from "src/components/Admin/FormInputs";
 
-import { createLandingPage } from "./api";
-import { useStyles } from "./styles";
+import { createLandingPage } from "src/api/admin/landingPages";
+import { useStyles } from "src/styles/admin/landingPages";
 
 import getConfig from "next/config";
 
@@ -127,7 +127,7 @@ export default function CreateNew() {
               <Link href="/admin">Dashboard</Link>
             </Typography>
             <Typography variant="h6">
-              <Link href="/admin/landing-pages">Landing Pages</Link>
+              <Link href="/admin/landingPages">Landing Pages</Link>
             </Typography>
             <Typography variant="h6">New Landing Page</Typography>
           </Breadcrumbs>

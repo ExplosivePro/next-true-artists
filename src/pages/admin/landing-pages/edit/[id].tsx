@@ -38,9 +38,9 @@ import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
 import { InfoAlert, TextInput, SelectInput } from "src/components/Admin/FormInputs";
 
-import { getLandingPage, editLandingPage } from "../api";
-import { landingPage_status } from "../constants";
-import { useStyles, StyledTableCell, StyledTableRow } from "../styles";
+import { getLandingPage, editLandingPage } from "src/api/admin/landingPages";
+import { landingPage_status } from "src/constants/admin/landingPages";
+import { useStyles, StyledTableCell, StyledTableRow } from "src/styles/admin/landingPages";
 
 export default function EditLandingPages() {
   const classes = useStyles();
@@ -160,7 +160,7 @@ export default function EditLandingPages() {
               <Link href="/admin">Dashboard</Link>
             </Typography>
             <Typography variant="h6">
-              <Link href="/admin/landing-pages">Landing Pages</Link>
+              <Link href="/admin/landingPages">Landing Pages</Link>
             </Typography>
             <Typography variant="h6">{pageData?.title ?? pageId}</Typography>
           </Breadcrumbs>

@@ -20,8 +20,8 @@ import Loading from "src/components/Loading";
 import PrimaryButton from "src/components/PrimaryButton";
 import { TextInput, InfoAlert } from "src/components/Admin/FormInputs";
 
-import { useStyles } from "./styles";
-import { getStyle, updateStyle } from "./api";
+import { useStyles } from "src/styles/admin/styles";
+import { getStyle, updateStyle } from "src/api/admin/styles";
 
 export default function Style() {
   const router = useRouter();

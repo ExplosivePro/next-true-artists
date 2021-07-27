@@ -166,9 +166,9 @@ export default function Login() {
     }
   };
 
-  const handleGoogleLoginFailure = () => {
+  const handleGoogleLoginFailure = (e: any | undefined) => {
     // Just refresh the page
-    window.location.reload();
+    console.error(`Google login fail`, e);
   };
 
   // useEffect(() => {

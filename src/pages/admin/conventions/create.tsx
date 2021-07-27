@@ -27,9 +27,9 @@ import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
 import { InfoAlert, TextInput, DatePickerInput } from "src/components/Admin/FormInputs";
 
-import { createConvention } from "./api";
+import { createConvention } from "src/api/admin/conventions";
 import { countryList } from "src/constants";
-import { useStyles } from "./styles";
+import { useStyles } from "src/styles/admin/conventions";
 
 export default function EditConventions() {
   const classes = useStyles();

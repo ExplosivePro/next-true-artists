@@ -24,9 +24,9 @@ import AdminBody from "src/components/Admin/AdminBody";
 import handleApiErrors from "src/components/Admin/handleApiErrors";
 import Loading from "src/components/Loading";
 
-import { getArtistList } from "./api";
-import { artist_status } from "./constants";
-import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
+import { getArtistList } from "src/api/admin/artists";
+import { artist_status } from "src/constants/admin/artists";
+import { useStyles, StyledTableCell, StyledTableRow } from "src/styles/admin/artists";
 
 export default function Artists() {
   const classes = useStyles();

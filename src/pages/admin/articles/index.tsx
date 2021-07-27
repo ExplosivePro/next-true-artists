@@ -33,9 +33,9 @@ import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
 import { InfoAlert } from "src/components/Admin/FormInputs";
 
-import { getArticleList, deleteArticle } from "./api";
-import { article_status } from "./constants";
-import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
+import { getArticleList, deleteArticle } from "src/api/admin/articles";
+import { article_status } from "src/constants/admin/articles";
+import { useStyles, StyledTableCell, StyledTableRow } from "src/styles/admin/articles";
 
 import getConfig from "next/config";
 
