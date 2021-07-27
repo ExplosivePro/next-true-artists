@@ -39,10 +39,16 @@ import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
 import { InfoAlert, TextInput, DatePickerInput } from "src/components/Admin/FormInputs";
 
-import { getConvention, editConvention, approveConvention, rejectConvention, submitForReviewConvention } from "./api";
+import {
+  getConvention,
+  editConvention,
+  approveConvention,
+  rejectConvention,
+  submitForReviewConvention,
+} from "src/api/admin/conventions";
 import { countryList } from "src/constants";
-import { conventionStatus } from "./constants";
-import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
+import { conventionStatus } from "src/constants/admin/conventions";
+import { useStyles, StyledTableCell, StyledTableRow } from "src/styles/admin/conventions";
 
 export default function ShowEditConventions() {
   const classes = useStyles();

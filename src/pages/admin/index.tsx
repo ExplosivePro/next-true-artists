@@ -21,8 +21,8 @@ import Loading from "src/components/Loading";
 import AdminBody from "src/components/Admin/AdminBody";
 import handleApiErrors from "src/components/Admin/handleApiErrors";
 
-import { getDashboard } from "./api";
-import { useStyles } from "./styles";
+import { getDashboard } from "src/api/admin/dashboard";
+import { useStyles } from "src/styles/admin/dashboard";
 
 export default function Dashboard() {
   const classes = useStyles();

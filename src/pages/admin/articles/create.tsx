@@ -26,8 +26,8 @@ import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
 import { TextInput, InfoAlert } from "src/components/Admin/FormInputs";
 
-import { createArticle } from "./api";
-import { useStyles } from "./styles";
+import { createArticle } from "src/api/admin/articles";
+import { useStyles } from "src/styles/admin/articles";
 
 import getConfig from "next/config";
 

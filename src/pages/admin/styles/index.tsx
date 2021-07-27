@@ -33,8 +33,8 @@ import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
 import { InfoAlert } from "src/components/Admin/FormInputs";
 
-import { getStyleList, deleteStyle } from "./api";
-import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
+import { getStyleList, deleteStyle } from "src/api/admin/styles";
+import { useStyles, StyledTableCell, StyledTableRow } from "src/styles/admin/styles";
 
 export default function Styles() {
   const classes = useStyles();

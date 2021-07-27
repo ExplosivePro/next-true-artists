@@ -38,9 +38,9 @@ import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
 import { InfoAlert, TextInput, SelectInput } from "src/components/Admin/FormInputs";
 
-import { getArticle, editArticle } from "../api";
-import { article_status } from "../constants";
-import { useStyles, StyledTableCell, StyledTableRow } from "../styles";
+import { getArticle, editArticle } from "src/api/admin/articles";
+import { article_status } from "src/constants/admin/articles";
+import { useStyles, StyledTableCell, StyledTableRow } from "src/styles/admin/articles";
 
 export default function EditArticles() {
   const classes = useStyles();
