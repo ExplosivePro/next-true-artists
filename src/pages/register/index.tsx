@@ -182,9 +182,10 @@ export default function Register() {
   };
 
   // Google login fail
-  const handleGoogleLoginFailure = () => {
+  const handleGoogleLoginFailure = (e: any | undefined) => {
     // Dirt hack to resolve react social keep remember logged in state
-    window.location.reload();
+    // window.location.reload();
+    console.error(`Google login fail`, e);
   };
 
   const setSocialLoginRef = () => socialLoginRef;

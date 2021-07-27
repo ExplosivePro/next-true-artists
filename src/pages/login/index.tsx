@@ -166,7 +166,7 @@ export default function Login() {
     }
   };
 
-  const handleGoogleLoginFailure = (e) => {
+  const handleGoogleLoginFailure = (e: any | undefined) => {
     // Just refresh the page
     console.error(`Google login fail`, e);
   };
