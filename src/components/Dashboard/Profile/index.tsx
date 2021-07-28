@@ -615,7 +615,7 @@ export default function UserProfile() {
                   <ListItemIcon>
                     <GroupOutlinedIcon />
                   </ListItemIcon>
-                  <ListItemText primary={<Typography>Social Profile</Typography>} />
+                  <ListItemText primary={<Typography>Social Media Profiles</Typography>} />
                 </MenuItem>
               )}
             </div>

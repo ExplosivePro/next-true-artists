@@ -147,7 +147,7 @@ export default function UploadTattoos({ id }: Props) {
 
       return data;
     } else {
-      app.showErrorDialog(true, errors ? errors.toString() : "Upload fail");
+      app.showErrorDialog(true, errors ? errors.toString() : "We are not able to upload your photos. Try again");
     }
   };
 
@@ -192,11 +192,11 @@ export default function UploadTattoos({ id }: Props) {
       <div className={classes.formWrapper}>
         <div className={classes.titleWrapper}>
           <Typography variant={"h5"} className={classes.titleText}>
-            {!editMode ? "Upload Images of Your Work" : "Edit Image"}
+            {!editMode ? "Upload tattoos photos showcasing your work" : "Edit Image"}
           </Typography>
           {!editMode && (
             <Typography>
-              Upload your work to showcase your skills and share your portfolio with the community.
+              Upload your tattoo work to showcase your skills and share your portfolio with the community.
             </Typography>
           )}
         </div>

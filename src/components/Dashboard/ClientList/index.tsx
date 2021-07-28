@@ -195,7 +195,7 @@ export default function ClientList() {
             startIcon={<AddIcon />}
             className={classes.addNewButton}
           >
-            Add New User
+            Add New Client
           </PrimaryButton>
         </Grid>
 
