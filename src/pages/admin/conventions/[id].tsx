@@ -6,6 +6,13 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const importJodit = () => import("jodit-react");
+const JoditEditor = dynamic(importJodit, {
+  ssr: false,
+});
+import "jodit/build/jodit.min.css";
 
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
@@ -38,6 +45,7 @@ import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
 import { InfoAlert, TextInput, DatePickerInput } from "src/components/Admin/FormInputs";
+import { JoditUploadButton } from "src/components/Admin/JoditCustomUploadButton";
 
 import {
   getConvention,
@@ -131,6 +139,12 @@ function ShowConvention({
   setEditMode: (T: boolean) => void;
 }) {
   const classes = useStyles();
+
+  // Jodit editor config
+  const config = {
+    readOnly: true,
+    toolbar: false,
+  };
 
   // Create an Alert for info feedback
   const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
@@ -386,18 +400,17 @@ function ShowConvention({
                   </CardContent>
                 </Card>
 
-                <Card variant="outlined" className={classes.gridSpacer}>
-                  <Table size="medium">
-                    <TableBody>
-                      <StyledTableRow>
-                        <StyledTableCell className={classes.titleCell}>Description:</StyledTableCell>
-                      </StyledTableRow>
-                      <StyledTableRow>
-                        <StyledTableCell>{conventionData?.description}</StyledTableCell>
-                      </StyledTableRow>
-                    </TableBody>
-                  </Table>
-                </Card>
+                <Grid container className={classes.gridSpacer}>
+                  <Grid item xs={12}>
+                    <Typography gutterBottom>Description *</Typography>
+
+                    <JoditEditor
+                      // @ts-ignore
+                      config={config}
+                      value={conventionData?.description ?? ""}
+                    />
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -417,6 +430,12 @@ function EditConvention({
   setEditMode: (T: boolean) => void;
 }) {
   const classes = useStyles();
+
+  // Jodit editor config to edit
+  const config = {
+    removeButtons: ["image"],
+    extraButtons: JoditUploadButton,
+  };
 
   // Create a reference to the hidden file input element
   const hiddenFileInput = React.useRef(null);
@@ -668,18 +687,28 @@ function EditConvention({
             </Grid>
 
             <Grid item xs={12} className={classes.gridSpacer}>
-              <Typography>Description *</Typography>
-              <Card variant="outlined" className={classes.cardNoBorder}>
-                <TextInput
-                  name="description"
-                  register={register}
-                  required={true}
-                  multiline={true}
-                  rows={4}
-                  errors={!!errors.description}
-                  errorMessage={errors.description?.message}
+              <FormControl fullWidth error={errors.description ? true : false} required={true}>
+                <Typography>Description *</Typography>
+                <Controller
+                  name={"description"}
+                  control={control}
+                  rules={{ required: true }}
+                  render={(props: any) => (
+                    <JoditEditor
+                      // @ts-ignore
+                      config={config}
+                      value={props?.value ?? ""}
+                      onBlur={(newContent) => {
+                        props.onChange(newContent);
+                      }}
+                    />
+                  )}
                 />
-              </Card>
+
+                {errors.description && (
+                  <FormHelperText error>{`Required ! ${errors.description?.message}`}</FormHelperText>
+                )}
+              </FormControl>
             </Grid>
           </Grid>
         </Grid>
@@ -703,6 +732,7 @@ function EditConvention({
                   <input
                     className={classes.fileInput}
                     type={"file"}
+                    accept="image/*"
                     ref={hiddenFileInput}
                     onChange={(e) => {
                       if (e.target.files) handleImageChange(e.target.files[0]);
