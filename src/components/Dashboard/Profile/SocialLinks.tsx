@@ -100,7 +100,7 @@ export default function SocialLinks({ data }: { data: any }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={2}>
-        <Grid item lg={6} md={6} xs={6}>
+        <Grid item lg={6} md={6} xs={12}>
           <FormInput
             name="instagram"
             classes={{ root: classes.formInput }}
@@ -117,7 +117,7 @@ export default function SocialLinks({ data }: { data: any }) {
             }}
           />
         </Grid>
-        <Grid item lg={6} md={6} xs={6}>
+        <Grid item lg={6} md={6} xs={12}>
           <FormInput
             name="website"
             classes={{ root: classes.formInput }}
@@ -134,7 +134,7 @@ export default function SocialLinks({ data }: { data: any }) {
       </Grid>
 
       <Grid container spacing={2}>
-        <Grid item lg={6} md={6} xs={6}>
+        <Grid item lg={6} md={6} xs={12}>
           <FormInput
             name="facebook"
             classes={{ root: classes.formInput }}
@@ -151,7 +151,7 @@ export default function SocialLinks({ data }: { data: any }) {
             }}
           />
         </Grid>
-        <Grid item lg={6} md={6} xs={6}>
+        <Grid item lg={6} md={6} xs={12}>
           <FormInput
             name="twitter"
             classes={{ root: classes.formInput }}
