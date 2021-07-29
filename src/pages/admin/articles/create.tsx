@@ -87,7 +87,7 @@ export default function CreateNew() {
       else {
         setInfoAlert({ severity: "success", message: "Article created successfully" });
         setTimeout(() => {
-          router.push(`${PUBLIC_BASE}/articles/${response.slug}`);
+          router.push(`${PUBLIC_BASE}/blog/${response.slug}`);
         }, 2500);
         return;
       }

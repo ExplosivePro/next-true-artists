@@ -7,6 +7,7 @@ module.exports = {
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     AWS_BUCKET: process.env.AWS_BUCKET,
     AWS_REGION: process.env.AWS_REGION,
+    NEXT_PUBLIC_CDN_HOST: process.env.NEXT_PUBLIC_CDN_HOST,
   },
   compress: false,
   poweredByHeader: false,
