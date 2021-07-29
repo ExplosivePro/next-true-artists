@@ -57,6 +57,9 @@ const useStyles = makeStyles((theme: Theme) =>
       transform: "translate(-50%)",
       width: "70%",
     },
+    badge: {
+      maxWidth: theme.spacing(20),
+    },
   }),
 );
 
@@ -176,6 +179,7 @@ export default function RightBarRegisterAvatarUpload({
 
         <Grid container item justify={"center"}>
           <Badge
+            className={classes.badge}
             overlap="circle"
             anchorOrigin={{
               vertical: "bottom",
