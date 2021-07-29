@@ -37,7 +37,7 @@ import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
 import { InfoAlert, TextInput, SelectInput } from "src/components/Admin/FormInputs";
-import { useS3UploadButton } from "src/hooks/s3bucketImageUpload";
+import { JoditUploadButton } from "src/components/Admin/JoditCustomUploadButton";
 
 import { getArticle, editArticle } from "src/api/admin/articles";
 import { article_status } from "src/constants/admin/articles";
@@ -50,7 +50,7 @@ export default function EditArticles() {
   // Jodit editor config
   const config = {
     removeButtons: ["image"],
-    extraButtons: useS3UploadButton,
+    extraButtons: JoditUploadButton,
   };
 
   const [articleId, setArticleId] = useState("");

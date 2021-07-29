@@ -37,7 +37,7 @@ import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
 import { InfoAlert, TextInput, SelectInput } from "src/components/Admin/FormInputs";
-import { useS3UploadButton } from "src/hooks/s3bucketImageUpload";
+import { JoditUploadButton } from "src/components/Admin/JoditCustomUploadButton";
 
 import { getLandingPage, editLandingPage } from "src/api/admin/landingPages";
 import { landingPage_status } from "src/constants/admin/landingPages";
@@ -50,7 +50,7 @@ export default function EditLandingPages() {
   // Jodit editor config
   const config = {
     removeButtons: ["image"],
-    extraButtons: useS3UploadButton,
+    extraButtons: JoditUploadButton,
   };
 
   const [pageId, setPageId] = useState("");

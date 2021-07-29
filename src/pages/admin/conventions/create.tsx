@@ -33,7 +33,7 @@ import AdminBody from "src/components/Admin/AdminBody";
 import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
 import { InfoAlert, TextInput, DatePickerInput } from "src/components/Admin/FormInputs";
-import { useS3UploadButton } from "src/hooks/s3bucketImageUpload";
+import { JoditUploadButton } from "src/components/Admin/JoditCustomUploadButton";
 
 import { createConvention } from "src/api/admin/conventions";
 import { countryList } from "src/constants";
@@ -46,7 +46,7 @@ export default function EditConventions() {
   // Jodit editor config
   const config = {
     removeButtons: ["image"],
-    extraButtons: useS3UploadButton,
+    extraButtons: JoditUploadButton,
   };
 
   // Create a reference to the hidden file input element

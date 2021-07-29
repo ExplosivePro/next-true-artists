@@ -27,7 +27,7 @@ import AdminBody from "src/components/Admin/AdminBody";
 import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
 import { TextInput, InfoAlert } from "src/components/Admin/FormInputs";
-import { useS3UploadButton } from "src/hooks/s3bucketImageUpload";
+import { JoditUploadButton } from "src/components/Admin/JoditCustomUploadButton";
 
 import { createLandingPage } from "src/api/admin/landingPages";
 import { useStyles } from "src/styles/admin/landingPages";
@@ -42,7 +42,7 @@ export default function CreateNew() {
   // Jodit editor config
   const config = {
     removeButtons: ["image"],
-    extraButtons: useS3UploadButton,
+    extraButtons: JoditUploadButton,
   };
 
   // Create an Alert for info feedback
