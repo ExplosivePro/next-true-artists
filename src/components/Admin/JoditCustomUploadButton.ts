@@ -6,12 +6,12 @@ export const JoditUploadButton = {
   name: "Insert image",
   popup: (editor: any, current: any, self: any, close: () => void) => {
     const form = editor.create.fromHTML(
-      `<b>Insert image</b> <br><br>
+      `<h2>Insert image</h2>
       <form>
         <input id="image" type="file" accept="image/*"> <br><br>
         <div id="status" style="color: blue;"></div> <br>
         <div id="alert" style="color: red;"></div> <br>
-        <input type="submit" value="Insert image" style="color: white;background-color: #0066ff;">
+        <input type="submit" value="Upload image" style="padding: 5px; border: none; color: black; background-color: #ecb22d;">
       </form>`,
     );
 
