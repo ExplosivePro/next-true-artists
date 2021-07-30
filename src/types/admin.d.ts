@@ -7,6 +7,8 @@ declare namespace Admin {
     role: string;
     status: string;
     password: string;
+    artist: ArtistProfile;
+    studio: StudioProfile;
   }
 
   declare interface ImageAsset {

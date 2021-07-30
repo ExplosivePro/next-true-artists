@@ -180,8 +180,24 @@ export default function Users() {
                           </Link>
                         </StyledTableCell>
                         <StyledTableCell>{user.email}</StyledTableCell>
-                        <StyledTableCell>{user.role}</StyledTableCell>
-                        <StyledTableCell>{user.status ?? "Pending"}</StyledTableCell>
+                        <StyledTableCell className={classes.textCell}>
+                          {user.role === "artist" ? (
+                            <Link href={`/admin/artists/${user.artist.id}`}>
+                              <a target="_blank" className={classes.listLink}>
+                                {user.role}
+                              </a>
+                            </Link>
+                          ) : user.role === "studio_manager" ? (
+                            <Link href={`/admin/studios/${user.studio.id}`}>
+                              <a target="_blank" className={classes.listLink}>
+                                {user.role}
+                              </a>
+                            </Link>
+                          ) : (
+                            user.role
+                          )}
+                        </StyledTableCell>
+                        <StyledTableCell className={classes.textCell}>{user.status ?? "Pending"}</StyledTableCell>
                       </StyledTableRow>
                     ))}
                   </TableBody>
