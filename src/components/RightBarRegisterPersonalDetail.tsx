@@ -114,7 +114,7 @@ export default function RightBarRegisterPersonalDetail({
       if (!error) {
         onNext && onNext(data?.id, { firstName, lastName, email, password, confirmPassword });
       } else {
-        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        app.showErrorDialog(true, errors ? errors.toString() : "We are not to complete your registration. Try again");
       }
     } else {
       // Create the new one
@@ -135,7 +135,7 @@ export default function RightBarRegisterPersonalDetail({
 
         onNext && onNext(data?.user.id, { firstName, lastName, email, password, confirmPassword }, data.auth_token);
       } else {
-        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        app.showErrorDialog(true, errors ? errors.toString() : "We are not to complete your registration. Try again");
       }
     }
   };

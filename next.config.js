@@ -3,6 +3,11 @@ module.exports = {
     GOOGLE_APP_ID: process.env.GOOGLE_APP_ID,
     INSTAGRAM_APP_ID: process.env.INSTAGRAM_APP_ID,
     PUBLIC_PAGE_BASE_URL: process.env.PUBLIC_PAGE_BASE_URL,
+    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+    AWS_BUCKET: process.env.AWS_BUCKET,
+    AWS_REGION: process.env.AWS_REGION,
+    NEXT_PUBLIC_CDN_HOST: process.env.NEXT_PUBLIC_CDN_HOST,
   },
   compress: false,
   poweredByHeader: false,
@@ -25,13 +30,13 @@ module.exports = {
         permanent: true,
       },
       {
-        source: "/tattoos",
+        source: "/artists",
         destination: `${process.env.PUBLIC_PAGE_BASE_URL}/artists`,
         permanent: true,
       },
     ];
   },
   images: {
-    domains: ["localhost"],
+    domains: ["localhost", "qa_account.trueartists.com", "account.trueartists.com"],
   },
 };

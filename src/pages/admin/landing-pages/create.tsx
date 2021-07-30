@@ -27,9 +27,10 @@ import AdminBody from "src/components/Admin/AdminBody";
 import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
 import { TextInput, InfoAlert } from "src/components/Admin/FormInputs";
+import { JoditUploadButton } from "src/components/Admin/JoditCustomUploadButton";
 
-import { createLandingPage } from "./api";
-import { useStyles } from "./styles";
+import { createLandingPage } from "src/api/admin/landingPages";
+import { useStyles } from "src/styles/admin/landingPages";
 
 import getConfig from "next/config";
 
@@ -37,6 +38,12 @@ export default function CreateNew() {
   const classes = useStyles();
   const router = useRouter();
   const PUBLIC_BASE = getConfig().publicRuntimeConfig.PUBLIC_PAGE_BASE_URL;
+
+  // Jodit editor config
+  const config = {
+    removeButtons: ["image"],
+    extraButtons: JoditUploadButton,
+  };
 
   // Create an Alert for info feedback
   const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
@@ -187,6 +194,7 @@ export default function CreateNew() {
                     <input
                       className={classes.fileInput}
                       type={"file"}
+                      accept="image/*"
                       ref={hiddenFileInput}
                       onChange={(e) => {
                         if (e.target.files) handleAvatarChange(e.target.files[0]);
@@ -217,6 +225,8 @@ export default function CreateNew() {
                 rules={{ required: true }}
                 render={(props: any) => (
                   <JoditEditor
+                    // @ts-ignore
+                    config={config}
                     value={props?.value ?? ""}
                     onChange={(newContent) => {
                       props.onChange(newContent);
@@ -226,9 +236,6 @@ export default function CreateNew() {
               />
 
               {errors.content && <FormHelperText error>{`Required ! ${errors.content?.message}`}</FormHelperText>}
-              <Typography variant="caption" gutterBottom>
-                <i>(Drag and drop or copy and paste images)</i>
-              </Typography>
             </FormControl>
           </Grid>
 

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import Head from "next/head";
-import Link from "next/link";
 
 import { useRouter } from "next/router";
+import Head from "next/head";
+import Link from "next/link";
 import dynamic from "next/dynamic";
 
 const importJodit = () => import("jodit-react");
@@ -26,8 +26,9 @@ import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
 import { TextInput, InfoAlert } from "src/components/Admin/FormInputs";
 
-import { createArticle } from "./api";
-import { useStyles } from "./styles";
+import { createArticle } from "src/api/admin/articles";
+import { useStyles } from "src/styles/admin/articles";
+import { JoditUploadButton } from "src/components/Admin/JoditCustomUploadButton";
 
 import getConfig from "next/config";
 
@@ -35,6 +36,12 @@ export default function CreateNew() {
   const classes = useStyles();
   const router = useRouter();
   const PUBLIC_BASE = getConfig().publicRuntimeConfig.PUBLIC_PAGE_BASE_URL;
+
+  // Jodit editor config
+  const config = {
+    removeButtons: ["image"],
+    extraButtons: JoditUploadButton,
+  };
 
   // Create an Alert for info feedback
   const [infoAlert, setInfoAlert] = useState({ severity: "info", message: "" });
@@ -80,7 +87,7 @@ export default function CreateNew() {
       else {
         setInfoAlert({ severity: "success", message: "Article created successfully" });
         setTimeout(() => {
-          router.push(`${PUBLIC_BASE}/articles/${response.slug}`);
+          router.push(`${PUBLIC_BASE}/blog/${response.slug}`);
         }, 2500);
         return;
       }
@@ -185,6 +192,7 @@ export default function CreateNew() {
                     <input
                       className={classes.fileInput}
                       type={"file"}
+                      accept="image/*"
                       ref={hiddenFileInput}
                       onChange={(e) => {
                         if (e.target.files) handleImageChange(e.target.files[0]);
@@ -211,8 +219,10 @@ export default function CreateNew() {
                 rules={{ required: true }}
                 render={(props: any) => (
                   <JoditEditor
+                    // @ts-ignore
+                    config={config}
                     value={props?.value ?? ""}
-                    onChange={(newContent) => {
+                    onBlur={(newContent) => {
                       props.onChange(newContent);
                     }}
                   />
@@ -220,9 +230,6 @@ export default function CreateNew() {
               />
 
               {errors.content && <FormHelperText error>{`Required ! ${errors.content?.message}`}</FormHelperText>}
-              <Typography variant="caption" gutterBottom>
-                <i>(Drag and drop or copy and paste images)</i>
-              </Typography>
             </FormControl>
           </Grid>
 

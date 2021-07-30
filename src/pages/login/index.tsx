@@ -166,9 +166,9 @@ export default function Login() {
     }
   };
 
-  const handleGoogleLoginFailure = () => {
+  const handleGoogleLoginFailure = (e: any | undefined) => {
     // Just refresh the page
-    window.location.reload();
+    console.error(`Google login fail`, e);
   };
 
   // useEffect(() => {
@@ -298,7 +298,7 @@ export default function Login() {
               fullWidth
               href={"/register-selection"}
             >
-              Join as artist or studio
+              Join as a tattoo artist or studio
             </PrimaryButton>
           </form>
         </Grid>

@@ -267,9 +267,9 @@ export default function UserProfile() {
 
     // Show errors if there is any errors
     if (editUserResponse.error || editArtistResponse.error || avatarUploadResponse?.error) {
-      showErrorDialog(true, "Update profile fail");
+      showErrorDialog(true, "Error occured while updating your profile. Try again.");
     } else {
-      showSuccessDialog(true, "Update profile successfully");
+      showSuccessDialog(true, "Profile updated successfully");
       // Get new info
       updateUserData();
       // Back to dashboard
@@ -324,9 +324,9 @@ export default function UserProfile() {
 
     // Show errors if there is any errors
     if (editUserResponse.error || editStudioResponse.error || avatarUploadResponse?.error) {
-      showErrorDialog(true, "Update profile fail");
+      showErrorDialog(true, "Error occured while updating your profile. Try again.");
     } else {
-      showSuccessDialog(true, "Update profile successfully");
+      showSuccessDialog(true, "Profile updated successfully");
       // Get new info
       updateUserData();
       // Back to dashboard
@@ -338,9 +338,9 @@ export default function UserProfile() {
   const submitEditRegularProfile = (editUserResponse: RestApi.Response) => {
     // Show errors if there is any errors
     if (editUserResponse.error) {
-      showErrorDialog(true, "Update profile fail");
+      showErrorDialog(true, "Error occured while updating your profile. Try again.");
     } else {
-      showSuccessDialog(true, "Update profile successfully");
+      showSuccessDialog(true, "Profile updated successfully");
       // Get new info
       updateUserData();
       // Back to dashboard
@@ -615,7 +615,7 @@ export default function UserProfile() {
                   <ListItemIcon>
                     <GroupOutlinedIcon />
                   </ListItemIcon>
-                  <ListItemText primary={<Typography>Social Profile</Typography>} />
+                  <ListItemText primary={<Typography>Social Media Profiles</Typography>} />
                 </MenuItem>
               )}
             </div>

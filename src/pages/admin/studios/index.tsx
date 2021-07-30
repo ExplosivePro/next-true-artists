@@ -24,9 +24,9 @@ import AdminBody from "src/components/Admin/AdminBody";
 import handleApiErrors from "src/components/Admin/handleApiErrors";
 import Loading from "src/components/Loading";
 
-import { getStudioList } from "./api";
-import { studio_status } from "./constants";
-import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
+import { getStudioList } from "src/api/admin/studios";
+import { studio_status } from "src/constants/admin/studios";
+import { useStyles, StyledTableCell, StyledTableRow } from "src/styles/admin/studios";
 
 export default function Studios() {
   const classes = useStyles();

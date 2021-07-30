@@ -41,9 +41,9 @@ import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
 import { InfoAlert } from "src/components/Admin/FormInputs";
 
-import { getConventionList, deleteConvention } from "./api";
-import { conventionStatus } from "./constants";
-import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
+import { getConventionList, deleteConvention } from "src/api/admin/conventions";
+import { conventionStatus } from "src/constants/admin/conventions";
+import { useStyles, StyledTableCell, StyledTableRow } from "src/styles/admin/conventions";
 
 import getConfig from "next/config";
 
@@ -268,6 +268,7 @@ export default function Conventions() {
                   <colgroup>
                     <col width="auto" />
                     <col width="auto" />
+                    <col width="auto" />
                     <col width="10%" />
                     <col width="10%" />
                     <col width="3%" />
@@ -279,7 +280,8 @@ export default function Conventions() {
                   <TableHead>
                     <TableRow>
                       <StyledTableCell>Name</StyledTableCell>
-                      <StyledTableCell>Description</StyledTableCell>
+                      <StyledTableCell>City</StyledTableCell>
+                      <StyledTableCell>Country</StyledTableCell>
                       <StyledTableCell>Start date</StyledTableCell>
                       <StyledTableCell>End date</StyledTableCell>
                       <StyledTableCell className={classes.statusCell} colSpan={2}>
@@ -302,7 +304,8 @@ export default function Conventions() {
                             </a>
                           </Link>
                         </StyledTableCell>
-                        <StyledTableCell>{convention?.description ?? "--"}</StyledTableCell>
+                        <StyledTableCell>{convention?.city ?? "--"}</StyledTableCell>
+                        <StyledTableCell>{convention?.country ?? "--"}</StyledTableCell>
                         <StyledTableCell>
                           {convention?.start_date ? moment(convention?.start_date).format("DD-MM-YYYY") : "--"}
                         </StyledTableCell>

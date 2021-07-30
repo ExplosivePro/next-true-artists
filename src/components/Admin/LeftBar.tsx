@@ -19,7 +19,7 @@ import EventNoteIcon from "@material-ui/icons/EventNote";
 import SpeakerIcon from "@material-ui/icons/Speaker";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
-import { menuAdminBar } from "src/constants";
+import { menuAdminBar } from "src/constants/admin/menuBar";
 import { useMenuStyles } from "./styles";
 
 interface NavigationType {
@@ -71,7 +71,7 @@ export default function LeftBar() {
         }
         break;
 
-      case "landingPages":
+      case "landing-pages":
         if (currentActiveBar !== menuAdminBar.LANDING_PAGES) {
           goToPage(`/admin/landing-pages`, { mainBar: menuAdminBar.LANDING_PAGES });
         }
@@ -185,8 +185,8 @@ export default function LeftBar() {
 
       <ListItem
         button
-        key={"Landing-Pages"}
-        onClick={() => handleAdminMenuClick("landingPages")}
+        key={"landing-pages"}
+        onClick={() => handleAdminMenuClick("landing-pages")}
         className={clsx(classes.listItem, {
           [classes.activeBar]: currentActiveBar.indexOf(menuAdminBar.LANDING_PAGES) > -1,
         })}

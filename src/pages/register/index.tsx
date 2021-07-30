@@ -182,9 +182,10 @@ export default function Register() {
   };
 
   // Google login fail
-  const handleGoogleLoginFailure = () => {
+  const handleGoogleLoginFailure = (e: any | undefined) => {
     // Dirt hack to resolve react social keep remember logged in state
-    window.location.reload();
+    // window.location.reload();
+    console.error(`Google login fail`, e);
   };
 
   const setSocialLoginRef = () => socialLoginRef;
@@ -227,7 +228,7 @@ export default function Register() {
 
         <Grid item lg={4} md={4} sm={12} xs={12} className={clsx(classes.relativeContainer, classes.rightContainer)}>
           <Typography variant={"h5"} className={classes.title}>
-            Find inspiration. Get tattooed. Book today.
+            Join to Connect with Certified Tattoo Artists & Studios near you
           </Typography>
 
           <form onSubmit={handleSubmit(onSubmit)} className={classes.formWrapper}>
@@ -346,7 +347,7 @@ export default function Register() {
               fullWidth
               href={"/register-selection"}
             >
-              Join as artist or studio
+              Join as a tattoo artist or studio
             </PrimaryButton>
           </form>
         </Grid>

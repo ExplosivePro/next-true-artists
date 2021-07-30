@@ -229,7 +229,7 @@ export default function RightBarArtistRegisterInformation({
               specialties,
             });
         } else {
-          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+          app.showErrorDialog(true, errors ? errors.toString() : "We are not to complete your registration. Try again");
         }
       } else {
         // Create the new one
@@ -284,7 +284,7 @@ export default function RightBarArtistRegisterInformation({
               specialties,
             });
         } else {
-          app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+          app.showErrorDialog(true, errors ? errors.toString() : "We are not to complete your registration. Try again");
         }
       }
     }
@@ -526,7 +526,7 @@ export default function RightBarArtistRegisterInformation({
           </Typography>
 
           <Grid container spacing={2}>
-            <Grid item lg={6} md={6} xs={6}>
+            <Grid item lg={6} md={6} xs={12}>
               <FormInput
                 name="instagram"
                 classes={{ root: classes.formInput }}
@@ -543,7 +543,7 @@ export default function RightBarArtistRegisterInformation({
                 }}
               />
             </Grid>
-            <Grid item lg={6} md={6} xs={6}>
+            <Grid item lg={6} md={6} xs={12}>
               <FormInput
                 name="website"
                 classes={{ root: classes.formInput }}
@@ -560,7 +560,7 @@ export default function RightBarArtistRegisterInformation({
           </Grid>
 
           <Grid container spacing={2}>
-            <Grid item lg={6} md={6} xs={6}>
+            <Grid item lg={6} md={6} xs={12}>
               <FormInput
                 name="facebook"
                 classes={{ root: classes.formInput }}
@@ -577,7 +577,7 @@ export default function RightBarArtistRegisterInformation({
                 }}
               />
             </Grid>
-            <Grid item lg={6} md={6} xs={6}>
+            <Grid item lg={6} md={6} xs={12}>
               <FormInput
                 name="twitter"
                 classes={{ root: classes.formInput }}

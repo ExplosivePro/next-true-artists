@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 
 // Material UI Components
-import { makeStyles } from "@material-ui/core/styles";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography } from "@material-ui/core";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -21,51 +21,56 @@ import { editArtistProfile } from "../api";
 // Context
 import { useApp } from "../contexts";
 
-const useStyles = makeStyles({
-  root: {
-    height: "100%",
-    position: "relative",
-  },
-  groupInput: {
-    marginBottom: "4px",
-  },
-  titleText: {
-    fontWeight: 600,
-    marginBottom: "10px",
-  },
-  titleWrapper: {
-    marginBottom: "72px",
-  },
-  formInput: {
-    margin: "12px 0",
-  },
-  formWrapper: {
-    width: "70%",
-    height: "100%",
-    position: "relative",
-  },
-  buttonWrapper: {
-    marginTop: "25px",
-    paddingBottom: "100px",
-  },
-  box: {
-    backgroundColor: colors.white,
-    borderRadius: "6px",
-    padding: "15px",
-    margin: "15px 0",
-  },
-  formControlLabel: {
-    width: "100%",
-    flexDirection: "inherit",
-  },
-  checkBox: {
-    position: "absolute",
-    right: 0,
-  },
-  checkedIcon: {
-    color: colors.standardGreen,
-  },
-});
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    root: {
+      height: "100%",
+      position: "relative",
+    },
+    groupInput: {
+      marginBottom: "4px",
+    },
+    titleText: {
+      fontWeight: 600,
+      marginBottom: "10px",
+    },
+    titleWrapper: {
+      marginBottom: "72px",
+    },
+    formInput: {
+      margin: "12px 0",
+    },
+    formWrapper: {
+      width: "70%",
+      height: "100%",
+      position: "relative",
+      [theme.breakpoints.down("sm")]: {
+        width: "100%",
+      },
+    },
+    buttonWrapper: {
+      marginTop: "25px",
+      paddingBottom: "100px",
+    },
+    box: {
+      backgroundColor: colors.white,
+      borderRadius: "6px",
+      padding: "15px",
+      margin: "15px 0",
+    },
+    formControlLabel: {
+      width: "100%",
+      flexDirection: "inherit",
+    },
+    checkBox: {
+      position: "absolute",
+      right: 0,
+    },
+    checkedIcon: {
+      color: colors.standardGreen,
+    },
+  }),
+);
 
 export default function RightBarRegisterWorkStyle({ data = [], currentUserId, currentData, onSkip, onNext }: Props) {
   const classes = useStyles();
@@ -105,7 +110,7 @@ export default function RightBarRegisterWorkStyle({ data = [], currentUserId, cu
       if (!error) {
         onNext && onNext(optionValues);
       } else {
-        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        app.showErrorDialog(true, errors ? errors.toString() : "We are not to complete your registration. Try again");
       }
     }
   };

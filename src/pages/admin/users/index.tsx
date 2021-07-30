@@ -24,9 +24,9 @@ import AdminBody from "src/components/Admin/AdminBody";
 import handleApiErrors from "src/components/Admin/handleApiErrors";
 import Loading from "src/components/Loading";
 
-import { getUserList } from "./api";
-import { user_roles } from "./constants";
-import { useStyles, StyledTableCell, StyledTableRow } from "./styles";
+import { getUserList } from "src/api/admin/users";
+import { user_roles } from "src/constants/admin/users";
+import { useStyles, StyledTableCell, StyledTableRow } from "src/styles/admin/users";
 
 export default function Users() {
   const classes = useStyles();

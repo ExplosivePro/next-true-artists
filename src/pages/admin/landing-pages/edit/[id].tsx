@@ -37,14 +37,21 @@ import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
 import { InfoAlert, TextInput, SelectInput } from "src/components/Admin/FormInputs";
+import { JoditUploadButton } from "src/components/Admin/JoditCustomUploadButton";
 
-import { getLandingPage, editLandingPage } from "../api";
-import { landingPage_status } from "../constants";
-import { useStyles, StyledTableCell, StyledTableRow } from "../styles";
+import { getLandingPage, editLandingPage } from "src/api/admin/landingPages";
+import { landingPage_status } from "src/constants/admin/landingPages";
+import { useStyles, StyledTableCell, StyledTableRow } from "src/styles/admin/landingPages";
 
 export default function EditLandingPages() {
   const classes = useStyles();
   const router = useRouter();
+
+  // Jodit editor config
+  const config = {
+    removeButtons: ["image"],
+    extraButtons: JoditUploadButton,
+  };
 
   const [pageId, setPageId] = useState("");
 
@@ -239,6 +246,8 @@ export default function EditLandingPages() {
                           rules={{ required: true }}
                           render={(props: any) => (
                             <JoditEditor
+                              // @ts-ignore
+                              config={config}
                               value={props?.value ?? ""}
                               onChange={(newContent) => {
                                 props.onChange(newContent);
@@ -250,9 +259,6 @@ export default function EditLandingPages() {
                         {errors.content && (
                           <FormHelperText error>{`Required ! ${errors.content?.message}`}</FormHelperText>
                         )}
-                        <Typography variant="caption" gutterBottom>
-                          <i>(Drag and drop or copy and paste images)</i>
-                        </Typography>
                       </FormControl>
                     </Grid>
                   </Grid>
@@ -271,6 +277,7 @@ export default function EditLandingPages() {
                           <input
                             className={classes.fileInput}
                             type={"file"}
+                            accept="image/*"
                             ref={hiddenFileInput}
                             onChange={(e) => {
                               if (e.target.files) handleAvatarChange(e.target.files[0]);
