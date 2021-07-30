@@ -87,10 +87,10 @@ export default function RightBarRegisterTattooUpload({ role, currentUserId, onPr
       if (!error) {
         return data;
       } else {
-        app.showErrorDialog(true, errors ? errors.toString() : "Upload fail");
+        app.showErrorDialog(true, errors ? errors.toString() : "We are not able to upload your photos. Try again");
       }
     } else {
-      app.showErrorDialog(true, "Upload fail");
+      app.showErrorDialog(true, "We are not able to upload your photos. Try again");
     }
   };
 
@@ -138,7 +138,7 @@ export default function RightBarRegisterTattooUpload({ role, currentUserId, onPr
 
       return data;
     } else {
-      app.showErrorDialog(true, errors ? errors.toString() : "Upload fail");
+      app.showErrorDialog(true, errors ? errors.toString() : "We are not able to upload your photos. Try again");
     }
   };
 

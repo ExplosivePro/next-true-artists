@@ -1,3 +1,3 @@
 export default function Dashboard() {
-  return <div>Dashboard WIP</div>;
+  return <div>Welcome to TrueArtists</div>;
 }

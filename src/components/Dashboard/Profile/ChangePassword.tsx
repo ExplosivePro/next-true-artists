@@ -53,7 +53,7 @@ export default function ChangePassword() {
     const changePasswordResponse = await changePassword({ password: newPassword, confirmPassword });
 
     if (changePasswordResponse.error) {
-      showErrorDialog(true, "Change password fail");
+      showErrorDialog(true, "We were not able to change your password. Try again.");
     } else {
       showSuccessDialog(true, "Change password successfully");
     }

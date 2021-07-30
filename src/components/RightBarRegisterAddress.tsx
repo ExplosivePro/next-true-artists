@@ -84,7 +84,7 @@ export default function RightBarRegisterAddress({ onPreviousStep, onNext, curren
       if (!error) {
         onNext && onNext(data.id, { streetAddress, streetAddress2, zipCode, country, phoneNumber });
       } else {
-        app.showErrorDialog(true, errors ? errors.toString() : "Register fail");
+        app.showErrorDialog(true, errors ? errors.toString() : "We are not to complete your registration. Try again");
       }
     }
   };

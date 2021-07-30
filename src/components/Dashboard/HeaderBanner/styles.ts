@@ -65,6 +65,9 @@ const useStyles = makeStyles((theme) =>
       position: "relative",
       width: "50%",
       borderRadius: "5px",
+      [theme.breakpoints.down("sm")]: {
+        width: "100%",
+      },
     },
     modalCloseButton: {
       position: "absolute",

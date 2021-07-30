@@ -5,6 +5,13 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const importJodit = () => import("jodit-react");
+const JoditEditor = dynamic(importJodit, {
+  ssr: false,
+});
+import "jodit/build/jodit.min.css";
 
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
@@ -26,6 +33,7 @@ import AdminBody from "src/components/Admin/AdminBody";
 import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
 import { InfoAlert, TextInput, DatePickerInput } from "src/components/Admin/FormInputs";
+import { JoditUploadButton } from "src/components/Admin/JoditCustomUploadButton";
 
 import { createConvention } from "src/api/admin/conventions";
 import { countryList } from "src/constants";
@@ -34,6 +42,12 @@ import { useStyles } from "src/styles/admin/conventions";
 export default function EditConventions() {
   const classes = useStyles();
   const router = useRouter();
+
+  // Jodit editor config
+  const config = {
+    removeButtons: ["image"],
+    extraButtons: JoditUploadButton,
+  };
 
   // Create a reference to the hidden file input element
   const hiddenFileInput = React.useRef(null);
@@ -298,18 +312,28 @@ export default function EditConventions() {
                   </Grid>
 
                   <Grid item xs={12} className={classes.gridSpacer}>
-                    <Typography>Description *</Typography>
-                    <Card variant="outlined" className={classes.cardNoBorder}>
-                      <TextInput
-                        name="description"
-                        register={register}
-                        required={true}
-                        multiline={true}
-                        rows={4}
-                        errors={!!errors.description}
-                        errorMessage={errors.description?.message}
+                    <FormControl fullWidth error={errors.description ? true : false} required={true}>
+                      <Typography>Description *</Typography>
+                      <Controller
+                        name={"description"}
+                        control={control}
+                        rules={{ required: true }}
+                        render={(props: any) => (
+                          <JoditEditor
+                            // @ts-ignore
+                            config={config}
+                            value={props?.value ?? ""}
+                            onBlur={(newContent) => {
+                              props.onChange(newContent);
+                            }}
+                          />
+                        )}
                       />
-                    </Card>
+
+                      {errors.description && (
+                        <FormHelperText error>{`Required ! ${errors.description?.message}`}</FormHelperText>
+                      )}
+                    </FormControl>
                   </Grid>
                 </Grid>
               </Grid>
@@ -327,6 +351,7 @@ export default function EditConventions() {
                         <input
                           className={classes.fileInput}
                           type={"file"}
+                          accept="image/*"
                           ref={hiddenFileInput}
                           onChange={(e) => {
                             if (e.target.files) handleImageChange(e.target.files[0]);

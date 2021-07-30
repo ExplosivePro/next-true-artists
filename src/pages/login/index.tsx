@@ -298,7 +298,7 @@ export default function Login() {
               fullWidth
               href={"/register-selection"}
             >
-              Join as artist or studio
+              Join as a tattoo artist or studio
             </PrimaryButton>
           </form>
         </Grid>
