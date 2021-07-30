@@ -415,7 +415,6 @@ export async function socialLoginUser(socialId: number, email: string): Promise<
 
 // Request to reset password
 export async function requestResetPassword(email: any | undefined): Promise<RestApi.Response> {
-  console.log(email);
   return await api
     .post("/api/v1/passwords", email)
     .then((response) => {
@@ -437,7 +436,7 @@ export async function resetPassword({
   token: string | string[] | undefined;
 }): Promise<RestApi.Response> {
   return await api
-    .put(`/api/v1/passwords/${token ? token.toString() : ""}`, {
+    .put(`/api/v1/passwords/change_password?token=${token ? token.toString() : ""}`, {
       password,
       password_confirmation: confirmPassword,
     })
