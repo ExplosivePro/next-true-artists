@@ -414,11 +414,10 @@ export async function socialLoginUser(socialId: number, email: string): Promise<
 }
 
 // Request to reset password
-export async function requestResetPassword(email: { email: any }): Promise<RestApi.Response> {
+export async function requestResetPassword(email: any | undefined): Promise<RestApi.Response> {
+  console.log(email);
   return await api
-    .post("/api/v1/passwords", {
-      email,
-    })
+    .post("/api/v1/passwords", email)
     .then((response) => {
       return { error: false, data: response.data, errors: "" };
     })
