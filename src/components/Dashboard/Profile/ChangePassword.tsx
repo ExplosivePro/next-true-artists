@@ -70,6 +70,7 @@ export default function ChangePassword() {
         fullWidth
         control={control}
         variant={"outlined"}
+        type={"password"}
         defaultValue={""}
         errors={errors.newPassword}
       />
@@ -82,6 +83,7 @@ export default function ChangePassword() {
         fullWidth
         control={control}
         variant={"outlined"}
+        type={"password"}
         defaultValue={""}
         errors={errors.confirmPassword}
       />
@@ -113,6 +115,6 @@ export default function ChangePassword() {
 }
 
 export const titleHeader = {
-  title: "Password Settings",
+  title: "Change your password",
   subTitle: "Change or reset your account password",
 };

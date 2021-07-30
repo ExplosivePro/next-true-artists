@@ -210,115 +210,95 @@ export const baseTwitterUrl = "twitter.com/";
 // Placements
 export const placements = [
   {
-    value: "Ankle",
     label: "Ankle",
+    value: "Ankle",
   },
   {
-    value: "Back - full",
-    label: "back_full",
+    label: "Back",
+    value: "back",
   },
   {
-    value: "Back - lower",
-    label: "back_lower",
+    label: "Ear",
+    value: "ear",
   },
   {
-    value: "Back - upper",
-    label: "back_upper",
-  },
-  {
-    value: "Behind ear",
-    label: "behind_ear",
-  },
-  {
-    value: "Calf",
     label: "Calf",
+    value: "Calf",
   },
   {
-    value: "Chest",
     label: "Chest",
+    value: "Chest",
   },
   {
-    value: "Elbow",
     label: "Elbow",
+    value: "Elbow",
   },
   {
-    value: "Foot",
     label: "Foot",
+    value: "Foot",
   },
   {
-    value: "Forearm - inner",
-    label: "forearm_inner",
+    label: "Forearm",
+    value: "forearm_inner",
   },
   {
-    value: "Forearm - outer",
-    label: "forearm_outer",
+    label: "Full sleeve",
+    value: "full_sleeve",
   },
   {
-    value: "Full sleeve",
-    label: "full_sleeve",
-  },
-  {
-    value: "Hand",
     label: "Hand",
+    value: "Hand",
   },
   {
-    value: "Hip",
     label: "Hip",
+    value: "Hip",
   },
   {
-    value: "Knee",
     label: "Knee",
+    value: "Knee",
   },
   {
-    value: "Neck",
     label: "Neck",
+    value: "Neck",
   },
   {
-    value: "Other",
     label: "Other",
+    value: "Other",
   },
   {
-    value: "Ribs",
     label: "Ribs",
+    value: "Ribs",
   },
   {
-    value: "Shin",
     label: "Shin",
+    value: "Shin",
   },
   {
-    value: "Shoulder blade",
-    label: "shoulder_blade",
+    label: "Shoulder",
+    value: "shoulder",
   },
   {
-    value: "Sternum",
     label: "Sternum",
+    value: "Sternum",
   },
   {
-    value: "Stomach",
     label: "Stomach",
+    value: "Stomach",
   },
   {
-    value: "Thigh - back",
-    label: "thigh_back",
+    label: "Thigh",
+    value: "thigh",
   },
   {
-    value: "Thigh - front",
-    label: "thigh_front",
-  },
-  {
-    value: "Throat",
     label: "Throat",
+    value: "Throat",
   },
   {
-    value: "Upper arm - inner",
-    label: "upper_arm_inner",
+    label: "Upper arm",
+    value: "upper_arm",
   },
   {
-    value: "Upper arm - outer",
-    label: "upper_arm_outer",
-  },
-  {
-    value: "Wrist",
+    label: "Wrist",
     label: "Wrist",
   },
 ];
