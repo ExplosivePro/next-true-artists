@@ -1,1 +1,5 @@
-export const article_status = ["draft", "published", "flagged"];
+export const articleStatus = {
+  Draft: "draft",
+  Published: "published",
+  Flagged: "flagged",
+};

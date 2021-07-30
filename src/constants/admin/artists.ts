@@ -1,1 +1,5 @@
-export const artist_status = ["pending", "approved", "rejected"];
+export const artistStatus = {
+  Pending: "pending",
+  Approved: "approved",
+  Rejected: "rejected",
+};

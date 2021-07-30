@@ -40,7 +40,7 @@ import { InfoAlert, TextInput, SelectInput } from "src/components/Admin/FormInpu
 import { JoditUploadButton } from "src/components/Admin/JoditCustomUploadButton";
 
 import { getArticle, editArticle } from "src/api/admin/articles";
-import { article_status } from "src/constants/admin/articles";
+import { articleStatus } from "src/constants/admin/articles";
 import { useStyles, StyledTableCell, StyledTableRow } from "src/styles/admin/articles";
 
 export default function EditArticles() {
@@ -202,7 +202,10 @@ export default function EditArticles() {
                         label="Status"
                         errors={!!errors.status}
                         errorMessage={errors.status?.message}
-                        dropDownList={article_status.map((status) => ({ id: status, name: status }))}
+                        dropDownList={Object.entries(articleStatus).map(([status, value]) => ({
+                          id: value,
+                          name: status,
+                        }))}
                       />
                     </Grid>
 
