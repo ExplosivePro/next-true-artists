@@ -25,7 +25,7 @@ import handleApiErrors from "src/components/Admin/handleApiErrors";
 import Loading from "src/components/Loading";
 
 import { getUserList } from "src/api/admin/users";
-import { user_roles } from "src/constants/admin/users";
+import { userRoles } from "src/constants/admin/users";
 import { useStyles, StyledTableCell, StyledTableRow } from "src/styles/admin/users";
 
 export default function Users() {
@@ -111,7 +111,7 @@ export default function Users() {
                 onChange={(e) => handleRoleFilterChange(e.target.value)}
               >
                 <MenuItem value="">Clear Filter...</MenuItem>
-                {user_roles.map((role, index) => (
+                {userRoles.map((role, index) => (
                   <MenuItem value={role} key={index}>
                     {role}
                   </MenuItem>
