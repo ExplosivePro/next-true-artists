@@ -38,6 +38,9 @@ export const useStyles = makeStyles({
     margin: "2px",
     padding: 0,
   },
+  gridSpacer: {
+    marginTop: "15px",
+  },
 });
 
 export const StyledTableCell = withStyles((theme: Theme) =>

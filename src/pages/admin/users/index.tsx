@@ -22,6 +22,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 
 import AdminBody from "src/components/Admin/AdminBody";
 import handleApiErrors from "src/components/Admin/handleApiErrors";
+import PrimaryButton from "src/components/PrimaryButton";
 import Loading from "src/components/Loading";
 
 import { getUserList } from "src/api/admin/users";
@@ -96,7 +97,7 @@ export default function Users() {
               </Breadcrumbs>
             </Grid>
 
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={1}>
               {userListIsFetching ? <Loading /> : null}
             </Grid>
 
@@ -119,7 +120,7 @@ export default function Users() {
               </TextField>
             </Grid>
 
-            <Grid item xs={12} sm={6} md={4} lg={4}>
+            <Grid item xs={12} sm={3}>
               <Autocomplete
                 freeSolo
                 options={
@@ -140,6 +141,14 @@ export default function Users() {
                   />
                 )}
               />
+            </Grid>
+
+            <Grid item xs={12} sm={2}>
+              <Grid container item justify="center">
+                <PrimaryButton primaryColor onClick={() => router.push(`${router.pathname}/create`)}>
+                  Add New User
+                </PrimaryButton>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
