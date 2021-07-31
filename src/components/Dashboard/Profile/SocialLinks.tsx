@@ -197,6 +197,6 @@ export default function SocialLinks({ data }: { data: any }) {
 }
 
 export const titleHeader = {
-  title: "Social Profiles",
-  subTitle: "Add elsewhere links to your profile",
+  title: "Social Media Profiles",
+  subTitle: "Add your social media profiles",
 };

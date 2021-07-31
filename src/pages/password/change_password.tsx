@@ -100,7 +100,7 @@ export default function ResetPassword() {
   const resolver = useYupValidationResolver(validationSchema);
   const { control, handleSubmit, errors } = useForm({ resolver });
 
-  const onSubmit = async ({ password, confirmPassword }: FormSubmit) => {
+  const onSubmit = async ({ password, confirmPassword }: passwordResetParams) => {
     const { error, errors } = await resetPassword({
       token,
       password,
@@ -109,12 +109,11 @@ export default function ResetPassword() {
 
     // No error happens
     if (!error) {
-      app.showErrorDialog(true, "Change password successfully");
+      app.showSuccessDialog(true, "Password changed successfully. Login to proceed");
 
-      // Redirect to login page
-      router.replace("/login");
+      location.replace("/login");
     } else {
-      app.showErrorDialog(true, errors ? errors.toString() : "Internal Server Error");
+      app.showErrorDialog(true, errors ? errors.toString() : "We are not able to change your password. Try again.");
     }
   };
 
@@ -134,7 +133,7 @@ export default function ResetPassword() {
             </Link>
 
             <Typography variant={"h5"} display={"inline"} className={classes.title}>
-              Reset Password
+              Change your password
             </Typography>
           </Grid>
 
@@ -175,7 +174,7 @@ export default function ResetPassword() {
               fullWidth
               primaryColor
             >
-              Reset Password
+              Change Password
             </PrimaryButton>
           </form>
         </Grid>
@@ -184,7 +183,7 @@ export default function ResetPassword() {
   );
 }
 
-interface FormSubmit {
+interface passwordResetParams {
   password: string;
   confirmPassword: string;
 }
