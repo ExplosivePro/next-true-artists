@@ -278,7 +278,7 @@ export default function Articles() {
                         <StyledTableCell>{article?.user?.full_name}</StyledTableCell>
                         <StyledTableCell>{showStatus(article?.status)}</StyledTableCell>
                         <StyledTableCell>
-                          <Link href={`${router.pathname}/edit/${article?.id}`}>
+                          <Link href={`${router.pathname}/${article?.id}`}>
                             <a className={classes.listLink}>Edit</a>
                           </Link>
                         </StyledTableCell>
