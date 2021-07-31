@@ -13,7 +13,7 @@ import CardContent from "@material-ui/core/CardContent";
 import AdminBody from "src/components/Admin/AdminBody";
 import handleApiErrors from "src/components/Admin/handleApiErrors";
 import PrimaryButton from "src/components/PrimaryButton";
-import { TextInput, PasswordInput, InfoAlert } from "src/components/Admin/FormInputs";
+import { TextInput, InfoAlert } from "src/components/Admin/FormInputs";
 
 import { useStyles } from "src/styles/admin/users";
 import { createUser } from "src/api/admin/users";
@@ -31,8 +31,6 @@ export default function User() {
     otherNames: "",
     email: "",
     email_confirmation: "",
-    password: "",
-    password_confirmation: "",
   });
 
   const {
@@ -54,7 +52,10 @@ export default function User() {
 
     // Process payload
     const formData = new FormData();
-    const payload = processPayload(formValues);
+
+    const { firstName, lastName, otherNames, email } = formValues;
+    const payload = { full_name: `${firstName} ${otherNames} ${lastName}`, email };
+
     Object.entries(payload).map(([key, value]) => formData.append(key, value));
 
     try {
@@ -76,39 +77,18 @@ export default function User() {
   };
 
   const validateForm = () => {
-    let errors = false;
-
-    // Validate presence of recipients and/or custom emails
+    // Validate Email
     if (getValues("email") !== getValues("email_confirmation")) {
-      setError("email_confirmation", { type: "manual", message: `Email mismatch !` });
-      setError("email", { type: "manual", message: `Email mismatch !` });
+      setError("email_confirmation", { type: "manual", message: `Emails do not match !` });
+      setError("email", { type: "manual", message: `Emails do not match !` });
 
       setTimeout(() => {
         clearErrors("email");
         clearErrors("email_confirmation");
       }, 3500);
-      errors = true;
-    }
 
-    // Validate presence of send-when and/or send-now
-    if (getValues("password") !== getValues("password_confirmation")) {
-      setError("password", { type: "manual", message: `Password mismatch !` });
-      setError("password_confirmation", { type: "manual", message: `Password mismatch !` });
-
-      setTimeout(() => {
-        clearErrors("password");
-        clearErrors("password_confirmation");
-      }, 3500);
-      errors = true;
-    }
-    return errors;
-  };
-
-  const processPayload = (formValues: { [T: string]: any }) => {
-    const { firstName, lastName, otherNames, email, password, password_confirmation } = formValues;
-    const full_name = `${firstName} ${otherNames} ${lastName}`;
-    const formData = { full_name, email, password, password_confirmation };
-    return formData;
+      return true;
+    } else return false;
   };
 
   const handleCancel = () => {
@@ -198,28 +178,6 @@ export default function User() {
                           label="Confirm Email Address *"
                           errors={!!errors.email_confirmation}
                           errorMessage={errors.email_confirmation?.message}
-                        />
-                      </Grid>
-
-                      <Grid item xs={12}>
-                        <PasswordInput
-                          name="password"
-                          register={register}
-                          required={true}
-                          label="Password *"
-                          errors={!!errors.password}
-                          errorMessage={errors.password?.message}
-                        />
-                      </Grid>
-
-                      <Grid item xs={12}>
-                        <PasswordInput
-                          name="password_confirmation"
-                          register={register}
-                          required={true}
-                          label="Confirm Password *"
-                          errors={!!errors.password_confirmation}
-                          errorMessage={errors.password_confirmation?.message}
                         />
                       </Grid>
                     </Grid>
