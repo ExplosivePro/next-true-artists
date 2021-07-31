@@ -1,1 +1,5 @@
-export const landingPage_status = ["draft", "published", "archived"];
+export const landingPageStatus = {
+  Draft: "draft",
+  Published: "published",
+  Archived: "archived",
+};
