@@ -299,7 +299,7 @@ export const placements = [
   },
   {
     label: "Wrist",
-    label: "Wrist",
+    value: "Wrist",
   },
 ];
 
