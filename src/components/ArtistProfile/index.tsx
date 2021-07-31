@@ -122,7 +122,11 @@ export default function ArtistProfile({
           })}
 
           <Typography variant={"h6"} className={classes.sectionTitle}>
-            Work Styles
+            Tattoo Specialization
+          </Typography>
+
+          <Typography variant={"caption"} display={"block"}>
+            Select tattoo styles you specialize in.
           </Typography>
 
           <div className={classes.workStyleWrapper}>

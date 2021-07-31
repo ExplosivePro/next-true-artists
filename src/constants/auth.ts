@@ -22,7 +22,7 @@ export const unauthRoutes = [
   "/dashboard/manage-clients/create",
   "/dashboard/manage-clients/[id]",
   "/dashboard/invitations",
-  "/password/[type]",
+  "/password/change_password",
 ];
 
 // Outside this list, route will be remember if they access to page without login, after login, they will be redirected to previous page

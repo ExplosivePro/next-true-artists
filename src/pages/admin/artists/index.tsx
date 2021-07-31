@@ -12,6 +12,11 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import Alert from "@material-ui/lab/Alert";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
+import Chip from "@material-ui/core/Chip";
+
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CancelIcon from "@material-ui/icons/Cancel";
+import AdjustIcon from "@material-ui/icons/Adjust";
 
 import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
@@ -25,7 +30,7 @@ import handleApiErrors from "src/components/Admin/handleApiErrors";
 import Loading from "src/components/Loading";
 
 import { getArtistList } from "src/api/admin/artists";
-import { artist_status } from "src/constants/admin/artists";
+import { artistStatus } from "src/constants/admin/artists";
 import { useStyles, StyledTableCell, StyledTableRow } from "src/styles/admin/artists";
 
 export default function Artists() {
@@ -78,6 +83,35 @@ export default function Artists() {
     value ? setStatusFilter({ status: value }) : setStatusFilter({});
   };
 
+  const showStatus = (value: string) =>
+    value === artistStatus.Approved ? (
+      <Chip
+        icon={<CheckCircleIcon fontSize="small" className={classes.greenIcon} />}
+        label="Approved"
+        variant="outlined"
+        size="small"
+        className={classes.tableChip}
+      />
+    ) : value === artistStatus.Rejected ? (
+      <Chip
+        icon={<CancelIcon fontSize="small" className={classes.redIcon} />}
+        label="Rejected"
+        variant="outlined"
+        size="small"
+        className={classes.tableChip}
+      />
+    ) : value === artistStatus.Pending ? (
+      <Chip
+        icon={<AdjustIcon fontSize="small" />}
+        label="Pending"
+        variant="outlined"
+        size="small"
+        className={classes.tableChip}
+      />
+    ) : (
+      value
+    );
+
   return (
     <AdminBody>
       <Head>
@@ -111,8 +145,8 @@ export default function Artists() {
                 onChange={(e) => handleStatusFilterChange(e.target.value)}
               >
                 <MenuItem value="">Clear Filter...</MenuItem>
-                {artist_status.map((status, index) => (
-                  <MenuItem value={status} key={index}>
+                {Object.entries(artistStatus).map(([status, value], index) => (
+                  <MenuItem value={value} key={index}>
                     {status}
                   </MenuItem>
                 ))}
@@ -189,7 +223,7 @@ export default function Artists() {
                         <StyledTableCell>{artist.country}</StyledTableCell>
                         <StyledTableCell>{artist.state}</StyledTableCell>
                         <StyledTableCell>{artist.city}</StyledTableCell>
-                        <StyledTableCell>{artist.status}</StyledTableCell>
+                        <StyledTableCell>{showStatus(artist?.status)}</StyledTableCell>
                       </StyledTableRow>
                     ))}
                   </TableBody>

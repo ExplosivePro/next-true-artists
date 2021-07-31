@@ -165,7 +165,7 @@ export default function RightBarRegisterTattooUpload({ role, currentUserId, onPr
       <div className={classes.formWrapper}>
         <div className={classes.titleWrapper}>
           <Typography variant={"h5"} className={classes.titleText}>
-            {"Upload Images of Your Work"}
+            {"Upload Tattoo Images of Your Work"}
           </Typography>
           <Typography>
             Upload a minimum of 5 images of your best tattoo artwork in order to complete your profile and to be

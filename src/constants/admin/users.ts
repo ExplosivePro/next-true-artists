@@ -1,3 +1,3 @@
-export const user_roles = ["admin", "artist", "studio_manager", "regular"];
+export const userRoles = ["admin", "artist", "studio_manager", "regular"];
 
-export const user_status = ["active", "inactive", "suspended", "closed"];
+export const userStatus = ["active", "inactive", "suspended", "closed"];

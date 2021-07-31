@@ -41,6 +41,9 @@ export const useStyles = makeStyles({
   textCell: {
     textTransform: "capitalize",
   },
+  gridSpacer: {
+    marginTop: "15px",
+  },
 });
 
 export const StyledTableCell = withStyles((theme: Theme) =>

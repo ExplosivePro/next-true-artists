@@ -16,6 +16,11 @@ export const updateUser = async (payload: any, userId: number) => {
   return data;
 };
 
+export const createUser = async (payload: any) => {
+  const { data } = await api.post(`/api/v1/admin/users`, payload);
+  return data;
+};
+
 // reset password
 export const resetUserPassword = async (payload: { email: string }) => {
   const { data } = await api.post(`/api/v1/admin/passwords`, payload);

@@ -90,9 +90,12 @@ export default function Register() {
 
     // No error happens
     if (!error) {
-      app.showErrorDialog(true, "A reset password link has been just sent to your email. Please check it");
+      app.showSuccessDialog(true, "A reset password link has been just sent to your email. Please check it");
     } else {
-      app.showErrorDialog(true, errors ? errors.toString() : "Internal Server Error");
+      app.showErrorDialog(
+        true,
+        errors ? errors.toString() : "We encountered an error while processing your request. Try again.",
+      );
     }
   };
 

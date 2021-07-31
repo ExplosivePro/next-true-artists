@@ -12,6 +12,11 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import Alert from "@material-ui/lab/Alert";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
+import Chip from "@material-ui/core/Chip";
+
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import PageviewIcon from "@material-ui/icons/Pageview";
+import AdjustIcon from "@material-ui/icons/Adjust";
 
 import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
@@ -34,7 +39,7 @@ import Loading from "src/components/Loading";
 import { InfoAlert } from "src/components/Admin/FormInputs";
 
 import { getLandingPageList, deleteLandingPage } from "src/api/admin/landingPages";
-import { landingPage_status } from "src/constants/admin/landingPages";
+import { landingPageStatus } from "src/constants/admin/landingPages";
 import { useStyles, StyledTableCell, StyledTableRow } from "src/styles/admin/landingPages";
 
 import getConfig from "next/config";
@@ -121,6 +126,35 @@ export default function LandingPages() {
     value ? setStatusFilter({ status: value }) : setStatusFilter({});
   };
 
+  const showStatus = (value: string) =>
+    value === landingPageStatus.Published ? (
+      <Chip
+        icon={<CheckCircleIcon fontSize="small" className={classes.greenIcon} />}
+        label="Published"
+        variant="outlined"
+        size="small"
+        className={classes.tableChip}
+      />
+    ) : value === landingPageStatus.Draft ? (
+      <Chip
+        icon={<PageviewIcon fontSize="small" className={classes.blueIcon} />}
+        label="Draft"
+        variant="outlined"
+        size="small"
+        className={classes.tableChip}
+      />
+    ) : value === landingPageStatus.Archived ? (
+      <Chip
+        icon={<AdjustIcon fontSize="small" className={classes.blueIcon} />}
+        label="Archived"
+        variant="outlined"
+        size="small"
+        className={classes.tableChip}
+      />
+    ) : (
+      <Chip label={value} variant="outlined" size="small" className={classes.tableChip} />
+    );
+
   return (
     <AdminBody>
       <Head>
@@ -158,8 +192,8 @@ export default function LandingPages() {
                 onChange={(e) => handleStatusFilterChange(e.target.value)}
               >
                 <MenuItem value="">Clear Filter...</MenuItem>
-                {landingPage_status.map((status, index) => (
-                  <MenuItem value={status} key={index}>
+                {Object.entries(landingPageStatus).map(([status, value], index) => (
+                  <MenuItem value={value} key={index}>
                     {status}
                   </MenuItem>
                 ))}
@@ -224,7 +258,7 @@ export default function LandingPages() {
                     <TableRow>
                       <StyledTableCell>Title</StyledTableCell>
                       <StyledTableCell>Page Title</StyledTableCell>
-                      <StyledTableCell>Status</StyledTableCell>
+                      <StyledTableCell className={classes.statusHeader}>Status</StyledTableCell>
                       <StyledTableCell className={classes.statusHeader} colSpan={2}>
                         Actions
                       </StyledTableCell>
@@ -242,7 +276,7 @@ export default function LandingPages() {
                           </Link>
                         </StyledTableCell>
                         <StyledTableCell>{landingPage?.page_title}</StyledTableCell>
-                        <StyledTableCell>{landingPage?.status}</StyledTableCell>
+                        <StyledTableCell>{showStatus(landingPage?.status)}</StyledTableCell>
                         <StyledTableCell className={classes.statusHeader}>
                           <Link href={`${router.pathname}/edit/${landingPage?.id}`}>
                             <a className={classes.listLink}>Edit</a>
