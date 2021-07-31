@@ -82,6 +82,7 @@ export default function EditArticles() {
     title: "",
     introduction: "",
     page_title: "",
+    meta_description: "",
     content: "",
   });
 
@@ -103,19 +104,16 @@ export default function EditArticles() {
       setValue("title", articleData?.title);
       setValue("introduction", articleData?.introduction);
       setValue("page_title", articleData?.page_title);
+      setValue("meta_description", articleData?.meta_description);
       setValue("content", articleData?.content);
     }
   }, [articleDataStatus]);
 
   const onSubmit = async (formValues: { [T: string]: any }) => {
-    const { title, page_title, introduction } = formValues;
     const formData = new FormData();
 
     Object.entries(formValues).map(([key, value]) => formData.append(key, value));
-    formData.append(
-      "meta_description",
-      JSON.stringify({ title: title, page_title: page_title, introduction: introduction }),
-    );
+
     if (image)
       if (image === "remove") formData.append("image", "");
       else formData.append("image", image);
@@ -237,6 +235,18 @@ export default function EditArticles() {
                         label="Introduction *"
                         errors={!!errors.introduction}
                         errorMessage={errors.introduction?.message}
+                      />
+                    </Grid>
+
+                    <Grid item xs={10}>
+                      <TextInput
+                        multiline={true}
+                        name="meta_description"
+                        register={register}
+                        required={false}
+                        label="Meta Description"
+                        errors={!!errors.meta_description}
+                        errorMessage={errors.meta_description?.message}
                       />
                     </Grid>
 

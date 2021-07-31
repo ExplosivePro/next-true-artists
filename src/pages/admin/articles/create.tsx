@@ -56,6 +56,7 @@ export default function CreateNew() {
     title: "",
     introduction: "",
     page_title: "",
+    meta_description: "",
     content: "",
   });
 
@@ -71,14 +72,10 @@ export default function CreateNew() {
   });
 
   const onSubmit = async (formValues: { [T: string]: any }) => {
-    const { title, page_title, introduction } = formValues;
     const formData = new FormData();
 
     Object.entries(formValues).map(([key, value]) => formData.append(key, value));
-    formData.append(
-      "meta_description",
-      JSON.stringify({ title: title, page_title: page_title, introduction: introduction }),
-    );
+
     if (image) formData.append("image", image);
 
     try {
@@ -175,6 +172,18 @@ export default function CreateNew() {
                   <Typography variant="caption">
                     <i>Provide a short description of the article.</i>
                   </Typography>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextInput
+                    multiline={true}
+                    name="meta_description"
+                    register={register}
+                    required={false}
+                    label="Meta Description"
+                    errors={!!errors.meta_description}
+                    errorMessage={errors.meta_description?.message}
+                  />
                 </Grid>
               </Grid>
             </Grid>
