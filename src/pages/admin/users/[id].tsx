@@ -29,7 +29,7 @@ import PrimaryButton from "src/components/PrimaryButton";
 import { TextInput, SelectInput, InfoAlert } from "src/components/Admin/FormInputs";
 
 import { useStyles } from "src/styles/admin/users";
-import { user_roles, user_status } from "src/constants/admin/users";
+import { userRoles, userStatus } from "src/constants/admin/users";
 import { getUser, updateUser, resetUserPassword } from "src/api/admin/users";
 
 export default function User() {
@@ -287,7 +287,7 @@ function EditProfile({
                   label="Role *"
                   errors={!!errors.role}
                   errorMessage={errors.role?.message}
-                  dropDownList={user_roles.map((role) => ({ id: role, name: role }))}
+                  dropDownList={userRoles.map((role) => ({ id: role, name: role }))}
                 />
               </Grid>
 
@@ -298,7 +298,7 @@ function EditProfile({
                   label="Status"
                   errors={!!errors.status}
                   errorMessage={errors.status?.message}
-                  dropDownList={user_status.map((status) => ({ id: status, name: status }))}
+                  dropDownList={userStatus.map((status) => ({ id: status, name: status }))}
                 />
               </Grid>
             </Grid>
