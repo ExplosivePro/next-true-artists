@@ -1,6 +1,6 @@
 // External
 import clsx from "clsx";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // Material UI Components
 import { Grid, Typography } from "@material-ui/core";
@@ -17,10 +17,14 @@ import PrimaryButton from "../../PrimaryButton";
 import Loading from "../../Loading";
 
 // Contexts
-import { placements, colors as colorList } from "../../../constants";
+import { placements } from "../../../constants";
 
 import useStyles from "./styles";
 import { useRouter } from "next/router";
+
+// APIs
+import { getWorkingStyleList } from "../../../api";
+import MultipleSelection from "../../ArtistProfile/MutilpleSelection";
 
 const ImageItem = ({ data, className, editMode = false }: { data: any; className?: any; editMode?: boolean }) => {
   // Import class styles
@@ -60,7 +64,7 @@ const AddImageItem = ({
           results.push({
             file: fileUploaded,
             preview: reader.result,
-            color: "",
+            styles: [],
             placement: "",
             caption: "",
             featured: false,
@@ -117,6 +121,18 @@ const Tattoos = ({
   // Import class styles
   const classes = useStyles();
   const { push } = useRouter();
+
+  const [workingStyles, setWorkingStyles] = useState([]);
+
+  const fetchWorkingStyle = async () => {
+    const rs = await getWorkingStyleList();
+
+    setWorkingStyles(rs);
+  };
+
+  useEffect(() => {
+    fetchWorkingStyle();
+  }, []);
 
   return (
     <>
@@ -180,27 +196,16 @@ const Tattoos = ({
                   </Grid>
 
                   <Grid item lg={12} md={12} xs={12} className={classes.inputWrapper}>
-                    <Typography className={classes.sectionSubTitle}>Colors)</Typography>
-                    <TextField
-                      name="color"
-                      select
-                      classes={{ root: classes.formInput }}
-                      label={"Color"}
-                      id="color"
-                      placeholder={"Color"}
-                      fullWidth
-                      variant={"outlined"}
-                      value={item.color}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        onChange(index, "color", e.target.value);
+                    <Typography className={classes.sectionSubTitle}>Styles)</Typography>
+
+                    <MultipleSelection
+                      name={"Styles"}
+                      value={item.styles || []}
+                      optionList={workingStyles.map((workingStyle: any) => workingStyle.name)}
+                      onChange={(value) => {
+                        onChange(index, "styles", value);
                       }}
-                    >
-                      {colorList.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                    />
                   </Grid>
 
                   <Grid item lg={12} md={12} xs={12} className={classes.inputWrapper}>
@@ -259,7 +264,9 @@ const Tattoos = ({
                         onUpdate(
                           item.id as number,
                           {
-                            color: item.color,
+                            styles: workingStyles
+                              .filter((workingStyle: any) => item.styles.includes(workingStyle.name))
+                              .map((filteredStyle: any) => filteredStyle.id),
                             placement: item.placement,
                             caption: item.caption,
                             featured: item.featured,
@@ -301,7 +308,9 @@ const Tattoos = ({
                             onUpdate(
                               item.id as number,
                               {
-                                color: item.color,
+                                styles: workingStyles
+                                  .filter((workingStyle: any) => item.styles.includes(workingStyle.name))
+                                  .map((filteredStyle: any) => filteredStyle.id),
                                 placement: item.placement,
                                 caption: item.caption,
                                 featured: item.featured,
@@ -335,6 +344,7 @@ export interface Image {
   caption: string;
   featured: boolean;
   saved: boolean;
+  styles: string[];
 }
 
 interface Props {
