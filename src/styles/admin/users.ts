@@ -38,6 +38,9 @@ export const useStyles = makeStyles({
     margin: "2px",
     padding: 0,
   },
+  textCell: {
+    textTransform: "capitalize",
+  },
   gridSpacer: {
     marginTop: "15px",
   },

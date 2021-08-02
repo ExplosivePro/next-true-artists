@@ -36,7 +36,7 @@ export default function Users() {
   // Fetch User list
   const {
     status: userListStatus,
-    data: { users: userListData = [] } = {},
+    data: { users: userListData = [], meta = { limit_value: 60, total_count: 0 } } = {},
     error: userListError,
     refetch: userListRefetch,
     isFetching: userListIsFetching,
@@ -48,7 +48,7 @@ export default function Users() {
 
   const [pageOptions, setPageOptions] = useState({});
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
+  const [rowsPerPage, setRowsPerPage] = useState(meta.limit_value);
 
   // Force refetch after paginate and/or search update
   useEffect(() => {
@@ -189,8 +189,24 @@ export default function Users() {
                           </Link>
                         </StyledTableCell>
                         <StyledTableCell>{user.email}</StyledTableCell>
-                        <StyledTableCell>{user.role}</StyledTableCell>
-                        <StyledTableCell>{user.status ?? "Pending"}</StyledTableCell>
+                        <StyledTableCell className={classes.textCell}>
+                          {user.role === "artist" ? (
+                            <Link href={`/admin/artists/${user.artist.id}`}>
+                              <a target="_blank" className={classes.listLink}>
+                                {user.role}
+                              </a>
+                            </Link>
+                          ) : user.role === "studio_manager" ? (
+                            <Link href={`/admin/studios/${user.studio.id}`}>
+                              <a target="_blank" className={classes.listLink}>
+                                {user.role}
+                              </a>
+                            </Link>
+                          ) : (
+                            user.role
+                          )}
+                        </StyledTableCell>
+                        <StyledTableCell className={classes.textCell}>{user.status ?? "Pending"}</StyledTableCell>
                       </StyledTableRow>
                     ))}
                   </TableBody>
@@ -199,9 +215,9 @@ export default function Users() {
 
               <TablePagination
                 component="div"
-                rowsPerPageOptions={[5, 10, 25, 50, 75, 100]}
+                rowsPerPageOptions={[5, 10, 25, 50, 75, 100, { value: meta.total_count, label: "All" }]}
                 rowsPerPage={rowsPerPage}
-                count={-1}
+                count={meta.total_count}
                 page={page}
                 onChangePage={handleChangePage}
                 onChangeRowsPerPage={handleChangeRowsPerPage}
