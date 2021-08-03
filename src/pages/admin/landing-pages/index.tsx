@@ -42,12 +42,9 @@ import { getLandingPageList, deleteLandingPage } from "src/api/admin/landingPage
 import { landingPageStatus } from "src/constants/admin/landingPages";
 import { useStyles, StyledTableCell, StyledTableRow } from "src/styles/admin/landingPages";
 
-import getConfig from "next/config";
-
 export default function LandingPages() {
   const classes = useStyles();
   const router = useRouter();
-  const PUBLIC_BASE = getConfig().publicRuntimeConfig.PUBLIC_PAGE_BASE_URL;
 
   // Fetch Landing Page list
   const {
@@ -269,10 +266,8 @@ export default function LandingPages() {
                     {pageListData.map((landingPage: Admin.LandingPages, index: number) => (
                       <StyledTableRow key={index}>
                         <StyledTableCell>
-                          <Link href={`${PUBLIC_BASE}/landing_pages/${landingPage?.id}`}>
-                            <a target="_blank" className={classes.listLink}>
-                              {landingPage?.title}
-                            </a>
+                          <Link href={`${router.pathname}/${landingPage?.id}`}>
+                            <a className={classes.listLink}>{landingPage?.title}</a>
                           </Link>
                         </StyledTableCell>
                         <StyledTableCell>{landingPage?.page_title}</StyledTableCell>
