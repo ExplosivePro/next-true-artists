@@ -269,7 +269,7 @@ export default function LandingPages() {
                     {pageListData.map((landingPage: Admin.LandingPages, index: number) => (
                       <StyledTableRow key={index}>
                         <StyledTableCell>
-                          <Link href={`${PUBLIC_BASE}${landingPage?.page_key}`}>
+                          <Link href={`${PUBLIC_BASE}/landing_pages/${landingPage?.id}`}>
                             <a target="_blank" className={classes.listLink}>
                               {landingPage?.title}
                             </a>
@@ -278,7 +278,7 @@ export default function LandingPages() {
                         <StyledTableCell>{landingPage?.page_title}</StyledTableCell>
                         <StyledTableCell>{showStatus(landingPage?.status)}</StyledTableCell>
                         <StyledTableCell className={classes.statusHeader}>
-                          <Link href={`${router.pathname}/edit/${landingPage?.id}`}>
+                          <Link href={`${router.pathname}/${landingPage?.id}`}>
                             <a className={classes.listLink}>Edit</a>
                           </Link>
                         </StyledTableCell>
