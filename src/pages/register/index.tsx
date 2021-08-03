@@ -8,6 +8,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 
+// Google recaptcha component
+import GoogleReCaptcha from "src/components/GoogleReCaptcha";
+
 // Material UI Components
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
@@ -137,6 +140,7 @@ export default function Register() {
   const resolver = useYupValidationResolver(validationSchema);
   const { control, handleSubmit, errors } = useForm({ resolver });
   const [ref, setRef] = useState();
+  const [isHuman, setIsHuman] = useState(false);
 
   // On submit form
   const onSubmit = async (data: Register.FormData) => {
@@ -319,6 +323,8 @@ export default function Register() {
               type={"password"}
             />
 
+            <GoogleReCaptcha setIsHuman={setIsHuman} />
+
             <PrimaryButton
               className={classes.signUpButton}
               type={"submit"}
@@ -327,6 +333,7 @@ export default function Register() {
               size="large"
               fullWidth
               primaryColor
+              disabled={isHuman ? false : true}
             >
               Sign up
             </PrimaryButton>
