@@ -24,7 +24,6 @@ import { useRouter } from "next/router";
 
 // APIs
 import { getWorkingStyleList } from "../../../api";
-import MultipleSelection from "../../ArtistProfile/MutilpleSelection";
 
 const ImageItem = ({ data, className, editMode = false }: { data: any; className?: any; editMode?: boolean }) => {
   // Import class styles
@@ -64,7 +63,7 @@ const AddImageItem = ({
           results.push({
             file: fileUploaded,
             preview: reader.result,
-            styles: [],
+            style: "",
             placement: "",
             caption: "",
             featured: false,
@@ -122,7 +121,7 @@ const Tattoos = ({
   const classes = useStyles();
   const { push } = useRouter();
 
-  const [workingStyles, setWorkingStyles] = useState([]);
+  const [workingStyles, setWorkingStyles] = useState<Resource.WorkingStyle[]>([]);
 
   const fetchWorkingStyle = async () => {
     const rs = await getWorkingStyleList();
@@ -196,16 +195,28 @@ const Tattoos = ({
                   </Grid>
 
                   <Grid item lg={12} md={12} xs={12} className={classes.inputWrapper}>
-                    <Typography className={classes.sectionSubTitle}>Styles)</Typography>
+                    <Typography className={classes.sectionSubTitle}>Style</Typography>
 
-                    <MultipleSelection
-                      name={"Styles"}
-                      value={item.styles || []}
-                      optionList={workingStyles.map((workingStyle: any) => workingStyle.name)}
-                      onChange={(value) => {
-                        onChange(index, "styles", value);
+                    <TextField
+                      name="style"
+                      select
+                      classes={{ root: classes.formInput }}
+                      label={"Style"}
+                      id="style"
+                      placeholder={"Style"}
+                      fullWidth
+                      variant={"outlined"}
+                      value={item.style}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        onChange(index, "style", e.target.value);
                       }}
-                    />
+                    >
+                      {workingStyles.map((option) => (
+                        <MenuItem key={option.id} value={option.id}>
+                          {option.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
                   </Grid>
 
                   <Grid item lg={12} md={12} xs={12} className={classes.inputWrapper}>
@@ -264,9 +275,7 @@ const Tattoos = ({
                         onUpdate(
                           item.id as number,
                           {
-                            styles: workingStyles
-                              .filter((workingStyle: any) => item.styles.includes(workingStyle.name))
-                              .map((filteredStyle: any) => filteredStyle.id),
+                            style_id: item.style,
                             placement: item.placement,
                             caption: item.caption,
                             featured: item.featured,
@@ -308,9 +317,7 @@ const Tattoos = ({
                             onUpdate(
                               item.id as number,
                               {
-                                styles: workingStyles
-                                  .filter((workingStyle: any) => item.styles.includes(workingStyle.name))
-                                  .map((filteredStyle: any) => filteredStyle.id),
+                                style_id: item.style,
                                 placement: item.placement,
                                 caption: item.caption,
                                 featured: item.featured,
@@ -344,7 +351,7 @@ export interface Image {
   caption: string;
   featured: boolean;
   saved: boolean;
-  styles: string[];
+  style: number;
 }
 
 interface Props {
