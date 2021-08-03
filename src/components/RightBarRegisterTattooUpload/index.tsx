@@ -72,7 +72,7 @@ export default function RightBarRegisterTattooUpload({ role, currentUserId, onPr
         metaData.push({
           placement: tattoo.placement,
           workplace: tattoo.workplace,
-          color: tattoo.color,
+          style_id: tattoo.style,
           caption: tattoo.caption,
           featured: tattoo.featured,
         });

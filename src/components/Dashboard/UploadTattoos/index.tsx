@@ -44,7 +44,7 @@ export default function UploadTattoos({ id }: Props) {
         metaData.push({
           placement: tattoo.placement,
           workplace: tattoo.workplace,
-          color: tattoo.color,
+          style_id: tattoo.style,
           caption: tattoo.caption,
           featured: tattoo.featured,
         });
@@ -68,7 +68,7 @@ export default function UploadTattoos({ id }: Props) {
       formData.append("image", tattooImages[0].file);
       formData.append("placement", tattoos[0].placement);
       formData.append("workplace", tattoos[0].workplace);
-      formData.append("color", tattoos[0].color);
+      formData.append("style_id", JSON.stringify(tattoos[0].style));
       formData.append("caption", tattoos[0].caption);
       formData.append("featured", tattoos[0].featured.toString());
 
