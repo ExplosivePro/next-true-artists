@@ -162,6 +162,18 @@ export default function CreateNew() {
                 <Grid item xs={12}>
                   <TextInput
                     multiline={true}
+                    name="meta_description"
+                    register={register}
+                    required={false}
+                    label="Meta Description"
+                    errors={!!errors.meta_description}
+                    errorMessage={errors.meta_description?.message}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextInput
+                    multiline={true}
                     name="introduction"
                     register={register}
                     required={true}
@@ -173,18 +185,6 @@ export default function CreateNew() {
                     <i>Provide a short description of the article.</i>
                   </Typography>
                 </Grid>
-
-                <Grid item xs={12}>
-                  <TextInput
-                    multiline={true}
-                    name="meta_description"
-                    register={register}
-                    required={false}
-                    label="Meta Description"
-                    errors={!!errors.meta_description}
-                    errorMessage={errors.meta_description?.message}
-                  />
-                </Grid>
               </Grid>
             </Grid>
 
@@ -192,7 +192,7 @@ export default function CreateNew() {
               <Grid container item justify={"center"}>
                 <Card variant="outlined" className={classes.imageCard && classes.addArticleImage}>
                   <CardContent>
-                    <Typography>Article image</Typography>
+                    <Typography>Main Image</Typography>
                     <CardMedia
                       className={classes.imageCardMedia}
                       image={preview ? preview : "/images/camera.png"}
@@ -212,7 +212,7 @@ export default function CreateNew() {
               </Grid>
 
               <Grid container item justify={"center"}>
-                <Typography variant="caption">Add article image</Typography>
+                <Typography variant="caption">Upload article main image</Typography>
               </Grid>
             </Grid>
           </Grid>
