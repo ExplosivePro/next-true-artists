@@ -14,10 +14,7 @@ import {
   EReCaptchaV2Theme,
   ReCaptchaProvider,
   ReCaptchaV2,
-  // ReCaptchaV3,
   TReCaptchaV2Callback,
-  // TReCaptchaV3Callback,
-  // TReCaptchaV3RefreshToken,
 } from "react-recaptcha-x";
 
 const useStyles = makeStyles({
@@ -54,30 +51,10 @@ export default function GoogleReCaptcha({ setIsHuman }: { setIsHuman: React.Disp
     }
   };
 
-  /* const v3Callback: TReCaptchaV3Callback = (
-    token: string | void,
-    refreshToken: TReCaptchaV3RefreshToken | void,
-  ): void => {
-    if (typeof token === "string") {
-      if (typeof refreshToken === "function") {
-        setMsg({ status: false, message: "Token refresh in progress..." });
-      }
-      setMsg({ status: true, message: "Security check: Success" });
-      setIsHuman(true);
-    } else {
-      setMsg({ status: false, message: "Token retrieval in progress..." });
-    }
-  }; */
-
   return (
     <Grid container item justify={"center"}>
       {!msg.status ? (
-        <ReCaptchaProvider
-          siteKeyV2={recaptchaSiteKey}
-          // siteKeyV3="your-reCAPTCHA-v3-site-key"
-          langCode="en"
-          // hideV3Badge={false}
-        >
+        <ReCaptchaProvider siteKeyV2={recaptchaSiteKey} langCode="en">
           <CustomDivider className={classes.dividerContainer}>
             <Typography className={classes.greyText}>Security Check</Typography>
           </CustomDivider>
@@ -89,7 +66,6 @@ export default function GoogleReCaptcha({ setIsHuman }: { setIsHuman: React.Disp
             id="googleReCaptcha"
             data-test-id="googleReCaptcha-test-id"
           />
-          {/* <ReCaptchaV3 action="your-action" callback={v3Callback} /> */}
 
           <Typography variant="caption" align="center" className={classes.checkWrapperError}>
             {msg.message}
