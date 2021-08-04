@@ -42,12 +42,12 @@ export default function GoogleReCaptcha({ setIsHuman }: { setIsHuman: React.Disp
 
   const v2Callback: TReCaptchaV2Callback = (token: string | false | Error): void => {
     if (typeof token === "string") {
-      setMsg({ status: true, message: "Security check: Success" });
+      setMsg({ status: true, message: "Security check succeeded." });
       setIsHuman(true);
     } else if (typeof token === "boolean" && !token) {
-      setMsg({ status: false, message: "Token has expired, Check the checkbox again" });
+      setMsg({ status: false, message: "Please tick the checkbox again" });
     } else if (token instanceof Error) {
-      setMsg({ status: false, message: "Error. Please check your network connection" });
+      setMsg({ status: false, message: "Error. Something went wrong" });
     }
   };
 
