@@ -231,18 +231,6 @@ export default function EditArticles() {
 
                     <Grid item xs={10}>
                       <TextInput
-                        name="introduction"
-                        register={register}
-                        required={true}
-                        multiline={true}
-                        label="Introduction *"
-                        errors={!!errors.introduction}
-                        errorMessage={errors.introduction?.message}
-                      />
-                    </Grid>
-
-                    <Grid item xs={10}>
-                      <TextInput
                         multiline={true}
                         name="meta_description"
                         register={register}
@@ -250,6 +238,18 @@ export default function EditArticles() {
                         label="Meta Description"
                         errors={!!errors.meta_description}
                         errorMessage={errors.meta_description?.message}
+                      />
+                    </Grid>
+
+                    <Grid item xs={10}>
+                      <TextInput
+                        name="introduction"
+                        register={register}
+                        required={true}
+                        multiline={true}
+                        label="Introduction *"
+                        errors={!!errors.introduction}
+                        errorMessage={errors.introduction?.message}
                       />
                     </Grid>
 
