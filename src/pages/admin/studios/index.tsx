@@ -39,14 +39,16 @@ export default function Studios() {
     error: studioListError,
     refetch: studioListRefetch,
     isFetching: studioListIsFetching,
-  } = useQuery("studioList", async () => await getStudioList(location.search));
+  } = useQuery("studioList", async () => await getStudioList(location.search), {
+    enabled: false,
+  });
 
   const [pageOptions, setPageOptions] = useState({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(meta.limit_value);
 
   const [searchInputValue, setSearchInputValue] = useState("");
-  const [searchValue, setSearchValue] = useState({});
+  const [searchValue, setSearchValue] = useState({ query: "[]" });
   const [statusFilter, setStatusFilter] = useState({});
 
   // Force refetch after search update
@@ -70,7 +72,7 @@ export default function Studios() {
   };
 
   const debouncedSearchInput = useCallback(
-    debounce((value: string) => (value ? setSearchValue({ query: value }) : setSearchValue({})), 2000),
+    debounce((value: string) => (value ? setSearchValue({ query: value }) : setSearchValue({ query: "[]" })), 2000),
     [],
   );
 
@@ -106,7 +108,7 @@ export default function Studios() {
                 select
                 fullWidth
                 size="small"
-                label="Filter by Status"
+                label="Filter studio by status"
                 defaultValue=""
                 onChange={(e) => handleStatusFilterChange(e.target.value)}
               >
@@ -122,11 +124,7 @@ export default function Studios() {
             <Grid item xs={12} sm={4}>
               <Autocomplete
                 freeSolo
-                options={
-                  studioListStatus === "success"
-                    ? studioListData?.map((option: Admin.StudioProfile) => option.name)
-                    : []
-                }
+                options={[]}
                 inputValue={searchInputValue}
                 onInputChange={(event, newInputValue) => {
                   setSearchInputValue(newInputValue);
@@ -135,7 +133,7 @@ export default function Studios() {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Search Studios"
+                    label="Search studio by name or email"
                     size="small"
                     variant="outlined"
                     InputProps={{ ...params.InputProps, type: "search" }}
@@ -207,6 +205,8 @@ export default function Studios() {
                 className={classes.paginationWrapper}
               />
             </React.Fragment>
+          ) : searchValue.query === "[]" ? (
+            <Alert severity="info">Search studio by name or email</Alert>
           ) : (
             <Alert severity="info">No studios records found...</Alert>
           )}
