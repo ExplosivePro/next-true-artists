@@ -47,7 +47,7 @@ export default function GoogleReCaptcha({ setIsHuman }: { setIsHuman: React.Disp
     } else if (typeof token === "boolean" && !token) {
       setMsg({ status: false, message: "Please tick the checkbox again" });
     } else if (token instanceof Error) {
-      setMsg({ status: false, message: "Error. Something went wrong" });
+      setMsg({ status: false, message: "Error. Something went wrong. Please try again" });
     }
   };
 
