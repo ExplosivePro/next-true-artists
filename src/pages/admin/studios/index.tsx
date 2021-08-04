@@ -108,7 +108,7 @@ export default function Studios() {
                 select
                 fullWidth
                 size="small"
-                label="Filter by Status"
+                label="Filter studio by status"
                 defaultValue=""
                 onChange={(e) => handleStatusFilterChange(e.target.value)}
               >
@@ -133,7 +133,7 @@ export default function Studios() {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Search Studios"
+                    label="Search studio by name or email"
                     size="small"
                     variant="outlined"
                     InputProps={{ ...params.InputProps, type: "search" }}
@@ -206,7 +206,7 @@ export default function Studios() {
               />
             </React.Fragment>
           ) : searchValue.query === "[]" ? (
-            <Alert severity="info">Search Studios...</Alert>
+            <Alert severity="info">Search studio by name or email</Alert>
           ) : (
             <Alert severity="info">No studios records found...</Alert>
           )}

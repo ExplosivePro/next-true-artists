@@ -142,11 +142,11 @@ export default function Artists() {
                 select
                 fullWidth
                 size="small"
-                label="Filter by Status"
+                label="Filter by status"
                 defaultValue=""
                 onChange={(e) => handleStatusFilterChange(e.target.value)}
               >
-                <MenuItem value="">Clear Filter...</MenuItem>
+                <MenuItem value="">Clear search...</MenuItem>
                 {Object.entries(artistStatus).map(([status, value], index) => (
                   <MenuItem value={value} key={index}>
                     {status}
@@ -167,7 +167,7 @@ export default function Artists() {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Search Artists"
+                    label="Search artist by name or email"
                     size="small"
                     variant="outlined"
                     InputProps={{ ...params.InputProps, type: "search" }}
@@ -240,7 +240,7 @@ export default function Artists() {
               />
             </React.Fragment>
           ) : searchValue.query === "[]" ? (
-            <Alert severity="info">Search Artists...</Alert>
+            <Alert severity="info">Search artists by name or email</Alert>
           ) : (
             <Alert severity="info">No artists records found...</Alert>
           )}

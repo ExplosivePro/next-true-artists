@@ -109,7 +109,7 @@ export default function Users() {
                 select
                 fullWidth
                 size="small"
-                label="Filter by Role"
+                label="Filter user by role"
                 defaultValue=""
                 onChange={(e) => handleRoleFilterChange(e.target.value)}
               >
@@ -134,7 +134,7 @@ export default function Users() {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Search Users"
+                    label="Search user by email or name"
                     size="small"
                     variant="outlined"
                     InputProps={{ ...params.InputProps, type: "search" }}
@@ -209,9 +209,9 @@ export default function Users() {
               />
             </React.Fragment>
           ) : searchValue.query === "[]" ? (
-            <Alert severity="info">Search Users...</Alert>
+            <Alert severity="info">Search user by email or name</Alert>
           ) : (
-            <Alert severity="info">No users records found...</Alert>
+            <Alert severity="info">No user records found...</Alert>
           )}
         </Grid>
       </Grid>
