@@ -44,14 +44,16 @@ export default function Artists() {
     error: artistListError,
     refetch: artistListRefetch,
     isFetching: artistListIsFetching,
-  } = useQuery("artistList", async () => await getArtistList(location.search));
+  } = useQuery("artistList", async () => await getArtistList(location.search), {
+    enabled: false,
+  });
 
   const [pageOptions, setPageOptions] = useState({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(meta.limit_value);
 
   const [searchInputValue, setSearchInputValue] = useState("");
-  const [searchValue, setSearchValue] = useState({});
+  const [searchValue, setSearchValue] = useState({ query: "[]" });
   const [statusFilter, setStatusFilter] = useState({});
 
   // Force refetch after search update
@@ -75,7 +77,7 @@ export default function Artists() {
   };
 
   const debouncedSearchInput = useCallback(
-    debounce((value: string) => (value ? setSearchValue({ query: value }) : setSearchValue({})), 2000),
+    debounce((value: string) => (value ? setSearchValue({ query: value }) : setSearchValue({ query: "[]" })), 2000),
     [],
   );
 
@@ -156,11 +158,7 @@ export default function Artists() {
             <Grid item xs={12} sm={4}>
               <Autocomplete
                 freeSolo
-                options={
-                  artistListStatus === "success"
-                    ? artistListData?.map((option: Admin.ArtistProfile) => option.name ?? "")
-                    : []
-                }
+                options={[]}
                 inputValue={searchInputValue}
                 onInputChange={(event, newInputValue) => {
                   setSearchInputValue(newInputValue);
@@ -241,6 +239,8 @@ export default function Artists() {
                 className={classes.paginationWrapper}
               />
             </React.Fragment>
+          ) : searchValue.query === "[]" ? (
+            <Alert severity="info">Search Artists...</Alert>
           ) : (
             <Alert severity="info">No artists records found...</Alert>
           )}

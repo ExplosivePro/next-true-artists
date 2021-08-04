@@ -40,10 +40,12 @@ export default function Users() {
     error: userListError,
     refetch: userListRefetch,
     isFetching: userListIsFetching,
-  } = useQuery("userList", async () => await getUserList(location.search));
+  } = useQuery("userList", async () => await getUserList(location.search), {
+    enabled: false,
+  });
 
   const [searchInputValue, setSearchInputValue] = useState("");
-  const [searchValue, setSearchValue] = useState({});
+  const [searchValue, setSearchValue] = useState({ query: "[]" });
   const [roleFilter, setRoleFilter] = useState({});
 
   const [pageOptions, setPageOptions] = useState({});
@@ -71,7 +73,7 @@ export default function Users() {
   };
 
   const debouncedSearchInput = useCallback(
-    debounce((value: string) => (value ? setSearchValue({ query: value }) : setSearchValue({})), 2000),
+    debounce((value: string) => (value ? setSearchValue({ query: value }) : setSearchValue({ query: "[]" })), 2000),
     [],
   );
 
@@ -123,9 +125,7 @@ export default function Users() {
             <Grid item xs={12} sm={3}>
               <Autocomplete
                 freeSolo
-                options={
-                  userListStatus === "success" ? userListData?.map((option: Admin.User) => option.full_name ?? "") : []
-                }
+                options={[]}
                 inputValue={searchInputValue}
                 onInputChange={(event, newInputValue) => {
                   setSearchInputValue(newInputValue);
@@ -189,23 +189,7 @@ export default function Users() {
                           </Link>
                         </StyledTableCell>
                         <StyledTableCell>{user.email}</StyledTableCell>
-                        <StyledTableCell className={classes.textCell}>
-                          {user.role === "artist" ? (
-                            <Link href={`/admin/artists/${user.artist.id}`}>
-                              <a target="_blank" className={classes.listLink}>
-                                {user.role}
-                              </a>
-                            </Link>
-                          ) : user.role === "studio_manager" ? (
-                            <Link href={`/admin/studios/${user.studio.id}`}>
-                              <a target="_blank" className={classes.listLink}>
-                                {user.role}
-                              </a>
-                            </Link>
-                          ) : (
-                            user.role
-                          )}
-                        </StyledTableCell>
+                        <StyledTableCell className={classes.textCell}>{user.role}</StyledTableCell>
                         <StyledTableCell className={classes.textCell}>{user.status ?? "Pending"}</StyledTableCell>
                       </StyledTableRow>
                     ))}
@@ -224,6 +208,8 @@ export default function Users() {
                 className={classes.paginationWrapper}
               />
             </React.Fragment>
+          ) : searchValue.query === "[]" ? (
+            <Alert severity="info">Search Users...</Alert>
           ) : (
             <Alert severity="info">No users records found...</Alert>
           )}
