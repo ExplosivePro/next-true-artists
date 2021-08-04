@@ -81,6 +81,7 @@ export default function EditLandingPages() {
     page_key: "",
     title: "",
     page_title: "",
+    meta_description: "",
     content: "",
   });
 
@@ -102,16 +103,15 @@ export default function EditLandingPages() {
       setValue("page_key", pageData?.page_key);
       setValue("title", pageData?.title);
       setValue("page_title", pageData?.page_title);
+      setValue("meta_description", pageData?.meta_description);
       setValue("content", pageData?.content);
     }
   }, [pageDataStatus]);
 
   const onSubmit = async (formValues: { [T: string]: any }) => {
-    const { title, page_title } = formValues;
     const formData = new FormData();
-
     Object.entries(formValues).map(([key, value]) => formData.append(key, value));
-    formData.append("meta_description", JSON.stringify({ title: title, page_title: page_title }));
+
     if (avatar)
       if (avatar === "remove") formData.append("avatar", "");
       else formData.append("avatar", avatar);
@@ -218,6 +218,17 @@ export default function EditLandingPages() {
 
                     <Grid item xs={10}>
                       <TextInput
+                        name="page_title"
+                        register={register}
+                        required={true}
+                        label="Page Title *"
+                        errors={!!errors.page_title}
+                        errorMessage={errors.page_title?.message}
+                      />
+                    </Grid>
+
+                    <Grid item xs={10}>
+                      <TextInput
                         name="title"
                         register={register}
                         required={true}
@@ -229,12 +240,13 @@ export default function EditLandingPages() {
 
                     <Grid item xs={10}>
                       <TextInput
-                        name="page_title"
+                        multiline={true}
+                        name="meta_description"
                         register={register}
-                        required={true}
-                        label="Page Title *"
-                        errors={!!errors.page_title}
-                        errorMessage={errors.page_title?.message}
+                        required={false}
+                        label="Meta Description"
+                        errors={!!errors.meta_description}
+                        errorMessage={errors.meta_description?.message}
                       />
                     </Grid>
 

@@ -59,6 +59,7 @@ export default function CreateNew() {
     page_key: "",
     title: "",
     page_title: "",
+    meta_description: "",
     content: "",
   });
 
@@ -74,11 +75,9 @@ export default function CreateNew() {
   });
 
   const onSubmit = async (formValues: { [T: string]: any }) => {
-    const { title, page_title, page_key } = formValues;
     const formData = new FormData();
-
     Object.entries(formValues).map(([key, value]) => formData.append(key, value));
-    formData.append("meta_description", JSON.stringify({ title: title, page_title: page_title, page_key: page_key }));
+
     if (avatar) formData.append("avatar", avatar);
 
     try {
@@ -159,6 +158,17 @@ export default function CreateNew() {
 
                 <Grid item xs={12}>
                   <TextInput
+                    name="page_title"
+                    register={register}
+                    required={true}
+                    label="Page Title *"
+                    errors={!!errors.page_title}
+                    errorMessage={errors.page_title?.message}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextInput
                     name="title"
                     register={register}
                     required={true}
@@ -170,12 +180,13 @@ export default function CreateNew() {
 
                 <Grid item xs={12}>
                   <TextInput
-                    name="page_title"
+                    multiline={true}
+                    name="meta_description"
                     register={register}
-                    required={true}
-                    label="Page Title *"
-                    errors={!!errors.page_title}
-                    errorMessage={errors.page_title?.message}
+                    required={false}
+                    label="Meta Description"
+                    errors={!!errors.meta_description}
+                    errorMessage={errors.meta_description?.message}
                   />
                 </Grid>
               </Grid>

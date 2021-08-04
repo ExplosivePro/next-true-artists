@@ -1,6 +1,6 @@
 // External
 import clsx from "clsx";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // Material UI Components
 import { Grid, Typography } from "@material-ui/core";
@@ -17,10 +17,13 @@ import PrimaryButton from "../../PrimaryButton";
 import Loading from "../../Loading";
 
 // Contexts
-import { placements, colors as colorList } from "../../../constants";
+import { placements } from "../../../constants";
 
 import useStyles from "./styles";
 import { useRouter } from "next/router";
+
+// APIs
+import { getWorkingStyleList } from "../../../api";
 
 const ImageItem = ({ data, className, editMode = false }: { data: any; className?: any; editMode?: boolean }) => {
   // Import class styles
@@ -60,7 +63,7 @@ const AddImageItem = ({
           results.push({
             file: fileUploaded,
             preview: reader.result,
-            color: "",
+            style: "",
             placement: "",
             caption: "",
             featured: false,
@@ -117,6 +120,18 @@ const Tattoos = ({
   // Import class styles
   const classes = useStyles();
   const { push } = useRouter();
+
+  const [workingStyles, setWorkingStyles] = useState<Resource.WorkingStyle[]>([]);
+
+  const fetchWorkingStyle = async () => {
+    const rs = await getWorkingStyleList();
+
+    setWorkingStyles(rs);
+  };
+
+  useEffect(() => {
+    fetchWorkingStyle();
+  }, []);
 
   return (
     <>
@@ -180,24 +195,25 @@ const Tattoos = ({
                   </Grid>
 
                   <Grid item lg={12} md={12} xs={12} className={classes.inputWrapper}>
-                    <Typography className={classes.sectionSubTitle}>Colors)</Typography>
+                    <Typography className={classes.sectionSubTitle}>Style</Typography>
+
                     <TextField
-                      name="color"
+                      name="style"
                       select
                       classes={{ root: classes.formInput }}
-                      label={"Color"}
-                      id="color"
-                      placeholder={"Color"}
+                      label={"Style"}
+                      id="style"
+                      placeholder={"Style"}
                       fullWidth
                       variant={"outlined"}
-                      value={item.color}
+                      value={item.style}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        onChange(index, "color", e.target.value);
+                        onChange(index, "style", e.target.value);
                       }}
                     >
-                      {colorList.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                      {workingStyles.map((option) => (
+                        <MenuItem key={option.id} value={option.id}>
+                          {option.name}
                         </MenuItem>
                       ))}
                     </TextField>
@@ -259,7 +275,7 @@ const Tattoos = ({
                         onUpdate(
                           item.id as number,
                           {
-                            color: item.color,
+                            style_id: item.style,
                             placement: item.placement,
                             caption: item.caption,
                             featured: item.featured,
@@ -301,7 +317,7 @@ const Tattoos = ({
                             onUpdate(
                               item.id as number,
                               {
-                                color: item.color,
+                                style_id: item.style,
                                 placement: item.placement,
                                 caption: item.caption,
                                 featured: item.featured,
@@ -335,6 +351,7 @@ export interface Image {
   caption: string;
   featured: boolean;
   saved: boolean;
+  style: number;
 }
 
 interface Props {

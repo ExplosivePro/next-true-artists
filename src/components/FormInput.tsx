@@ -24,7 +24,6 @@ export default function FormInput(props: CustomTextFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => {
-    console.log("toggle");
     setShowPassword(!showPassword);
   };
 

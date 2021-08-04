@@ -9,6 +9,7 @@ module.exports = {
     AWS_REGION: process.env.AWS_REGION,
     NEXT_PUBLIC_CDN_HOST: process.env.NEXT_PUBLIC_CDN_HOST,
     NEXT_PUBLIC_RECAPTCHA_SITE_KEY: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
+    ROLLBAR_CLIENT_TOKEN: process.env.ROLLBAR_CLIENT_TOKEN,
   },
   compress: false,
   poweredByHeader: false,
