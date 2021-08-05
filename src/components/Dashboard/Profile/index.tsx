@@ -188,7 +188,7 @@ export default function UserProfile() {
   const [checked, setChecked] = useState<string[]>(getDefaultValue(user, role as Role));
 
   const [minimumSpend, setMinimumSpend] = useState<number>(artist?.minimum_spend || 0);
-  const [specialties, setSpecialties] = React.useState<string[]>(artist?.specialties || []);
+  const [specialties, setSpecialties] = React.useState<string[]>(artist?.specialty?.split(",") || []);
   const [artistStyles, setArtistStyles] = useState(getWorkStyleData(role as Role, user));
 
   // Studio detail
@@ -229,7 +229,6 @@ export default function UserProfile() {
       country,
       phoneNumber,
       state,
-      specialties,
     }: any,
     editUserResponse: RestApi.Response,
   ) => {
@@ -250,7 +249,7 @@ export default function UserProfile() {
       country,
       state,
       phone_number: phoneNumber,
-      specialty: specialties ? specialties.join(",") : [],
+      specialty: specialties ? specialties.join(",") : "",
       styles: getSelectedIds(artistStyles),
     });
 
