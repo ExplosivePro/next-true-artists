@@ -97,7 +97,7 @@ export default function ArtistProfile({
               />
             </Grid>
 
-            <Typography className={classes.sectionSubTitle}>Your specialties</Typography>
+            <Typography className={classes.sectionSubTitle}>What kind of tattooing do you specialize in?</Typography>
             <Grid item lg={12} md={12} xs={12}>
               <MultipleSelection
                 name={"Specialties"}
