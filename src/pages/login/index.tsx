@@ -1,5 +1,5 @@
 // External import
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { useYupValidationResolver } from "../../utils";
@@ -7,6 +7,9 @@ import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
+
+// Google recaptcha component
+import GoogleReCaptcha from "src/components/GoogleReCaptcha";
 
 // Material UI Components
 import Container from "@material-ui/core/Container";
@@ -137,6 +140,7 @@ export default function Login() {
   const classes = useStyles();
   const resolver = useYupValidationResolver(validationSchema);
   const { control, handleSubmit, errors } = useForm({ resolver });
+  const [isHuman, setIsHuman] = useState(false);
 
   // Submit normal login, by email and password
   const onSubmit = async (data: Login.FormData) => {
@@ -263,6 +267,8 @@ export default function Login() {
               type={"password"}
             />
 
+            <GoogleReCaptcha setIsHuman={setIsHuman} />
+
             <PrimaryButton
               className={classes.signUpButton}
               type={"submit"}
@@ -271,6 +277,7 @@ export default function Login() {
               size="large"
               fullWidth
               primaryColor
+              disabled={isHuman ? false : true}
             >
               Login
             </PrimaryButton>

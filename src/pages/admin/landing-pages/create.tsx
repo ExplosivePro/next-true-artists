@@ -158,23 +158,23 @@ export default function CreateNew() {
 
                 <Grid item xs={12}>
                   <TextInput
-                    name="title"
-                    register={register}
-                    required={true}
-                    label="Header Title *"
-                    errors={!!errors.title}
-                    errorMessage={errors.title?.message}
-                  />
-                </Grid>
-
-                <Grid item xs={12}>
-                  <TextInput
                     name="page_title"
                     register={register}
                     required={true}
                     label="Page Title *"
                     errors={!!errors.page_title}
                     errorMessage={errors.page_title?.message}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextInput
+                    name="title"
+                    register={register}
+                    required={true}
+                    label="Header Title *"
+                    errors={!!errors.title}
+                    errorMessage={errors.title?.message}
                   />
                 </Grid>
 

@@ -1,11 +1,14 @@
 // External import
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { makeStyles } from "@material-ui/core/styles";
 import { useYupValidationResolver } from "../utils";
 import clsx from "clsx";
 import Link from "next/link";
+
+// Google recaptcha component
+import GoogleReCaptcha from "src/components/GoogleReCaptcha";
 
 // Material UI Components
 import Container from "@material-ui/core/Container";
@@ -69,6 +72,7 @@ const useStyles = makeStyles({
 
 export default function Register() {
   const app = useApp();
+  const [isHuman, setIsHuman] = useState(false);
 
   // Validation schema
   const validationSchema = useMemo(
@@ -132,6 +136,9 @@ export default function Register() {
               defaultValue={""}
               errors={errors.email}
             />
+
+            <GoogleReCaptcha setIsHuman={setIsHuman} />
+
             <PrimaryButton
               className={classes.resetPasswordButton}
               type={"submit"}
@@ -140,6 +147,7 @@ export default function Register() {
               size="large"
               fullWidth
               primaryColor
+              disabled={isHuman ? false : true}
             >
               Reset Password
             </PrimaryButton>

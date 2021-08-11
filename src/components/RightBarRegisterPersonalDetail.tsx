@@ -1,7 +1,10 @@
 // External
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
+
+// Google recaptcha component
+import GoogleReCaptcha from "src/components/GoogleReCaptcha";
 
 // Material UI Components
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
@@ -97,6 +100,7 @@ export default function RightBarRegisterPersonalDetail({
   const classes = useStyles();
   const resolver = useYupValidationResolver(validationSchema);
   const { control, handleSubmit, errors } = useForm({ resolver });
+  const [isHuman, setIsHuman] = useState(false);
 
   const onSubmit = async ({ firstName, lastName, email, password, confirmPassword }: SubmitFormData) => {
     // Call APIs to submit register data
@@ -228,6 +232,8 @@ export default function RightBarRegisterPersonalDetail({
             errors={errors.confirmPassword}
           />
 
+          <GoogleReCaptcha setIsHuman={setIsHuman} />
+
           <Grid container spacing={2} className={classes.buttonWrapper}>
             <Grid item lg={6} md={6} sm={12} xs={12}>
               <PrimaryButton
@@ -243,7 +249,15 @@ export default function RightBarRegisterPersonalDetail({
               </PrimaryButton>
             </Grid>
             <Grid item lg={6} md={6} sm={12} xs={12}>
-              <PrimaryButton type={"submit"} variant="contained" color="primary" size="large" fullWidth primaryColor>
+              <PrimaryButton
+                type={"submit"}
+                variant="contained"
+                color="primary"
+                size="large"
+                fullWidth
+                primaryColor
+                disabled={isHuman ? false : true}
+              >
                 Next
               </PrimaryButton>
             </Grid>
