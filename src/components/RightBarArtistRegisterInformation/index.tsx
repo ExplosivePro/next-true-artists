@@ -201,7 +201,7 @@ export default function RightBarArtistRegisterInformation({
           facebook_url: facebook ? `${baseFacebookUrl}${facebook}` : "",
           instagram_url: instagram ? `${baseInstagramUrl}${instagram}` : "",
           twitter_url: twitter ? `${baseTwitterUrl}${twitter}` : "",
-          specialty: specialties.join(","),
+          specialty: specialties,
         });
 
         const { error, data, errors } = response;
@@ -256,7 +256,7 @@ export default function RightBarArtistRegisterInformation({
           facebook_url: facebook ? `${baseFacebookUrl}${facebook}` : "",
           instagram_url: instagram ? `${baseInstagramUrl}${instagram}` : "",
           twitter_url: twitter ? `${baseTwitterUrl}${twitter}` : "",
-          specialty: specialties.join(","),
+          specialty: specialties,
         });
 
         const { error, data, errors } = response;
@@ -646,7 +646,7 @@ export const preloadRightBarArtistRegisterInformationData = (data: Resource.Arti
     zipCode: zip_code,
     country,
     phoneNumber: phone_number,
-    specialties: specialty?.split(","),
+    specialties: specialty,
   };
 };
 

@@ -186,7 +186,7 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, curren
         parking: checked.includes("parking"),
         lgbt_friendly: checked.includes("lgbt_friendly"),
         languages: language.join(","),
-        services: services.join(","),
+        services: services,
       });
 
       const { error, errors } = response;
@@ -275,7 +275,7 @@ export const preloadRightBarRegisterBusinessSettingsData = (data: Resource.Studi
     paymentMethods: accepted_payment_methods?.split(","),
     checked: getPreloadSettingValue(settingList, data),
     language: languages?.split(","),
-    services: services?.split(","),
+    services: services,
   };
 };
 
