@@ -374,7 +374,7 @@ export function DashboardContext({ children }: Props) {
                     push("/dashboard/upload-tattoos");
                   }}
                 >
-                  Upload
+                  Upload Tattoo Photos
                 </PrimaryButton>
               )}
 

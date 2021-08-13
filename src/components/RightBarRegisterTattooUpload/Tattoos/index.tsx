@@ -206,7 +206,7 @@ const Tattoos = ({
                       placeholder={"Style"}
                       fullWidth
                       variant={"outlined"}
-                      value={item.style}
+                      value={item.style.id ? item.style.id : item.style}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         onChange(index, "style", e.target.value);
                       }}
@@ -351,7 +351,7 @@ export interface Image {
   caption: string;
   featured: boolean;
   saved: boolean;
-  style: number;
+  style: any; // Id when creating, style object when updating
 }
 
 interface Props {

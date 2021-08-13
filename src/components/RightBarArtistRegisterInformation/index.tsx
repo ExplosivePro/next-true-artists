@@ -201,7 +201,7 @@ export default function RightBarArtistRegisterInformation({
           facebook_url: facebook ? `${baseFacebookUrl}${facebook}` : "",
           instagram_url: instagram ? `${baseInstagramUrl}${instagram}` : "",
           twitter_url: twitter ? `${baseTwitterUrl}${twitter}` : "",
-          specialty: specialties.join(","),
+          specialty: specialties,
         });
 
         const { error, data, errors } = response;
@@ -256,7 +256,7 @@ export default function RightBarArtistRegisterInformation({
           facebook_url: facebook ? `${baseFacebookUrl}${facebook}` : "",
           instagram_url: instagram ? `${baseInstagramUrl}${instagram}` : "",
           twitter_url: twitter ? `${baseTwitterUrl}${twitter}` : "",
-          specialty: specialties.join(","),
+          specialty: specialties,
         });
 
         const { error, data, errors } = response;
@@ -332,9 +332,11 @@ export default function RightBarArtistRegisterInformation({
       <div className={classes.formWrapper}>
         <div className={classes.titleWrapper}>
           <Typography variant={"h5"} className={classes.titleText}>
-            Artist Information
+            Build Your Artist Profile
           </Typography>
-          <Typography>Fill in the information about your studio. Make it easy for clients to contact you.</Typography>
+          <Typography>
+            Tell us alittle about yourself and your work. Make it easy for clients to contact you.
+          </Typography>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
@@ -346,9 +348,9 @@ export default function RightBarArtistRegisterInformation({
               <FormInput
                 name="bio"
                 classes={{ root: classes.formInput }}
-                label={"Bio"}
+                label={"Write something about  yourself"}
                 id="bio"
-                placeholder={"Write something about  yourself"}
+                placeholder={"Why should customers come to you?"}
                 fullWidth
                 control={control}
                 variant={"outlined"}
@@ -646,7 +648,7 @@ export const preloadRightBarArtistRegisterInformationData = (data: Resource.Arti
     zipCode: zip_code,
     country,
     phoneNumber: phone_number,
-    specialties: specialty?.split(","),
+    specialties: specialty,
   };
 };
 

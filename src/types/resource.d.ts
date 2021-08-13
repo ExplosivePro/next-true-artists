@@ -55,7 +55,7 @@ declare namespace Resource {
     twitter_url?: string;
     zip_code?: string;
     phone_number?: string;
-    specialty?: string;
+    specialty?: string[];
     styles?: WorkingStyle[];
     tattoos: TattooDetail[];
     avatar?: Image;
@@ -99,10 +99,10 @@ declare namespace Resource {
     website_url?: string;
     facebook_url?: string;
     twitter_url?: string;
-    accepted_payment_methods?: string;
+    accepted_payment_methods?: string[];
     price_per_hour?: number;
-    languages?: string;
-    services?: string;
+    languages?: string[];
+    services?: string[];
     minimum_spend?: number;
     currency_code?: string;
     city: string;

@@ -188,14 +188,14 @@ export default function UserProfile() {
   const [checked, setChecked] = useState<string[]>(getDefaultValue(user, role as Role));
 
   const [minimumSpend, setMinimumSpend] = useState<number>(artist?.minimum_spend || 0);
-  const [specialties, setSpecialties] = React.useState<string[]>(artist?.specialties || []);
+  const [specialties, setSpecialties] = React.useState<string[]>(artist?.specialty || []);
   const [artistStyles, setArtistStyles] = useState(getWorkStyleData(role as Role, user));
 
   // Studio detail
-  const [paymentMethods, setPaymentMethod] = useState(studio?.accepted_payment_methods?.split(",") || []);
+  const [paymentMethods, setPaymentMethod] = useState(studio?.accepted_payment_methods || []);
   const [minimumRate, setMinimumRate] = useState<number>(studio?.minimum_spend || 0);
-  const [services, setServices] = useState<string[]>(studio?.services?.split(",") || []);
-  const [language, setLanguage] = useState<string[]>(studio?.languages?.split(",") || []);
+  const [services, setServices] = useState<string[]>(studio?.services || []);
+  const [language, setLanguage] = useState<string[]>(studio?.languages || []);
 
   // Switch setting tab
   const switchTab = (index: number) => {
@@ -229,7 +229,6 @@ export default function UserProfile() {
       country,
       phoneNumber,
       state,
-      specialties,
     }: any,
     editUserResponse: RestApi.Response,
   ) => {
@@ -250,7 +249,7 @@ export default function UserProfile() {
       country,
       state,
       phone_number: phoneNumber,
-      specialty: specialties ? specialties.join(",") : [],
+      specialty: specialties,
       styles: getSelectedIds(artistStyles),
     });
 
@@ -307,8 +306,8 @@ export default function UserProfile() {
       wheelchair_access: checked.includes("wheelchair_access"),
       parking: checked.includes("parking"),
       lgbt_friendly: checked.includes("lgbt_friendly"),
-      languages: language.join(","),
-      services: services.join(","),
+      languages: language,
+      services: services,
     });
 
     let avatarUploadResponse: RestApi.Response = { error: false };

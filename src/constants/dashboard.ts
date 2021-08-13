@@ -17,7 +17,7 @@ export const dashboardRouteDetails = [
   },
   {
     path: "/dashboard/upload-tattoos",
-    name: "Upload Tattoos",
+    name: "Upload Tattoos Photos",
     backButton: {
       enable: true,
       path: "/dashboard",

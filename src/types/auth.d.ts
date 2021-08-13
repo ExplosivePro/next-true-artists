@@ -51,7 +51,7 @@ declare namespace Register {
     country?: string;
     styles?: number[];
     phone_number?: string;
-    specialty?: string;
+    specialty?: string[];
   }
 
   interface ApiEditArtistPayload {
@@ -80,7 +80,7 @@ declare namespace Register {
     state?: string;
     styles?: number[];
     phone_number?: string;
-    specialty?: string;
+    specialty?: string[];
   }
 
   interface ApiUpdateAvatarPayload {
@@ -142,9 +142,9 @@ declare namespace Register {
     wheelchair_access?: boolean;
     parking?: boolean;
     lgbt_friendly?: boolean;
-    specialty?: string;
-    languages?: string;
-    services?: string;
+    specialty?: string[];
+    languages?: string[];
+    services?: string[];
   }
 
   interface FormData {

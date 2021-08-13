@@ -3,11 +3,6 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import React, { useEffect, useState } from "react";
 import { Typography } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import FormControl from "@material-ui/core/FormControl";
-import SearchIcon from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
@@ -24,7 +19,7 @@ import { Role, useApp, useAuth } from "../../../contexts";
 import useStyles from "./styles";
 
 import { getMyArtistList, getMyStudioList, inviteArtist, removeArtist } from "../../../api";
-import { useDebounce } from "../../../hooks";
+
 import Loading from "../../Loading";
 
 const getTitleByRole = (role: Role) => {
@@ -51,8 +46,8 @@ export default function UserList() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [searchInput, setSearchInput] = useState(""); // Direct search input value before debounce
-  const debouncedSearchTerm = useDebounce(searchInput, 500);
+  // const [searchInput, setSearchInput] = useState(""); // Direct search input value before debounce
+  // const debouncedSearchTerm = useDebounce(searchInput, 500);
 
   const title = getTitleByRole(user?.role as Role);
 
@@ -125,19 +120,19 @@ export default function UserList() {
     setEmail("");
   };
 
-  // Search
-  const search = async (keyword: string) => {
-    // Clear all current result first
-    setUserList([]);
-
-    // Show loading
-    setLoading(true);
-
-    getUserList(user?.role as Role, keyword);
-
-    // Hide loading
-    setLoading(false);
-  };
+  // // Search
+  // const search = async (keyword: string) => {
+  //   // Clear all current result first
+  //   setUserList([]);
+  //
+  //   // Show loading
+  //   setLoading(true);
+  //
+  //   getUserList(user?.role as Role, keyword);
+  //
+  //   // Hide loading
+  //   setLoading(false);
+  // };
 
   // On remove artist/studio
   const onRemove = async (id: number) => {
@@ -155,10 +150,10 @@ export default function UserList() {
     getUserList(user?.role as Role);
   }, []);
 
-  // On search
-  useEffect(() => {
-    search(debouncedSearchTerm);
-  }, [debouncedSearchTerm]);
+  // // On search
+  // useEffect(() => {
+  //   search(debouncedSearchTerm);
+  // }, [debouncedSearchTerm]);
 
   return (
     <>
@@ -172,26 +167,26 @@ export default function UserList() {
             {userList.length} {user?.role === Role.ARTIST ? "Studios" : "Artists"}
           </Typography>
 
-          <FormControl className={classes.textField} variant="outlined">
-            <OutlinedInput
-              className={classes.inputWrapper}
-              id="search"
-              type={"text"}
-              placeholder={"Search by Name"}
-              value={searchInput}
-              onChange={(e) => {
-                setSearchInput(e.target.value);
-              }}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton aria-label="toggle password visibility" edge="end">
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
-              }
-              labelWidth={70}
-            />
-          </FormControl>
+          {/*<FormControl className={classes.textField} variant="outlined">*/}
+          {/*  <OutlinedInput*/}
+          {/*    className={classes.inputWrapper}*/}
+          {/*    id="search"*/}
+          {/*    type={"text"}*/}
+          {/*    placeholder={"Search by Name"}*/}
+          {/*    value={searchInput}*/}
+          {/*    onChange={(e) => {*/}
+          {/*      setSearchInput(e.target.value);*/}
+          {/*    }}*/}
+          {/*    endAdornment={*/}
+          {/*      <InputAdornment position="end">*/}
+          {/*        <IconButton aria-label="toggle password visibility" edge="end">*/}
+          {/*          <SearchIcon />*/}
+          {/*        </IconButton>*/}
+          {/*      </InputAdornment>*/}
+          {/*    }*/}
+          {/*    labelWidth={70}*/}
+          {/*  />*/}
+          {/*</FormControl>*/}
 
           {user?.role === Role.STUDIO && (
             <PrimaryButton
