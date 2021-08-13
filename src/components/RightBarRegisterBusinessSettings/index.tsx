@@ -174,7 +174,7 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, curren
         minimum_spend: minimumRate,
         price_per_hour: pricePerHour,
         currency_code: currency,
-        accepted_payment_methods: paymentMethods.join(","),
+        accepted_payment_methods: paymentMethods,
         accepting_guest_artist: checked.includes("accepting_guest_artist"),
         appointment_only: checked.includes("appointment_only"),
         piercings: checked.includes("piercings"),
@@ -185,7 +185,7 @@ export default function RightBarRegisterBusinessSettings({ currentUserId, curren
         wheelchair_access: checked.includes("wheelchair_access"),
         parking: checked.includes("parking"),
         lgbt_friendly: checked.includes("lgbt_friendly"),
-        languages: language.join(","),
+        languages: language,
         services: services,
       });
 
@@ -272,9 +272,9 @@ export const preloadRightBarRegisterBusinessSettingsData = (data: Resource.Studi
     minimumRate: minimum_spend || "",
     pricePerHour: price_per_hour,
     currency: currency_code || "",
-    paymentMethods: accepted_payment_methods?.split(","),
+    paymentMethods: accepted_payment_methods,
     checked: getPreloadSettingValue(settingList, data),
-    language: languages?.split(","),
+    language: languages,
     services: services,
   };
 };

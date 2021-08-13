@@ -99,9 +99,9 @@ declare namespace Resource {
     website_url?: string;
     facebook_url?: string;
     twitter_url?: string;
-    accepted_payment_methods?: string;
+    accepted_payment_methods?: string[];
     price_per_hour?: number;
-    languages?: string;
+    languages?: string[];
     services?: string[];
     minimum_spend?: number;
     currency_code?: string;

@@ -192,10 +192,10 @@ export default function UserProfile() {
   const [artistStyles, setArtistStyles] = useState(getWorkStyleData(role as Role, user));
 
   // Studio detail
-  const [paymentMethods, setPaymentMethod] = useState(studio?.accepted_payment_methods?.split(",") || []);
+  const [paymentMethods, setPaymentMethod] = useState(studio?.accepted_payment_methods || []);
   const [minimumRate, setMinimumRate] = useState<number>(studio?.minimum_spend || 0);
   const [services, setServices] = useState<string[]>(studio?.services || []);
-  const [language, setLanguage] = useState<string[]>(studio?.languages?.split(",") || []);
+  const [language, setLanguage] = useState<string[]>(studio?.languages || []);
 
   // Switch setting tab
   const switchTab = (index: number) => {
@@ -306,7 +306,7 @@ export default function UserProfile() {
       wheelchair_access: checked.includes("wheelchair_access"),
       parking: checked.includes("parking"),
       lgbt_friendly: checked.includes("lgbt_friendly"),
-      languages: language.join(","),
+      languages: language,
       services: services,
     });
 

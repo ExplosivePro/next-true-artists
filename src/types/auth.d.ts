@@ -142,8 +142,8 @@ declare namespace Register {
     wheelchair_access?: boolean;
     parking?: boolean;
     lgbt_friendly?: boolean;
-    specialty?: string;
-    languages?: string;
+    specialty?: string[];
+    languages?: string[];
     services?: string[];
   }
 
